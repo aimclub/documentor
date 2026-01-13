@@ -12,6 +12,12 @@ try:
 except ImportError:
     DOCX_AVAILABLE = False
 
+try:
+    from .doc_parser import DocParser
+    DOC_AVAILABLE = True
+except ImportError:
+    DOC_AVAILABLE = False
+
 __all__ = [
     "TxtParser",
     "ImageParser", 
@@ -22,3 +28,6 @@ __all__ = [
 # Add Word parsers to exports if available
 if DOCX_AVAILABLE:
     __all__.append("DocxParser")
+
+if DOC_AVAILABLE:
+    __all__.append("DocParser")

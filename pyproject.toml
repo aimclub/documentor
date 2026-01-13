@@ -27,6 +27,7 @@ dependencies = [
     "langchain-core>=0.1.0,<1.0.0",
     "overrides>=7.0.0,<8.0.0",
     "pdf2image>=1.17.0,<2.0.0",
+    "aiohttp>=3.8.0,<4.0.0",
     # Word document processing
     "python-docx>=1.1.0,<2.0.0",
     "docx2txt>=0.8,<1.0.0",

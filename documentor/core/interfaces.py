@@ -90,6 +90,15 @@ class BaseParser(ABC):
         """
         pass
     
+    def is_available(self) -> bool:
+        """
+        Check if parser is available for use.
+        
+        Returns:
+            bool: True if parser is available, False otherwise
+        """
+        return True
+    
     def can_parse(self, file_path: Path) -> bool:
         """
         Check if parser can process given file.

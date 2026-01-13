@@ -12,9 +12,15 @@ __pychache__/
 # all jupyter notebook
 *.ipynb
 
-/tests/semantic/preprocessing/data/ruwiki_20180420_300d.pkl
-/examples/data/work_names.csv
 *.pyc
 /__pycache__/
 .env
-/SAMPO
+/План_работы.txt
+/test_folder/
+/processed_documents/
+/output/
+/test_docx_structure.py
+docx_structure_analysis.json
+docx_to_markdownl.zip
+/docx_to_markdownl
+.pytest_cache

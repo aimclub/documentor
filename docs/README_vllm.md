@@ -30,3 +30,17 @@ OCR config will read the variables from `.env` via `documentor/core/load_env.py`
 ### Entrypoint script
 
 - **Entrypoint script**: [entrypoint.sh](entrypoint.sh)
+<<<<<<< Updated upstream
+=======
+
+
+### Models installation
+
+You can install models from Hugging Face.
+
+[DotsOCR](https://huggingface.co/rednote-hilab/dots.ocr)
+[Qwen2.5-VL](https://huggingface.co/collections/Qwen/qwen25-vl-6795ffac22b334a837c0f9a5)
+
+
+
+>>>>>>> Stashed changes

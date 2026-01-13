@@ -37,6 +37,7 @@ warnings.filterwarnings("ignore")
 from documentor.processing.processors.document_processor import DocumentProcessor
 from documentor.processing.processors.config import ProcessingConfig
 from documentor.storage import StructuredDocumentStorage
+from documentor.processing.parsers.ocr_health_check import check_ocr_services_from_env
 
 
 DEFAULT_CONFIG_PATH = str(Path(__file__).resolve().parents[1] / 'config' / 'daemon_config.json')
@@ -53,6 +54,12 @@ class DocumentDaemon:
         # Initialize components
         self.storage = StructuredDocumentStorage(Path(self.config["output_directory"]))
         self.processor = DocumentProcessor(ProcessingConfig.create_default())
+
+        # Show parser status
+        self._show_parser_status()
+
+        # Show OCR services status
+        self._show_ocr_status()
 
         # Load already processed files
         self._load_processed_files()
@@ -80,6 +87,107 @@ class DocumentDaemon:
             print(f"INFO: Loaded {len(self.processed_files)} previously processed files", flush=True)
         except Exception as e:
             print(f"WARNING: Error loading processed files list: {e}", flush=True)
+
+    def _show_parser_status(self) -> None:
+        """Show status of available parsers."""
+        print("=" * 60, flush=True)
+        print("DOCUMENTOR PARSER STATUS", flush=True)
+        print("=" * 60, flush=True)
+        
+        # Get parser information
+        parser_info = self.processor.get_processing_stats()
+        supported_extensions = parser_info.get("supported_extensions", [])
+        parsers = parser_info.get("parsers", {})
+        
+        print(f"Supported file extensions: {', '.join(sorted(supported_extensions))}", flush=True)
+        print("", flush=True)
+        
+        # Show individual parser status
+        parser_status = {
+            '.txt': 'TXT Parser',
+            '.pdf': 'PDF Parser (OCR)',
+            '.jpg': 'Image Parser (OCR)',
+            '.png': 'Image Parser (OCR)',
+            '.jpeg': 'Image Parser (OCR)',
+            '.docx': 'DOCX Parser',
+            '.doc': 'DOC Parser (Word COM)'
+        }
+        
+        for ext, name in parser_status.items():
+            if ext in supported_extensions:
+                parser_name = parsers.get(ext, 'Unknown')
+                print(f"[OK] {name}: {parser_name}", flush=True)
+            else:
+                if ext == '.doc':
+                    print(f"[FAIL] {name}: Word COM not available - convert DOC files manually", flush=True)
+                elif ext in ['.pdf', '.jpg', '.png', '.jpeg']:
+                    print(f"[FAIL] {name}: OCR services not available", flush=True)
+                else:
+                    print(f"[FAIL] {name}: Not available", flush=True)
+        
+        print("", flush=True)
+        
+        # Special message for DOC files
+        if '.doc' not in supported_extensions:
+            print("NOTE: DOC files require Microsoft Word and Windows for automatic conversion.", flush=True)
+            print("      Please convert DOC files to DOCX manually before processing.", flush=True)
+        
+        print("=" * 60, flush=True)
+
+    def _show_ocr_status(self) -> None:
+        """Show status of OCR services."""
+        print("=" * 60, flush=True)
+        print("OCR SERVICES STATUS", flush=True)
+        print("=" * 60, flush=True)
+        
+        try:
+            # Check OCR services
+            ocr_results = check_ocr_services_from_env()
+            
+            # Dots.OCR status
+            dots_ocr = ocr_results.get('dots_ocr', {})
+            dots_available = dots_ocr.get('available', False)
+            dots_message = dots_ocr.get('message', 'Unknown')
+            dots_url = dots_ocr.get('url', 'not specified')
+            
+            if dots_available:
+                print(f"[OK] Dots.OCR: {dots_message}", flush=True)
+            else:
+                print(f"[FAIL] Dots.OCR: {dots_message}", flush=True)
+            
+            print(f"  URL: {dots_url}", flush=True)
+            
+            # Qwen2.5-VL status
+            qwen = ocr_results.get('qwen', {})
+            qwen_available = qwen.get('available', False)
+            qwen_message = qwen.get('message', 'Unknown')
+            qwen_url = qwen.get('url', 'not specified')
+            
+            if qwen_available:
+                print(f"[OK] Qwen2.5-VL: {qwen_message}", flush=True)
+            else:
+                print(f"[FAIL] Qwen2.5-VL: {qwen_message}", flush=True)
+            
+            print(f"  URL: {qwen_url}", flush=True)
+            
+            # Overall status
+            overall_available = ocr_results.get('overall_available', False)
+            print("", flush=True)
+            
+            if overall_available:
+                print("[OK] OCR services ready for work", flush=True)
+            else:
+                print("[WARNING] OCR services unavailable - PDF and images will not be processed", flush=True)
+                print("  Check settings in .env file:", flush=True)
+                print("  - DOTS_OCR_BASE_URL, DOTS_OCR_API_KEY", flush=True)
+                print("  - QWEN_BASE_URL, QWEN_API_KEY", flush=True)
+                print("  - Ensure services are running and accessible", flush=True)
+            
+        except Exception as e:
+            print(f"[ERROR] OCR services check error: {e}", flush=True)
+            print("  OCR functionality may be unavailable", flush=True)
+        
+        print("=" * 60, flush=True)
 
     def _is_file_supported(self, file_path: Path) -> bool:
         """Check file support."""

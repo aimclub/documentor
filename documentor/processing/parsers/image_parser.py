@@ -36,29 +36,52 @@ class ImageParser(BaseParser):
             ocr_config: OCR pipeline configuration
         """
         self.ocr_config = ocr_config
+        self._ocr_available = False
+        self.ocr_pipeline = None
         self._setup_ocr_pipeline()
     
     def _setup_ocr_pipeline(self) -> None:
         """Setup OCR pipeline."""
-        # Create LLM clients
-        dots_client = DotsOCRClient(self.ocr_config.dots_ocr_config)
-        qwen_client = QwenClient(self.ocr_config.qwen_config)
-        
-        # Create pipeline components
-        detector = DotsBlockDetector(dots_client)
-        recognizer = QwenBlockRecognizer(qwen_client)
-        
-        # Create OCR pipeline
-        self.ocr_pipeline = ScanPipeline(
-            detector=detector,
-            recognizer=recognizer
-        )
-        
-        logger.info("OCR pipeline configured for image processing")
+        try:
+            # Test OCR services availability first
+            from .ocr_health_check import check_ocr_services_from_env
+            ocr_results = check_ocr_services_from_env()
+            
+            if not ocr_results['overall_available']:
+                self._ocr_available = False
+                logger.warning("OCR services not available - Image parser disabled")
+                return
+            
+            # Create LLM clients
+            dots_client = DotsOCRClient(self.ocr_config.dots_ocr_config)
+            qwen_client = QwenClient(self.ocr_config.qwen_config)
+            
+            # Create pipeline components
+            detector = DotsBlockDetector(dots_client)
+            recognizer = QwenBlockRecognizer(qwen_client)
+            
+            # Create OCR pipeline
+            self.ocr_pipeline = ScanPipeline(
+                detector=detector,
+                recognizer=recognizer
+            )
+            
+            self._ocr_available = True
+            logger.info("OCR pipeline configured for image processing")
+        except Exception as e:
+            self._ocr_available = False
+            logger.warning(f"OCR pipeline not available for image processing: {e}")
     
     def supported_extensions(self) -> Set[str]:
         """Get supported extensions."""
-        return {'.png', '.jpg', '.jpeg'}
+        if self._ocr_available:
+            return {'.png', '.jpg', '.jpeg'}
+        else:
+            return set()  # No support if OCR not available
+    
+    def is_available(self) -> bool:
+        """Check if parser is available (OCR services must be available)."""
+        return self._ocr_available
     
     def parse(self, file_path: Path) -> Document:
         """

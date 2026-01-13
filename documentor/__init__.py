@@ -34,6 +34,12 @@ try:
 except ImportError:
     DOCX_PARSER_AVAILABLE = False
 
+try:
+    from .processing.parsers import DocParser
+    DOC_PARSER_AVAILABLE = True
+except ImportError:
+    DOC_PARSER_AVAILABLE = False
+
 from .processing import RecursiveDocumentLoader
 from .processing.pipelines.ocr.config import OCRPipelineConfig
 

@@ -54,15 +54,43 @@ class PdfParser(BaseParser):
         self.ocr_config = ocr_config
         self.min_text_threshold = min_text_threshold
         self.dpi = dpi
+        self._ocr_available = False
+        self.pdf_processor = None
         
         # Create PDF processor
-        self.pdf_processor = PDFProcessor(ocr_config)
+        self._setup_pdf_processor()
         
         logger.info("PDF parser initialized")
     
+    def _setup_pdf_processor(self) -> None:
+        """Setup PDF processor with OCR support."""
+        try:
+            # Test OCR services availability first
+            from .ocr_health_check import check_ocr_services_from_env
+            ocr_results = check_ocr_services_from_env()
+            
+            if not ocr_results['overall_available']:
+                self._ocr_available = False
+                logger.warning("OCR services not available - PDF parser disabled")
+                return
+            
+            self.pdf_processor = PDFProcessor(self.ocr_config)
+            self._ocr_available = True
+            logger.info("PDF processor with OCR support initialized")
+        except Exception as e:
+            self._ocr_available = False
+            logger.warning(f"PDF processor with OCR not available: {e}")
+    
     def supported_extensions(self) -> Set[str]:
         """Get supported extensions."""
-        return {'.pdf'}
+        if self._ocr_available:
+            return {'.pdf'}
+        else:
+            return set()  # No support if OCR not available
+    
+    def is_available(self) -> bool:
+        """Check if parser is available (OCR services must be available)."""
+        return self._ocr_available
     
     def parse(self, file_path: Path) -> Document:
         """

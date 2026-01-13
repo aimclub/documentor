@@ -40,13 +40,21 @@ class ParserRegistry:
             
             # Image parser
             image_parser = ImageParser(self.ocr_config)
-            for ext in image_parser.supported_extensions():
-                self._parsers[ext] = image_parser
+            if image_parser.is_available():
+                for ext in image_parser.supported_extensions():
+                    self._parsers[ext] = image_parser
+                logger.info("Image parser registered successfully")
+            else:
+                logger.warning("Image parser not available - OCR services not accessible")
             
             # PDF parser
             pdf_parser = PdfParser(self.ocr_config)
-            for ext in pdf_parser.supported_extensions():
-                self._parsers[ext] = pdf_parser
+            if pdf_parser.is_available():
+                for ext in pdf_parser.supported_extensions():
+                    self._parsers[ext] = pdf_parser
+                logger.info("PDF parser registered successfully")
+            else:
+                logger.warning("PDF parser not available - OCR services not accessible")
             
             # DOCX parser
             try:
@@ -54,9 +62,22 @@ class ParserRegistry:
                 docx_parser = DocxParser()
                 for ext in docx_parser.supported_extensions():
                     self._parsers[ext] = docx_parser
+                logger.info("DOCX parser registered successfully")
             except ImportError as e:
                 logger.warning(f"DOCX parser not available: {e}")
             
+            # DOC parser (with Word COM conversion)
+            try:
+                from .doc_parser import DocParser
+                doc_parser = DocParser()
+                for ext in doc_parser.supported_extensions():
+                    self._parsers[ext] = doc_parser
+                if doc_parser.is_available():
+                    logger.info("DOC parser registered successfully (Word COM available)")
+                else:
+                    logger.warning("DOC parser not available - Word COM not installed or not on Windows")
+            except ImportError as e:
+                logger.warning(f"DOC parser not available: {e}")
             
             logger.info(f"Registered parsers for extensions: {list(self._parsers.keys())}")
             
