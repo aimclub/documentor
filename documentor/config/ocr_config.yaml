@@ -1,0 +1,181 @@
+# Конфигурация для работы с OCR (Optical Character Recognition)
+
+# Настройки Dots.OCR для layout detection
+dots_ocr:
+  # URL или путь к сервису Dots.OCR
+  endpoint: null  # если null - используется локальный сервис
+  
+  # Таймаут запроса
+  timeout: 60
+  
+  # Промпты для Dots.OCR (строгие промпты из официальной документации)
+  prompts:
+    # Полное извлечение layout с текстом в JSON формате
+    prompt_layout_all_en: |
+      Please output the layout information from the PDF image, including each layout element's bbox, its category, and the corresponding text content within the bbox.
+
+      1. Bbox format: [x1, y1, x2, y2]
+
+      2. Layout Categories: The possible categories are ['Caption', 'Footnote', 'Formula', 'List-item', 'Page-footer', 'Page-header', 'Picture', 'Section-header', 'Table', 'Text', 'Title'].
+
+      3. Text Extraction & Formatting Rules:
+          - Picture: For the 'Picture' category, the text field should be omitted.
+          - Formula: Format its text as LaTeX.
+          - Table: Format its text as HTML.
+          - All Others (Text, Title, etc.): Format their text as Markdown.
+
+      4. Constraints:
+          - The output text must be the original text from the image, with no translation.
+          - All layout elements must be sorted according to human reading order.
+
+      5. Final Output: The entire output must be a single JSON object.
+    
+    # Только определение layout без текста
+    prompt_layout_only_en: |
+      Please output the layout information from this PDF image, including each layout's bbox and its category. The bbox should be in the format [x1, y1, x2, y2]. The layout categories for the PDF document include ['Caption', 'Footnote', 'Formula', 'List-item', 'Page-footer', 'Page-header', 'Picture', 'Section-header', 'Table', 'Text', 'Title']. Do not output the corresponding text. The layout result should be in JSON format.
+    
+    # Извлечение текста из изображения (кроме Page-header и Page-footer)
+    prompt_ocr: |
+      Extract the text content from this image.
+    
+    # Извлечение текста из заданного bounding box
+    prompt_grounding_ocr: |
+      Extract text from the given bounding box on the image (format: [x1, y1, x2, y2]).
+      Bounding Box:
+  
+  # Режим работы промпта (какой промпт использовать)
+  prompt_mode: "prompt_layout_all_en"  # prompt_layout_all_en, prompt_layout_only_en, prompt_ocr, prompt_grounding_ocr
+  
+  # Параметры layout detection
+  layout:
+    # Минимальный размер элемента для детектирования
+    min_element_size: 10  # пикселей
+    
+    # Порог уверенности детектирования
+    confidence_threshold: 0.5
+    
+    # Типы элементов для детектирования
+    detect_types:
+      - "Text"
+      - "Picture"
+      - "Caption"
+      - "Table"
+      - "Section-header"
+      - "Title"
+      - "Formula"
+      - "List-item"
+      - "Footnote"
+  
+  # Настройки для построения порядка чтения
+  reading_order:
+    # Метод построения порядка (top-to-bottom, left-to-right, или комбинированный)
+    method: "top-to-bottom"
+    
+    # Учитывать группировку элементов
+    group_elements: true
+
+# Настройки Qwen OCR для распознавания текста
+qwen_ocr:
+  # Модель для OCR
+  model: "qwen2-vl-7b-instruct"  # или другая VL модель
+  
+  # URL для API
+  base_url: null  # если null - используется локальная модель
+  
+  # Параметры распознавания
+  recognition:
+    # Языки для распознавания
+    languages: ["ru", "en"]
+    
+    # Разрешение изображения для OCR (больше = лучше качество, но медленнее)
+    image_resolution: 1024
+    
+    # Таймаут на одно изображение
+    timeout: 30
+  
+  # Батч-обработка
+  batch:
+    # Размер батча для обработки
+    batch_size: 4
+    
+    # Максимальное время ожидания батча
+    batch_timeout: 120
+
+# Настройки обработки изображений
+image_processing:
+  # Формат изображений для OCR
+  format: "PNG"
+  
+  # Качество изображения (для JPEG)
+  quality: 95
+  
+  # DPI для рендеринга страниц
+  dpi: 300
+  
+  # Максимальный размер изображения (пикселей)
+  max_size: 4096
+  
+  # Оптимизация для OCR
+  optimize_for_ocr: true
+  
+  # Предобработка изображений
+  preprocessing:
+    # Увеличение контраста
+    enhance_contrast: true
+    
+    # Удаление шума
+    denoise: false
+    
+    # Бинаризация (для сканов)
+    binarize: false
+
+# Настройки для работы с координатами (bbox)
+bbox:
+  # Точность координат (количество знаков после запятой)
+  precision: 2
+  
+  # Нормализация координат (относительно страницы или абсолютные)
+  normalize: true
+  
+  # Единицы измерения (pixels, points, mm)
+  units: "pixels"
+
+# Настройки маппинга типов Layout → ElementType
+type_mapping:
+  # Маппинг типов Dots.OCR в ElementType
+  layout_to_element:
+    "Section-header": "HEADER_N"  # уровень определяется отдельно
+    "Text": "TEXT"
+    "Picture": "IMAGE"  # ImageFragment
+    "Caption": "CAPTION"  # CaptionFragment
+    "Table": "TABLE"  # TableFragment
+    "Formula": "FORMULA"  # LatexFormulaFragment
+    "Title": "TITLE"  # TitleFragment
+    "List-item": "LIST_ITEM"  # ListItemFragment
+    "Page-header": "PAGE_HEADER"  # PageHeaderFragment
+    "Page-footer": "PAGE_FOOTER"  # PageFooterFragment
+    "Footnote": "FOOTNOTE"  # FootnoteFragment
+    "Other": "TEXT"
+    "Unknown": "TEXT"
+  
+  # Правила определения уровня заголовка из Section-header
+  header_level_detection:
+    # Использовать LLM для определения уровня
+    use_llm: true
+    
+    # Или использовать эвристики (размер шрифта, позиция и т.д.)
+    use_heuristics: false
+
+# Настройки производительности
+performance:
+  # Параллельная обработка страниц
+  parallel_processing: true
+  
+  # Количество потоков для параллельной обработки
+  max_workers: 4
+  
+  # Кэширование результатов layout detection
+  cache_layout_results: true
+  
+  # Кэширование результатов OCR
+  cache_ocr_results: true

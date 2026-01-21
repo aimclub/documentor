@@ -25,3 +25,8 @@ docx_to_markdownl.zip
 /docx_to_markdownl
 .pytest_cache
 test_two_llm.py
+/trash
+/documentor_old
+/test.py
+/docs/docx_parser_diagram.md
+ROADMAP.md
