@@ -175,10 +175,14 @@ def detect_document_format(document: Document) -> DocumentFormat:
     Raises:
         ValueError: Если документ невалиден (нет page_content и source)
     """
-    if not document.page_content and not get_document_source(document):
+    source = get_document_source(document)
+    # Проверяем, что есть либо непустой page_content, либо валидный source
+    has_content = bool(document.page_content and document.page_content.strip())
+    has_source = source != "unknown"
+    
+    if not has_content and not has_source:
         raise ValueError("Документ должен содержать page_content или source в метаданных")
     
-    source = get_document_source(document)
     metadata = document.metadata or {}
     
     # Метод 1: По расширению файла
