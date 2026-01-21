@@ -44,6 +44,28 @@ class Element:
         """Валидация элемента после инициализации."""
         self.validate()
 
+    def _validate_basic_fields(self) -> None:
+        """
+        Валидация базовых полей элемента (без проверки parent_id).
+        
+        Raises:
+            ValueError: Если базовые поля невалидны
+        """
+        if not self.id or not isinstance(self.id, str) or not self.id.strip():
+            raise ValueError(f"Element id must be a non-empty string, got: {self.id!r}")
+        
+        if not isinstance(self.type, ElementType):
+            raise ValueError(f"Element type must be ElementType, got: {type(self.type).__name__}")
+        
+        if self.content is None:
+            raise ValueError("Element content cannot be None")
+        
+        if not isinstance(self.content, str):
+            raise ValueError(f"Element content must be a string, got: {type(self.content).__name__}")
+        
+        if not isinstance(self.metadata, dict):
+            raise ValueError(f"Element metadata must be a dict, got: {type(self.metadata).__name__}")
+
     def validate(self) -> None:
         """
         Валидация элемента.
@@ -52,23 +74,36 @@ class Element:
         - id не пустой
         - type валидный ElementType
         - content не None
-        - parent_id ссылается на существующий элемент (если указан)
+        - parent_id валидный (если указан)
         
         Raises:
             ValueError: Если элемент невалиден
         """
-        # TODO: Реализовать валидацию
-        pass
+        self._validate_basic_fields()
+        
+        if self.parent_id is not None:
+            if not isinstance(self.parent_id, str) or not self.parent_id.strip():
+                raise ValueError(f"Element parent_id must be a non-empty string or None, got: {self.parent_id!r}")
 
     def __repr__(self) -> str:
         """Строковое представление для отладки."""
-        # TODO: Реализовать __repr__
-        return f"Element(id={self.id!r}, type={self.type.value!r}, ...)"
+        content_preview = (
+            self.content[:50] + "..." if len(self.content) > 50 else self.content
+        ).replace("\n", "\\n")
+        metadata_str = f", metadata={self.metadata!r}" if self.metadata else ""
+        parent_str = f", parent_id={self.parent_id!r}" if self.parent_id else ""
+        return (
+            f"Element(id={self.id!r}, type={self.type.value!r}, "
+            f"content={content_preview!r}{parent_str}{metadata_str})"
+        )
 
     def __str__(self) -> str:
         """Человекочитаемое строковое представление."""
-        # TODO: Реализовать __str__
-        return f"Element({self.type.value}, id={self.id})"
+        content_preview = (
+            self.content[:30] + "..." if len(self.content) > 30 else self.content
+        ).replace("\n", " ")
+        parent_info = f" (parent: {self.parent_id})" if self.parent_id else ""
+        return f"{self.type.value}[{self.id}]: {content_preview}{parent_info}"
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -77,14 +112,16 @@ class Element:
         Returns:
             Dict[str, Any]: Словарь с данными элемента
         """
-        # TODO: Реализовать сериализацию
-        return {
+        result: Dict[str, Any] = {
             "id": self.id,
             "type": self.type.value,
             "content": self.content,
-            "parent_id": self.parent_id,
-            "metadata": self.metadata,
         }
+        if self.parent_id is not None:
+            result["parent_id"] = self.parent_id
+        if self.metadata:
+            result["metadata"] = self.metadata
+        return result
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> Element:
@@ -99,15 +136,29 @@ class Element:
         
         Raises:
             ValueError: Если данные невалидны
+            KeyError: Если отсутствуют обязательные поля
         """
-        # TODO: Реализовать десериализацию
-        return cls(
-            id=data["id"],
-            type=ElementType(data["type"]),
-            content=data["content"],
-            parent_id=data.get("parent_id"),
-            metadata=data.get("metadata", {}),
+        if not isinstance(data, dict):
+            raise ValueError(f"Expected dict, got {type(data).__name__}")
+        
+        required_fields = ["id", "type", "content"]
+        missing_fields = [field for field in required_fields if field not in data]
+        if missing_fields:
+            raise ValueError(f"Missing required fields: {missing_fields}")
+        
+        try:
+            element_type = ElementType(data["type"])
+        except ValueError as e:
+            raise ValueError(f"Invalid ElementType: {data['type']}") from e
+        
+        element = cls(
+            id=str(data["id"]),
+            type=element_type,
+            content=str(data["content"]),
+            parent_id=str(data["parent_id"]) if data.get("parent_id") is not None else None,
+            metadata=dict(data.get("metadata", {})),
         )
+        return element
 
     def to_json(self) -> str:
         """
@@ -115,9 +166,14 @@ class Element:
         
         Returns:
             str: JSON строка
+        
+        Raises:
+            TypeError: Если данные не сериализуемы в JSON
         """
-        # TODO: Реализовать JSON сериализацию
-        return json.dumps(self.to_dict(), ensure_ascii=False, indent=2)
+        try:
+            return json.dumps(self.to_dict(), ensure_ascii=False, indent=2)
+        except TypeError as e:
+            raise TypeError(f"Failed to serialize Element to JSON: {e}") from e
 
     @classmethod
     def from_json(cls, json_str: str) -> Element:
@@ -131,10 +187,17 @@ class Element:
             Element: Экземпляр элемента
         
         Raises:
-            ValueError: Если JSON невалиден
+            ValueError: Если JSON невалиден или данные некорректны
+            json.JSONDecodeError: Если JSON не может быть распарсен
         """
-        # TODO: Реализовать JSON десериализацию
-        data = json.loads(json_str)
+        if not isinstance(json_str, str):
+            raise ValueError(f"Expected str, got {type(json_str).__name__}")
+        
+        try:
+            data = json.loads(json_str)
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Invalid JSON: {e}") from e
+        
         return cls.from_dict(data)
 
 
@@ -164,8 +227,39 @@ class ParsedDocument:
         Raises:
             ValueError: Если документ невалиден
         """
-        # TODO: Реализовать валидацию
-        pass
+        if not self.source or not isinstance(self.source, str) or not self.source.strip():
+            raise ValueError(f"Document source must be a non-empty string, got: {self.source!r}")
+        
+        if not isinstance(self.format, DocumentFormat):
+            raise ValueError(f"Document format must be DocumentFormat, got: {type(self.format).__name__}")
+        
+        if not isinstance(self.elements, list):
+            raise ValueError(f"Document elements must be a list, got: {type(self.elements).__name__}")
+        
+        if not self.elements:
+            raise ValueError("Document must contain at least one element")
+        
+        # Валидация каждого элемента (базовые поля, parent_id проверяется в validate_hierarchy)
+        for element in self.elements:
+            if not isinstance(element, Element):
+                raise ValueError(f"All elements must be Element instances, got: {type(element).__name__}")
+            try:
+                element._validate_basic_fields()
+            except ValueError as e:
+                raise ValueError(f"Invalid element {element.id}: {e}") from e
+        
+        # Проверка уникальности id
+        element_ids = [elem.id for elem in self.elements]
+        duplicate_ids = [eid for eid in element_ids if element_ids.count(eid) > 1]
+        if duplicate_ids:
+            raise ValueError(f"Duplicate element ids found: {set(duplicate_ids)}")
+        
+        # Валидация иерархии
+        self.validate_hierarchy()
+        
+        # Валидация metadata
+        if not isinstance(self.metadata, dict):
+            raise ValueError(f"Document metadata must be a dict, got: {type(self.metadata).__name__}")
 
     def validate_hierarchy(self) -> None:
         """
@@ -174,23 +268,69 @@ class ParsedDocument:
         Проверяет:
         - все parent_id ссылаются на существующие элементы
         - отсутствие циклов в иерархии
-        - корректность уровней заголовков
+        
+        Примечание:
+        - Разрешается любая структура заголовков (например, header_1 -> header_2 -> header_1 без родителя)
+        - Заголовки могут "сбрасывать" иерархию, создавая новые разделы на том же или более высоком уровне
         
         Raises:
             ValueError: Если иерархия невалидна
         """
-        # TODO: Реализовать валидацию иерархии
-        pass
+        # Создаем индекс элементов по id для быстрого поиска
+        element_by_id: Dict[str, Element] = {elem.id: elem for elem in self.elements}
+        
+        # Проверка ссылок parent_id
+        for element in self.elements:
+            if element.parent_id is not None:
+                if element.parent_id not in element_by_id:
+                    raise ValueError(
+                        f"Element {element.id} references non-existent parent_id: {element.parent_id}"
+                    )
+                
+                # Проверка на самоссылку
+                if element.parent_id == element.id:
+                    raise ValueError(f"Element {element.id} cannot be its own parent")
+        
+        # Проверка на циклы в иерархии (DFS)
+        visited: set[str] = set()
+        rec_stack: set[str] = set()
+        
+        def has_cycle(element_id: str) -> bool:
+            """Проверяет наличие цикла, начиная с элемента."""
+            if element_id in rec_stack:
+                return True
+            if element_id in visited:
+                return False
+            
+            visited.add(element_id)
+            rec_stack.add(element_id)
+            
+            element = element_by_id[element_id]
+            if element.parent_id is not None:
+                if has_cycle(element.parent_id):
+                    return True
+            
+            rec_stack.remove(element_id)
+            return False
+        
+        for element in self.elements:
+            if element.id not in visited:
+                if has_cycle(element.id):
+                    raise ValueError(f"Cycle detected in hierarchy starting from element {element.id}")
 
     def __repr__(self) -> str:
         """Строковое представление для отладки."""
-        # TODO: Реализовать __repr__
-        return f"ParsedDocument(source={self.source!r}, format={self.format.value!r}, elements={len(self.elements)})"
+        metadata_str = f", metadata={self.metadata!r}" if self.metadata else ""
+        return (
+            f"ParsedDocument(source={self.source!r}, format={self.format.value!r}, "
+            f"elements={len(self.elements)}{metadata_str})"
+        )
 
     def __str__(self) -> str:
         """Человекочитаемое строковое представление."""
-        # TODO: Реализовать __str__
-        return f"ParsedDocument({self.format.value}, {len(self.elements)} elements)"
+        source_name = self.source.split("/")[-1] if "/" in self.source else self.source
+        source_name = source_name.split("\\")[-1] if "\\" in source_name else source_name
+        return f"ParsedDocument({self.format.value}): {source_name} ({len(self.elements)} elements)"
 
     def to_dicts(self) -> List[Dict[str, Any]]:
         """
@@ -208,13 +348,14 @@ class ParsedDocument:
         Returns:
             Dict[str, Any]: Словарь с данными документа
         """
-        # TODO: Реализовать сериализацию
-        return {
+        result: Dict[str, Any] = {
             "source": self.source,
             "format": self.format.value,
             "elements": [element.to_dict() for element in self.elements],
-            "metadata": self.metadata,
         }
+        if self.metadata:
+            result["metadata"] = self.metadata
+        return result
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> ParsedDocument:
@@ -229,14 +370,36 @@ class ParsedDocument:
         
         Raises:
             ValueError: Если данные невалидны
+            KeyError: Если отсутствуют обязательные поля
         """
-        # TODO: Реализовать десериализацию
-        return cls(
-            source=data["source"],
-            format=DocumentFormat(data["format"]),
-            elements=[Element.from_dict(elem) for elem in data["elements"]],
-            metadata=data.get("metadata", {}),
+        if not isinstance(data, dict):
+            raise ValueError(f"Expected dict, got {type(data).__name__}")
+        
+        required_fields = ["source", "format", "elements"]
+        missing_fields = [field for field in required_fields if field not in data]
+        if missing_fields:
+            raise ValueError(f"Missing required fields: {missing_fields}")
+        
+        if not isinstance(data["elements"], list):
+            raise ValueError(f"Elements must be a list, got {type(data['elements']).__name__}")
+        
+        try:
+            document_format = DocumentFormat(data["format"])
+        except ValueError as e:
+            raise ValueError(f"Invalid DocumentFormat: {data['format']}") from e
+        
+        try:
+            elements = [Element.from_dict(elem) for elem in data["elements"]]
+        except (ValueError, KeyError) as e:
+            raise ValueError(f"Failed to deserialize elements: {e}") from e
+        
+        document = cls(
+            source=str(data["source"]),
+            format=document_format,
+            elements=elements,
+            metadata=dict(data.get("metadata", {})),
         )
+        return document
 
     def to_json(self) -> str:
         """
@@ -244,9 +407,14 @@ class ParsedDocument:
         
         Returns:
             str: JSON строка
+        
+        Raises:
+            TypeError: Если данные не сериализуемы в JSON
         """
-        # TODO: Реализовать JSON сериализацию
-        return json.dumps(self.to_dict(), ensure_ascii=False, indent=2)
+        try:
+            return json.dumps(self.to_dict(), ensure_ascii=False, indent=2)
+        except TypeError as e:
+            raise TypeError(f"Failed to serialize ParsedDocument to JSON: {e}") from e
 
     @classmethod
     def from_json(cls, json_str: str) -> ParsedDocument:
@@ -260,10 +428,17 @@ class ParsedDocument:
             ParsedDocument: Экземпляр документа
         
         Raises:
-            ValueError: Если JSON невалиден
+            ValueError: Если JSON невалиден или данные некорректны
+            json.JSONDecodeError: Если JSON не может быть распарсен
         """
-        # TODO: Реализовать JSON десериализацию
-        data = json.loads(json_str)
+        if not isinstance(json_str, str):
+            raise ValueError(f"Expected str, got {type(json_str).__name__}")
+        
+        try:
+            data = json.loads(json_str)
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Invalid JSON: {e}") from e
+        
         return cls.from_dict(data)
 
 
@@ -282,10 +457,12 @@ class ElementIdGenerator:
 
     def __repr__(self) -> str:
         """Строковое представление для отладки."""
-        # TODO: Реализовать __repr__
-        return f"ElementIdGenerator(start={self._counter}, width={self._width})"
+        next_id_preview = f"{self._counter:0{self._width}d}"
+        return (
+            f"ElementIdGenerator(counter={self._counter}, width={self._width}, "
+            f"next_id={next_id_preview!r})"
+        )
 
     def __str__(self) -> str:
         """Человекочитаемое строковое представление."""
-        # TODO: Реализовать __str__
-        return f"ElementIdGenerator(width={self._width}, current={self._counter})"
+        return f"ElementIdGenerator(width={self._width}, next_id={self._counter:0{self._width}d})"
