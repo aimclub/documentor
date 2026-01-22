@@ -30,7 +30,8 @@ class ElementType(str, Enum):
     FOOTNOTE = "footnote"  # Сноска
     PAGE_HEADER = "page_header"  # Колонтитул верхний
     PAGE_FOOTER = "page_footer"  # Колонтитул нижний
-
+    LINK = "link"  # Ссылка
+    CODE_BLOCK = "code_block"  # Блок кода
 
 @dataclass(slots=True)
 class Element:
@@ -236,8 +237,9 @@ class ParsedDocument:
         if not isinstance(self.elements, list):
             raise ValueError(f"Document elements must be a list, got: {type(self.elements).__name__}")
         
-        if not self.elements:
-            raise ValueError("Document must contain at least one element")
+        # Разрешаем пустые документы (могут быть валидными для некоторых случаев)
+        # if not self.elements:
+        #     raise ValueError("Document must contain at least one element")
         
         # Валидация каждого элемента (базовые поля, parent_id проверяется в validate_hierarchy)
         for element in self.elements:
