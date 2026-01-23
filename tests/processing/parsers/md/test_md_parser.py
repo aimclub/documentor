@@ -432,3 +432,116 @@ class TestMarkdownParserIntegration:
         assert result.elements[0].id == "00000001"
         assert result.elements[1].id == "00000002"
         assert result.elements[2].id == "00000003"
+
+
+class TestMarkdownParserFullDocument:
+    """Тесты парсинга полного документа со всеми элементами."""
+
+    def test_parse_full_markdown_file(self):
+        """Тест парсинга полного markdown файла со всеми элементами."""
+        parser = MarkdownParser()
+        # Путь от корня проекта (используем _project_root из начала файла)
+        test_file = _project_root / "tests" / "files_for_tests" / "full_markdown.md"
+        
+        # Если файл не существует, пропускаем тест
+        if not test_file.exists():
+            pytest.skip(f"Тестовый файл не найден: {test_file}")
+        
+        # Читаем файл и парсим
+
+        content = test_file.read_text(encoding="utf-8")
+        doc = Document(page_content=content, metadata={"source": str(test_file)})
+        result = parser.parse(doc)
+
+        # Базовые проверки
+        assert isinstance(result, ParsedDocument)
+        assert result.format == DocumentFormat.MARKDOWN
+        assert result.source == str(test_file)
+        assert len(result.elements) > 0
+
+        # Проверяем наличие всех типов элементов
+        element_types = {elem.type for elem in result.elements}
+        
+        # Заголовки всех уровней
+        assert ElementType.HEADER_1 in element_types
+        assert ElementType.HEADER_2 in element_types
+        assert ElementType.HEADER_3 in element_types
+        assert ElementType.HEADER_4 in element_types
+        assert ElementType.HEADER_5 in element_types
+        assert ElementType.HEADER_6 in element_types
+        
+        # Другие элементы
+        assert ElementType.TEXT in element_types
+        assert ElementType.LIST_ITEM in element_types
+        assert ElementType.TABLE in element_types
+        assert ElementType.CODE_BLOCK in element_types
+        assert ElementType.LINK in element_types
+        assert ElementType.IMAGE in element_types
+
+        # Проверяем конкретные элементы
+        headers = [e for e in result.elements if e.type.name.startswith("HEADER_")]
+        assert len(headers) >= 6  # Должно быть минимум 6 заголовков (H1-H6)
+
+        # Проверяем заголовок H1
+        h1 = next((e for e in result.elements if e.type == ElementType.HEADER_1), None)
+        assert h1 is not None
+        assert "Заголовок уровня 1" in h1.content
+        assert h1.parent_id is None  # H1 не должен иметь родителя
+
+        # Проверяем списки
+        list_items = [e for e in result.elements if e.type == ElementType.LIST_ITEM]
+        assert len(list_items) >= 5  # Должно быть минимум 5 элементов списка
+
+        # Проверяем таблицу
+        tables = [e for e in result.elements if e.type == ElementType.TABLE]
+        assert len(tables) >= 1
+        assert "Заголовок 1" in tables[0].content
+
+        # Проверяем код-блоки
+        code_blocks = [e for e in result.elements if e.type == ElementType.CODE_BLOCK]
+        assert len(code_blocks) >= 2  # Должно быть минимум 2 блока кода
+        python_block = next((e for e in code_blocks if e.metadata.get("language") == "python"), None)
+        assert python_block is not None
+        assert "def hello_world" in python_block.content
+
+        # Проверяем ссылки
+        links = [e for e in result.elements if e.type == ElementType.LINK]
+        assert len(links) >= 2  # Должно быть минимум 2 ссылки
+        google_link = next((e for e in links if "google.com" in e.metadata.get("href", "")), None)
+        assert google_link is not None
+
+        # Проверяем изображения
+        images = [e for e in result.elements if e.type == ElementType.IMAGE]
+        assert len(images) >= 2  # Должно быть минимум 2 изображения
+
+        # Проверяем цитаты (обрабатываются как TEXT с metadata quote=True)
+        quotes = [e for e in result.elements if e.metadata.get("quote") is True]
+        assert len(quotes) >= 2  # Должно быть минимум 2 цитаты
+
+        # Проверяем иерархию заголовков
+        h2_elements = [e for e in result.elements if e.type == ElementType.HEADER_2]
+        for h2 in h2_elements:
+            # H2 должен иметь H1 как родителя (если есть H1 выше)
+            if h2.parent_id:
+                parent = next((e for e in result.elements if e.id == h2.parent_id), None)
+                if parent:
+                    assert parent.type in (ElementType.HEADER_1, ElementType.HEADER_2)
+
+        # Проверяем, что элементы под заголовками имеют правильного родителя
+        h2_markdown = next((e for e in result.elements if e.type == ElementType.HEADER_2 and "Маркированный список" in e.content), None)
+        if h2_markdown:
+            # Элементы после этого заголовка должны иметь его как родителя
+            h2_index = result.elements.index(h2_markdown)
+            next_elements = result.elements[h2_index + 1:h2_index + 4]  # Следующие несколько элементов
+            for elem in next_elements:
+                if elem.type != ElementType.HEADER_2:  # Пропускаем следующий H2
+                    # Элемент должен быть под H2 или под другим заголовком
+                    assert elem.parent_id is not None
+
+        # Проверяем уникальность ID
+        ids = [elem.id for elem in result.elements]
+        assert len(ids) == len(set(ids)), "Все ID должны быть уникальными"
+
+        # Проверяем, что все элементы валидны
+        for elem in result.elements:
+            elem.validate()  # Не должно вызывать исключений

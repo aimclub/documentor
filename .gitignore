@@ -30,3 +30,6 @@ test_two_llm.py
 /test.py
 /docs/docx_parser_diagram.md
 ROADMAP.md
+.coverage
+md_output_test.txt
+test_md_output.py
