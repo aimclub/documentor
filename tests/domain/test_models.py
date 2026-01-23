@@ -90,6 +90,8 @@ class TestElementType:
             "footnote",
             "page_header",
             "page_footer",
+            "code_block",
+            "link",
         }
         actual_types = {elem_type.value for elem_type in ElementType}
         assert actual_types == expected_types
@@ -439,10 +441,12 @@ class TestParsedDocument:
         with pytest.raises(ValueError, match="format must be DocumentFormat"):
             ParsedDocument(source="test.md", format="invalid", elements=sample_elements)  # type: ignore
 
-    def test_validate_empty_elements_raises_error(self):
-        """Тест валидации: пустой список elements вызывает ошибку."""
-        with pytest.raises(ValueError, match="must contain at least one element"):
-            ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=[])
+    def test_validate_empty_elements_allowed(self):
+        """Тест валидации: пустой список elements разрешен."""
+        # Пустые документы разрешены
+        doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=[])
+        assert doc.elements == []
+        assert len(doc.elements) == 0
 
     def test_validate_non_list_elements_raises_error(self):
         """Тест валидации: elements не список вызывает ошибку."""
@@ -763,3 +767,333 @@ class TestElementIdGenerator:
         assert generator.next_id() == "0999"
         assert generator.next_id() == "1000"
         assert generator.next_id() == "1001"
+
+
+# ============================================================================
+# Тесты для Element.dataframe property
+# ============================================================================
+
+class TestElementDataframe:
+    """Тесты для свойства Element.dataframe."""
+
+    def test_dataframe_for_table_element(self):
+        """Тест получения DataFrame для элемента-таблицы."""
+        import pandas as pd
+
+        df = pd.DataFrame({"Col1": ["A1", "A2"], "Col2": ["B1", "B2"]})
+        element = Element(
+            id="001",
+            type=ElementType.TABLE,
+            content="| Col1 | Col2 |\n|------|------|\n| A1   | B1   |",
+            metadata={"dataframe": df},
+        )
+
+        result_df = element.dataframe
+        assert result_df is not None
+        assert isinstance(result_df, pd.DataFrame)
+        assert len(result_df) == 2
+        assert list(result_df.columns) == ["Col1", "Col2"]
+
+    def test_dataframe_for_non_table_element(self):
+        """Тест получения DataFrame для элемента, не являющегося таблицей."""
+        element = Element(
+            id="001",
+            type=ElementType.TEXT,
+            content="Some text",
+        )
+
+        assert element.dataframe is None
+
+    def test_dataframe_for_table_without_dataframe(self):
+        """Тест получения DataFrame для таблицы без DataFrame в metadata."""
+        element = Element(
+            id="001",
+            type=ElementType.TABLE,
+            content="| Col1 | Col2 |",
+            metadata={},  # Нет dataframe
+        )
+
+        assert element.dataframe is None
+
+
+# ============================================================================
+# Тесты для ParsedDocument.get_elements_by_type
+# ============================================================================
+
+class TestParsedDocumentGetElementsByType:
+    """Тесты для метода ParsedDocument.get_elements_by_type."""
+
+    @pytest.fixture
+    def mixed_elements(self):
+        """Фикстура с элементами разных типов."""
+        return [
+            Element(id="001", type=ElementType.TITLE, content="Title"),
+            Element(id="002", type=ElementType.HEADER_1, content="Header 1"),
+            Element(id="003", type=ElementType.TEXT, content="Text 1"),
+            Element(id="004", type=ElementType.HEADER_2, content="Header 2"),
+            Element(id="005", type=ElementType.TEXT, content="Text 2"),
+            Element(id="006", type=ElementType.IMAGE, content="Image"),
+        ]
+
+    def test_get_elements_by_type_text(self, mixed_elements):
+        """Тест получения элементов типа TEXT."""
+        doc = ParsedDocument(
+            source="test.md",
+            format=DocumentFormat.MARKDOWN,
+            elements=mixed_elements,
+        )
+
+        text_elements = doc.get_elements_by_type(ElementType.TEXT)
+        assert len(text_elements) == 2
+        assert all(elem.type == ElementType.TEXT for elem in text_elements)
+        assert text_elements[0].id == "003"
+        assert text_elements[1].id == "005"
+
+    def test_get_elements_by_type_header(self, mixed_elements):
+        """Тест получения элементов типа HEADER_1."""
+        doc = ParsedDocument(
+            source="test.md",
+            format=DocumentFormat.MARKDOWN,
+            elements=mixed_elements,
+        )
+
+        header_elements = doc.get_elements_by_type(ElementType.HEADER_1)
+        assert len(header_elements) == 1
+        assert header_elements[0].id == "002"
+        assert header_elements[0].content == "Header 1"
+
+    def test_get_elements_by_type_nonexistent(self, mixed_elements):
+        """Тест получения элементов несуществующего типа."""
+        doc = ParsedDocument(
+            source="test.md",
+            format=DocumentFormat.MARKDOWN,
+            elements=mixed_elements,
+        )
+
+        code_blocks = doc.get_elements_by_type(ElementType.CODE_BLOCK)
+        assert len(code_blocks) == 0
+        assert isinstance(code_blocks, list)
+
+
+# ============================================================================
+# Тесты для ParsedDocument.get_tables
+# ============================================================================
+
+class TestParsedDocumentGetTables:
+    """Тесты для метода ParsedDocument.get_tables."""
+
+    def test_get_tables_with_tables(self):
+        """Тест получения таблиц из документа с таблицами."""
+        import pandas as pd
+
+        df1 = pd.DataFrame({"A": [1, 2], "B": [3, 4]})
+        df2 = pd.DataFrame({"X": ["a", "b"], "Y": ["c", "d"]})
+
+        elements = [
+            Element(id="001", type=ElementType.TITLE, content="Title"),
+            Element(
+                id="002",
+                type=ElementType.TABLE,
+                content="| A | B |\n| 1 | 3 |",
+                metadata={"dataframe": df1},
+            ),
+            Element(id="003", type=ElementType.TEXT, content="Text"),
+            Element(
+                id="004",
+                type=ElementType.TABLE,
+                content="| X | Y |\n| a | c |",
+                metadata={"dataframe": df2},
+            ),
+        ]
+
+        doc = ParsedDocument(
+            source="test.md",
+            format=DocumentFormat.MARKDOWN,
+            elements=elements,
+        )
+
+        tables = doc.get_tables()
+        assert len(tables) == 2
+        assert tables[0].id == "002"
+        assert tables[1].id == "004"
+        assert tables[0].dataframe is not None
+        assert tables[1].dataframe is not None
+
+    def test_get_tables_without_tables(self):
+        """Тест получения таблиц из документа без таблиц."""
+        elements = [
+            Element(id="001", type=ElementType.TITLE, content="Title"),
+            Element(id="002", type=ElementType.TEXT, content="Text"),
+        ]
+
+        doc = ParsedDocument(
+            source="test.md",
+            format=DocumentFormat.MARKDOWN,
+            elements=elements,
+        )
+
+        tables = doc.get_tables()
+        assert len(tables) == 0
+        assert isinstance(tables, list)
+
+    def test_get_tables_dataframe_access(self):
+        """Тест доступа к DataFrame через get_tables()."""
+        import pandas as pd
+
+        df = pd.DataFrame({"Name": ["John", "Jane"], "Age": [25, 30]})
+        elements = [
+            Element(
+                id="001",
+                type=ElementType.TABLE,
+                content="| Name | Age |",
+                metadata={"dataframe": df},
+            ),
+        ]
+
+        doc = ParsedDocument(
+            source="test.md",
+            format=DocumentFormat.MARKDOWN,
+            elements=elements,
+        )
+
+        table = doc.get_tables()[0]
+        result_df = table.dataframe
+
+        assert result_df is not None
+        assert len(result_df) == 2
+        assert list(result_df.columns) == ["Name", "Age"]
+        assert result_df.iloc[0]["Name"] == "John"
+        assert result_df.iloc[1]["Age"] == 30
+
+
+# ============================================================================
+# Тесты для ParsedDocument.get_headers
+# ============================================================================
+
+class TestParsedDocumentGetHeaders:
+    """Тесты для метода ParsedDocument.get_headers."""
+
+    @pytest.fixture
+    def header_elements(self):
+        """Фикстура с элементами-заголовками разных уровней."""
+        return [
+            Element(id="001", type=ElementType.TITLE, content="Title"),
+            Element(id="002", type=ElementType.HEADER_1, content="H1-1"),
+            Element(id="003", type=ElementType.HEADER_2, content="H2-1"),
+            Element(id="004", type=ElementType.HEADER_3, content="H3-1"),
+            Element(id="005", type=ElementType.HEADER_1, content="H1-2"),
+            Element(id="006", type=ElementType.HEADER_2, content="H2-2"),
+            Element(id="007", type=ElementType.TEXT, content="Text"),
+        ]
+
+    def test_get_headers_all(self, header_elements):
+        """Тест получения всех заголовков."""
+        doc = ParsedDocument(
+            source="test.md",
+            format=DocumentFormat.MARKDOWN,
+            elements=header_elements,
+        )
+
+        headers = doc.get_headers()
+        assert len(headers) == 5
+        assert all(
+            elem.type
+            in [
+                ElementType.HEADER_1,
+                ElementType.HEADER_2,
+                ElementType.HEADER_3,
+                ElementType.HEADER_4,
+                ElementType.HEADER_5,
+                ElementType.HEADER_6,
+            ]
+            for elem in headers
+        )
+        assert headers[0].id == "002"  # H1-1
+        assert headers[1].id == "003"  # H2-1
+        assert headers[2].id == "004"  # H3-1
+        assert headers[3].id == "005"  # H1-2
+        assert headers[4].id == "006"  # H2-2
+
+    def test_get_headers_level_1(self, header_elements):
+        """Тест получения заголовков уровня 1."""
+        doc = ParsedDocument(
+            source="test.md",
+            format=DocumentFormat.MARKDOWN,
+            elements=header_elements,
+        )
+
+        h1_headers = doc.get_headers(level=1)
+        assert len(h1_headers) == 2
+        assert all(elem.type == ElementType.HEADER_1 for elem in h1_headers)
+        assert h1_headers[0].id == "002"
+        assert h1_headers[1].id == "005"
+
+    def test_get_headers_level_2(self, header_elements):
+        """Тест получения заголовков уровня 2."""
+        doc = ParsedDocument(
+            source="test.md",
+            format=DocumentFormat.MARKDOWN,
+            elements=header_elements,
+        )
+
+        h2_headers = doc.get_headers(level=2)
+        assert len(h2_headers) == 2
+        assert all(elem.type == ElementType.HEADER_2 for elem in h2_headers)
+        assert h2_headers[0].id == "003"
+        assert h2_headers[1].id == "006"
+
+    def test_get_headers_level_3(self, header_elements):
+        """Тест получения заголовков уровня 3."""
+        doc = ParsedDocument(
+            source="test.md",
+            format=DocumentFormat.MARKDOWN,
+            elements=header_elements,
+        )
+
+        h3_headers = doc.get_headers(level=3)
+        assert len(h3_headers) == 1
+        assert h3_headers[0].type == ElementType.HEADER_3
+        assert h3_headers[0].id == "004"
+
+    def test_get_headers_level_nonexistent(self, header_elements):
+        """Тест получения заголовков несуществующего уровня."""
+        doc = ParsedDocument(
+            source="test.md",
+            format=DocumentFormat.MARKDOWN,
+            elements=header_elements,
+        )
+
+        h4_headers = doc.get_headers(level=4)
+        assert len(h4_headers) == 0
+        assert isinstance(h4_headers, list)
+
+    def test_get_headers_invalid_level(self, header_elements):
+        """Тест получения заголовков с невалидным уровнем."""
+        doc = ParsedDocument(
+            source="test.md",
+            format=DocumentFormat.MARKDOWN,
+            elements=header_elements,
+        )
+
+        with pytest.raises(ValueError, match="Header level must be between 1 and 6"):
+            doc.get_headers(level=0)
+
+        with pytest.raises(ValueError, match="Header level must be between 1 and 6"):
+            doc.get_headers(level=7)
+
+    def test_get_headers_without_headers(self):
+        """Тест получения заголовков из документа без заголовков."""
+        elements = [
+            Element(id="001", type=ElementType.TEXT, content="Text 1"),
+            Element(id="002", type=ElementType.TEXT, content="Text 2"),
+        ]
+
+        doc = ParsedDocument(
+            source="test.md",
+            format=DocumentFormat.MARKDOWN,
+            elements=elements,
+        )
+
+        headers = doc.get_headers()
+        assert len(headers) == 0
+        assert isinstance(headers, list)

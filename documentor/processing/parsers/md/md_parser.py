@@ -21,6 +21,7 @@ import re
 from dataclasses import dataclass
 from typing import Any, List, Optional
 
+import pandas as pd
 from langchain_core.documents import Document
 
 from ....domain import DocumentFormat, Element, ElementType, ParsedDocument
@@ -190,15 +191,32 @@ class MarkdownParser(BaseParser):
                 table_lines = [line]
                 i += 1
                 # Пропускаем разделитель (---)
+                delimiter_line = None
                 if i < line_count and '|' in lines[i] and re.match(r'^\s*\|[-:\s|]+\|\s*$', lines[i]):
+                    delimiter_line = lines[i]
                     i += 1
                 # Собираем строки данных
                 while i < line_count and '|' in lines[i] and self.TABLE_PATTERN.match(lines[i]):
                     table_lines.append(lines[i])
                     i += 1
                 table_content = '\n'.join(table_lines)
+                
+                # Парсим таблицу в DataFrame
+                try:
+                    df = self._parse_table_to_dataframe(table_lines, delimiter_line)
+                    metadata = {"dataframe": df, "rows": len(df), "columns": len(df.columns)}
+                except Exception as e:
+                    # Если не удалось распарсить в DataFrame, сохраняем только текст
+                    self._logger.warning(f"Failed to parse table to DataFrame: {e}")
+                    metadata = {}
+                
                 blocks.append(
-                    MarkdownBlock(type=ElementType.TABLE, content=table_content, line_number=i - len(table_lines))
+                    MarkdownBlock(
+                        type=ElementType.TABLE,
+                        content=table_content,
+                        metadata=metadata,
+                        line_number=i - len(table_lines),
+                    )
                 )
                 continue
 
@@ -287,6 +305,67 @@ class MarkdownParser(BaseParser):
             i += 1
 
         return blocks
+
+    def _parse_table_to_dataframe(self, table_lines: List[str], delimiter_line: Optional[str] = None) -> pd.DataFrame:
+        """
+        Парсит Markdown таблицу в pandas DataFrame.
+
+        Args:
+            table_lines: Список строк таблицы (включая заголовок и данные)
+            delimiter_line: Строка-разделитель (опционально, не используется, но оставлена для совместимости)
+
+        Returns:
+            pandas.DataFrame: Распарсенная таблица
+
+        Raises:
+            ValueError: Если таблица не может быть распарсена
+        """
+        if not table_lines:
+            raise ValueError("Table lines cannot be empty")
+
+        # Парсим строки таблицы
+        rows = []
+        for line in table_lines:
+            # Убираем начальные и конечные пробелы
+            stripped = line.strip()
+            if not stripped.startswith('|') or not stripped.endswith('|'):
+                continue
+            
+            # Разбиваем по | и обрабатываем ячейки
+            # Убираем первый и последний |, затем разбиваем
+            cells = [cell.strip() for cell in stripped[1:-1].split('|')]
+            rows.append(cells)
+
+        if not rows:
+            raise ValueError("No valid rows found in table")
+
+        # Первая строка - заголовки
+        headers = rows[0]
+        
+        # Определяем максимальное количество колонок (на случай несовпадения)
+        max_cols = max(len(row) for row in rows) if rows else 0
+        
+        # Нормализуем все строки до одинакового количества колонок
+        normalized_rows = []
+        for row in rows:
+            # Дополняем пустыми строками, если колонок меньше
+            while len(row) < max_cols:
+                row.append("")
+            # Обрезаем, если колонок больше (не должно быть, но на всякий случай)
+            normalized_rows.append(row[:max_cols])
+        
+        # Нормализуем заголовки
+        if len(headers) < max_cols:
+            headers.extend([f"Column_{i+1}" for i in range(len(headers), max_cols)])
+        headers = headers[:max_cols]
+        
+        # Остальные строки - данные (пропускаем первую строку с заголовками)
+        data_rows = normalized_rows[1:]
+
+        # Создаем DataFrame
+        df = pd.DataFrame(data_rows, columns=headers)
+
+        return df
 
     def _build_elements(self, blocks: List[MarkdownBlock]) -> List[Element]:
         """

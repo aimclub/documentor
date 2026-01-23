@@ -3,7 +3,10 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 
 class DocumentFormat(str, Enum):
@@ -193,13 +196,26 @@ class Element:
         """
         if not isinstance(json_str, str):
             raise ValueError(f"Expected str, got {type(json_str).__name__}")
-        
+
         try:
             data = json.loads(json_str)
         except json.JSONDecodeError as e:
             raise ValueError(f"Invalid JSON: {e}") from e
-        
+
         return cls.from_dict(data)
+
+    @property
+    def dataframe(self) -> Optional["pd.DataFrame"]:
+        """
+        Возвращает pandas DataFrame для элементов типа TABLE.
+
+        Returns:
+            pandas.DataFrame или None, если элемент не является таблицей
+            или DataFrame не был создан при парсинге
+        """
+        if self.type != ElementType.TABLE:
+            return None
+        return self.metadata.get("dataframe")
 
 
 @dataclass(slots=True)
@@ -442,6 +458,53 @@ class ParsedDocument:
             raise ValueError(f"Invalid JSON: {e}") from e
         
         return cls.from_dict(data)
+
+    def get_elements_by_type(self, element_type: ElementType) -> List[Element]:
+        """
+        Возвращает все элементы указанного типа.
+
+        Args:
+            element_type: Тип элементов для поиска
+
+        Returns:
+            Список элементов указанного типа
+        """
+        return [elem for elem in self.elements if elem.type == element_type]
+
+    def get_tables(self) -> List[Element]:
+        """
+        Возвращает все элементы-таблицы.
+
+        Returns:
+            Список элементов типа TABLE
+        """
+        return self.get_elements_by_type(ElementType.TABLE)
+
+    def get_headers(self, level: Optional[int] = None) -> List[Element]:
+        """
+        Возвращает все заголовки, опционально фильтруя по уровню.
+
+        Args:
+            level: Уровень заголовка (1-6). Если None, возвращает все заголовки.
+
+        Returns:
+            Список элементов-заголовков
+        """
+        if level is None:
+            header_types = [
+                ElementType.HEADER_1,
+                ElementType.HEADER_2,
+                ElementType.HEADER_3,
+                ElementType.HEADER_4,
+                ElementType.HEADER_5,
+                ElementType.HEADER_6,
+            ]
+            return [elem for elem in self.elements if elem.type in header_types]
+        else:
+            if not 1 <= level <= 6:
+                raise ValueError(f"Header level must be between 1 and 6, got: {level}")
+            header_type = ElementType[f"HEADER_{level}"]
+            return self.get_elements_by_type(header_type)
 
 
 class ElementIdGenerator:
