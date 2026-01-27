@@ -60,7 +60,11 @@ class PdfParser(BaseParser):
             text = (document.page_content or "").strip()
             elements: List[Element] = []
 
-            if text:
+            if not text:
+                self._logger.warning(
+                    f"PDF документ пуст или не содержит текста (источник: {source})"
+                )
+            else:
                 for paragraph in self._split_paragraphs(text):
                     element = self._create_element(
                         type=ElementType.TEXT,
@@ -73,7 +77,12 @@ class PdfParser(BaseParser):
                 source=source,
                 format=self.format,
                 elements=elements,
-                metadata={"parser": "pdf", "status": "skeleton"},
+                metadata={
+                    "parser": "pdf",
+                    "status": "skeleton",
+                    "text_length": len(text),
+                    "paragraphs_count": len(elements),
+                },
             )
 
             self._validate_parsed_document(parsed_document)
