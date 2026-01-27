@@ -173,21 +173,37 @@ class TestMarkdownIntegrationMetrics:
         
         metrics = result.metadata["pipeline_metrics"]
         
-        # Проверяем структуру метрик
+        # Проверяем структуру базовых метрик
         assert "parsing_time_seconds" in metrics
         assert "num_elements" in metrics
         assert "parser_class" in metrics
         
-        # Проверяем значения
+        # Проверяем новые метрики
+        assert "elements_by_type" in metrics
+        assert "elements_per_second" in metrics
+        assert "document_size_bytes" in metrics
+        assert "document_lines" in metrics
+        
+        # Проверяем значения базовых метрик
         assert isinstance(metrics["parsing_time_seconds"], (int, float))
         assert metrics["parsing_time_seconds"] >= 0
         assert metrics["num_elements"] == len(result.elements)
         assert metrics["parser_class"] == "MarkdownParser"
+        
+        # Проверяем значения новых метрик
+        assert isinstance(metrics["elements_by_type"], dict)
+        assert isinstance(metrics["elements_per_second"], (int, float))
+        assert metrics["elements_per_second"] >= 0
+        assert isinstance(metrics["document_size_bytes"], int)
+        assert metrics["document_size_bytes"] > 0
+        assert isinstance(metrics["document_lines"], int)
+        assert metrics["document_lines"] >= 0
 
     def test_metrics_accuracy(self):
         """Тест точности метрик."""
+        content = "# H1\n## H2\n### H3\n\nТекст."
         doc = Document(
-            page_content="# H1\n## H2\n### H3\n\nТекст.",
+            page_content=content,
             metadata={"source": "test.md"}
         )
         
@@ -200,6 +216,25 @@ class TestMarkdownIntegrationMetrics:
         
         # Время парсинга должно быть разумным (меньше 1 секунды для простого документа)
         assert metrics["parsing_time_seconds"] < 1.0
+        
+        # Проверяем elements_by_type
+        elements_by_type = metrics["elements_by_type"]
+        assert isinstance(elements_by_type, dict)
+        # Должны быть заголовки
+        assert "header_1" in elements_by_type or sum(
+            v for k, v in elements_by_type.items() if k.startswith("header_")
+        ) >= 3
+        
+        # Проверяем document_size_bytes и document_lines
+        expected_bytes = len(content.encode("utf-8"))
+        expected_lines = len(content.splitlines())
+        assert metrics["document_size_bytes"] == expected_bytes
+        assert metrics["document_lines"] == expected_lines
+        
+        # Проверяем elements_per_second
+        if metrics["parsing_time_seconds"] > 0:
+            expected_eps = metrics["num_elements"] / metrics["parsing_time_seconds"]
+            assert abs(metrics["elements_per_second"] - expected_eps) < 0.01  # допуск на округление
 
 
 class TestMarkdownIntegrationHierarchy:

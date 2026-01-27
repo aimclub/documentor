@@ -136,10 +136,32 @@ class Pipeline:
                 # Добавление метрик в метаданные
                 if parsed_document.metadata is None:
                     parsed_document.metadata = {}
+                
+                # Вычисление дополнительных метрик
+                # Статистика элементов по типам
+                elements_by_type: Dict[str, int] = {}
+                for element in parsed_document.elements:
+                    element_type = element.type.value
+                    elements_by_type[element_type] = elements_by_type.get(element_type, 0) + 1
+                
+                # Размер документа
+                document_content = document.page_content or ""
+                document_size_bytes = len(document_content.encode("utf-8"))
+                document_lines = len(document_content.splitlines())
+                
+                # Производительность
+                elements_per_second = (
+                    round(num_elements / elapsed_time, 2) if elapsed_time > 0 else 0.0
+                )
+                
                 parsed_document.metadata["pipeline_metrics"] = {
                     "parsing_time_seconds": round(elapsed_time, 3),
                     "num_elements": num_elements,
                     "parser_class": parser.__class__.__name__,
+                    "elements_by_type": elements_by_type,
+                    "elements_per_second": elements_per_second,
+                    "document_size_bytes": document_size_bytes,
+                    "document_lines": document_lines,
                 }
 
                 return parsed_document
