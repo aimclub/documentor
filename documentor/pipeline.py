@@ -174,6 +174,7 @@ class Pipeline:
         Raises:
             ParsingError: Если произошла ошибка при парсинге любого документа.
         """
+        # TODO: возможно переписать в одну функцию parse (подумаю)
         start_time = time.time()
         doc_list = list(documents)
         total_docs = len(doc_list)
