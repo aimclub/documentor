@@ -239,14 +239,22 @@ class MarkdownParser(BaseParser):
                 )
                 continue
 
-            # 6. Списки
+            # 6. Списки (с поддержкой вложенности)
             list_match = self.LIST_ITEM_PATTERN.match(line)
             if list_match:
+                indent = len(list_match.group(1))  # Количество пробелов отступа
                 content = list_match.group(3).strip()
                 # Определяем тип списка
                 list_marker = list_match.group(2).strip()
                 is_ordered = bool(re.match(r'\d+\.', list_marker))
-                metadata = {"list_type": "ordered" if is_ordered else "unordered"}
+                # Уровень вложенности определяется по отступу (каждые 2-4 пробела = 1 уровень)
+                # Стандарт Markdown: 2 или 4 пробела на уровень
+                list_level = indent // 2 if indent > 0 else 0
+                metadata = {
+                    "list_type": "ordered" if is_ordered else "unordered",
+                    "list_level": list_level,
+                    "indent": indent,
+                }
                 blocks.append(
                     MarkdownBlock(
                         type=ElementType.LIST_ITEM,
@@ -258,9 +266,12 @@ class MarkdownParser(BaseParser):
                 i += 1
                 continue
 
-            # 7. Изображения (inline, обрабатываем в тексте)
+            # 7. Изображения (standalone или inline)
             image_matches = list(self.IMAGE_PATTERN.finditer(line))
             if image_matches:
+                # Удаляем изображения из строки для проверки, остался ли текст
+                line_without_images = self.IMAGE_PATTERN.sub('', line).strip()
+                
                 for match in image_matches:
                     alt_text = match.group(1)
                     url = match.group(2)
@@ -273,26 +284,82 @@ class MarkdownParser(BaseParser):
                             line_number=i,
                         )
                     )
-                # Удаляем изображения из строки для дальнейшей обработки
-                line = self.IMAGE_PATTERN.sub('', line)
+                
+                # Если после удаления изображений остался текст, обрабатываем его отдельно
+                if line_without_images:
+                    # Проверяем, есть ли ссылки в оставшемся тексте
+                    link_matches = list(self.LINK_PATTERN.finditer(line_without_images))
+                    if link_matches:
+                        for match in link_matches:
+                            link_text = match.group(1)
+                            url = match.group(2)
+                            metadata = {"href": url}
+                            blocks.append(
+                                MarkdownBlock(
+                                    type=ElementType.LINK,
+                                    content=link_text or url,
+                                    metadata=metadata,
+                                    line_number=i,
+                                )
+                            )
+                        line_without_images = self.LINK_PATTERN.sub(r'\1', line_without_images)
+                    
+                    # Добавляем оставшийся текст
+                    clean_text = self.INLINE_CODE_PATTERN.sub(r'\1', line_without_images).strip()
+                    if clean_text:
+                        blocks.append(
+                            MarkdownBlock(type=ElementType.TEXT, content=clean_text, line_number=i)
+                        )
+                i += 1
+                continue
 
-            # 8. Ссылки (inline, обрабатываем в тексте)
+            # 8. Ссылки (standalone или inline)
             link_matches = list(self.LINK_PATTERN.finditer(line))
             if link_matches:
-                for match in link_matches:
-                    link_text = match.group(1)
-                    url = match.group(2)
-                    metadata = {"href": url}
-                    blocks.append(
-                        MarkdownBlock(
-                            type=ElementType.LINK,
-                            content=link_text or url,
-                            metadata=metadata,
-                            line_number=i,
+                # Вычисляем длину всех ссылок в строке
+                total_link_length = sum(match.end() - match.start() for match in link_matches)
+                line_length = len(line.strip())
+                
+                # Если строка состоит только из ссылок (с учетом пробелов), создаем только элементы ссылок
+                if total_link_length >= line_length * 0.8:  # 80% строки - ссылки
+                    # Строка состоит в основном из ссылок
+                    for match in link_matches:
+                        link_text = match.group(1)
+                        url = match.group(2)
+                        metadata = {"href": url}
+                        blocks.append(
+                            MarkdownBlock(
+                                type=ElementType.LINK,
+                                content=link_text or url,
+                                metadata=metadata,
+                                line_number=i,
+                            )
                         )
-                    )
-                # Удаляем ссылки из строки для дальнейшей обработки
-                line = self.LINK_PATTERN.sub(r'\1', line)
+                    i += 1
+                    continue
+                else:
+                    # Есть текст помимо ссылок - создаем элементы ссылок и обрабатываем текст
+                    for match in link_matches:
+                        link_text = match.group(1)
+                        url = match.group(2)
+                        metadata = {"href": url}
+                        blocks.append(
+                            MarkdownBlock(
+                                type=ElementType.LINK,
+                                content=link_text or url,
+                                metadata=metadata,
+                                line_number=i,
+                            )
+                        )
+                    # Удаляем ссылки из строки и обрабатываем оставшийся текст
+                    line_without_links = self.LINK_PATTERN.sub(r'\1', line).strip()
+                    clean_text = self.INLINE_CODE_PATTERN.sub(r'\1', line_without_links).strip()
+                    if clean_text:
+                        blocks.append(
+                            MarkdownBlock(type=ElementType.TEXT, content=clean_text, line_number=i)
+                        )
+                    i += 1
+                    continue
 
             # 9. Обычный текст (параграф)
             # Убираем inline код из текста для чистоты
@@ -379,13 +446,14 @@ class MarkdownParser(BaseParser):
         """
         elements: List[Element] = []
         header_stack: List[tuple[int, str]] = []
+        list_stack: List[tuple[int, str]] = []  # Стек для вложенных списков: (уровень, element_id)
 
         # Сортируем блоки по номеру строки для сохранения порядка
         sorted_blocks = sorted(blocks, key=lambda b: b.line_number)
 
         for block in sorted_blocks:
             element_type = block.type
-            parent_id: Optional[str] = header_stack[-1][1] if header_stack else None
+            parent_id: Optional[str] = None
 
             # Обработка заголовков - обновляем стек иерархии
             if element_type.name.startswith("HEADER_"):
@@ -395,6 +463,8 @@ class MarkdownParser(BaseParser):
                     header_stack.pop()
                 # Родитель - последний заголовок в стеке
                 parent_id = header_stack[-1][1] if header_stack else None
+                # Очищаем стек списков при встрече заголовка
+                list_stack.clear()
 
                 # Создаем элемент заголовка
                 element = self._create_element(
@@ -409,7 +479,47 @@ class MarkdownParser(BaseParser):
                 header_stack.append((level, element.id))
                 continue
 
-            # Для остальных элементов используем последний заголовок как родителя
+            # Обработка элементов списка - строим иерархию списков
+            if element_type == ElementType.LIST_ITEM:
+                list_level = block.metadata.get("list_level", 0) if block.metadata else 0
+                
+                # Удаляем элементы списка с уровнем >= текущего
+                while list_stack and list_stack[-1][0] >= list_level:
+                    list_stack.pop()
+                
+                # Родитель определяется по приоритету:
+                # 1. Последний элемент списка того же или более высокого уровня
+                # 2. Последний заголовок
+                if list_stack:
+                    # Если есть элементы списка в стеке, родитель - последний элемент того же уровня
+                    # или ближайший элемент более высокого уровня
+                    parent_id = list_stack[-1][1]
+                else:
+                    # Если стек списков пуст, родитель - последний заголовок
+                    parent_id = header_stack[-1][1] if header_stack else None
+
+                # Создаем элемент списка
+                element = self._create_element(
+                    type=element_type,
+                    content=block.content,
+                    parent_id=parent_id,
+                    metadata=block.metadata or {},
+                )
+                elements.append(element)
+
+                # Добавляем в стек списков
+                list_stack.append((list_level, element.id))
+                continue
+
+            # Для остальных элементов (текст, таблицы, код-блоки, ссылки, изображения)
+            # Родитель определяется по приоритету:
+            # 1. Последний элемент списка (если мы внутри списка)
+            # 2. Последний заголовок
+            if list_stack:
+                parent_id = list_stack[-1][1]
+            else:
+                parent_id = header_stack[-1][1] if header_stack else None
+
             element = self._create_element(
                 type=element_type,
                 content=block.content,

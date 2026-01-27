@@ -186,6 +186,56 @@ class TestMarkdownParserLists:
         assert len(result.elements) == 3
         assert all(elem.type == ElementType.LIST_ITEM for elem in result.elements)
         assert "Первый" in result.elements[0].content
+        assert result.elements[0].metadata.get("list_type") == "ordered"
+
+    def test_parse_nested_list(self):
+        """Тест парсинга вложенных списков."""
+        parser = MarkdownParser()
+        content = """- Элемент 1
+  - Вложенный 1
+  - Вложенный 2
+- Элемент 2
+  - Вложенный 3
+    - Глубоко вложенный"""
+        doc = Document(page_content=content, metadata={"source": "test.md"})
+        result = parser.parse(doc)
+
+        list_items = [e for e in result.elements if e.type == ElementType.LIST_ITEM]
+        assert len(list_items) >= 6
+        
+        # Проверяем уровни вложенности
+        first_level = [e for e in list_items if e.metadata.get("list_level", 0) == 0]
+        second_level = [e for e in list_items if e.metadata.get("list_level", 0) == 1]
+        third_level = [e for e in list_items if e.metadata.get("list_level", 0) == 2]
+        
+        assert len(first_level) >= 2  # Элемент 1, Элемент 2
+        assert len(second_level) >= 3  # Вложенные элементы
+        assert len(third_level) >= 1  # Глубоко вложенный
+
+    def test_nested_list_hierarchy(self):
+        """Тест иерархии вложенных списков."""
+        parser = MarkdownParser()
+        content = """- Родитель 1
+  - Дочерний 1
+  - Дочерний 2
+- Родитель 2"""
+        doc = Document(page_content=content, metadata={"source": "test.md"})
+        result = parser.parse(doc)
+
+        list_items = [e for e in result.elements if e.type == ElementType.LIST_ITEM]
+        
+        # Находим элементы по содержимому
+        parent1 = next((e for e in list_items if "Родитель 1" in e.content), None)
+        child1 = next((e for e in list_items if "Дочерний 1" in e.content), None)
+        child2 = next((e for e in list_items if "Дочерний 2" in e.content), None)
+        
+        assert parent1 is not None
+        assert child1 is not None
+        assert child2 is not None
+        
+        # Проверяем, что дочерние элементы ссылаются на родительский
+        assert child1.parent_id == parent1.id
+        assert child2.parent_id == parent1.id
         assert "Второй" in result.elements[1].content
         assert "Третий" in result.elements[2].content
 
@@ -245,38 +295,92 @@ def hello():
 class TestMarkdownParserLinks:
     """Тесты парсинга ссылок."""
 
-    def test_parse_link(self):
-        """Тест парсинга ссылки."""
+    def test_parse_standalone_link(self):
+        """Тест парсинга отдельной ссылки."""
         parser = MarkdownParser()
         content = "[Текст ссылки](https://example.com)"
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
-        # Ссылки могут быть обработаны как отдельные элементы или внутри параграфа
-        # Проверяем, что ссылка присутствует в результате
-        assert len(result.elements) >= 1
-        # Может быть как LINK элемент, так и TEXT с ссылкой внутри
+        # Ссылка должна быть создана как отдельный элемент LINK
         link_elements = [e for e in result.elements if e.type == ElementType.LINK]
-        if link_elements:
-            assert link_elements[0].content == "Текст ссылки"
-            assert link_elements[0].metadata.get("href") == "https://example.com"
+        assert len(link_elements) >= 1
+        assert link_elements[0].content == "Текст ссылки"
+        assert link_elements[0].metadata.get("href") == "https://example.com"
+
+    def test_parse_link_in_text(self):
+        """Тест парсинга ссылки внутри текста."""
+        parser = MarkdownParser()
+        content = "Вот [ссылка на Google](https://www.google.com) в тексте."
+        doc = Document(page_content=content, metadata={"source": "test.md"})
+        result = parser.parse(doc)
+
+        # Должны быть созданы элементы: LINK и TEXT
+        link_elements = [e for e in result.elements if e.type == ElementType.LINK]
+        text_elements = [e for e in result.elements if e.type == ElementType.TEXT]
+        
+        assert len(link_elements) >= 1
+        assert link_elements[0].metadata.get("href") == "https://www.google.com"
+        # Текст должен быть обработан отдельно
+        assert len(text_elements) >= 1
+
+    def test_parse_multiple_links(self):
+        """Тест парсинга нескольких ссылок."""
+        parser = MarkdownParser()
+        content = "[Ссылка 1](https://example.com) и [Ссылка 2](https://github.com)"
+        doc = Document(page_content=content, metadata={"source": "test.md"})
+        result = parser.parse(doc)
+
+        link_elements = [e for e in result.elements if e.type == ElementType.LINK]
+        assert len(link_elements) >= 2
+        assert link_elements[0].metadata.get("href") == "https://example.com"
+        assert link_elements[1].metadata.get("href") == "https://github.com"
 
 
 class TestMarkdownParserImages:
     """Тесты парсинга изображений."""
 
-    def test_parse_image(self):
-        """Тест парсинга изображения."""
+    def test_parse_standalone_image(self):
+        """Тест парсинга отдельного изображения."""
         parser = MarkdownParser()
         content = "![Альт текст](image.jpg)"
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
-        # Изображения могут быть обработаны как отдельные элементы
+        # Изображение должно быть создано как отдельный элемент IMAGE
         image_elements = [e for e in result.elements if e.type == ElementType.IMAGE]
-        if image_elements:
-            assert image_elements[0].metadata.get("alt") == "Альт текст"
-            assert image_elements[0].metadata.get("src") == "image.jpg"
+        assert len(image_elements) >= 1
+        assert image_elements[0].metadata.get("alt") == "Альт текст"
+        assert image_elements[0].metadata.get("src") == "image.jpg"
+        assert image_elements[0].content == "Альт текст"
+
+    def test_parse_image_in_text(self):
+        """Тест парсинга изображения внутри текста."""
+        parser = MarkdownParser()
+        content = "Вот ![картинка](image.png) в тексте."
+        doc = Document(page_content=content, metadata={"source": "test.md"})
+        result = parser.parse(doc)
+
+        # Должны быть созданы элементы: IMAGE и TEXT
+        image_elements = [e for e in result.elements if e.type == ElementType.IMAGE]
+        text_elements = [e for e in result.elements if e.type == ElementType.TEXT]
+        
+        assert len(image_elements) >= 1
+        assert image_elements[0].metadata.get("src") == "image.png"
+        # Текст должен быть обработан отдельно
+        assert len(text_elements) >= 1
+
+    def test_parse_image_without_alt(self):
+        """Тест парсинга изображения без альтернативного текста."""
+        parser = MarkdownParser()
+        content = "![](image.jpg)"
+        doc = Document(page_content=content, metadata={"source": "test.md"})
+        result = parser.parse(doc)
+
+        image_elements = [e for e in result.elements if e.type == ElementType.IMAGE]
+        assert len(image_elements) >= 1
+        assert image_elements[0].metadata.get("src") == "image.jpg"
+        assert image_elements[0].content == "image.jpg"  # Используется URL как content
 
 
 class TestMarkdownParserQuotes:
