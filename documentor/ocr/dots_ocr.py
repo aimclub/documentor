@@ -86,6 +86,20 @@ def load_prompts_from_config(config_path: Optional[Path] = None) -> Dict[str, st
     return prompts
 
 
+def get_system_prompt(image_width: int, image_height: int) -> str:
+    """
+    Возвращает system prompt для layout detection.
+    
+    Args:
+        image_width: Ширина изображения в пикселях
+        image_height: Высота изображения в пикселях
+    
+    Returns:
+        str: System prompt с информацией о размере изображения
+    """
+    return f"You are a precise document layout analyzer. The input image is exactly {image_width}x{image_height} pixels."
+
+
 class DotsOCRLayoutDetector:
     """
     Детектор layout для Dots.OCR.

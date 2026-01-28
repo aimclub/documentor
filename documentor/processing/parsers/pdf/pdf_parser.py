@@ -22,8 +22,10 @@ from langchain_core.documents import Document
 from ....domain import DocumentFormat, Element, ElementType, ParsedDocument
 from ....exceptions import ParsingError
 from ....llm.header_detector import HeaderDetector
+from ....ocr.manager import DotsOCRManager
 from ....utils.text_utils import split_with_overlap
 from ..base import BaseParser
+from .ocr.layout_detector import PdfLayoutDetector
 from .text_extractor import PdfTextExtractor
 
 
@@ -40,12 +42,36 @@ class PdfParser(BaseParser):
 
     format = DocumentFormat.PDF
 
-    def __init__(self) -> None:
-        """Инициализация парсера."""
+    def __init__(self, ocr_manager: Optional[DotsOCRManager] = None) -> None:
+        """
+        Инициализация парсера.
+        
+        Args:
+            ocr_manager: Экземпляр DotsOCRManager для OCR обработки. 
+                        Если None, автоматически создается из .env при необходимости.
+        """
         super().__init__()
         self.text_extractor = PdfTextExtractor()
         self.header_detector: Optional[HeaderDetector] = None
+        self.ocr_manager = ocr_manager
+        self.layout_detector: Optional[PdfLayoutDetector] = None
         # TODO: Инициализировать HeaderDetector при необходимости
+    
+    def _get_ocr_manager(self) -> Optional[DotsOCRManager]:
+        """
+        Получает OCR менеджер, создавая его при необходимости.
+        
+        Returns:
+            DotsOCRManager или None, если .env не настроен
+        """
+        if self.ocr_manager is None:
+            try:
+                self.ocr_manager = DotsOCRManager(auto_load_models=True)
+                self._logger.debug("DotsOCRManager автоматически создан из .env")
+            except Exception as e:
+                self._logger.warning(f"Не удалось создать DotsOCRManager из .env: {e}")
+                return None
+        return self.ocr_manager
 
     def parse(self, document: Document) -> ParsedDocument:
         """
@@ -175,7 +201,7 @@ class PdfParser(BaseParser):
 
         Процесс:
         1. Рендеринг страниц в изображения
-        2. Dots.OCR layout detection
+        2. Dots.OCR layout detection через DotsOCRManager
         3. Построение порядка чтения
         4. Qwen OCR распознавание текста
         5. Структурирование по layout типам
@@ -189,14 +215,26 @@ class PdfParser(BaseParser):
         """
         source = self.get_source(document)
         
-        # TODO: Реализовать OCR путь
+        # Получаем или создаем OCR менеджер
+        ocr_manager = self._get_ocr_manager()
+        if ocr_manager is None:
+            raise RuntimeError(
+                "OCR обработка недоступна: DotsOCRManager не может быть создан. "
+                "Проверьте настройки в .env файле (DOTS_OCR_BASE_URL, DOTS_OCR_API_KEY и т.д.)"
+            )
+        
+        # Инициализируем layout detector, если еще не инициализирован
+        if self.layout_detector is None:
+            self.layout_detector = PdfLayoutDetector(ocr_manager=ocr_manager)
+        
+        # TODO: Реализовать полный OCR путь
         # 1. Рендеринг страниц в изображения
         # page_images = self._render_pages(source)
         # 
-        # 2. Dots.OCR layout detection для каждой страницы
+        # 2. Dots.OCR layout detection для каждой страницы через менеджер
         # layout_elements = []
         # for page_image in page_images:
-        #     layout = self._detect_layout(page_image)
+        #     layout = self.layout_detector.detect_layout(page_image)
         #     layout_elements.extend(layout)
         # 
         # 3. Построение порядка чтения

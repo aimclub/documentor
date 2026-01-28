@@ -21,6 +21,7 @@ from langchain_core.documents import Document
 
 from .domain import DocumentFormat, ParsedDocument
 from .exceptions import ParsingError, UnsupportedFormatError, ValidationError
+from .ocr.manager import DotsOCRManager
 from .processing.loader.loader import detect_document_format, get_document_source
 from .processing.parsers.base import BaseParser
 from .processing.parsers.docx.docx_parser import DocxParser
@@ -59,17 +60,30 @@ class Pipeline:
         Args:
             parsers: Список парсеров для использования. Если не указан,
                     создаются парсеры по умолчанию (Markdown, DOCX, PDF).
+                    DotsOCRManager автоматически создается из .env для парсеров, которым он нужен.
         """
+        # Автоматически создаем менеджер из .env (если настроен)
+        try:
+            self.ocr_manager = DotsOCRManager(auto_load_models=True)
+            self._logger = logging.getLogger(self.__class__.__name__)
+            self._logger.debug("DotsOCRManager инициализирован из .env")
+        except Exception as e:
+            # Если .env не настроен или ошибка загрузки - менеджер будет None
+            self.ocr_manager = None
+            self._logger = logging.getLogger(self.__class__.__name__)
+            self._logger.debug(f"DotsOCRManager не инициализирован: {e}")
+        
         parser_list = list(parsers) if parsers is not None else [
             MarkdownParser(),
             DocxParser(),
-            PdfParser(),
+            PdfParser(ocr_manager=self.ocr_manager),
         ]
         self._parsers = parser_list
         self._parsers_by_format: Dict[DocumentFormat, BaseParser] = {
             parser.format: parser for parser in parser_list
         }
-        self._logger = logging.getLogger(self.__class__.__name__)
+        if not hasattr(self, '_logger'):
+            self._logger = logging.getLogger(self.__class__.__name__)
         self._logger.info(f"Pipeline initialized with {len(parser_list)} parsers")
 
     def get_available_formats(self) -> List[DocumentFormat]:
@@ -254,6 +268,7 @@ def pipeline(document: Document, pipeline_instance: Optional[Pipeline] = None) -
     Args:
         document: LangChain Document для парсинга.
         pipeline_instance: Экземпляр Pipeline. Если не указан, создается новый.
+                          DotsOCRManager автоматически инициализируется из .env.
 
     Returns:
         ParsedDocument: Структурированное представление документа.
@@ -271,6 +286,13 @@ def pipeline(document: Document, pipeline_instance: Optional[Pipeline] = None) -
         doc = Document(page_content="# Заголовок", metadata={"source": "test.md"})
         result = pipeline(doc)
         ```
+        
+    Примечание:
+        Для работы с OCR убедитесь, что в .env файле настроены:
+        - DOTS_OCR_BASE_URL
+        - DOTS_OCR_API_KEY
+        - DOTS_OCR_MODEL_NAME
+        и другие необходимые параметры.
     """
     active_pipeline = pipeline_instance or Pipeline()
     return active_pipeline.parse(document)
