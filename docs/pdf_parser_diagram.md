@@ -31,11 +31,13 @@ graph TB
     
     LayoutElements -->|Порядок чтения| ReadingOrder[Построение порядка чтения<br/>reading order]
     
-    ReadingOrder -->|Текстовые зоны| OCRProcessor[Qwen OCR<br/>Распознавание текста]
+    ReadingOrder -->|Координаты текстовых блоков| TextExtractor[PyMuPDF<br/>Извлечение текста по координатам]
     
-    OCRProcessor -->|Распознанный текст| OCRText[Текст из OCR<br/>с координатами]
+    TextExtractor -->|Текст из PDF<br/>с координатами| OCRText[Текст из PyMuPDF<br/>с координатами из Dots.OCR]
     
     OCRText -->|Структурирование| OCRStructure[Структурирование<br/>по layout типам]
+    
+    Note1[Dots.OCR: только layout detection<br/>PyMuPDF: извлечение текста<br/>OCR LLM: НЕ используется]
     
     OCRStructure -->|Построение иерархии| OCRHierarchy[Иерархия элементов<br/>parent_id]
     
@@ -103,7 +105,9 @@ sequenceDiagram
     Parser->>Parser: Создать ParsedDocument
 ```
 
-## Путь 2: OCR пайплайн (Dots.OCR + Qwen)
+## Путь 2: OCR пайплайн (Dots.OCR layout + PyMuPDF text extraction)
+
+**Важно**: Dots.OCR используется ТОЛЬКО для определения layout и координат блоков. Текст извлекается через PyMuPDF по координатам из Dots.OCR. OCR LLM (Qwen OCR) НЕ используется, если текст доступен в PDF.
 
 ```mermaid
 sequenceDiagram
@@ -111,7 +115,7 @@ sequenceDiagram
     participant Renderer as PageRenderer
     participant Layout as Dots.OCR Layout
     participant ReadingOrder as Reading Order Builder
-    participant OCR as Qwen OCR
+    participant PyMuPDF as PyMuPDF Text Extractor
     participant Structure as Structure Builder
     
     Parser->>Renderer: render_pages_to_images(pdf)
@@ -120,22 +124,22 @@ sequenceDiagram
     
     loop Для каждой страницы
         Parser->>Layout: detect_layout(page_image)
-        Layout->>Layout: Определить типы элементов
-        Layout-->>Parser: Layout элементы:<br/>Text, Picture, Caption,<br/>Table, Section-header и т.д.
+        Layout->>Layout: Определить типы элементов и координаты
+        Layout-->>Parser: Layout элементы с bbox:<br/>Text, Picture, Caption,<br/>Table, Section-header и т.д.
         
         Parser->>ReadingOrder: build_reading_order(layout_elements)
         ReadingOrder->>ReadingOrder: Определить порядок чтения
         ReadingOrder->>ReadingOrder: Сгруппировать элементы
-        ReadingOrder-->>Parser: Упорядоченные элементы
+        ReadingOrder-->>Parser: Упорядоченные элементы с координатами
         
-        loop Для текстовых зон
-            Parser->>OCR: recognize_text(zone_image)
-            OCR->>OCR: Qwen OCR распознавание
-            OCR-->>Parser: Распознанный текст + координаты
+        loop Для текстовых блоков
+            Parser->>PyMuPDF: extract_text_by_bbox(pdf, bbox)
+            Note over PyMuPDF: Извлечение текста из PDF<br/>по координатам из Dots.OCR
+            PyMuPDF-->>Parser: Текст из PDF + координаты
         end
     end
     
-    Parser->>Structure: structure_elements(layout, ocr_text)
+    Parser->>Structure: structure_elements(layout, pdf_text)
     Structure->>Structure: Сопоставить layout типы с текстом
     Structure->>Structure: Построить иерархию
     Structure-->>Parser: Список Element с иерархией
@@ -166,11 +170,13 @@ graph TB
     Elements2 --> ReadingOrder
     ElementsN --> ReadingOrder
     
-    ReadingOrder -->|Упорядоченные зоны| TextZones[Текстовые зоны<br/>для OCR]
+    ReadingOrder -->|Упорядоченные зоны<br/>с координатами| TextZones[Текстовые блоки<br/>с bbox из Dots.OCR]
     
-    TextZones -->|Для каждой текстовой зоны| QwenOCR[Qwen OCR<br/>Распознавание текста]
+    TextZones -->|Для каждого текстового блока| PyMuPDFExtract[PyMuPDF<br/>Извлечение текста по bbox]
     
-    QwenOCR -->|Распознанный текст| OCRResults[Результаты OCR:<br/>текст + bbox + page_num]
+    Note over PyMuPDFExtract: Dots.OCR: только координаты<br/>PyMuPDF: извлечение текста<br/>OCR LLM: НЕ используется
+    
+    PyMuPDFExtract -->|Текст из PDF| OCRResults[Результаты:<br/>текст из PyMuPDF + bbox + page_num]
     
     OCRResults --> StructureBuilder[Структурирование элементов]
     
@@ -183,7 +189,7 @@ graph TB
     style PDF fill:#e1f5ff
     style Layout1 fill:#fff4e1
     style ReadingOrder fill:#e8f5e9
-    style QwenOCR fill:#f3e5f5
+    style PyMuPDFExtract fill:#e3f2fd
     style StructureBuilder fill:#e3f2fd
     style Elements fill:#c8e6c9
 ```
@@ -310,9 +316,9 @@ classDiagram
         +get_reading_order(List~LayoutElement~) List~LayoutElement~
     }
     
-    class QwenOCR {
-        +recognize_text(Image, bbox) str
-        +recognize_batch(List~Image~) List~str~
+    class PyMuPDFTextExtractor {
+        +extract_text_by_bbox(str, bbox) str
+        +extract_text_by_page(int) str
     }
     
     class LayoutTypeDotsOCR {
@@ -338,9 +344,9 @@ classDiagram
     BaseParser <|-- PdfParser
     PdfParser --> PdfPlumberExtractor : использует для текста
     PdfParser --> LLMHeaderDetector : использует для заголовков
-    PdfParser --> PageRenderer : использует для OCR
+    PdfParser --> PageRenderer : использует для layout detection
     PdfParser --> LayoutDetector : использует для layout
-    PdfParser --> QwenOCR : использует для OCR
+    PdfParser --> PyMuPDFTextExtractor : использует для извлечения текста
     LayoutDetector --> LayoutTypeDotsOCR : возвращает типы
     PdfParser --> Element : создаёт
 ```

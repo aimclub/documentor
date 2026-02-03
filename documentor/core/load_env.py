@@ -37,6 +37,12 @@ def load_env_file(env_file: Optional[Path] = None) -> None:
             
             # Парсинг пар key=value
             if '=' in line:
+                # Удаляем комментарии (все после #)
+                if '#' in line:
+                    line = line.split('#')[0].strip()
+                    if not line:
+                        continue
+                
                 key, value = line.split('=', 1)
                 key = key.strip()
                 value = value.strip()
@@ -47,8 +53,11 @@ def load_env_file(env_file: Optional[Path] = None) -> None:
                 elif value.startswith("'") and value.endswith("'"):
                     value = value[1:-1]
                 
+                # Удаляем пробелы в начале и конце значения
+                value = value.strip()
+                
                 # Устанавливаем переменную окружения, если она ещё не установлена
-                if key not in os.environ:
+                if key and value and key not in os.environ:
                     os.environ[key] = value
             else:
                 print(f"Warning: Invalid line {line_num} in {env_file}: {line}")

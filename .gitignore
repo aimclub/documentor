@@ -39,3 +39,6 @@ test_md_output.py
 
 /.hypothesis
 /.deepeval
+/Plan.txt
+/dots.ocr
+/documentor/test_pdf_parser.py

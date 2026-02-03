@@ -20,3 +20,14 @@ pytest-cov>=4.1.0
 # black>=24.0.0  # Форматирование кода
 # ruff>=0.1.0    # Линтер
 # mypy>=1.8.0    # Проверка типов
+# streamlit 
+gradio
+gradio_image_annotation
+PyMuPDF
+openai
+qwen_vl_utils
+transformers==4.51.3
+huggingface_hub
+modelscope
+flash-attn==2.8.0.post2
+accelerate
