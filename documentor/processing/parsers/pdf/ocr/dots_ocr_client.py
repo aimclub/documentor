@@ -8,8 +8,7 @@
 from __future__ import annotations
 
 import os
-import sys
-from pathlib import Path
+import time
 from typing import Optional, Tuple
 from io import BytesIO
 
@@ -21,20 +20,10 @@ import base64
 from documentor.core.load_env import load_env_file
 load_env_file()
 
-# Импортируем утилиты из dots.ocr если доступны
-try:
-    _dots_ocr_path = Path(__file__).resolve().parents[5] / "dots.ocr"
-    if _dots_ocr_path.exists():
-        sys.path.insert(0, str(_dots_ocr_path))
-    
-    from dots_ocr.utils.consts import MIN_PIXELS, MAX_PIXELS
-    from dots_ocr.utils.image_utils import fetch_image
-    from dots_ocr.utils.layout_utils import post_process_output
-except ImportError:
-    MIN_PIXELS = None
-    MAX_PIXELS = None
-    fetch_image = None
-    post_process_output = None
+# Импортируем утилиты из documentor.utils
+from documentor.utils.ocr_consts import MIN_PIXELS, MAX_PIXELS
+from documentor.utils.ocr_image_utils import fetch_image
+from documentor.utils.ocr_layout_utils import post_process_output
 
 
 def _image_to_base64(image: Image.Image) -> str:
@@ -185,8 +174,6 @@ def process_layout_detection(
             - raw_response: Сырой ответ от модели или None
             - success: Успешность операции
     """
-    import time
-    
     if prompt is None:
         prompt = "Please output the layout information from this PDF image, including each layout's bbox and its category. The bbox should be in the format [x1, y1, x2, y2]. The layout categories for the PDF document include ['Caption', 'Footnote', 'Formula', 'List-item', 'Page-footer', 'Page-header', 'Picture', 'Section-header', 'Table', 'Text', 'Title']. Do not output the corresponding text. The layout result should be in JSON format."
     
@@ -194,9 +181,9 @@ def process_layout_detection(
         origin_image = image
     
     if min_pixels is None:
-        min_pixels = MIN_PIXELS if MIN_PIXELS is not None else 100000
+        min_pixels = MIN_PIXELS
     if max_pixels is None:
-        max_pixels = MAX_PIXELS if MAX_PIXELS is not None else 5000000
+        max_pixels = MAX_PIXELS
     
     raw_response = None
     for attempt in range(max_retries):
@@ -220,20 +207,16 @@ def process_layout_detection(
     if raw_response is None or len(raw_response.strip()) == 0:
         return None, None, False
     
-    if post_process_output is not None:
-        parsed_cells, filtered = post_process_output(
-            raw_response,
-            "prompt_layout_only_en",
-            origin_image,
-            image,
-            min_pixels=min_pixels,
-            max_pixels=max_pixels,
-        )
-        
-        if isinstance(parsed_cells, list):
-            return parsed_cells, raw_response, True
-        else:
-            return None, raw_response, False
+    parsed_cells, filtered = post_process_output(
+        raw_response,
+        "prompt_layout_only_en",
+        origin_image,
+        image,
+        min_pixels=min_pixels,
+        max_pixels=max_pixels,
+    )
+    
+    if isinstance(parsed_cells, list):
+        return parsed_cells, raw_response, True
     else:
-        # Если post_process_output недоступен, возвращаем сырой ответ
         return None, raw_response, False

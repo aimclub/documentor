@@ -16,21 +16,9 @@ from io import BytesIO
 from PIL import Image
 import fitz
 
-# Импортируем утилиты из dots.ocr если доступны
-try:
-    import sys
-    from pathlib import Path as PathLib
-    
-    _dots_ocr_path = PathLib(__file__).resolve().parents[5] / "dots.ocr"
-    if _dots_ocr_path.exists():
-        sys.path.insert(0, str(_dots_ocr_path))
-    
-    from dots_ocr.utils.consts import MIN_PIXELS, MAX_PIXELS
-    from dots_ocr.utils.image_utils import fetch_image
-except ImportError:
-    MIN_PIXELS = None
-    MAX_PIXELS = None
-    fetch_image = None
+# Импортируем утилиты из documentor.utils
+from documentor.utils.ocr_consts import MIN_PIXELS, MAX_PIXELS
+from documentor.utils.ocr_image_utils import fetch_image
 
 
 class PdfPageRenderer:
@@ -63,9 +51,9 @@ class PdfPageRenderer:
         self.optimize_for_ocr = optimize_for_ocr
         
         if min_pixels is None:
-            min_pixels = MIN_PIXELS if MIN_PIXELS is not None else 100000
+            min_pixels = MIN_PIXELS
         if max_pixels is None:
-            max_pixels = MAX_PIXELS if MAX_PIXELS is not None else 1000000
+            max_pixels = MAX_PIXELS
         
         self.min_pixels = min_pixels
         self.max_pixels = max_pixels
@@ -95,7 +83,7 @@ class PdfPageRenderer:
             img_data = pix.tobytes("ppm")
             original_image = Image.open(BytesIO(img_data)).convert("RGB")
             
-            if self.optimize_for_ocr and fetch_image is not None:
+            if self.optimize_for_ocr:
                 optimized_image = fetch_image(
                     original_image,
                     min_pixels=self.min_pixels,
