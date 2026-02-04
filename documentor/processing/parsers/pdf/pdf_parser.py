@@ -35,6 +35,7 @@ from .ocr.qwen_table_parser import (
     detect_merged_tables,
     markdown_to_dataframe,
 )
+from .ocr.qwen_ocr import ocr_text_with_qwen
 
 
 logger = logging.getLogger(__name__)
@@ -156,28 +157,47 @@ class PdfParser(BaseParser):
             layout_elements = self._detect_layout_for_all_pages(source)
             
             # Шаг 2: Фильтрация лишних элементов
+            logger.info("Шаг 2: Фильтрация элементов...")
             filtered_elements = self._filter_layout_elements(layout_elements)
+            logger.info(f"Отфильтровано: {len(layout_elements)} -> {len(filtered_elements)} элементов")
             
             # Шаг 3: Анализ уровней заголовков (сначала определяем уровни)
+            logger.info("Шаг 3: Анализ уровней заголовков...")
             analyzed_elements = self._analyze_header_levels_from_elements(filtered_elements, source)
+            logger.info(f"Проанализировано заголовков: {len([e for e in analyzed_elements if e.get('category') == 'Section-header'])}")
             
             # Шаг 4: Построение иерархии от Section-header (с учетом уровней)
+            logger.info("Шаг 4: Построение иерархии...")
             hierarchy = self._build_hierarchy_from_section_headers(analyzed_elements)
+            logger.info(f"Построено секций: {len(hierarchy)}")
             
-            # Шаг 5: Извлечение текста через PyMuPDF
-            text_elements = self._extract_text_by_bboxes(source, analyzed_elements)
+            # Шаг 5: Извлечение текста через PyMuPDF или OCR
+            # Для сканированных PDF используем OCR через Qwen2.5
+            logger.info("Шаг 5: Извлечение текста...")
+            text_elements = self._extract_text_by_bboxes(
+                source, analyzed_elements, use_ocr=not is_text_extractable
+            )
+            logger.info(f"Извлечено текстовых элементов: {len(text_elements)}")
             
             # Шаг 6: Склеивание подряд идущих Text элементов
+            logger.info("Шаг 6: Склеивание текстовых блоков...")
             merged_text_elements = self._merge_nearby_text_blocks(text_elements, max_chunk_size=3000)
+            logger.info(f"Склеено: {len(text_elements)} -> {len(merged_text_elements)} элементов")
             
             # Шаг 7: Создание элементов из иерархии
+            logger.info("Шаг 7: Создание элементов из иерархии...")
             elements = self._create_elements_from_hierarchy(hierarchy, merged_text_elements, analyzed_elements)
+            logger.info(f"Создано элементов: {len(elements)}")
             
             # Шаг 8: Хранение изображений в метаданных
+            logger.info("Шаг 8: Хранение изображений в метаданных...")
             elements = self._store_images_in_metadata(elements, source)
+            logger.info("Изображения сохранены")
             
             # Шаг 9: Парсинг таблиц через Qwen2.5
+            logger.info("Шаг 9: Парсинг таблиц...")
             elements = self._parse_tables_with_qwen(elements, source)
+            logger.info("Таблицы обработаны")
             
             # Создание ParsedDocument
             parsed_document = ParsedDocument(
@@ -273,7 +293,7 @@ class PdfParser(BaseParser):
                         "OCR обработка недоступна: DotsOCRManager не может быть создан. "
                         "Проверьте настройки в .env файле"
                     )
-            
+
             self.layout_detector = PdfLayoutDetector(ocr_manager=ocr_manager, use_direct_api=use_direct_api)
         
         pdf_path = Path(source)
@@ -541,14 +561,16 @@ class PdfParser(BaseParser):
         return 1
 
     def _extract_text_by_bboxes(
-        self, source: str, layout_elements: List[Dict[str, Any]]
+        self, source: str, layout_elements: List[Dict[str, Any]], use_ocr: bool = False
     ) -> List[Dict[str, Any]]:
         """
         Извлекает текст через PyMuPDF по координатам из layout elements.
+        Для сканированных PDF (use_ocr=True) использует Qwen2.5 OCR.
 
         Args:
             source: Путь к PDF файлу.
             layout_elements: Список элементов layout с bbox.
+            use_ocr: Если True, использует OCR через Qwen2.5 вместо PyMuPDF.
 
         Returns:
             Список элементов с извлеченным текстом.
@@ -558,10 +580,42 @@ class PdfParser(BaseParser):
             text_elements: List[Dict[str, Any]] = []
             render_scale = self._get_config("layout_detection.render_scale", 2.0)
             
-            for element in layout_elements:
+            # Для OCR нужно хранить оригинальные изображения страниц
+            page_images: Dict[int, Image.Image] = {}
+            
+            if use_ocr:
+                logger.info("Начинаем OCR обработку: рендерим страницы...")
+                # Рендерим все страницы заранее для OCR
+                if self.page_renderer is None:
+                    self.page_renderer = PdfPageRenderer(
+                        render_scale=render_scale,
+                        optimize_for_ocr=False,  # Не применяем smart_resize для оригинальных изображений
+                    )
+                
+                pdf_path = Path(source)
+                for page_num in tqdm(range(len(pdf_document)), desc="Рендеринг страниц для OCR", unit="страница", leave=False):
+                    original_image, _ = self.page_renderer.render_page(
+                        pdf_path, page_num, return_original=True
+                    )
+                    page_images[page_num] = original_image
+                
+                # Подсчитываем количество элементов для OCR
+                ocr_elements = [
+                    e for e in layout_elements 
+                    if e.get("category", "") in ["Text", "Section-header", "Title", "Caption"]
+                    and e.get("category", "") != "Picture"
+                ]
+                logger.info(f"Найдено {len(ocr_elements)} элементов для OCR обработки")
+            
+            for element in tqdm(layout_elements, desc="Извлечение текста", unit="элемент", disable=not use_ocr, leave=False):
                 category = element.get("category", "")
                 bbox = element.get("bbox", [])
                 page_num = element.get("page_num", 0)
+                
+                # Пропускаем Picture - не делаем OCR для изображений
+                if category == "Picture":
+                    text_elements.append(element)
+                    continue
                 
                 # Извлекаем текст только для текстовых элементов
                 if category not in ["Text", "Section-header", "Title", "Caption"]:
@@ -570,18 +624,42 @@ class PdfParser(BaseParser):
                 
                 if len(bbox) >= 4 and page_num < len(pdf_document):
                     try:
-                        page = pdf_document.load_page(page_num)
-                        # Приводим координаты к масштабу оригинального PDF
-                        x1, y1, x2, y2 = (
-                            bbox[0] / render_scale,
-                            bbox[1] / render_scale,
-                            bbox[2] / render_scale,
-                            bbox[3] / render_scale,
-                        )
-                        rect = fitz.Rect(x1, y1, x2, y2)
-                        text = page.get_text("text", clip=rect).strip()
-                        
-                        element["text"] = text
+                        if use_ocr:
+                            # Используем OCR через Qwen2.5
+                            if page_num not in page_images:
+                                logger.warning(f"Изображение страницы {page_num} не найдено для OCR")
+                                element["text"] = ""
+                                text_elements.append(element)
+                                continue
+                            
+                            page_image = page_images[page_num]
+                            
+                            # Вырезаем элемент из изображения
+                            x1, y1, x2, y2 = bbox
+                            padding = 5
+                            x1_crop = max(0, int(x1) - padding)
+                            y1_crop = max(0, int(y1) - padding)
+                            x2_crop = min(page_image.width, int(x2) + padding)
+                            y2_crop = min(page_image.height, int(y2) + padding)
+                            
+                            cropped_image = page_image.crop((x1_crop, y1_crop, x2_crop, y2_crop))
+                            
+                            # OCR через Qwen2.5
+                            text = ocr_text_with_qwen(cropped_image)
+                            element["text"] = text.strip() if text else ""
+                        else:
+                            # Используем PyMuPDF для выделяемого текста
+                            page = pdf_document.load_page(page_num)
+                            # Приводим координаты к масштабу оригинального PDF
+                            x1, y1, x2, y2 = (
+                                bbox[0] / render_scale,
+                                bbox[1] / render_scale,
+                                bbox[2] / render_scale,
+                                bbox[3] / render_scale,
+                            )
+                            rect = fitz.Rect(x1, y1, x2, y2)
+                            text = page.get_text("text", clip=rect).strip()
+                            element["text"] = text
                     except Exception as e:
                         logger.warning(f"Ошибка при извлечении текста для элемента: {e}")
                         element["text"] = ""

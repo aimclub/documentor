@@ -42,3 +42,4 @@ test_md_output.py
 /Plan.txt
 /dots.ocr
 /documentor/test_pdf_parser.py
+/documentor/test_scanned_pdf_parser.py

@@ -16,6 +16,7 @@ from .qwen_table_parser import (
     detect_merged_tables,
     markdown_to_dataframe,
 )
+from .qwen_ocr import ocr_text_with_qwen
 
 __all__ = [
     "PdfLayoutDetector",
@@ -25,4 +26,5 @@ __all__ = [
     "parse_table_with_qwen",
     "detect_merged_tables",
     "markdown_to_dataframe",
+    "ocr_text_with_qwen",
 ]
