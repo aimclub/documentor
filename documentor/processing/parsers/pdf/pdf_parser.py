@@ -409,6 +409,9 @@ class PdfParser(BaseParser):
     ) -> List[Dict[str, Any]]:
         """
         Анализирует уровни заголовков из списка элементов (до построения иерархии).
+        
+        Учитывает контекст: если есть заголовок с нумерацией (например, "1.2"),
+        следующие заголовки без нумерации получают уровень на 1 больше.
 
         Args:
             layout_elements: Список элементов layout.
@@ -421,6 +424,11 @@ class PdfParser(BaseParser):
         try:
             analyzed_elements: List[Dict[str, Any]] = []
             render_scale = self._get_config("layout_detection.render_scale", 2.0)
+            
+            # Последний уровень заголовка с явной нумерацией
+            last_numbered_level: Optional[int] = None
+            # История предыдущих заголовков для сравнения размера шрифта
+            previous_headers: List[Dict[str, Any]] = []  # {level, font_size, page_num}
             
             for element in layout_elements:
                 category = element.get("category", "")
@@ -443,8 +451,25 @@ class PdfParser(BaseParser):
                             rect = fitz.Rect(x1, y1, x2, y2)
                             text = page.get_text("text", clip=rect).strip()
                             
+                            # Получаем размер шрифта для сравнения
+                            font_size = self._get_font_size(page, rect)
+                            
                             # Определяем уровень заголовка
-                            level = self._determine_header_level(text, element, page, rect)
+                            level = self._determine_header_level(
+                                text, element, page, rect, last_numbered_level, previous_headers, font_size
+                            )
+                            
+                            # Если заголовок имеет явную нумерацию, обновляем last_numbered_level
+                            if self._has_explicit_numbering(text):
+                                last_numbered_level = level
+                            
+                            # Сохраняем информацию о заголовке для сравнения с последующими
+                            previous_headers.append({
+                                "level": level,
+                                "font_size": font_size,
+                                "page_num": page_num,
+                            })
+                            
                             element_type = getattr(ElementType, f"HEADER_{level}", ElementType.HEADER_1)
                             
                             element["text"] = text
@@ -454,9 +479,19 @@ class PdfParser(BaseParser):
                             logger.warning(f"Ошибка при анализе заголовка: {e}")
                             element["level"] = 1
                             element["element_type"] = ElementType.HEADER_1
+                            previous_headers.append({
+                                "level": 1,
+                                "font_size": None,
+                                "page_num": page_num,
+                            })
                     else:
                         element["level"] = 1
                         element["element_type"] = ElementType.HEADER_1
+                        previous_headers.append({
+                            "level": 1,
+                            "font_size": None,
+                            "page_num": page_num,
+                        })
                 
                 analyzed_elements.append(element)
             
@@ -500,7 +535,7 @@ class PdfParser(BaseParser):
                             rect = fitz.Rect(x1, y1, x2, y2)
                             text = page.get_text("text", clip=rect).strip()
                             
-                            level = self._determine_header_level(text, header, page, rect)
+                            level = self._determine_header_level(text, header, page, rect, None, None, None)
                             element_type = getattr(ElementType, f"HEADER_{level}", ElementType.HEADER_1)
                             
                             header["text"] = text
@@ -518,17 +553,91 @@ class PdfParser(BaseParser):
         
         return hierarchy
 
+    def _has_explicit_numbering(self, text: str) -> bool:
+        """
+        Проверяет, имеет ли заголовок явную нумерацию (цифры, буквы и т.д.).
+
+        Args:
+            text: Текст заголовка.
+
+        Returns:
+            True, если заголовок имеет явную нумерацию.
+        """
+        # Проверяем различные паттерны нумерации
+        patterns = [
+            r'^\d+\s+',  # "1 ", "2 "
+            r'^\d+\.\d+\s+',  # "1.1 ", "1.2 "
+            r'^\d+\.\d+\.\d+\s+',  # "1.1.1 ", "1.1.2 "
+            r'^[A-Z]\.\s+',  # "A. ", "B. "
+            r'^[a-z]\.\s+',  # "a. ", "b. "
+            r'^\([A-Z]\)\s+',  # "(A) ", "(B) "
+            r'^\([a-z]\)\s+',  # "(a) ", "(b) "
+            r'^[IVX]+\.\s+',  # "I. ", "II. ", "III. "
+            r'^[ivx]+\.\s+',  # "i. ", "ii. ", "iii. "
+        ]
+        
+        for pattern in patterns:
+            if re.match(pattern, text):
+                return True
+        
+        return False
+
+    def _get_font_size(self, page: fitz.Page, rect: fitz.Rect) -> Optional[float]:
+        """
+        Извлекает максимальный размер шрифта из области заголовка.
+
+        Args:
+            page: Страница PDF.
+            rect: Прямоугольник заголовка.
+
+        Returns:
+            Максимальный размер шрифта или None, если не удалось определить.
+        """
+        try:
+            text_dict = page.get_text("dict", clip=rect)
+            blocks = text_dict.get("blocks", [])
+            
+            font_sizes = []
+            for block in blocks:
+                if block.get("type") == 0:  # Текстовый блок
+                    for line in block.get("lines", []):
+                        for span in line.get("spans", []):
+                            font_size = span.get("size", 0)
+                            if font_size > 0:
+                                font_sizes.append(font_size)
+            
+            if font_sizes:
+                return max(font_sizes)
+            return None
+        except Exception:
+            return None
+
     def _determine_header_level(
-        self, text: str, header: Dict[str, Any], page: fitz.Page, rect: fitz.Rect
+        self,
+        text: str,
+        header: Dict[str, Any],
+        page: fitz.Page,
+        rect: fitz.Rect,
+        last_numbered_level: Optional[int] = None,
+        previous_headers: Optional[List[Dict[str, Any]]] = None,
+        font_size: Optional[float] = None,
     ) -> int:
         """
-        Определяет уровень заголовка на основе текста, стиля и позиции.
+        Определяет уровень заголовка на основе текста и размера шрифта.
+        
+        Если заголовок не имеет явной нумерации и есть last_numbered_level,
+        возвращает last_numbered_level + 1.
+        
+        Если нет нумерации, сравнивает размер шрифта с предыдущими заголовками.
 
         Args:
             text: Текст заголовка.
             header: Словарь с информацией о заголовке.
             page: Страница PDF.
             rect: Прямоугольник заголовка.
+            last_numbered_level: Уровень последнего заголовка с явной нумерацией.
+            previous_headers: Список предыдущих заголовков для сравнения размера шрифта.
+            font_size: Размер шрифта текущего заголовка.
 
         Returns:
             Уровень заголовка (1-6).
@@ -543,19 +652,51 @@ class PdfParser(BaseParser):
         # Заголовки вида "1.1.1", "1.1.2" -> HEADER_3
         if re.match(r'^\d+\.\d+\.\d+\s+', text):
             return 3
+        # Заголовки вида "1.1.1.1" -> HEADER_4
+        if re.match(r'^\d+\.\d+\.\d+\.\d+\s+', text):
+            return 4
         
-        # Анализ позиции (левее = выше уровень)
-        bbox = header.get("bbox", [])
-        if len(bbox) >= 4:
-            x1 = bbox[0]
-            # Эвристика: заголовки слева (x < 400) обычно HEADER_1
-            if x1 < 400:
+        # Если заголовок не имеет явной нумерации, но есть контекст с нумерацией
+        if last_numbered_level is not None:
+            # Возвращаем уровень на 1 больше последнего заголовка с нумерацией
+            return min(last_numbered_level + 1, 6)  # Ограничиваем максимум 6
+        
+        # Если нет нумерации, обязательно сравниваем размер шрифта с предыдущими заголовками
+        if font_size is not None:
+            if previous_headers:
+                # Ищем предыдущие заголовки с известным размером шрифта
+                previous_with_font = [
+                    h for h in previous_headers
+                    if h.get("font_size") is not None
+                ]
+                
+                if previous_with_font:
+                    # Берем последний заголовок с известным размером шрифта
+                    last_header = previous_with_font[-1]
+                    last_font_size = last_header.get("font_size")
+                    last_level = last_header.get("level", 1)
+                    
+                    # Сравниваем размеры шрифта
+                    # Если шрифт значительно больше (>= 2pt разница) - уровень выше
+                    if font_size >= last_font_size + 2:
+                        return max(1, last_level - 1)
+                    # Если шрифт значительно меньше (>= 2pt разница) - уровень ниже
+                    elif font_size <= last_font_size - 2:
+                        return min(6, last_level + 1)
+                    # Если размер примерно такой же - тот же уровень
+                    else:
+                        return last_level
+            
+            # Если нет предыдущих заголовков для сравнения, используем абсолютные значения
+            # Шрифт >= 16pt -> обычно HEADER_1 или HEADER_2
+            if font_size >= 16:
                 return 1
-            # Заголовки в центре (400 < x < 600) обычно HEADER_2
-            if x1 < 600:
+            # Шрифт 12-16pt -> обычно HEADER_2 или HEADER_3
+            elif font_size >= 12:
                 return 2
-            # Остальные - HEADER_3
-            return 3
+            # Шрифт < 12pt -> обычно HEADER_3
+            else:
+                return 3
         
         # По умолчанию HEADER_1
         return 1
