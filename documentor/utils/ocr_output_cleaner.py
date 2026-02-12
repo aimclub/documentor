@@ -87,7 +87,7 @@ class OutputCleaner:
         operations['final_count'] = len(cleaned_data)
         print(f"  ✅ Cleaning complete: {len(cleaned_data)} items, {operations['bbox_fixes']} bbox fixes, {operations['removed_items']} items removed")
         
-        return CleanedData(
+        result = CleanedData(
             case_id=case_id,
             original_type='list',
             original_length=len(data),
@@ -95,6 +95,11 @@ class OutputCleaner:
             cleaning_operations=operations,
             success=True
         )
+        
+        # Track result
+        self.cleaned_results.append(result)
+        
+        return result
     
     def clean_string_data(self, data_str: str, case_id: int) -> CleanedData:
         """Cleans string-type data"""
@@ -136,7 +141,7 @@ class OutputCleaner:
                 operations['final_objects'] = len(final_data)
                 print(f"  ✅ Cleaning complete: {len(final_data)} objects")
                 
-                return CleanedData(
+                result = CleanedData(
                     case_id=case_id,
                     original_type='str',
                     original_length=operations['original_length'],
@@ -144,12 +149,17 @@ class OutputCleaner:
                     cleaning_operations=operations,
                     success=True
                 )
+                
+                # Track result
+                self.cleaned_results.append(result)
+                
+                return result
             else:
                 raise Exception("Could not parse the cleaned data")
                 
         except Exception as e:
             print(f"  ❌ Cleaning failed: {e}")
-            return CleanedData(
+            result = CleanedData(
                 case_id=case_id,
                 original_type='str',
                 original_length=operations['original_length'],
@@ -157,6 +167,11 @@ class OutputCleaner:
                 cleaning_operations=operations,
                 success=False
             )
+            
+            # Track result even if failed
+            self.cleaned_results.append(result)
+            
+            return result
     
     def _fix_missing_delimiters(self, text: str) -> Tuple[str, int]:
         """Fixes missing delimiters"""

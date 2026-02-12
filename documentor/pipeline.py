@@ -110,6 +110,9 @@ class Pipeline:
             UnsupportedFormatError: If document format is not supported.
             ParsingError: If parsing error occurred.
         """
+        if document is None:
+            raise ValidationError("Document cannot be None", field="document")
+        
         start_time = time.time()
         source = get_document_source(document)
 

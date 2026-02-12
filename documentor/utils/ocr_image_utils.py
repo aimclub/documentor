@@ -76,6 +76,48 @@ def to_rgb(pil_image: Image.Image) -> Image.Image:
         return pil_image.convert("RGB")
 
 
+def image_to_base64(pil_image: Image.Image) -> str:
+    """
+    Converts PIL Image to base64 data URL string.
+    
+    Args:
+        pil_image: PIL Image object
+        
+    Returns:
+        str: Base64 encoded data URL (data:image/png;base64,...)
+    """
+    from io import BytesIO
+    buffered = BytesIO()
+    pil_image.save(buffered, format="PNG")
+    img_str = base64.b64encode(buffered.getvalue()).decode()
+    return f"data:image/png;base64,{img_str}"
+
+
+def base64_to_image(base64_str: str) -> Image.Image | None:
+    """
+    Converts base64 data URL string to PIL Image.
+    
+    Args:
+        base64_str: Base64 encoded data URL or base64 string
+        
+    Returns:
+        PIL Image object or None if conversion fails
+    """
+    try:
+        # Handle data URL format: data:image/png;base64,...
+        if ',' in base64_str:
+            base64_str = base64_str.split(',', 1)[1]
+        
+        # Decode base64
+        image_data = base64.b64decode(base64_str)
+        
+        # Create image from bytes
+        with BytesIO(image_data) as bio:
+            return Image.open(bio).copy()
+    except Exception:
+        return None
+
+
 def fetch_image(
     image, 
     min_pixels=None,

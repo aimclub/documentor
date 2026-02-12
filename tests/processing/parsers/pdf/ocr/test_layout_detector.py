@@ -105,7 +105,7 @@ class TestDetectLayoutDirectAPI:
         mock_process.return_value = (None, "error_response", False)
         
         detector = PdfLayoutDetector(use_direct_api=True)
-        with pytest.raises(RuntimeError, match="Ошибка layout detection"):
+        with pytest.raises(RuntimeError, match="Layout detection error"):
             detector.detect_layout(mock_image)
 
     @patch("documentor.processing.parsers.pdf.ocr.layout_detector.process_layout_detection")
@@ -179,7 +179,7 @@ class TestDetectLayoutWithManager:
         
         detector = PdfLayoutDetector(ocr_manager=mock_manager, use_direct_api=False)
         
-        with pytest.raises(RuntimeError, match="Ошибка layout detection"):
+        with pytest.raises(RuntimeError, match="Layout detection error"):
             detector.detect_layout(mock_image)
 
     @patch("documentor.ocr.manager.TaskStatus")
@@ -253,7 +253,7 @@ class TestDetectLayoutWithManager:
         
         detector = PdfLayoutDetector(ocr_manager=mock_manager, use_direct_api=False)
         
-        with pytest.raises(ValueError, match="Неожиданный формат результата"):
+        with pytest.raises(ValueError, match="Unexpected result format"):
             detector.detect_layout(mock_image)
 
 

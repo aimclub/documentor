@@ -176,13 +176,13 @@ class TestRenderPages:
     def test_render_pages_invalid_page_num(self, sample_pdf_path):
         """Тест рендеринга страниц с невалидным номером страницы."""
         renderer = PdfPageRenderer()
-        with pytest.raises(ValueError, match="Номер страницы"):
+        with pytest.raises(ValueError, match="Page number"):
             renderer.render_pages(sample_pdf_path, page_nums=[999])
 
     def test_render_pages_negative_page_num(self, sample_pdf_path):
         """Тест рендеринга страниц с отрицательным номером страницы."""
         renderer = PdfPageRenderer()
-        with pytest.raises(ValueError, match="Номер страницы"):
+        with pytest.raises(ValueError, match="Page number"):
             renderer.render_pages(sample_pdf_path, page_nums=[-1])
 
 

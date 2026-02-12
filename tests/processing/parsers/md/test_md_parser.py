@@ -236,8 +236,11 @@ class TestMarkdownParserLists:
         # Проверяем, что дочерние элементы ссылаются на родительский
         assert child1.parent_id == parent1.id
         assert child2.parent_id == parent1.id
-        assert "Второй" in result.elements[1].content
-        assert "Третий" in result.elements[2].content
+        
+        # Проверяем содержимое элементов
+        assert "Дочерний 1" in child1.content
+        assert "Дочерний 2" in child2.content
+        assert "Родитель 1" in parent1.content
 
 
 class TestMarkdownParserTables:

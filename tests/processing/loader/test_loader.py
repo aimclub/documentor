@@ -342,7 +342,7 @@ class TestDetectDocumentFormat:
     def test_raises_error_when_no_content_and_no_source(self):
         """Тест выброса ошибки когда нет ни контента, ни источника."""
         doc = Document(page_content="", metadata={})
-        with pytest.raises(ValueError, match="Документ должен содержать page_content или source"):
+        with pytest.raises(ValueError, match="Document must contain page_content or source"):
             detect_document_format(doc)
 
     def test_works_with_only_source_no_content(self, markdown_file: Path):
@@ -390,18 +390,18 @@ class TestValidateDocument:
 
     def test_raises_error_when_none(self):
         """Тест выброса ошибки когда документ None."""
-        with pytest.raises(ValueError, match="Документ не может быть None"):
+        with pytest.raises(ValueError, match="Document cannot be None"):
             validate_document(None)
 
     def test_raises_error_when_not_document(self):
         """Тест выброса ошибки когда передан не Document."""
-        with pytest.raises(TypeError, match="Ожидается Document"):
+        with pytest.raises(TypeError, match="Expected Document"):
             validate_document("not a document")
 
     def test_raises_error_when_no_content_and_no_source(self):
         """Тест выброса ошибки когда нет ни контента, ни источника."""
         doc = Document(page_content="", metadata={})
-        with pytest.raises(ValueError, match="Документ должен содержать page_content или source"):
+        with pytest.raises(ValueError, match="Document must contain page_content or source"):
             validate_document(doc)
 
     def test_raises_error_when_content_not_string(self):
