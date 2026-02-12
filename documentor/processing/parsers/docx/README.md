@@ -67,7 +67,7 @@ DOCX to PDF conversion using:
 
 ## Configuration
 
-See `documentor/config/docx_config.yaml` for configuration options.
+See `documentor/config/config.yaml` (section `docx_parser`) for configuration options.
 
 ## Usage
 

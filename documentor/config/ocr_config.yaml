@@ -1,12 +1,13 @@
-# Configuration for working with OCR (Optical Character Recognition)
+# Configuration for OCR (Optical Character Recognition) services
 
 # Dots.OCR settings for layout detection
 dots_ocr:
   # URL or path to Dots.OCR service
-  endpoint: null  # if null - uses local service
+  # If null - uses local service
+  endpoint: null
   
-  # Request timeout
-  timeout: 60
+  # Request timeout in seconds
+  timeout: 120
   
   # Prompts for Dots.OCR (strict prompts from official documentation)
   prompts:
@@ -44,14 +45,15 @@ dots_ocr:
       Bounding Box:
   
   # Prompt mode (which prompt to use)
-  prompt_mode: "prompt_layout_all_en"  # prompt_layout_all_en, prompt_layout_only_en, prompt_ocr, prompt_grounding_ocr
+  # Options: prompt_layout_all_en, prompt_layout_only_en, prompt_ocr, prompt_grounding_ocr
+  prompt_mode: "prompt_layout_all_en"
   
   # Layout detection parameters
   layout:
-    # Minimum element size for detection
-    min_element_size: 10  # pixels
+    # Minimum element size for detection (pixels)
+    min_element_size: 10
     
-    # Detection confidence threshold
+    # Detection confidence threshold (0.0 - 1.0)
     confidence_threshold: 0.5
     
     # Element types to detect
@@ -70,10 +72,11 @@ dots_ocr:
   
   # Reading order building settings
   reading_order:
-    # Reading order building method (top-to-bottom, left-to-right, or combined)
+    # Reading order building method
+    # Options: "top-to-bottom", "left-to-right", "combined"
     method: "combined"
     
-    # Consider element grouping
+    # Consider element grouping when building reading order
     use_grouping: true
 
 # Qwen OCR settings for text recognition
@@ -81,18 +84,19 @@ qwen_ocr:
   # Model for OCR
   model: "qwen2-vl-7b-instruct"  # or other VL model
   
-  # API URL
-  base_url: null  # if null - uses local model
+  # API URL (if null - uses local model)
+  base_url: null
   
   # Recognition parameters
   recognition:
-    # Recognition languages
+    # Recognition languages (ISO 639-1 codes)
     languages: ["en", "ru"]
     
-    # Image resolution for OCR (higher = better quality, but slower)
+    # Image resolution for OCR (DPI)
+    # Higher = better quality, but slower
     resolution: 300
     
-    # Timeout per image
+    # Timeout per image in seconds
     timeout: 30
   
   # Batch processing
@@ -100,25 +104,23 @@ qwen_ocr:
     # Batch size for processing
     size: 10
     
-    # Maximum batch wait time
+    # Maximum batch wait time in seconds
     max_wait_time: 5
 
 # Image processing settings
 image_processing:
   # Image format for OCR
+  # Options: "PNG", "JPEG"
   format: "PNG"
   
-  # Image quality (for JPEG)
+  # Image quality for JPEG (1-100)
   quality: 95
   
   # DPI for page rendering
   dpi: 300
   
-  # Maximum image size (pixels)
+  # Maximum image size in pixels
   max_size: 4096
-  
-  # Optimization for OCR
-  optimize_for_ocr: true
   
   # Image preprocessing
   preprocessing:
@@ -139,7 +141,8 @@ coordinates:
   # Coordinate normalization (relative to page or absolute)
   normalize: false
   
-  # Units of measurement (pixels, points, mm)
+  # Units of measurement
+  # Options: "pixels", "points", "mm"
   units: "pixels"
 
 # Layout Type → ElementType mapping settings
@@ -163,12 +166,12 @@ type_mapping:
     # Use LLM for level determination
     use_llm: true
     
-    # Or use heuristics (font size, position, etc.)
+    # Use heuristics (font size, position, etc.)
     use_heuristics: true
 
 # Performance settings
 performance:
-  # Parallel page processing
+  # Enable parallel page processing
   parallel_processing: true
   
   # Number of threads for parallel processing

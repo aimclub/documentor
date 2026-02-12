@@ -190,9 +190,20 @@ def _is_list_item_pattern(text: str) -> bool:
     return False
 
 
-def _check_docx_text_content(docx_path: Path) -> Dict[str, Any]:
+def _check_docx_text_content(
+    docx_path: Path,
+    min_text_length: int = 100,
+    min_text_for_non_scanned: int = 500,
+    images_to_text_ratio: float = 2.0
+) -> Dict[str, Any]:
     """
     Checks for text content in DOCX document.
+    
+    Args:
+        docx_path: Path to DOCX file
+        min_text_length: Minimum text length to determine text presence
+        min_text_for_non_scanned: Minimum text length for non-scanned document
+        images_to_text_ratio: If images count > text_paragraphs * ratio, document is considered scanned
     
     Returns:
         Dictionary with information about text and images:
@@ -216,10 +227,10 @@ def _check_docx_text_content(docx_path: Path) -> Dict[str, Any]:
             text_paragraphs += 1
     
     images_count = len(images)
-    has_text = text_length > 100
+    has_text = text_length > min_text_length
     
     is_scanned = False
-    if not has_text or (images_count > 0 and text_length < 500 and images_count > text_paragraphs * 2):
+    if not has_text or (images_count > 0 and text_length < min_text_for_non_scanned and images_count > text_paragraphs * images_to_text_ratio):
         is_scanned = True
     
     return {
@@ -243,8 +254,8 @@ class DocxParser(BaseParser):
         self._load_config()
 
     def _load_config(self) -> None:
-        """Loads configuration from docx_config.yaml."""
-        config_path = Path(__file__).parent.parent.parent.parent / "config" / "docx_config.yaml"
+        """Loads configuration from config.yaml."""
+        config_path = Path(__file__).parent.parent.parent.parent / "config" / "config.yaml"
         if config_path.exists():
             with open(config_path, "r", encoding="utf-8") as f:
                 config = yaml.safe_load(f)
@@ -291,7 +302,17 @@ class DocxParser(BaseParser):
             if not docx_path.exists():
                 raise ParsingError(f"DOCX file not found: {source}", source=source)
 
-            content_info = _check_docx_text_content(docx_path)
+            # Get scanned detection parameters from config
+            min_text_length = self._get_config("scanned_detection.min_text_length", 100)
+            min_text_for_non_scanned = self._get_config("scanned_detection.min_text_for_non_scanned", 500)
+            images_to_text_ratio = self._get_config("scanned_detection.images_to_text_ratio", 2.0)
+            
+            content_info = _check_docx_text_content(
+                docx_path,
+                min_text_length=min_text_length,
+                min_text_for_non_scanned=min_text_for_non_scanned,
+                images_to_text_ratio=images_to_text_ratio
+            )
             
             if content_info['is_scanned']:
                 logger.info(
@@ -335,10 +356,17 @@ class DocxParser(BaseParser):
                 try:
                     total_pages = len(pdf_doc)
                     
+                    # Check if we should skip title page
+                    skip_title_page = self._get_config("processing.skip_title_page", False)
+                    start_page = 1 if skip_title_page else 0
+                    
+                    if skip_title_page and total_pages > 1:
+                        logger.info(f"Skipping title page (page 1), processing pages 2-{total_pages}")
+                    
                     ocr_elements = []
                     page_images = {}
                     
-                    for page_num in tqdm(range(total_pages), desc="Processing PDF pages", unit="page", leave=False):
+                    for page_num in tqdm(range(start_page, total_pages), desc="Processing PDF pages", unit="page", leave=False):
                         page_image = renderer.render_page(temp_pdf_path, page_num)
                         if page_image is None:
                             continue

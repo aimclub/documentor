@@ -82,8 +82,7 @@ documentor/
 
 Configuration files are located in `documentor/config/`:
 
-- `pdf_config.yaml`: PDF parser settings
-- `docx_config.yaml`: DOCX parser settings
+- `config.yaml`: Main configuration file (contains `pdf_parser` and `docx_parser` sections)
 - `llm_config.yaml`: LLM service configuration
 - `ocr_config.yaml`: OCR service configuration
 

@@ -45,3 +45,5 @@ test_md_output.py
 /documentor/test_scanned_pdf_parser.py
 /documentor/test_docx_parser.py
 /documentor/ELEMENT_METADATA_STANDARD.md
+1234.txt
+documentor/**/__pycache__/

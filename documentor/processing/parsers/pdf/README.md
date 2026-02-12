@@ -41,7 +41,7 @@ Text extraction utilities for PDF documents.
 
 ## Configuration
 
-See `documentor/config/pdf_config.yaml` for configuration options.
+See `documentor/config/config.yaml` (section `pdf_parser`) for configuration options.
 
 ## Usage
 

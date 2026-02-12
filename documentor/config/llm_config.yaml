@@ -1,39 +1,53 @@
-# Configuration for working with LLM (Large Language Models)
+# Configuration for LLM (Large Language Models) services
 
 # LLM provider settings
 providers:
   qwen:
     # Qwen for text analysis
     text:
+      # Model name
       model: "qwen2.5-7b-instruct"  # or other model
-      base_url: null  # API URL, if null - uses local model
+      # API URL (if null - uses local model)
+      base_url: null
+      # Generation temperature (0.0 - 1.0)
       temperature: 0.1
+      # Maximum number of tokens
       max_tokens: 4096
-      timeout: 60
+      # Request timeout in seconds
+      timeout: 120
     
     # Qwen VL for visual analysis (OCR)
     visual:
+      # Model name
       model: "qwen2-vl-7b-instruct"  # or other VL model
+      # API URL (if null - uses local model)
       base_url: null
+      # Generation temperature (0.0 - 1.0)
       temperature: 0.1
+      # Maximum number of tokens
       max_tokens: 4096
+      # Request timeout in seconds
       timeout: 120
   
   openai:
     # Optional OpenAI support
     model: "gpt-4o"
+    # API URL (if null - uses default OpenAI endpoint)
     base_url: null
+    # Generation temperature (0.0 - 1.0)
     temperature: 0.1
+    # Maximum number of tokens
     max_tokens: 4096
+    # Request timeout in seconds
     timeout: 60
 
 # Text chunking settings
 chunking:
-  # Chunk size for LLM analysis
-  chunk_size: 3000  # characters
+  # Chunk size for LLM analysis (characters)
+  chunk_size: 3000
   
-  # Overlap between chunks
-  overlap: 1  # paragraphs
+  # Overlap between chunks (paragraphs)
+  overlap: 1
   
   # Minimum chunk size (if smaller - merge with previous)
   min_chunk_size: 100
@@ -93,10 +107,10 @@ prompts:
 
 # Header processing settings
 headers:
-  # Maximum header level
+  # Maximum header level (1-6)
   max_level: 6
   
-  # Minimum header level
+  # Minimum header level (1-6)
   min_level: 1
   
   # Hierarchy validation (checking level logic)
@@ -104,12 +118,13 @@ headers:
 
 # LLM response processing settings
 response_processing:
-  # JSON response parsing
+  # Parse JSON response
   parse_json: true
   
-  # Parse error handling
+  # Handle parse errors gracefully
   handle_parse_errors: true
   
-  # Retries on errors
+  # Retry on errors
   retry_on_error: true
+  # Maximum number of retries
   max_retries: 3

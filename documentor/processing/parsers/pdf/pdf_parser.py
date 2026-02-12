@@ -72,8 +72,8 @@ class PdfParser(BaseParser):
         self._load_config()
     
     def _load_config(self) -> None:
-        """Loads configuration from pdf_config.yaml."""
-        config_path = Path(__file__).parent.parent.parent.parent / "config" / "pdf_config.yaml"
+        """Loads configuration from config.yaml."""
+        config_path = Path(__file__).parent.parent.parent.parent / "config" / "config.yaml"
         if config_path.exists():
             with open(config_path, "r", encoding="utf-8") as f:
                 config = yaml.safe_load(f)
@@ -300,9 +300,16 @@ class PdfParser(BaseParser):
         total_pages = self.page_renderer.get_page_count(pdf_path)
         all_layout_elements: List[Dict[str, Any]] = []
         
-        logger.info(f"Starting layout detection for {total_pages} pages")
+        # Check if we should skip title page
+        skip_title_page = self._get_config("processing.skip_title_page", False)
+        start_page = 1 if skip_title_page else 0
         
-        for page_num in tqdm(range(total_pages), desc="Layout detection", unit="page"):
+        if skip_title_page and total_pages > 1:
+            logger.info(f"Skipping title page (page 1), processing pages 2-{total_pages}")
+        else:
+            logger.info(f"Starting layout detection for {total_pages} pages")
+        
+        for page_num in tqdm(range(start_page, total_pages), desc="Layout detection", unit="page"):
             try:
                 original_image, optimized_image = self.page_renderer.render_page(
                     pdf_path, page_num, return_original=True
@@ -746,6 +753,11 @@ class PdfParser(BaseParser):
                     )
                 
                 pdf_path = Path(source)
+                # Check if we should skip title page
+                skip_title_page = self._get_config("processing.skip_title_page", False)
+                start_page = 1 if skip_title_page else 0
+                
+                # Render pages that might be needed (all pages, as elements may reference any page)
                 for page_num in tqdm(range(len(pdf_document)), desc="Rendering pages for OCR", unit="page", leave=False):
                     original_image, _ = self.page_renderer.render_page(
                         pdf_path, page_num, return_original=True
