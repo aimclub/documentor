@@ -1,169 +1,178 @@
-# Структура проекта Documentor
+# Documentor Project Structure
 
-## Общая структура
+## General Structure
 
 ```
 documentor/
-├── __init__.py              # Публичный API библиотеки
-├── pipeline.py              # Главный пайплайн обработки документов
-├── exceptions.py            # Кастомные исключения
+├── __init__.py              # Public API of the library
+├── pipeline.py              # Main document processing pipeline
+├── exceptions.py            # Custom exceptions
 │
-├── domain/                  # Доменные модели и типы данных
+├── domain/                  # Domain models and data types
 │   ├── __init__.py
 │   └── models.py            # Element, ParsedDocument, ElementType, DocumentFormat, ElementIdGenerator
 │
-├── config/                  # Конфигурация
+├── config/                  # Configuration
 │   ├── __init__.py
-│   ├── config.yaml          # Общая конфигурация
-│   ├── prompts.yaml         # Промпты для LLM
-│   ├── llm_config.yaml      # Конфигурация LLM (YAML)
-│   └── ocr_config.yaml      # Конфигурация OCR (YAML)
+│   ├── config.yaml          # General configuration (pdf_parser, docx_parser)
+│   ├── llm_config.yaml      # LLM configuration (YAML)
+│   └── ocr_config.yaml      # OCR configuration (YAML)
 │
-├── core/                    # Ядро библиотеки
+├── core/                    # Core library
 │   └── __init__.py
 │
-├── utils/                   # Утилиты
+├── utils/                   # Utilities
 │   ├── __init__.py
-│   ├── file_utils.py        # Работа с файлами
-│   ├── text_utils.py        # Работа с текстом (чанки, очистка)
-│   └── image_utils.py       # Работа с изображениями
+│   ├── text_utils.py        # Text processing (chunks, cleaning)
+│   ├── ocr_image_utils.py   # Image processing for OCR
+│   ├── ocr_layout_utils.py  # Utilities for processing layout results
+│   ├── ocr_output_cleaner.py # Cleaning JSON responses from LLM
+│   └── ocr_consts.py        # OCR constants
 │
-├── llm/                     # Работа с LLM
+├── llm/                     # LLM integration
 │   ├── __init__.py
-│   ├── base.py              # Базовый класс для LLM клиентов
-│   ├── qwen.py              # Реализация Qwen клиента (текст + визуальный)
-│   ├── header_detector.py  # Детектирование заголовков через LLM
-│   ├── structure_classifier.py  # Классификация элементов через LLM
-│   └── structure_validator.py   # Валидация структуры через LLM с XML
+│   ├── header_detector.py  # Header detection via LLM
+│   └── base.py              # Base class for LLM clients
 │
-├── ocr/                     # Работа с OCR
+├── ocr/                     # OCR integration
 │   ├── __init__.py
-│   ├── base.py              # Базовые классы для OCR
-│   ├── dots_ocr.py         # Интеграция с Dots.OCR (layout detection)
-│   ├── qwen_ocr.py         # Интеграция с Qwen OCR (распознавание текста)
-│   └── reading_order.py    # Построение порядка чтения
+│   ├── base.py              # Base classes for OCR
+│   ├── dots_ocr.py         # Integration with Dots.OCR (layout detection)
+│   └── manager.py          # Manager for OCR task management (DotsOCRManager)
 │
-└── processing/              # Обработка документов
-    ├── loader/              # Определение формата документа
+└── processing/              # Document processing
+    ├── loader/              # Document format detection
     │   ├── __init__.py
     │   └── loader.py        # detect_document_format, get_document_source
     │
-    ├── parsers/             # Парсеры для различных форматов
+    ├── parsers/             # Parsers for various formats
     │   ├── __init__.py
-    │   ├── base.py          # Базовый класс BaseParser
+    │   ├── base.py          # Base class BaseParser
     │   │
-    │   ├── md/              # Markdown парсер
+    │   ├── md/              # Markdown parser
     │   │   ├── __init__.py
-    │   │   ├── md_parser.py # Основной парсер Markdown
-    │   │   ├── tokenizer.py # Токенизация Markdown
-    │   │   └── hierarchy.py # Построение иерархии для Markdown
+    │   │   ├── md_parser.py # Main Markdown parser
+    │   │   ├── tokenizer.py # Markdown tokenization
+    │   │   └── hierarchy.py # Hierarchy building for Markdown
     │   │
-    │   ├── pdf/             # PDF парсер
+    │   ├── pdf/             # PDF parser
     │   │   ├── __init__.py
-    │   │   ├── pdf_parser.py        # Основной парсер PDF
-    │   │   ├── text_extractor.py    # Извлечение текста (PdfPlumber)
-    │   │   └── ocr/                 # OCR компоненты для PDF
+    │   │   ├── pdf_parser.py        # Main PDF parser
+    │   │   ├── text_extractor.py    # Text extraction (PdfPlumber)
+    │   │   └── ocr/                 # OCR components for PDF
     │   │       ├── __init__.py
-    │   │       ├── layout_detector.py  # Layout detection через Dots.OCR
-    │   │       └── page_renderer.py    # Рендеринг страниц в изображения
+    │   │       ├── layout_detector.py  # Layout detection via Dots.OCR
+    │   │       ├── page_renderer.py    # Page rendering to images
+    │   │       ├── qwen_ocr.py         # Qwen OCR for text extraction
+    │   │       ├── qwen_table_parser.py # Qwen OCR for table parsing
+    │   │       └── dots_ocr_client.py  # Direct Dots.OCR API client
     │   │
-    │   └── docx/            # DOCX парсер
+    │   └── docx/            # DOCX parser
     │       ├── __init__.py
-    │       ├── docx_parser.py         # Основной парсер DOCX
-    │       ├── extractor.py           # Извлечение текста, стилей и XML из DOCX
-    │       ├── style_parser.py        # Парсинг встроенных стилей DOCX
-    │       ├── structure_corrector.py # Корректировка структуры на основе проверки
-    │       ├── xml_parser.py          # Парсинг XML разметки DOCX
-    │       ├── structural_elements.py # Извлечение изображений, таблиц, формул
-    │       ├── link_resolver.py       # Разрешение ссылок на элементы
-    │       ├── renderer.py            # НЕ ИСПОЛЬЗУЕТСЯ (OCR отменён)
-    │       └── ocr/                   # НЕ ИСПОЛЬЗУЕТСЯ (OCR отменён)
+    │       ├── docx_parser.py         # Main DOCX parser
+    │       ├── converter.py           # DOCX to PDF conversion
+    │       ├── xml_parser.py          # DOCX XML parsing
+    │       ├── toc_parser.py          # Table of Contents parsing
+    │       ├── header_finder.py       # Header finding and validation
+    │       ├── hierarchy_builder.py   # Hierarchy building
+    │       └── ocr/                   # OCR components (for PDF conversion)
     │           ├── __init__.py
-    │           ├── layout_dots.py     # LayoutTypeDotsOCR enum (для PDF)
-    │           └── layout_detector.py # НЕ ИСПОЛЬЗУЕТСЯ для DOCX
+    │           └── layout_dots.py     # LayoutTypeDotsOCR enum (for PDF)
     │
-    └── hierarchy/           # Построение иерархии элементов
-        ├── __init__.py
-        ├── builder.py       # Построение иерархии (parent_id)
-        └── validator.py     # Валидация иерархии
+    └── hierarchy/           # Element hierarchy building (NOT USED)
+        └── __init__.py      # Hierarchy is built inside each parser
 ```
 
-## Описание основных модулей
+## Description of Main Modules
 
 ### domain/
-Доменные модели и типы данных:
-- `Element` - элемент документа (id, type, content, parent_id, metadata)
-- `ParsedDocument` - результат парсинга (source, format, elements, metadata)
-- `ElementType` - типы элементов (HEADER_1-6, PLAIN_TEXT, TABLE, IMAGE и т.д.)
-- `DocumentFormat` - форматы документов (MARKDOWN, PDF, DOCX)
-- `ElementIdGenerator` - генератор уникальных ID
+Domain models and data types:
+- `Element` - document element (id, type, content, parent_id, metadata)
+- `ParsedDocument` - parsing result (source, format, elements, metadata)
+- `ElementType` - element types (HEADER_1-6, TEXT, TABLE, IMAGE, etc.)
+- `DocumentFormat` - document formats (MARKDOWN, PDF, DOCX)
+- `ElementIdGenerator` - unique ID generator
 
 ### llm/
-Работа с Large Language Models:
-- Детектирование заголовков в тексте (семантический анализ)
-- Классификация элементов документа
-- Построение структуры документа
-- Валидация структуры через LLM с XML разметкой (для DOCX)
-- Поддержка различных провайдеров (Qwen, OpenAI и т.д.)
+Large Language Models integration:
+- Header detection in text (semantic analysis)
+- Document element classification
+- Document structure building
+- Structure validation via LLM with XML markup (for DOCX)
+- Support for various providers (Qwen, OpenAI, etc.)
 
 ### ocr/
-Работа с Optical Character Recognition:
-- Layout detection через Dots.OCR (используется только для PDF) - определение координат блоков
-- Извлечение текста через PyMuPDF по координатам из Dots.OCR (используется только для PDF)
-- Построение порядка чтения элементов
-- Для DOCX OCR-подход отменён, используется только для PDF
+Optical Character Recognition integration:
+- Layout detection via Dots.OCR (used only for PDF) - block coordinate detection
+- Text extraction via PyMuPDF by coordinates from Dots.OCR (used only for PDF)
+- Reading order building for elements
+- For DOCX, OCR approach is cancelled, used only for PDF
 
-**Важно**: Dots.OCR используется ТОЛЬКО для layout detection (координаты блоков). Текст извлекается через PyMuPDF, а не через OCR LLM.
+**Important**: Dots.OCR is used ONLY for layout detection (block coordinates). Text is extracted via PyMuPDF, not via OCR LLM.
 
 ### processing/parsers/
-Парсеры для различных форматов:
-- **Markdown**: токенизация, построение иерархии (локальный парсинг, без LLM)
-- **PDF**: два пути обработки
-  - Извлекаемый текст: PdfPlumber → разбиение на чанки → LLM детектирование заголовков
-  - OCR пайплайн: рендеринг страниц → Dots.OCR layout → Qwen OCR → структурирование
-- **DOCX**: LLM семантический анализ + проверка разметки
-  - Сначала: LLM семантический анализ с перекрытием (определение заголовков по смыслу)
-  - Затем проверка и корректировка одним из двух способов:
-    - Вариант 1: Проверка через встроенные стили DOCX (Heading 1-6)
-    - Вариант 2: Проверка через LLM с XML разметкой DOCX
-  - Обработка структурных элементов (изображения, таблицы, формулы)
+Parsers for various formats:
+- **Markdown**: tokenization, hierarchy building (local parsing, no LLM)
+- **PDF**: layout-based approach
+  - Layout detection via Dots.OCR for all pages
+  - Hierarchy building around Section-header
+  - Text extraction via PyMuPDF by coordinates (for text PDFs)
+  - OCR via Qwen2.5 for scanned PDFs (only for text elements)
+  - Table parsing via Qwen2.5 with DataFrame conversion
+- **DOCX**: combined approach
+  - Content check (scanned or not)
+  - Conversion to PDF for layout detection
+  - Layout detection via Dots.OCR (Section-header, Caption)
+  - Text extraction via PyMuPDF by coordinates
+  - XML parsing for full content (text, tables, images)
+  - Table of Contents (TOC) parsing for header validation
+  - Hierarchy building from all elements
+  - Table conversion from XML to DataFrame
 
 ### processing/hierarchy/
-Построение иерархии элементов:
-- Назначение parent_id на основе заголовков
-- Валидация корректности иерархии
-- Построение дерева элементов
+Element hierarchy building (NOT USED):
+- Hierarchy is built inside each parser
+- Each parser independently assigns parent_id based on headers
 
-## Логика работы парсеров
+## Parser Logic
 
 ### Markdown
-1. Токенизация текста (regex для определения типов блоков)
-2. Построение иерархии на основе заголовков (header_stack)
-3. Назначение parent_id элементам
-4. **Не требует LLM** - полностью локальный парсинг
+1. Text tokenization (regex for block type detection)
+2. Hierarchy building based on headers (header_stack)
+3. parent_id assignment to elements
+4. Table conversion to Pandas DataFrame
+5. **No LLM required** - fully local parsing
 
 ### PDF
-1. Определение типа PDF (текст извлекается или скан)
-2. **Путь 1 (текст)**: PdfPlumber → разбиение на чанки → LLM детектирование заголовков
-3. **Путь 2 (OCR)**: рендеринг страниц → Dots.OCR layout (координаты блоков) → PyMuPDF извлечение текста по координатам → построение порядка чтения → структурирование
-   - **Важно**: Dots.OCR используется ТОЛЬКО для определения layout и координат блоков
-   - Текст извлекается через PyMuPDF по координатам из Dots.OCR
-   - OCR LLM (Qwen OCR) НЕ используется, если текст доступен в PDF
+1. Check text extractability from PDF
+2. **Layout Detection**: page rendering → Dots.OCR layout detection for all pages
+3. **Filtering**: remove Page-header, Page-footer, side text
+4. **Header Level Analysis**: determine levels based on numbering, position, styles
+5. **Hierarchy Building**: build hierarchy around Section-header elements
+6. **Text Extraction**:
+   - For text PDFs: PyMuPDF by coordinates from Dots.OCR
+   - For scanned PDFs: OCR via Qwen2.5 for each text element
+7. **Text Block Merging**: merge close blocks (up to 3000 characters)
+8. **Table Parsing**: via Qwen2.5 with DataFrame conversion
+9. **Image Storage**: in Caption element metadata
 
 ### DOCX
-1. Извлечение текста, стилей и XML разметки из DOCX
-2. **Всегда сначала**: LLM семантический анализ с перекрытием (определение заголовков по смыслу)
-3. **Затем проверка и корректировка**:
-   - **Вариант 1**: Сравнение LLM структуры со встроенными стилями → корректировка уровней
-   - **Вариант 2**: Отправка в LLM своей разметки + XML → LLM проверяет и корректирует
-4. Обработка структурных элементов (изображения, таблицы, формулы)
-5. Разрешение ссылок на элементы
-6. **OCR-подход отменён** - не используется рендеринг и OCR для DOCX
+1. **Content Check**: determine scanned document (images vs text)
+2. **For scanned DOCX**: convert to PDF → process via PdfParser with OCR
+3. **For normal DOCX**:
+   - Convert DOCX to PDF for layout detection
+   - Layout Detection via Dots.OCR (Section-header, Caption)
+   - Extract text from PDF by bbox via PyMuPDF
+   - XML parsing for full content (text, tables, images)
+   - Table of Contents (TOC) parsing for header validation
+   - Find headers in XML (rules + TOC validation)
+   - Build document hierarchy from all elements
+   - Convert tables from XML to DataFrame
 
-## Принципы организации
+## Organization Principles
 
-1. **Разделение ответственности**: каждый модуль отвечает за свою область
-2. **Переиспользование**: общие компоненты (LLM, OCR) вынесены в отдельные модули
-3. **Расширяемость**: легко добавить новые парсеры или LLM провайдеры
-4. **Тестируемость**: каждый компонент можно тестировать отдельно
-5. **Конфигурация**: настройки в YAML файлах для удобства изменения
+1. **Separation of Concerns**: each module is responsible for its area
+2. **Reusability**: common components (LLM, OCR) are extracted into separate modules
+3. **Extensibility**: easy to add new parsers or LLM providers
+4. **Testability**: each component can be tested separately
+5. **Configuration**: settings in YAML files for easy modification

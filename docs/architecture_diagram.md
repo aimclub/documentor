@@ -1,6 +1,6 @@
-# Архитектура Documentor
+# Documentor Architecture
 
-## Блок-схема системы
+## System Overview
 
 ```mermaid
 graph TB
@@ -8,34 +8,34 @@ graph TB
     
     Pipeline --> Loader[DocumentLoader<br/>detect_document_format]
     
-    Loader -->|Определение формата| FormatCheck{Формат документа}
+    Loader -->|Format Detection| FormatCheck{Document Format}
     
-    FormatCheck -->|MARKDOWN| MarkdownParser[MarkdownParser]
-    FormatCheck -->|DOCX| DocxParser[DocxParser]
-    FormatCheck -->|PDF| PdfParser[PdfParser]
-    FormatCheck -->|UNKNOWN| Error[Ошибка:<br/>Неподдерживаемый формат]
+    FormatCheck -->|MARKDOWN| MarkdownParser[MarkdownParser<br/>Regex-based]
+    FormatCheck -->|DOCX| DocxParser[DocxParser<br/>Combined: OCR + XML + TOC]
+    FormatCheck -->|PDF| PdfParser[PdfParser<br/>Layout-based]
+    FormatCheck -->|UNKNOWN| Error[Error:<br/>Unsupported Format]
     
-    MarkdownParser -->|Наследует| BaseParser[BaseParser<br/>Абстрактный класс]
-    DocxParser -->|Наследует| BaseParser
-    PdfParser -->|Наследует| BaseParser
+    MarkdownParser -->|Inherits| BaseParser[BaseParser<br/>Abstract Class]
+    DocxParser -->|Inherits| BaseParser
+    PdfParser -->|Inherits| BaseParser
     
-    BaseParser -->|Использует| IdGenerator[ElementIdGenerator<br/>Генерация уникальных ID]
+    BaseParser -->|Uses| IdGenerator[ElementIdGenerator<br/>Unique ID Generation]
     
-    MarkdownParser -->|Парсинг| MarkdownLogic[Логика парсинга:<br/>- Заголовки #<br/>- Таблицы<br/>- Списки<br/>- Цитаты<br/>- Код-блоки]
+    MarkdownParser -->|Parsing| MarkdownLogic["Parsing Logic:<br/>Headers by #<br/>Tables to DataFrame<br/>Lists with nesting<br/>Quotes, Code blocks<br/>Images, Links"]
     
-    DocxParser -->|Парсинг| DocxLogic[Логика парсинга:<br/>- Текст<br/>- Изображения<br/>- Таблицы<br/>- Заголовки]
+    DocxParser -->|Parsing| DocxLogic["Parsing Logic:<br/>Layout Detection Dots.OCR<br/>XML Parsing<br/>TOC Validation<br/>Text Extraction PyMuPDF<br/>Tables to DataFrame<br/>Images"]
     
-    PdfParser -->|Парсинг| PdfLogic[Логика парсинга:<br/>- Текст<br/>- OCR для сканов<br/>- Layout detection]
+    PdfParser -->|Parsing| PdfLogic["Parsing Logic:<br/>Layout Detection Dots.OCR<br/>Text Extraction PyMuPDF or OCR<br/>Table Parsing Qwen2.5<br/>Image Storage"]
     
-    MarkdownLogic --> Elements[Список Element]
+    MarkdownLogic --> Elements[List of Elements]
     DocxLogic --> Elements
     PdfLogic --> Elements
     
-    Elements -->|Структурирование| Hierarchy[Построение иерархии<br/>parent_id]
+    Elements -->|Structuring| Hierarchy[Hierarchy Building<br/>parent_id assignment]
     
-    Hierarchy --> ParsedDoc[ParsedDocument<br/>Результат]
+    Hierarchy --> ParsedDoc[ParsedDocument<br/>Result]
     
-    ParsedDoc --> Output([Выход:<br/>Структурированные элементы])
+    ParsedDoc --> Output([Output:<br/>Structured Elements])
     
     style Start fill:#e1f5ff
     style Pipeline fill:#fff4e1
@@ -49,7 +49,7 @@ graph TB
     style Error fill:#ffcdd2
 ```
 
-## Детальная структура данных
+## Data Structure
 
 ```mermaid
 classDiagram
@@ -64,6 +64,7 @@ classDiagram
         +List~Element~ elements
         +dict metadata
         +to_dicts() List~dict~
+        +validate() None
     }
     
     class Element {
@@ -72,6 +73,7 @@ classDiagram
         +str content
         +str parent_id
         +dict metadata
+        +validate() None
     }
     
     class ElementType {
@@ -79,14 +81,15 @@ classDiagram
         HEADER_1
         HEADER_2
         HEADER_3
-        PLAIN_TEXT
+        HEADER_4
+        HEADER_5
+        HEADER_6
+        TEXT
         TABLE
         IMAGE
         LIST_ITEM
         CODE_BLOCK
-        QUOTE
-        FORMULA
-        CAPTION
+        LINK
     }
     
     class DocumentFormat {
@@ -103,22 +106,29 @@ classDiagram
         +ElementIdGenerator id_generator
         +can_parse(Document) bool
         +parse(Document)* ParsedDocument
+        +_validate_input(Document) None
+        +_validate_parsed_document(ParsedDocument) None
     }
     
     class MarkdownParser {
         +parse(Document) ParsedDocument
-        -_tokenize(str) Iterable
-        -_heading_type(int) ElementType
+        -_parse_markdown(str) List~MarkdownBlock~
+        -_build_elements(List~MarkdownBlock~) List~Element~
+        -_parse_table_to_dataframe(List~str~) DataFrame
     }
     
     class DocxParser {
         +parse(Document) ParsedDocument
-        -_split_paragraphs(str) List
+        -_check_docx_text_content(Path) Dict
+        -_extract_text_from_pdf_by_bbox(List~Dict~, Document, float) List~Dict~
     }
     
     class PdfParser {
         +parse(Document) ParsedDocument
-        -_split_paragraphs(str) List
+        -_is_text_extractable(str) bool
+        -_detect_layout_for_all_pages(str) List~Dict~
+        -_extract_text_by_bboxes(str, List~Dict~, bool) List~Dict~
+        -_parse_tables_with_qwen(List~Element~, str) List~Element~
     }
     
     class ElementIdGenerator {
@@ -129,38 +139,177 @@ classDiagram
         +reset(int) None
     }
     
-    Document --> ParsedDocument : преобразуется в
-    ParsedDocument --> Element : содержит
-    Element --> ElementType : имеет тип
-    ParsedDocument --> DocumentFormat : имеет формат
+    Document --> ParsedDocument : converted to
+    ParsedDocument --> Element : contains
+    Element --> ElementType : has type
+    ParsedDocument --> DocumentFormat : has format
     BaseParser <|-- MarkdownParser
     BaseParser <|-- DocxParser
     BaseParser <|-- PdfParser
-    BaseParser --> ElementIdGenerator : использует
+    BaseParser --> ElementIdGenerator : uses
 ```
 
-## Поток обработки документа
+## Document Processing Flow
 
 ```mermaid
 sequenceDiagram
-    participant User as Пользователь
-    participant Pipeline as Pipeline
+    participant User
+    participant Pipeline
     participant Loader as DocumentLoader
-    participant Parser as Парсер (MD/DOCX/PDF)
+    participant Parser as Parser MD/DOCX/PDF
     participant IdGen as ElementIdGenerator
     participant Result as ParsedDocument
     
     User->>Pipeline: Document(page_content, metadata)
+    Pipeline->>Pipeline: Check if document is None
     Pipeline->>Loader: detect_document_format(document)
     Loader-->>Pipeline: DocumentFormat
     
+    Pipeline->>Pipeline: Select parser by format
     Pipeline->>Parser: parse(document)
+    Parser->>Parser: _validate_input(document)
     Parser->>IdGen: next_id()
     IdGen-->>Parser: "00000001"
     
-    Parser->>Parser: Извлечение структуры
-    Parser->>Parser: Построение иерархии (parent_id)
+    alt Markdown Parser
+        Parser->>Parser: Load content from file if needed
+        Parser->>Parser: _parse_markdown(text)
+        Parser->>Parser: _build_elements(blocks)
+        Parser->>Parser: Create ParsedDocument
+    else DOCX Parser
+        Parser->>Parser: _check_docx_text_content()
+        alt Scanned DOCX
+            Parser->>Parser: Convert DOCX to PDF
+            Parser->>PdfParser: parse(pdf_document)
+            PdfParser-->>Parser: ParsedDocument
+        else Normal DOCX
+            Parser->>Parser: Convert DOCX to PDF
+            Parser->>Parser: Render PDF pages
+            Parser->>Parser: Layout Detection Dots.OCR
+            Parser->>Parser: Extract text from PDF by bbox PyMuPDF
+            Parser->>Parser: XML Parsing
+            Parser->>Parser: TOC Parsing
+            Parser->>Parser: Find headers in XML
+            Parser->>Parser: Validate headers via TOC
+            Parser->>Parser: Build hierarchy
+            Parser->>Parser: Convert tables to DataFrame
+            Parser->>Parser: Create ParsedDocument
+        end
+    else PDF Parser
+        Parser->>Parser: _is_text_extractable()
+        Parser->>Parser: _detect_layout_for_all_pages()
+        Parser->>Parser: _filter_layout_elements()
+        Parser->>Parser: _analyze_header_levels_from_elements()
+        Parser->>Parser: _build_hierarchy_from_section_headers()
+        Parser->>Parser: _extract_text_by_bboxes()
+        Parser->>Parser: _merge_nearby_text_blocks()
+        Parser->>Parser: _create_elements_from_hierarchy()
+        Parser->>Parser: _store_images_in_metadata()
+        Parser->>Parser: _parse_tables_with_qwen()
+        Parser->>Parser: Create ParsedDocument
+    end
     
+    Parser->>Parser: _validate_parsed_document(result)
     Parser-->>Pipeline: ParsedDocument
-    Pipeline-->>User: ParsedDocument.elements
+    Pipeline->>Pipeline: Add pipeline_metrics to metadata
+    Pipeline-->>User: ParsedDocument
+```
+
+## Parser Approaches
+
+```mermaid
+graph TB
+    subgraph "Markdown Parser"
+        MD[Markdown File] --> Load[Load Content<br/>from file or page_content]
+        Load --> Regex[Regex Parsing<br/>Line by line]
+        Regex --> Blocks[MarkdownBlocks]
+        Blocks --> Build[Build Elements<br/>with hierarchy]
+        Build --> Elements1[Elements]
+    end
+    
+    subgraph "DOCX Parser"
+        DOCX[DOCX File] --> Check{Scanned?}
+        Check -->|Yes| Convert1[Convert to PDF]
+        Convert1 --> PdfParser1[PdfParser with OCR]
+        PdfParser1 --> Elements2[Elements]
+        Check -->|No| Convert2[Convert to PDF]
+        Convert2 --> Render[Render PDF Pages<br/>2x scale]
+        Render --> Layout[Layout Detection<br/>Dots.OCR]
+        Layout --> Extract[Extract Text from PDF<br/>PyMuPDF by bbox]
+        Convert2 --> XML[XML Parsing<br/>Extract all elements]
+        XML --> TOC[TOC Parsing<br/>Parse table of contents]
+        Extract --> Match[Find Headers in XML<br/>Match OCR with XML]
+        TOC --> Match
+        Match --> Validate[Validate Headers via TOC]
+        Validate --> Hierarchy1[Build Hierarchy<br/>Group text blocks]
+        Hierarchy1 --> Tables[Convert Tables<br/>XML to DataFrame]
+        Tables --> Elements2
+    end
+    
+    subgraph "PDF Parser"
+        PDF[PDF File] --> TextCheck{Text Extractable?}
+        TextCheck --> Layout2[Layout Detection<br/>Dots.OCR for all pages]
+        Layout2 --> Filter[Filter Elements<br/>Remove headers/footers]
+        Filter --> Analyze[Analyze Header Levels<br/>Numbering, position, font]
+        Analyze --> Hierarchy2[Build Hierarchy<br/>Around Section-header]
+        Layout2 --> Extract2{Text Extractable?}
+        Extract2 -->|Yes| PyMuPDF[PyMuPDF<br/>by bbox coordinates]
+        Extract2 -->|No| OCR[Qwen2.5 OCR<br/>for text elements only]
+        PyMuPDF --> Merge[Merge Text Blocks<br/>up to 3000 chars]
+        OCR --> Merge
+        Merge --> Create[Create Elements<br/>from hierarchy]
+        Create --> Images[Store Images<br/>in metadata]
+        Layout2 --> Tables2[Parse Tables<br/>Qwen2.5]
+        Tables2 --> Elements3[Elements]
+        Images --> Elements3
+        Hierarchy2 --> Elements3
+    end
+    
+    Elements1 --> Unified[Unified ParsedDocument]
+    Elements2 --> Unified
+    Elements3 --> Unified
+    
+    style MD fill:#e3f2fd
+    style DOCX fill:#e3f2fd
+    style PDF fill:#e3f2fd
+    style Unified fill:#c8e6c9
+```
+
+## Pipeline Steps
+
+```mermaid
+flowchart TD
+    Start([User: Document]) --> Validate1{Document is None?}
+    Validate1 -->|Yes| Error1[ValidationError]
+    Validate1 -->|No| Detect[Format Detection<br/>detect_document_format]
+    
+    Detect --> Format{Format?}
+    Format -->|MARKDOWN| SelectMD[Select MarkdownParser]
+    Format -->|DOCX| SelectDOCX[Select DocxParser]
+    Format -->|PDF| SelectPDF[Select PdfParser]
+    Format -->|UNKNOWN| Error2[UnsupportedFormatError]
+    
+    SelectMD --> ParseMD[MarkdownParser.parse]
+    SelectDOCX --> ParseDOCX[DocxParser.parse]
+    SelectPDF --> ParsePDF[PdfParser.parse]
+    
+    ParseMD --> Validate2[Validate ParsedDocument]
+    ParseDOCX --> Validate2
+    ParsePDF --> Validate2
+    
+    Validate2 --> Metrics[Add Pipeline Metrics<br/>parsing_time, elements_per_second]
+    Metrics --> Return[Return ParsedDocument]
+    
+    Error1 --> End([End])
+    Error2 --> End
+    Return --> End
+    
+    style Start fill:#e1f5ff
+    style Detect fill:#fff4e1
+    style ParseMD fill:#e3f2fd
+    style ParseDOCX fill:#e3f2fd
+    style ParsePDF fill:#e3f2fd
+    style Return fill:#c8e6c9
+    style Error1 fill:#ffcdd2
+    style Error2 fill:#ffcdd2
 ```
