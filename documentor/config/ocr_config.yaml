@@ -92,10 +92,10 @@ dots_ocr:
 
 # Qwen OCR settings for text recognition
 qwen_ocr:
-  # Model for OCR
-  model: "qwen2-vl-7b-instruct"  # or other VL model
+  # Model for OCR (if null - uses from env variable QWEN_MODEL_NAME)
+  model: null
   
-  # API URL (if null - uses local model)
+  # API URL (if null - uses from env variable QWEN_BASE_URL)
   base_url: null
   
   # Recognition parameters

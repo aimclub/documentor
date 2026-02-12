@@ -186,6 +186,10 @@ def parse_table_with_qwen(
         logger.error("QWEN_BASE_URL or QWEN_API_KEY not configured")
         return None, None, False
     
+    if not model_name:
+        logger.error("QWEN_MODEL_NAME is not set (neither in config nor in env)")
+        return None, None, False
+    
     # Prompt for table parsing
     if method == "markdown":
         system_prompt = """You are Qwen, created by Alibaba Cloud. You are a helpful assistant.

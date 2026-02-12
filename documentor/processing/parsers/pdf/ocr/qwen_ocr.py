@@ -179,6 +179,9 @@ def ocr_text_with_qwen(
         else:
             base_url = f"{base_url}/v1"
     
+    if not model_name:
+        raise ValueError("QWEN_MODEL_NAME is not set (neither in config nor in env)")
+    
     prompt = """Extract all text from this image with high accuracy. Follow these guidelines:
 1. Preserve the exact reading order (left-to-right, top-to-bottom)
 2. Maintain line breaks exactly as they appear in the image
