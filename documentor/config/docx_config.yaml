@@ -1,0 +1,17 @@
+# Configuration for DOCX parser
+
+docx_parser:
+  # Layout Detection
+  layout_detection:
+    render_scale: 2.0  # scale increase for OCR rendering
+  
+  # Scanned document detection
+  scanned_detection:
+    min_text_length: 100  # minimum text length to determine text presence
+    min_text_for_non_scanned: 500  # minimum text length for non-scanned document
+    images_to_text_ratio: 2.0  # if images count > text_paragraphs * ratio, document is considered scanned
+  
+  # Hierarchy building
+  hierarchy:
+    max_text_block_size: 3000  # maximum text block size in characters
+    max_paragraphs_per_block: 10  # maximum number of paragraphs in one block
