@@ -6,8 +6,19 @@ dots_ocr:
   # If null - uses local service
   endpoint: null
   
-  # Request timeout in seconds
-  timeout: 120
+  # Model name
+  model: "/model"
+  
+  # Recognition parameters
+  recognition:
+    # Generation temperature (0.0 - 1.0)
+    temperature: 0.1
+    
+    # Maximum number of tokens
+    max_tokens: 32768
+    
+    # Request timeout in seconds
+    timeout: 30
   
   # Prompts for Dots.OCR (strict prompts from official documentation)
   prompts:
@@ -96,6 +107,12 @@ qwen_ocr:
     # Higher = better quality, but slower
     resolution: 300
     
+    # Generation temperature (0.0 - 1.0)
+    temperature: 0.1
+    
+    # Maximum number of tokens
+    max_tokens: 4096
+    
     # Timeout per image in seconds
     timeout: 30
   
@@ -118,9 +135,6 @@ image_processing:
   
   # DPI for page rendering
   dpi: 300
-  
-  # Maximum image size in pixels
-  max_size: 4096
   
   # Image preprocessing
   preprocessing:

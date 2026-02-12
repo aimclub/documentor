@@ -48,22 +48,31 @@ OCR (Optical Character Recognition) service configuration.
 
 **Structure:**
 - `dots_ocr`: Dots.OCR settings
-  - `endpoint`: URL or path to Dots.OCR service
-  - `timeout`: Request timeout in seconds
+  - `endpoint`: URL or path to Dots.OCR service (if null - uses local service)
+  - `model`: Model name (default: "/model")
+  - `recognition`: Recognition parameters
+    - `temperature`: Generation temperature (0.0 - 1.0, default: 0.1)
+    - `max_tokens`: Maximum number of tokens (default: 32768)
+    - `timeout`: Request timeout in seconds (default: 30)
   - `prompts`: Prompts for Dots.OCR
   - `prompt_mode`: Prompt mode to use
   - `layout`: Layout detection parameters
+    - `confidence_threshold`: Detection confidence threshold (0.0 - 1.0, default: 0.5)
   - `reading_order`: Reading order building settings
 - `qwen_ocr`: Qwen OCR settings
-  - `model`: Model for OCR
-  - `base_url`: API URL
+  - `model`: Model for OCR (default: "qwen2-vl-7b-instruct")
+  - `base_url`: API URL (if null - uses local model)
   - `recognition`: Recognition parameters
+    - `languages`: Recognition languages (ISO 639-1 codes)
+    - `resolution`: Image resolution for OCR (DPI)
+    - `temperature`: Generation temperature (0.0 - 1.0, default: 0.1)
+    - `max_tokens`: Maximum number of tokens (default: 4096)
+    - `timeout`: Timeout per image in seconds (default: 30)
   - `batch`: Batch processing settings
 - `image_processing`: Image processing settings
   - `format`: Image format for OCR
   - `quality`: Image quality for JPEG
   - `dpi`: DPI for page rendering
-  - `max_size`: Maximum image size in pixels
   - `preprocessing`: Image preprocessing options
 - `coordinates`: Coordinate (bbox) settings
   - `precision`: Coordinate precision (decimal places)
@@ -118,6 +127,20 @@ pipeline = Pipeline()
 doc = Document(page_content="", metadata={"source": "document.pdf"})
 parsed = pipeline.parse(doc)
 ```
+
+## Configuration Priority
+
+For non-secret parameters (timeouts, temperatures, model names, etc.), the priority is:
+1. **Configuration file** (`ocr_config.yaml`, `config.yaml`, `llm_config.yaml`)
+2. **Environment variables** (if config value is not found)
+3. **Default values** (hardcoded in code)
+
+For secret parameters (API keys, base URLs), only environment variables are used.
+
+Example for Qwen OCR timeout:
+- If `qwen_ocr.recognition.timeout` is set in `ocr_config.yaml` → uses that value
+- If not set in config but `QWEN_TIMEOUT` env var exists → uses env var
+- Otherwise → uses default value (180 seconds)
 
 ## Configuration Format
 

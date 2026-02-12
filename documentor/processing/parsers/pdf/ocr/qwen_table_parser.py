@@ -15,12 +15,88 @@ import logging
 import os
 import re
 from io import BytesIO
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import openai
+import yaml
 from PIL import Image
 
 logger = logging.getLogger(__name__)
+
+# Cache for OCR config
+_ocr_config_cache: Optional[dict] = None
+
+
+def _load_ocr_config() -> dict:
+    """Loads OCR configuration from ocr_config.yaml."""
+    global _ocr_config_cache
+    if _ocr_config_cache is not None:
+        return _ocr_config_cache
+    
+    config_path = Path(__file__).parent.parent.parent.parent.parent / "config" / "ocr_config.yaml"
+    if config_path.exists():
+        try:
+            with open(config_path, "r", encoding="utf-8") as f:
+                config = yaml.safe_load(f)
+                _ocr_config_cache = config or {}
+                return _ocr_config_cache
+        except Exception as e:
+            logger.warning(f"Failed to load OCR config from {config_path}: {e}")
+            _ocr_config_cache = {}
+            return _ocr_config_cache
+    else:
+        _ocr_config_cache = {}
+        return _ocr_config_cache
+
+
+def _get_config_value(key_path: str, env_var: Optional[str] = None, default: Optional[Any] = None) -> Any:
+    """
+    Gets configuration value with priority: config file → env var → default.
+    
+    Args:
+        key_path: Dot-separated path in config (e.g., "qwen_ocr.recognition.timeout")
+        env_var: Environment variable name (optional)
+        default: Default value if not found
+    
+    Returns:
+        Configuration value
+    """
+    config = _load_ocr_config()
+    
+    # Try config file first
+    keys = key_path.split(".")
+    value = config
+    for k in keys:
+        if isinstance(value, dict):
+            value = value.get(k)
+        else:
+            value = None
+            break
+        if value is None:
+            break
+    
+    if value is not None:
+        return value
+    
+    # Fallback to environment variable
+    if env_var:
+        env_value = os.getenv(env_var)
+        if env_value is not None:
+            try:
+                # Try to convert to appropriate type
+                if isinstance(default, int):
+                    return int(env_value)
+                elif isinstance(default, float):
+                    return float(env_value)
+                elif isinstance(default, bool):
+                    return env_value.lower() in ("true", "1", "yes", "on")
+                return env_value
+            except (ValueError, TypeError):
+                logger.warning(f"Failed to convert env var {env_var}={env_value} to {type(default).__name__}")
+    
+    # Return default
+    return default
 
 
 def _image_to_base64(image: Image.Image) -> str:
@@ -76,16 +152,35 @@ def parse_table_with_qwen(
                         break
                 if base_url:
                     break
+    # Secret parameters: only from env
     if api_key is None:
         api_key = os.getenv("QWEN_API_KEY")
+    
+    # Non-secret parameters: from config → env → default
     if temperature is None:
-        temperature = float(os.getenv("QWEN_TEMPERATURE"))
+        temperature = _get_config_value(
+            "qwen_ocr.recognition.temperature",
+            "QWEN_TEMPERATURE",
+            0.1
+        )
     if max_tokens is None:
-        max_tokens = int(os.getenv("QWEN_MAX_TOKENS"))
+        max_tokens = _get_config_value(
+            "qwen_ocr.recognition.max_tokens",
+            "QWEN_MAX_TOKENS",
+            4096
+        )
     if model_name is None:
-        model_name = os.getenv("QWEN_MODEL_NAME")
+        model_name = _get_config_value(
+            "qwen_ocr.model",
+            "QWEN_MODEL_NAME",
+            None
+        )
     if timeout is None:
-        timeout = int(os.getenv("QWEN_TIMEOUT"))
+        timeout = _get_config_value(
+            "qwen_ocr.recognition.timeout",
+            "QWEN_TIMEOUT",
+            180
+        )
     
     if not base_url or not api_key:
         logger.error("QWEN_BASE_URL or QWEN_API_KEY not configured")

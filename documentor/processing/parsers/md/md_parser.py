@@ -17,8 +17,10 @@ Supported elements:
 
 from __future__ import annotations
 
+import logging
 import re
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, List, Optional
 
 import pandas as pd
@@ -27,6 +29,8 @@ from langchain_core.documents import Document
 from ....domain import DocumentFormat, Element, ElementType, ParsedDocument
 from ....exceptions import ParsingError
 from ..base import BaseParser
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(slots=True)
@@ -81,7 +85,20 @@ class MarkdownParser(BaseParser):
         self._log_parsing_start(source)
 
         try:
+            # Load content from file if page_content is empty
             markdown_text = document.page_content or ""
+            if not markdown_text.strip() and source != "unknown":
+                try:
+                    file_path = Path(source)
+                    if file_path.exists() and file_path.is_file():
+                        with open(file_path, "r", encoding="utf-8") as f:
+                            markdown_text = f.read()
+                        logger.debug(f"Loaded Markdown content from file: {source}")
+                    else:
+                        logger.warning(f"File not found: {source}")
+                except Exception as e:
+                    logger.warning(f"Failed to load file content from {source}: {e}")
+                    # Continue with empty content
 
             # Parse document line by line
             blocks = self._parse_markdown(markdown_text)
@@ -114,7 +131,7 @@ class MarkdownParser(BaseParser):
 
         except Exception as e:
             error_msg = f"Error parsing Markdown document (source: {source})"
-            self._logger.error(f"{error_msg}. Original error: {e}")
+            logger.error(f"{error_msg}. Original error: {e}")
             raise ParsingError(error_msg, source=source) from e
 
     def _parse_markdown(self, text: str) -> List[MarkdownBlock]:
@@ -227,7 +244,7 @@ class MarkdownParser(BaseParser):
                     }
                 except Exception as e:
                     # If failed to parse to DataFrame, save only text
-                    self._logger.warning(f"Failed to parse table to DataFrame: {e}")
+                    logger.warning(f"Failed to parse table to DataFrame: {e}")
                     metadata = {"source": "markdown"}
                 
                 blocks.append(

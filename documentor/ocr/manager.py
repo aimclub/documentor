@@ -26,9 +26,88 @@ from pathlib import Path
 from queue import Queue, Empty
 from PIL import Image
 import openai
+import yaml
 
 from .dots_ocr import get_system_prompt, load_prompts_from_config
 from ..core.load_env import load_env_file
+
+# Cache for OCR config
+_ocr_config_cache: Optional[dict] = None
+
+
+def _load_ocr_config() -> dict:
+    """Loads OCR configuration from ocr_config.yaml."""
+    global _ocr_config_cache
+    if _ocr_config_cache is not None:
+        return _ocr_config_cache
+    
+    config_path = Path(__file__).parent.parent / "config" / "ocr_config.yaml"
+    if config_path.exists():
+        try:
+            with open(config_path, "r", encoding="utf-8") as f:
+                config = yaml.safe_load(f)
+                _ocr_config_cache = config or {}
+                return _ocr_config_cache
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning(f"Failed to load OCR config from {config_path}: {e}")
+            _ocr_config_cache = {}
+            return _ocr_config_cache
+    else:
+        _ocr_config_cache = {}
+        return _ocr_config_cache
+
+
+def _get_config_value(key_path: str, env_var: Optional[str] = None, default: Optional[Any] = None) -> Any:
+    """
+    Gets configuration value with priority: config file → env var → default.
+    
+    Args:
+        key_path: Dot-separated path in config (e.g., "dots_ocr.recognition.timeout")
+        env_var: Environment variable name (optional)
+        default: Default value if not found
+    
+    Returns:
+        Configuration value
+    """
+    config = _load_ocr_config()
+    
+    # Try config file first
+    keys = key_path.split(".")
+    value = config
+    for k in keys:
+        if isinstance(value, dict):
+            value = value.get(k)
+        else:
+            value = None
+            break
+        if value is None:
+            break
+    
+    if value is not None:
+        return value
+    
+    # Fallback to environment variable
+    if env_var:
+        env_value = os.getenv(env_var)
+        if env_value is not None:
+            try:
+                # Try to convert to appropriate type
+                if isinstance(default, int):
+                    return int(env_value)
+                elif isinstance(default, float):
+                    return float(env_value)
+                elif isinstance(default, bool):
+                    return env_value.lower() in ("true", "1", "yes", "on")
+                return env_value
+            except (ValueError, TypeError):
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.warning(f"Failed to convert env var {env_var}={env_value} to {type(default).__name__}")
+    
+    # Return default
+    return default
 
 
 class TaskStatus(str, Enum):
@@ -175,11 +254,30 @@ class DotsOCRManager:
             raise RuntimeError("No valid DOTS_OCR_BASE_URL found")
         
         # Get common parameters
+        # Secret parameters: only from env
         api_key = os.getenv("DOTS_OCR_API_KEY", "")
-        model_name = os.getenv("DOTS_OCR_MODEL_NAME", "/model")
-        temperature = float(os.getenv("DOTS_OCR_TEMPERATURE", "0.1"))
-        max_tokens = int(os.getenv("DOTS_OCR_MAX_TOKENS", "4096"))
-        timeout = int(os.getenv("DOTS_OCR_TIMEOUT", "60"))
+        
+        # Non-secret parameters: from config → env → default
+        model_name = _get_config_value(
+            "dots_ocr.model",
+            "DOTS_OCR_MODEL_NAME",
+            "/model"
+        )
+        temperature = _get_config_value(
+            "dots_ocr.recognition.temperature",
+            "DOTS_OCR_TEMPERATURE",
+            0.1
+        )
+        max_tokens = _get_config_value(
+            "dots_ocr.recognition.max_tokens",
+            "DOTS_OCR_MAX_TOKENS",
+            4096
+        )
+        timeout = _get_config_value(
+            "dots_ocr.recognition.timeout",
+            "DOTS_OCR_TIMEOUT",
+            60
+        )
         
         # Get task_format for each model (can be multiple via comma)
         task_formats_raw = os.getenv("DOTS_OCR_TASK_FORMAT", "")
