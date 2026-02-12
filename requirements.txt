@@ -1,33 +1,42 @@
-# Основные зависимости для Documentor
+# Core dependencies for Documentor
 
-# LangChain для работы с Document
+# LangChain for Document support
 langchain-core>=0.3.0
 
-# YAML для конфигурации
+# YAML for configuration
 pyyaml>=6.0
 
-# Работа с DOCX
+# DOCX processing
 python-docx>=1.1.0
 
-# Работа с PDF
-pdfplumber>=0.11.0
+# PDF processing
+PyMuPDF>=1.23.0  # fitz module
 
-# Для тестирования
+# Image processing
+Pillow>=10.0.0  # PIL module
+
+# Data processing
+pandas>=2.0.0
+
+# Progress bars
+tqdm>=4.66.0
+
+# HTTP requests
+requests>=2.31.0
+
+# OpenAI API (for Qwen OCR)
+openai>=1.0.0
+
+# Testing
 pytest>=8.0.0
 pytest-cov>=4.1.0
 
-# Для разработки (опционально)
-# black>=24.0.0  # Форматирование кода
-# ruff>=0.1.0    # Линтер
-# mypy>=1.8.0    # Проверка типов
-# streamlit 
-gradio
-gradio_image_annotation
-PyMuPDF
-openai
-qwen_vl_utils
-transformers==4.51.3
-huggingface_hub
-modelscope
-flash-attn==2.8.0.post2
-accelerate
+# Optional dependencies (for DOCX to PDF conversion)
+# Uncomment if using win32com (Windows only)
+# pywin32>=306
+
+# Uncomment if using docx2pdf
+# docx2pdf>=0.1.8
+
+# Uncomment if using LibreOffice
+# (LibreOffice must be installed separately)
