@@ -1,14 +1,14 @@
 """
-Главный пайплайн обработки документов.
+Main document processing pipeline.
 
-Содержит класс Pipeline и функцию pipeline для обработки документов
-в формате LangChain Document.
+Contains Pipeline class and pipeline function for processing documents
+in LangChain Document format.
 
-Основная логика:
-1. Определение формата документа
-2. Выбор соответствующего парсера
-3. Парсинг документа в структурированный формат
-4. Возврат ParsedDocument с элементами и иерархией
+Main logic:
+1. Document format detection
+2. Select appropriate parser
+3. Parse document into structured format
+4. Return ParsedDocument with elements and hierarchy
 """
 
 from __future__ import annotations
@@ -33,45 +33,45 @@ logger = logging.getLogger(__name__)
 
 class Pipeline:
     """
-    Главный пайплайн для обработки документов различных форматов.
+    Main pipeline for processing documents of various formats.
 
-    Поддерживает:
-    - Автоматическое определение формата документа
-    - Выбор соответствующего парсера
-    - Обработку ошибок с информативными сообщениями
-    - Логирование всех операций
-    - Метрики производительности
+    Supports:
+    - Automatic document format detection
+    - Selection of appropriate parser
+    - Error handling with informative messages
+    - Logging of all operations
+    - Performance metrics
 
-    Пример использования:
+    Usage example:
         ```python
         from langchain_core.documents import Document
         from documentor import Pipeline
 
         pipeline = Pipeline()
-        doc = Document(page_content="# Заголовок", metadata={"source": "test.md"})
+        doc = Document(page_content="# Header", metadata={"source": "test.md"})
         result = pipeline.parse(doc)
         ```
     """
 
     def __init__(self, parsers: Optional[Iterable[BaseParser]] = None) -> None:
         """
-        Инициализация Pipeline.
+        Initialize Pipeline.
 
         Args:
-            parsers: Список парсеров для использования. Если не указан,
-                    создаются парсеры по умолчанию (Markdown, DOCX, PDF).
-                    DotsOCRManager автоматически создается из .env для парсеров, которым он нужен.
+            parsers: List of parsers to use. If not specified,
+                    default parsers are created (Markdown, DOCX, PDF).
+                    DotsOCRManager is automatically created from .env for parsers that need it.
         """
-        # Автоматически создаем менеджер из .env (если настроен)
+        # Automatically create manager from .env (if configured)
         try:
             self.ocr_manager = DotsOCRManager(auto_load_models=True)
             self._logger = logging.getLogger(self.__class__.__name__)
-            self._logger.debug("DotsOCRManager инициализирован из .env")
+            self._logger.debug("DotsOCRManager initialized from .env")
         except Exception as e:
-            # Если .env не настроен или ошибка загрузки - менеджер будет None
+            # If .env is not configured or loading error - manager will be None
             self.ocr_manager = None
             self._logger = logging.getLogger(self.__class__.__name__)
-            self._logger.debug(f"DotsOCRManager не инициализирован: {e}")
+            self._logger.debug(f"DotsOCRManager not initialized: {e}")
         
         parser_list = list(parsers) if parsers is not None else [
             MarkdownParser(),
@@ -88,27 +88,27 @@ class Pipeline:
 
     def get_available_formats(self) -> List[DocumentFormat]:
         """
-        Возвращает список поддерживаемых форматов.
+        Returns list of supported formats.
 
         Returns:
-            Список форматов, для которых есть парсеры.
+            List of formats for which parsers are available.
         """
         return list(self._parsers_by_format.keys())
 
     def parse(self, document: Document) -> ParsedDocument:
         """
-        Парсит документ и возвращает структурированное представление.
+        Parse document and return structured representation.
 
         Args:
-            document: LangChain Document для парсинга.
+            document: LangChain Document to parse.
 
         Returns:
-            ParsedDocument: Структурированное представление документа.
+            ParsedDocument: Structured document representation.
 
         Raises:
-            ValidationError: Если документ невалиден.
-            UnsupportedFormatError: Если формат документа не поддерживается.
-            ParsingError: Если произошла ошибка при парсинге.
+            ValidationError: If document is invalid.
+            UnsupportedFormatError: If document format is not supported.
+            ParsingError: If parsing error occurred.
         """
         start_time = time.time()
         source = get_document_source(document)
@@ -116,30 +116,30 @@ class Pipeline:
         self._logger.info(f"Starting parsing document: {source}")
 
         try:
-            # Определение формата
+            # Format detection
             try:
                 format_ = detect_document_format(document)
                 self._logger.debug(f"Detected format: {format_.value} for source: {source}")
             except ValueError as e:
-                error_msg = f"Failed to detect document format (источник: {source})"
-                self._logger.error(f"{error_msg}. Исходная ошибка: {e}")
+                error_msg = f"Failed to detect document format (source: {source})"
+                self._logger.error(f"{error_msg}. Original error: {e}")
                 raise ValidationError(error_msg, field="format") from e
 
-            # Выбор парсера
+            # Parser selection
             parser = self._parsers_by_format.get(format_)
             if parser is None:
                 error_msg = f"No parser available for format: {format_.value}"
-                self._logger.error(f"{error_msg} (источник: {source})")
+                self._logger.error(f"{error_msg} (source: {source})")
                 raise UnsupportedFormatError(format_value=format_.value, message=error_msg)
 
             self._logger.debug(f"Using parser: {parser.__class__.__name__} for format: {format_.value}")
 
-            # Парсинг документа
+            # Document parsing
             try:
                 parsed_document = parser.parse(document)
                 elapsed_time = time.time() - start_time
 
-                # Логирование результата
+                # Log result
                 num_elements = len(parsed_document.elements)
                 self._logger.info(
                     f"Successfully parsed document: {source}. "
@@ -147,23 +147,23 @@ class Pipeline:
                     f"Time: {elapsed_time:.3f}s"
                 )
 
-                # Добавление метрик в метаданные
+                # Add metrics to metadata
                 if parsed_document.metadata is None:
                     parsed_document.metadata = {}
                 
-                # Вычисление дополнительных метрик
-                # Статистика элементов по типам
+                # Calculate additional metrics
+                # Element statistics by type
                 elements_by_type: Dict[str, int] = {}
                 for element in parsed_document.elements:
                     element_type = element.type.value
                     elements_by_type[element_type] = elements_by_type.get(element_type, 0) + 1
                 
-                # Размер документа
+                # Document size
                 document_content = document.page_content or ""
                 document_size_bytes = len(document_content.encode("utf-8"))
                 document_lines = len(document_content.splitlines())
                 
-                # Производительность
+                # Performance
                 elements_per_second = (
                     round(num_elements / elapsed_time, 2) if elapsed_time > 0 else 0.0
                 )
@@ -181,36 +181,36 @@ class Pipeline:
                 return parsed_document
 
             except (ValidationError, UnsupportedFormatError):
-                # Пробрасываем исключения валидации и неподдерживаемого формата как есть
+                # Re-raise validation and unsupported format exceptions as-is
                 raise
             except Exception as e:
-                error_msg = f"Error during parsing (источник: {source}, формат: {format_.value})"
-                self._logger.error(f"{error_msg}. Исходная ошибка: {type(e).__name__}: {e}", exc_info=True)
+                error_msg = f"Error during parsing (source: {source}, format: {format_.value})"
+                self._logger.error(f"{error_msg}. Original error: {type(e).__name__}: {e}", exc_info=True)
                 raise ParsingError(error_msg, source=source, original_error=e) from e
 
         except (ValidationError, UnsupportedFormatError, ParsingError):
-            # Пробрасываем наши кастомные исключения как есть
+            # Re-raise our custom exceptions as-is
             raise
         except Exception as e:
-            # Обрабатываем неожиданные ошибки
-            error_msg = f"Unexpected error in pipeline (источник: {source})"
-            self._logger.error(f"{error_msg}. Исходная ошибка: {type(e).__name__}: {e}", exc_info=True)
+            # Handle unexpected errors
+            error_msg = f"Unexpected error in pipeline (source: {source})"
+            self._logger.error(f"{error_msg}. Original error: {type(e).__name__}: {e}", exc_info=True)
             raise ParsingError(error_msg, source=source, original_error=e) from e
 
     def parse_many(self, documents: Iterable[Document]) -> List[ParsedDocument]:
         """
-        Парсит несколько документов.
+        Parse multiple documents.
 
         Args:
-            documents: Итерируемый объект с LangChain Document.
+            documents: Iterable of LangChain Documents.
 
         Returns:
-            Список ParsedDocument для каждого документа.
+            List of ParsedDocument for each document.
 
         Raises:
-            ParsingError: Если произошла ошибка при парсинге любого документа.
+            ParsingError: If error occurred while parsing any document.
         """
-        # TODO: возможно переписать в одну функцию parse (подумаю)
+        # TODO: possibly rewrite into single parse function (think about it)
         start_time = time.time()
         doc_list = list(documents)
         total_docs = len(doc_list)
@@ -242,7 +242,7 @@ class Pipeline:
         )
 
         if errors and not results:
-            # Если все документы завершились ошибкой
+            # If all documents failed
             error_msg = f"All {total_docs} documents failed to parse"
             first_error = errors[0]
             raise ParsingError(
@@ -252,7 +252,7 @@ class Pipeline:
             )
 
         if errors:
-            # Если есть ошибки, но есть и успешные результаты
+            # If there are errors but also successful results
             self._logger.warning(
                 f"{error_count} document(s) failed to parse: "
                 f"{', '.join([err[0] for err in errors])}"
@@ -263,36 +263,36 @@ class Pipeline:
 
 def pipeline(document: Document, pipeline_instance: Optional[Pipeline] = None) -> ParsedDocument:
     """
-    Удобная функция для парсинга одного документа.
+    Convenience function for parsing a single document.
 
     Args:
-        document: LangChain Document для парсинга.
-        pipeline_instance: Экземпляр Pipeline. Если не указан, создается новый.
-                          DotsOCRManager автоматически инициализируется из .env.
+        document: LangChain Document to parse.
+        pipeline_instance: Pipeline instance. If not specified, a new one is created.
+                          DotsOCRManager is automatically initialized from .env.
 
     Returns:
-        ParsedDocument: Структурированное представление документа.
+        ParsedDocument: Structured document representation.
 
     Raises:
-        ValidationError: Если документ невалиден.
-        UnsupportedFormatError: Если формат документа не поддерживается.
-        ParsingError: Если произошла ошибка при парсинге.
+        ValidationError: If document is invalid.
+        UnsupportedFormatError: If document format is not supported.
+        ParsingError: If parsing error occurred.
 
-    Пример:
+    Example:
         ```python
         from langchain_core.documents import Document
         from documentor import pipeline
 
-        doc = Document(page_content="# Заголовок", metadata={"source": "test.md"})
+        doc = Document(page_content="# Header", metadata={"source": "test.md"})
         result = pipeline(doc)
         ```
         
-    Примечание:
-        Для работы с OCR убедитесь, что в .env файле настроены:
+    Note:
+        For OCR functionality, ensure that .env file has:
         - DOTS_OCR_BASE_URL
         - DOTS_OCR_API_KEY
         - DOTS_OCR_MODEL_NAME
-        и другие необходимые параметры.
+        and other necessary parameters.
     """
     active_pipeline = pipeline_instance or Pipeline()
     return active_pipeline.parse(document)

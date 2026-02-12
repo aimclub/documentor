@@ -1,16 +1,16 @@
-# Конфигурация для работы с OCR (Optical Character Recognition)
+# Configuration for working with OCR (Optical Character Recognition)
 
-# Настройки Dots.OCR для layout detection
+# Dots.OCR settings for layout detection
 dots_ocr:
-  # URL или путь к сервису Dots.OCR
-  endpoint: null  # если null - используется локальный сервис
+  # URL or path to Dots.OCR service
+  endpoint: null  # if null - uses local service
   
-  # Таймаут запроса
+  # Request timeout
   timeout: 60
   
-  # Промпты для Dots.OCR (строгие промпты из официальной документации)
+  # Prompts for Dots.OCR (strict prompts from official documentation)
   prompts:
-    # Полное извлечение layout с текстом в JSON формате
+    # Full layout extraction with text in JSON format
     prompt_layout_all_en: |
       Please output the layout information from the PDF image, including each layout element's bbox, its category, and the corresponding text content within the bbox.
 
@@ -30,152 +30,152 @@ dots_ocr:
 
       5. Final Output: The entire output must be a single JSON object.
     
-    # Только определение layout без текста
+    # Layout detection only without text
     prompt_layout_only_en: |
       Please output the layout information from this PDF image, including each layout's bbox and its category. The bbox should be in the format [x1, y1, x2, y2]. The layout categories for the PDF document include ['Caption', 'Footnote', 'Formula', 'List-item', 'Page-footer', 'Page-header', 'Picture', 'Section-header', 'Table', 'Text', 'Title']. Do not output the corresponding text. The layout result should be in JSON format.
     
-    # Извлечение текста из изображения (кроме Page-header и Page-footer)
+    # Text extraction from image (except Page-header and Page-footer)
     prompt_ocr: |
       Extract the text content from this image.
     
-    # Извлечение текста из заданного bounding box
+    # Text extraction from given bounding box
     prompt_grounding_ocr: |
       Extract text from the given bounding box on the image (format: [x1, y1, x2, y2]).
       Bounding Box:
   
-  # Режим работы промпта (какой промпт использовать)
+  # Prompt mode (which prompt to use)
   prompt_mode: "prompt_layout_all_en"  # prompt_layout_all_en, prompt_layout_only_en, prompt_ocr, prompt_grounding_ocr
   
-  # Параметры layout detection
+  # Layout detection parameters
   layout:
-    # Минимальный размер элемента для детектирования
-    min_element_size: 10  # пикселей
+    # Minimum element size for detection
+    min_element_size: 10  # pixels
     
-    # Порог уверенности детектирования
+    # Detection confidence threshold
     confidence_threshold: 0.5
     
-    # Типы элементов для детектирования
-    detect_types:
-      - "Text"
-      - "Picture"
-      - "Caption"
-      - "Table"
-      - "Section-header"
-      - "Title"
-      - "Formula"
-      - "List-item"
-      - "Footnote"
+    # Element types to detect
+    element_types:
+      - Caption
+      - Footnote
+      - Formula
+      - List-item
+      - Page-footer
+      - Page-header
+      - Picture
+      - Section-header
+      - Table
+      - Text
+      - Title
   
-  # Настройки для построения порядка чтения
+  # Reading order building settings
   reading_order:
-    # Метод построения порядка (top-to-bottom, left-to-right, или комбинированный)
-    method: "top-to-bottom"
+    # Reading order building method (top-to-bottom, left-to-right, or combined)
+    method: "combined"
     
-    # Учитывать группировку элементов
-    group_elements: true
+    # Consider element grouping
+    use_grouping: true
 
-# Настройки Qwen OCR для распознавания текста
+# Qwen OCR settings for text recognition
 qwen_ocr:
-  # Модель для OCR
-  model: "qwen2-vl-7b-instruct"  # или другая VL модель
+  # Model for OCR
+  model: "qwen2-vl-7b-instruct"  # or other VL model
   
-  # URL для API
-  base_url: null  # если null - используется локальная модель
+  # API URL
+  base_url: null  # if null - uses local model
   
-  # Параметры распознавания
+  # Recognition parameters
   recognition:
-    # Языки для распознавания
-    languages: ["ru", "en"]
+    # Recognition languages
+    languages: ["en", "ru"]
     
-    # Разрешение изображения для OCR (больше = лучше качество, но медленнее)
-    image_resolution: 1024
+    # Image resolution for OCR (higher = better quality, but slower)
+    resolution: 300
     
-    # Таймаут на одно изображение
+    # Timeout per image
     timeout: 30
   
-  # Батч-обработка
+  # Batch processing
   batch:
-    # Размер батча для обработки
-    batch_size: 4
+    # Batch size for processing
+    size: 10
     
-    # Максимальное время ожидания батча
-    batch_timeout: 120
+    # Maximum batch wait time
+    max_wait_time: 5
 
-# Настройки обработки изображений
+# Image processing settings
 image_processing:
-  # Формат изображений для OCR
+  # Image format for OCR
   format: "PNG"
   
-  # Качество изображения (для JPEG)
+  # Image quality (for JPEG)
   quality: 95
   
-  # DPI для рендеринга страниц
+  # DPI for page rendering
   dpi: 300
   
-  # Максимальный размер изображения (пикселей)
+  # Maximum image size (pixels)
   max_size: 4096
   
-  # Оптимизация для OCR
+  # Optimization for OCR
   optimize_for_ocr: true
   
-  # Предобработка изображений
+  # Image preprocessing
   preprocessing:
-    # Увеличение контраста
-    enhance_contrast: true
+    # Contrast enhancement
+    enhance_contrast: false
     
-    # Удаление шума
+    # Noise removal
     denoise: false
     
-    # Бинаризация (для сканов)
+    # Binarization (for scans)
     binarize: false
 
-# Настройки для работы с координатами (bbox)
-bbox:
-  # Точность координат (количество знаков после запятой)
+# Coordinate (bbox) settings
+coordinates:
+  # Coordinate precision (decimal places)
   precision: 2
   
-  # Нормализация координат (относительно страницы или абсолютные)
-  normalize: true
+  # Coordinate normalization (relative to page or absolute)
+  normalize: false
   
-  # Единицы измерения (pixels, points, mm)
+  # Units of measurement (pixels, points, mm)
   units: "pixels"
 
-# Настройки маппинга типов Layout → ElementType
+# Layout Type → ElementType mapping settings
 type_mapping:
-  # Маппинг типов Dots.OCR в ElementType
+  # Dots.OCR type mapping to ElementType
   layout_to_element:
-    "Section-header": "HEADER_N"  # уровень определяется отдельно
+    "Section-header": "HEADER_N"  # level determined separately
+    "Title": "TITLE"
     "Text": "TEXT"
-    "Picture": "IMAGE"  # ImageFragment
-    "Caption": "CAPTION"  # CaptionFragment
-    "Table": "TABLE"  # TableFragment
-    "Formula": "FORMULA"  # LatexFormulaFragment
-    "Title": "TITLE"  # TitleFragment
-    "List-item": "LIST_ITEM"  # ListItemFragment
-    "Page-header": "PAGE_HEADER"  # PageHeaderFragment
-    "Page-footer": "PAGE_FOOTER"  # PageFooterFragment
-    "Footnote": "FOOTNOTE"  # FootnoteFragment
-    "Other": "TEXT"
-    "Unknown": "TEXT"
+    "Picture": "IMAGE"
+    "Table": "TABLE"
+    "Caption": "CAPTION"
+    "Formula": "FORMULA"
+    "Footnote": "FOOTNOTE"
+    "List-item": "LIST_ITEM"
+    "Page-header": "PAGE_HEADER"
+    "Page-footer": "PAGE_FOOTER"
   
-  # Правила определения уровня заголовка из Section-header
-  header_level_detection:
-    # Использовать LLM для определения уровня
+  # Rules for determining header level from Section-header
+  header_level:
+    # Use LLM for level determination
     use_llm: true
     
-    # Или использовать эвристики (размер шрифта, позиция и т.д.)
-    use_heuristics: false
+    # Or use heuristics (font size, position, etc.)
+    use_heuristics: true
 
-# Настройки производительности
+# Performance settings
 performance:
-  # Параллельная обработка страниц
+  # Parallel page processing
   parallel_processing: true
   
-  # Количество потоков для параллельной обработки
-  max_workers: 4
+  # Number of threads for parallel processing
+  num_workers: 4
   
-  # Кэширование результатов layout detection
-  cache_layout_results: true
+  # Cache layout detection results
+  cache_layout: true
   
-  # Кэширование результатов OCR
-  cache_ocr_results: true
+  # Cache OCR results
+  cache_ocr: true

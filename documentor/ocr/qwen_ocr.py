@@ -1,13 +1,13 @@
 """
-Интеграция с Qwen OCR для распознавания текста.
+Integration with Qwen OCR for text recognition.
 
-Содержит классы для:
-- Распознавания текста из изображений
-- Распознавания текста из зон (bbox)
-- Батч-обработки изображений
+Contains classes for:
+- Recognizing text from images
+- Recognizing text from zones (bbox)
+- Batch processing of images
 """
 
-# TODO: Реализовать класс QwenOCR:
-# - recognize_text() - распознавание текста из изображения
-# - recognize_zone() - распознавание текста из зоны (bbox)
-# - recognize_batch() - батч-обработка изображений
+# TODO: Implement QwenOCR class:
+# - recognize_text() - text recognition from image
+# - recognize_zone() - text recognition from zone (bbox)
+# - recognize_batch() - batch processing of images

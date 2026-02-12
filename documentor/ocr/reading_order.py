@@ -1,13 +1,13 @@
 """
-Построение порядка чтения (reading order) элементов страницы.
+Building reading order of page elements.
 
-Содержит логику для:
-- Определения порядка чтения элементов по координатам
-- Группировки элементов по типам
-- Построения последовательности элементов
+Contains logic for:
+- Determining reading order of elements by coordinates
+- Grouping elements by types
+- Building element sequence
 """
 
-# TODO: Реализовать класс ReadingOrderBuilder:
-# - build_reading_order() - построение порядка чтения
-# - group_elements() - группировка элементов
-# - sort_by_position() - сортировка по координатам
+# TODO: Implement ReadingOrderBuilder class:
+# - build_reading_order() - building reading order
+# - group_elements() - grouping elements
+# - sort_by_position() - sorting by coordinates

@@ -1,18 +1,18 @@
 """
-Парсер для Markdown документов.
+Parser for Markdown documents.
 
-Использует регулярные выражения для парсинга Markdown и преобразует результат
-в структурированные элементы с иерархией.
+Uses regular expressions for parsing Markdown and converts result
+into structured elements with hierarchy.
 
-Поддерживаемые элементы:
-- Заголовки (HEADER_1-6)
-- Списки (LIST_ITEM)
-- Таблицы (TABLE)
-- Изображения (IMAGE)
-- Код-блоки (CODE_BLOCK)
-- Ссылки (LINK)
-- Цитаты (TEXT с metadata)
-- Текст (TEXT)
+Supported elements:
+- Headers (HEADER_1-6)
+- Lists (LIST_ITEM)
+- Tables (TABLE)
+- Images (IMAGE)
+- Code blocks (CODE_BLOCK)
+- Links (LINK)
+- Quotes (TEXT with metadata)
+- Text (TEXT)
 """
 
 from __future__ import annotations
@@ -31,24 +31,24 @@ from ..base import BaseParser
 
 @dataclass(slots=True)
 class MarkdownBlock:
-    """Временная структура для хранения блока Markdown."""
+    """Temporary structure for storing Markdown block."""
 
     type: ElementType
     content: str
     metadata: dict[str, Any] | None = None
-    line_number: int = 0  # Номер строки для отслеживания порядка
+    line_number: int = 0  # Line number for tracking order
 
 
 class MarkdownParser(BaseParser):
     """
-    Парсер для Markdown документов.
+    Parser for Markdown documents.
 
-    Использует регулярные выражения для парсинга и преобразует результат в структурированные элементы.
+    Uses regular expressions for parsing and converts result into structured elements.
     """
 
     format = DocumentFormat.MARKDOWN
 
-    # Регулярные выражения для парсинга
+    # Regular expressions for parsing
     HEADER_PATTERN = re.compile(r'^(#{1,6})\s+(.+)$', re.MULTILINE)
     LIST_ITEM_PATTERN = re.compile(r'^(\s*)([-*+]\s+|\d+\.\s+)(.+)$', re.MULTILINE)
     TABLE_PATTERN = re.compile(r'^\s*\|.+\|\s*$', re.MULTILINE)
@@ -61,20 +61,20 @@ class MarkdownParser(BaseParser):
 
     def parse(self, document: Document) -> ParsedDocument:
         """
-        Парсит Markdown документ и возвращает структурированное представление.
+        Parse Markdown document and return structured representation.
 
         Args:
-            document: LangChain Document с Markdown контентом
+            document: LangChain Document with Markdown content
 
         Returns:
-            ParsedDocument: Структурированное представление документа
+            ParsedDocument: Structured document representation
 
         Raises:
-            ValidationError: Если входные данные невалидны
-            UnsupportedFormatError: Если формат документа не поддерживается
-            ParsingError: Если произошла ошибка при парсинге
+            ValidationError: If input data is invalid
+            UnsupportedFormatError: If document format is not supported
+            ParsingError: If parsing error occurred
         """
-        # Валидация входных данных через BaseParser
+        # Input validation via BaseParser
         self._validate_input(document)
 
         source = self.get_source(document)
@@ -83,21 +83,29 @@ class MarkdownParser(BaseParser):
         try:
             markdown_text = document.page_content or ""
 
-            # Парсим документ построчно
+            # Parse document line by line
             blocks = self._parse_markdown(markdown_text)
 
-            # Строим иерархию и создаем элементы
+            # Build hierarchy and create elements
             elements = self._build_elements(blocks)
 
-            # Создаем ParsedDocument
+            # Create ParsedDocument
             parsed_document = ParsedDocument(
                 source=source,
                 format=self.format,
                 elements=elements,
-                metadata={"parser": "markdown", "source_type": "regex"},
+                metadata={
+                    "parser": "markdown",
+                    "status": "completed",
+                    "source_type": "regex",
+                    "elements_count": len(elements),
+                    "headers_count": len([e for e in elements if e.type.name.startswith("HEADER")]),
+                    "tables_count": len([e for e in elements if e.type == ElementType.TABLE]),
+                    "images_count": len([e for e in elements if e.type == ElementType.IMAGE]),
+                },
             )
 
-            # Валидация результата
+            # Result validation
             self._validate_parsed_document(parsed_document)
 
             self._log_parsing_end(source, len(elements))
@@ -105,19 +113,19 @@ class MarkdownParser(BaseParser):
             return parsed_document
 
         except Exception as e:
-            error_msg = f"Ошибка при парсинге Markdown документа (источник: {source})"
-            self._logger.error(f"{error_msg}. Исходная ошибка: {e}")
+            error_msg = f"Error parsing Markdown document (source: {source})"
+            self._logger.error(f"{error_msg}. Original error: {e}")
             raise ParsingError(error_msg, source=source) from e
 
     def _parse_markdown(self, text: str) -> List[MarkdownBlock]:
         """
-        Парсит Markdown текст и возвращает список блоков.
+        Parses Markdown text and returns list of blocks.
 
         Args:
-            text: Markdown текст
+            text: Markdown text
 
         Returns:
-            Список MarkdownBlock
+            List of MarkdownBlock
         """
         blocks: List[MarkdownBlock] = []
         lines = text.split('\n')
@@ -128,28 +136,30 @@ class MarkdownParser(BaseParser):
             line = lines[i]
             stripped = line.strip()
 
-            # Пропускаем пустые строки
+            # Skip empty lines
             if not stripped:
                 i += 1
                 continue
 
-            # 1. Код-блоки (многострочные, приоритет выше)
+            # 1. Code blocks (multiline, higher priority)
             if stripped.startswith('```'):
-                # Находим конец блока кода
+                # Find end of code block
                 language = stripped[3:].strip()
                 i += 1
                 code_lines = []
-                # Собираем строки до закрывающего ```
+                # Collect lines until closing ```
                 while i < line_count:
                     if lines[i].strip() == '```':
                         break
                     code_lines.append(lines[i])
                     i += 1
-                # Пропускаем закрывающий ```
+                # Skip closing ```
                 if i < line_count:
                     i += 1
                 code_content = '\n'.join(code_lines)
-                metadata = {"language": language} if language else {}
+                metadata = {"source": "markdown"}
+                if language:
+                    metadata["language"] = language
                 blocks.append(
                     MarkdownBlock(
                         type=ElementType.CODE_BLOCK,
@@ -160,55 +170,65 @@ class MarkdownParser(BaseParser):
                 )
                 continue
 
-            # 2. Горизонтальные линии
+            # 2. Horizontal lines
             if self.THEMATIC_BREAK_PATTERN.match(line):
                 blocks.append(
                     MarkdownBlock(
                         type=ElementType.TEXT,
                         content="---",
-                        metadata={"separator": True},
+                        metadata={"source": "markdown", "separator": True},
                         line_number=i,
                     )
                 )
                 i += 1
                 continue
 
-            # 3. Заголовки
+            # 3. Headers
             header_match = self.HEADER_PATTERN.match(line)
             if header_match:
                 level = len(header_match.group(1))
                 content = header_match.group(2).strip()
                 element_type = ElementType[f"HEADER_{level}"]
                 blocks.append(
-                    MarkdownBlock(type=element_type, content=content, line_number=i)
+                    MarkdownBlock(
+                        type=element_type,
+                        content=content,
+                        metadata={"source": "markdown", "level": level},
+                        line_number=i
+                    )
                 )
                 i += 1
                 continue
 
-            # 4. Таблицы
+            # 4. Tables
             if '|' in line and self.TABLE_PATTERN.match(line):
-                # Собираем все строки таблицы
+                # Collect all table rows
                 table_lines = [line]
                 i += 1
-                # Пропускаем разделитель (---)
+                # Skip delimiter (---)
                 delimiter_line = None
                 if i < line_count and '|' in lines[i] and re.match(r'^\s*\|[-:\s|]+\|\s*$', lines[i]):
                     delimiter_line = lines[i]
                     i += 1
-                # Собираем строки данных
+                # Collect data rows
                 while i < line_count and '|' in lines[i] and self.TABLE_PATTERN.match(lines[i]):
                     table_lines.append(lines[i])
                     i += 1
                 table_content = '\n'.join(table_lines)
                 
-                # Парсим таблицу в DataFrame
+                # Parse table to DataFrame
                 try:
                     df = self._parse_table_to_dataframe(table_lines, delimiter_line)
-                    metadata = {"dataframe": df, "rows": len(df), "columns": len(df.columns)}
+                    metadata = {
+                        "source": "markdown",
+                        "dataframe": df,
+                        "rows_count": len(df),
+                        "cols_count": len(df.columns),
+                    }
                 except Exception as e:
-                    # Если не удалось распарсить в DataFrame, сохраняем только текст
+                    # If failed to parse to DataFrame, save only text
                     self._logger.warning(f"Failed to parse table to DataFrame: {e}")
-                    metadata = {}
+                    metadata = {"source": "markdown"}
                 
                 blocks.append(
                     MarkdownBlock(
@@ -220,11 +240,11 @@ class MarkdownParser(BaseParser):
                 )
                 continue
 
-            # 5. Цитаты
+            # 5. Quotes
             blockquote_match = self.BLOCKQUOTE_PATTERN.match(line)
             if blockquote_match:
                 quote_content = blockquote_match.group(2).strip()
-                # Собираем многострочные цитаты
+                # Collect multiline quotes
                 i += 1
                 while i < line_count and lines[i].strip().startswith('>'):
                     quote_content += ' ' + lines[i].strip().lstrip('>').strip()
@@ -233,24 +253,25 @@ class MarkdownParser(BaseParser):
                     MarkdownBlock(
                         type=ElementType.TEXT,
                         content=quote_content,
-                        metadata={"quote": True},
+                        metadata={"source": "markdown", "quote": True},
                         line_number=i - 1,
                     )
                 )
                 continue
 
-            # 6. Списки (с поддержкой вложенности)
+            # 6. Lists (with nesting support)
             list_match = self.LIST_ITEM_PATTERN.match(line)
             if list_match:
-                indent = len(list_match.group(1))  # Количество пробелов отступа
+                indent = len(list_match.group(1))  # Number of spaces for indentation
                 content = list_match.group(3).strip()
-                # Определяем тип списка
+                # Determine list type
                 list_marker = list_match.group(2).strip()
                 is_ordered = bool(re.match(r'\d+\.', list_marker))
-                # Уровень вложенности определяется по отступу (каждые 2-4 пробела = 1 уровень)
-                # Стандарт Markdown: 2 или 4 пробела на уровень
+                # Nesting level determined by indent (every 2-4 spaces = 1 level)
+                # Markdown standard: 2 or 4 spaces per level
                 list_level = indent // 2 if indent > 0 else 0
                 metadata = {
+                    "source": "markdown",
                     "list_type": "ordered" if is_ordered else "unordered",
                     "list_level": list_level,
                     "indent": indent,
@@ -266,16 +287,16 @@ class MarkdownParser(BaseParser):
                 i += 1
                 continue
 
-            # 7. Изображения (standalone или inline)
+            # 7. Images (standalone or inline)
             image_matches = list(self.IMAGE_PATTERN.finditer(line))
             if image_matches:
-                # Удаляем изображения из строки для проверки, остался ли текст
+                # Remove images from line to check if text remains
                 line_without_images = self.IMAGE_PATTERN.sub('', line).strip()
                 
                 for match in image_matches:
                     alt_text = match.group(1)
                     url = match.group(2)
-                    metadata = {"alt": alt_text, "src": url}
+                    metadata = {"source": "markdown", "alt": alt_text, "src": url}
                     blocks.append(
                         MarkdownBlock(
                             type=ElementType.IMAGE,
@@ -285,15 +306,15 @@ class MarkdownParser(BaseParser):
                         )
                     )
                 
-                # Если после удаления изображений остался текст, обрабатываем его отдельно
+                # If text remains after removing images, process it separately
                 if line_without_images:
-                    # Проверяем, есть ли ссылки в оставшемся тексте
+                    # Check if there are links in remaining text
                     link_matches = list(self.LINK_PATTERN.finditer(line_without_images))
                     if link_matches:
                         for match in link_matches:
                             link_text = match.group(1)
                             url = match.group(2)
-                            metadata = {"href": url}
+                            metadata = {"source": "markdown", "href": url}
                             blocks.append(
                                 MarkdownBlock(
                                     type=ElementType.LINK,
@@ -304,29 +325,34 @@ class MarkdownParser(BaseParser):
                             )
                         line_without_images = self.LINK_PATTERN.sub(r'\1', line_without_images)
                     
-                    # Добавляем оставшийся текст
+                    # Add remaining text
                     clean_text = self.INLINE_CODE_PATTERN.sub(r'\1', line_without_images).strip()
                     if clean_text:
                         blocks.append(
-                            MarkdownBlock(type=ElementType.TEXT, content=clean_text, line_number=i)
+                            MarkdownBlock(
+                                type=ElementType.TEXT,
+                                content=clean_text,
+                                metadata={"source": "markdown"},
+                                line_number=i
+                            )
                         )
                 i += 1
                 continue
 
-            # 8. Ссылки (standalone или inline)
+            # 8. Links (standalone or inline)
             link_matches = list(self.LINK_PATTERN.finditer(line))
             if link_matches:
-                # Вычисляем длину всех ссылок в строке
+                # Calculate total length of all links in line
                 total_link_length = sum(match.end() - match.start() for match in link_matches)
                 line_length = len(line.strip())
                 
-                # Если строка состоит только из ссылок (с учетом пробелов), создаем только элементы ссылок
-                if total_link_length >= line_length * 0.8:  # 80% строки - ссылки
-                    # Строка состоит в основном из ссылок
+                # If line consists only of links (with spaces), create only link elements
+                if total_link_length >= line_length * 0.8:  # 80% of line is links
+                    # Line consists mostly of links
                     for match in link_matches:
                         link_text = match.group(1)
                         url = match.group(2)
-                        metadata = {"href": url}
+                        metadata = {"source": "markdown", "href": url}
                         blocks.append(
                             MarkdownBlock(
                                 type=ElementType.LINK,
@@ -338,11 +364,11 @@ class MarkdownParser(BaseParser):
                     i += 1
                     continue
                 else:
-                    # Есть текст помимо ссылок - создаем элементы ссылок и обрабатываем текст
+                    # There is text besides links - create link elements and process text
                     for match in link_matches:
                         link_text = match.group(1)
                         url = match.group(2)
-                        metadata = {"href": url}
+                        metadata = {"source": "markdown", "href": url}
                         blocks.append(
                             MarkdownBlock(
                                 type=ElementType.LINK,
@@ -351,22 +377,32 @@ class MarkdownParser(BaseParser):
                                 line_number=i,
                             )
                         )
-                    # Удаляем ссылки из строки и обрабатываем оставшийся текст
+                    # Remove links from line and process remaining text
                     line_without_links = self.LINK_PATTERN.sub(r'\1', line).strip()
                     clean_text = self.INLINE_CODE_PATTERN.sub(r'\1', line_without_links).strip()
                     if clean_text:
                         blocks.append(
-                            MarkdownBlock(type=ElementType.TEXT, content=clean_text, line_number=i)
+                            MarkdownBlock(
+                                type=ElementType.TEXT,
+                                content=clean_text,
+                                metadata={"source": "markdown"},
+                                line_number=i
+                            )
                         )
                     i += 1
                     continue
 
-            # 9. Обычный текст (параграф)
-            # Убираем inline код из текста для чистоты
+            # 9. Regular text (paragraph)
+            # Remove inline code from text for clarity
             clean_text = self.INLINE_CODE_PATTERN.sub(r'\1', line).strip()
             if clean_text:
                 blocks.append(
-                    MarkdownBlock(type=ElementType.TEXT, content=clean_text, line_number=i)
+                    MarkdownBlock(
+                        type=ElementType.TEXT,
+                        content=clean_text,
+                        metadata={"source": "markdown"},
+                        line_number=i
+                    )
                 )
 
             i += 1
@@ -375,98 +411,98 @@ class MarkdownParser(BaseParser):
 
     def _parse_table_to_dataframe(self, table_lines: List[str], delimiter_line: Optional[str] = None) -> pd.DataFrame:
         """
-        Парсит Markdown таблицу в pandas DataFrame.
+        Parses Markdown table to pandas DataFrame.
 
         Args:
-            table_lines: Список строк таблицы (включая заголовок и данные)
-            delimiter_line: Строка-разделитель (опционально, не используется, но оставлена для совместимости)
+            table_lines: List of table rows (including header and data)
+            delimiter_line: Delimiter line (optional, not used but kept for compatibility)
 
         Returns:
-            pandas.DataFrame: Распарсенная таблица
+            pandas.DataFrame: Parsed table
 
         Raises:
-            ValueError: Если таблица не может быть распарсена
+            ValueError: If table cannot be parsed
         """
         if not table_lines:
             raise ValueError("Table lines cannot be empty")
 
-        # Парсим строки таблицы
+        # Parse table rows
         rows = []
         for line in table_lines:
-            # Убираем начальные и конечные пробелы
+            # Remove leading and trailing spaces
             stripped = line.strip()
             if not stripped.startswith('|') or not stripped.endswith('|'):
                 continue
             
-            # Разбиваем по | и обрабатываем ячейки
-            # Убираем первый и последний |, затем разбиваем
+            # Split by | and process cells
+            # Remove first and last |, then split
             cells = [cell.strip() for cell in stripped[1:-1].split('|')]
             rows.append(cells)
 
         if not rows:
             raise ValueError("No valid rows found in table")
 
-        # Первая строка - заголовки
+        # First row is headers
         headers = rows[0]
         
-        # Определяем максимальное количество колонок (на случай несовпадения)
+        # Determine maximum number of columns (in case of mismatch)
         max_cols = max(len(row) for row in rows) if rows else 0
         
-        # Нормализуем все строки до одинакового количества колонок
+        # Normalize all rows to same number of columns
         normalized_rows = []
         for row in rows:
-            # Дополняем пустыми строками, если колонок меньше
+            # Pad with empty strings if columns are fewer
             while len(row) < max_cols:
                 row.append("")
-            # Обрезаем, если колонок больше (не должно быть, но на всякий случай)
+            # Truncate if columns are more (shouldn't happen, but just in case)
             normalized_rows.append(row[:max_cols])
         
-        # Нормализуем заголовки
+        # Normalize headers
         if len(headers) < max_cols:
             headers.extend([f"Column_{i+1}" for i in range(len(headers), max_cols)])
         headers = headers[:max_cols]
         
-        # Остальные строки - данные (пропускаем первую строку с заголовками)
+        # Remaining rows are data (skip first row with headers)
         data_rows = normalized_rows[1:]
 
-        # Создаем DataFrame
+        # Create DataFrame
         df = pd.DataFrame(data_rows, columns=headers)
 
         return df
 
     def _build_elements(self, blocks: List[MarkdownBlock]) -> List[Element]:
         """
-        Строит элементы с иерархией из блоков.
+        Builds elements with hierarchy from blocks.
 
         Args:
-            blocks: Список MarkdownBlock
+            blocks: List of MarkdownBlock
 
         Returns:
-            Список Element с построенной иерархией
+            List of Element with built hierarchy
         """
         elements: List[Element] = []
         header_stack: List[tuple[int, str]] = []
-        list_stack: List[tuple[int, str]] = []  # Стек для вложенных списков: (уровень, element_id)
+        list_stack: List[tuple[int, str]] = []  # Stack for nested lists: (level, element_id)
 
-        # Сортируем блоки по номеру строки для сохранения порядка
+        # Sort blocks by line number to preserve order
         sorted_blocks = sorted(blocks, key=lambda b: b.line_number)
 
         for block in sorted_blocks:
             element_type = block.type
             parent_id: Optional[str] = None
 
-            # Обработка заголовков - обновляем стек иерархии
+            # Header processing - update hierarchy stack
             if element_type.name.startswith("HEADER_"):
                 level = int(element_type.name.split("_")[-1])
-                # Удаляем заголовки с уровнем >= текущего
+                # Remove headers with level >= current
                 while header_stack and header_stack[-1][0] >= level:
                     header_stack.pop()
-                # Родитель - последний заголовок в стеке
+                # Parent is last header in stack
                 parent_id = header_stack[-1][1] if header_stack else None
-                # Очищаем стек списков при встрече заголовка
+                # Clear list stack when encountering header
                 list_stack.clear()
 
-                # Создаем элемент заголовка
+                # Create header element
                 element = self._create_element(
                     type=element_type,
                     content=block.content,
@@ -475,30 +511,30 @@ class MarkdownParser(BaseParser):
                 )
                 elements.append(element)
 
-                # Добавляем в стек
+                # Add to stack
                 header_stack.append((level, element.id))
                 continue
 
-            # Обработка элементов списка - строим иерархию списков
+            # List item processing - build list hierarchy
             if element_type == ElementType.LIST_ITEM:
                 list_level = block.metadata.get("list_level", 0) if block.metadata else 0
                 
-                # Удаляем элементы списка с уровнем >= текущего
+                # Remove list items with level >= current
                 while list_stack and list_stack[-1][0] >= list_level:
                     list_stack.pop()
                 
-                # Родитель определяется по приоритету:
-                # 1. Последний элемент списка того же или более высокого уровня
-                # 2. Последний заголовок
+                # Parent determined by priority:
+                # 1. Last list item of same or higher level
+                # 2. Last header
                 if list_stack:
-                    # Если есть элементы списка в стеке, родитель - последний элемент того же уровня
-                    # или ближайший элемент более высокого уровня
+                    # If there are list items in stack, parent is last item of same level
+                    # or nearest item of higher level
                     parent_id = list_stack[-1][1]
                 else:
-                    # Если стек списков пуст, родитель - последний заголовок
+                    # If list stack is empty, parent is last header
                     parent_id = header_stack[-1][1] if header_stack else None
 
-                # Создаем элемент списка
+                # Create list item element
                 element = self._create_element(
                     type=element_type,
                     content=block.content,
@@ -507,14 +543,14 @@ class MarkdownParser(BaseParser):
                 )
                 elements.append(element)
 
-                # Добавляем в стек списков
+                # Add to list stack
                 list_stack.append((list_level, element.id))
                 continue
 
-            # Для остальных элементов (текст, таблицы, код-блоки, ссылки, изображения)
-            # Родитель определяется по приоритету:
-            # 1. Последний элемент списка (если мы внутри списка)
-            # 2. Последний заголовок
+            # For other elements (text, tables, code blocks, links, images)
+            # Parent determined by priority:
+            # 1. Last list item (if we're inside a list)
+            # 2. Last header
             if list_stack:
                 parent_id = list_stack[-1][1]
             else:

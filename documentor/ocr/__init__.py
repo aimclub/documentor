@@ -1,12 +1,12 @@
 """
-Модуль для работы с OCR (Optical Character Recognition).
+Module for working with OCR (Optical Character Recognition).
 
-Содержит классы и функции для:
-- Layout detection (определение структуры страницы)
-- Распознавания текста
-- Построения порядка чтения (reading order)
-- Работы с различными OCR инструментами (Dots.OCR, Qwen OCR)
-- Управления очередями и состоянием моделей
+Contains classes and functions for:
+- Layout detection (page structure determination)
+- Text recognition
+- Reading order building
+- Working with various OCR tools (Dots.OCR, Qwen OCR)
+- Managing queues and model states
 """
 
 from .base import BaseLayoutDetector, BaseOCR, BaseReadingOrderBuilder

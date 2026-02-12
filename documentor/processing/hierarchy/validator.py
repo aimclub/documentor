@@ -1,14 +1,14 @@
 """
-Валидация иерархии элементов документа.
+Document element hierarchy validation.
 
-Содержит логику для:
-- Проверки корректности parent_id
-- Проверки логики уровней заголовков
-- Обнаружения циклических зависимостей
+Contains logic for:
+- Checking parent_id correctness
+- Checking header level logic
+- Detecting cyclic dependencies
 """
 
-# TODO: Реализовать класс HierarchyValidator:
-# - validate_parent_ids() - проверка parent_id
-# - validate_header_levels() - проверка уровней заголовков
-# - detect_cycles() - обнаружение циклов
-# - validate_structure() - общая валидация структуры
+# TODO: Implement HierarchyValidator class:
+# - validate_parent_ids() - parent_id validation
+# - validate_header_levels() - header level validation
+# - detect_cycles() - cycle detection
+# - validate_structure() - general structure validation

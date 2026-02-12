@@ -1,4 +1,4 @@
-"""Загрузка переменных окружения из .env файла."""
+"""Loading environment variables from .env file."""
 
 import os
 from pathlib import Path
@@ -7,37 +7,37 @@ from typing import Optional
 
 def load_env_file(env_file: Optional[Path] = None) -> None:
     """
-    Загружает переменные окружения из .env файла.
+    Loads environment variables from .env file.
     
     Args:
-        env_file: Путь к .env файлу. Если None, ищет .env в текущей директории и родительских.
+        env_file: Path to .env file. If None, searches for .env in current directory and parents.
     """
     if env_file is None:
-        # Поиск .env файла в текущей директории и родительских
+        # Search for .env file in current directory and parents
         current_dir = Path.cwd()
         for parent in [current_dir] + list(current_dir.parents):
             env_file = parent / ".env"
             if env_file.exists():
                 break
         else:
-            # .env файл не найден
+            # .env file not found
             return
     
     if not env_file.exists():
         return
     
-    # Загрузка .env файла
+    # Load .env file
     with open(env_file, 'r', encoding='utf-8') as f:
         for line_num, line in enumerate(f, 1):
             line = line.strip()
             
-            # Пропускаем пустые строки и комментарии
+            # Skip empty lines and comments
             if not line or line.startswith('#'):
                 continue
             
-            # Парсинг пар key=value
+            # Parse key=value pairs
             if '=' in line:
-                # Удаляем комментарии (все после #)
+                # Remove comments (everything after #)
                 if '#' in line:
                     line = line.split('#')[0].strip()
                     if not line:
@@ -47,16 +47,16 @@ def load_env_file(env_file: Optional[Path] = None) -> None:
                 key = key.strip()
                 value = value.strip()
                 
-                # Удаляем кавычки, если есть
+                # Remove quotes if present
                 if value.startswith('"') and value.endswith('"'):
                     value = value[1:-1]
                 elif value.startswith("'") and value.endswith("'"):
                     value = value[1:-1]
                 
-                # Удаляем пробелы в начале и конце значения
+                # Remove spaces at start and end of value
                 value = value.strip()
                 
-                # Устанавливаем переменную окружения, если она ещё не установлена
+                # Set environment variable if not already set
                 if key and value and key not in os.environ:
                     os.environ[key] = value
             else:

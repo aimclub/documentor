@@ -1,15 +1,15 @@
 """
-Утилиты для работы с файлами.
+File utilities.
 
-Содержит функции для:
-- Чтения файлов различных форматов
-- Определения MIME типов
-- Работы с путями к файлам
-- Валидации файлов
+Contains functions for:
+- Reading files of various formats
+- MIME type detection
+- Working with file paths
+- File validation
 """
 
-# TODO: Реализовать функции:
-# - read_file_safe() - безопасное чтение файла
-# - get_mime_type() - определение MIME типа
-# - validate_file() - валидация файла
-# - get_file_size() - получение размера файла
+# TODO: Implement functions:
+# - read_file_safe() - safe file reading
+# - get_mime_type() - MIME type detection
+# - validate_file() - file validation
+# - get_file_size() - getting file size

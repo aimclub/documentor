@@ -1,6 +1,6 @@
 """
-Утилиты для работы с документами.
+Document utilities.
 
-Содержит вспомогательные функции для работы с файлами, текстом,
-изображениями и другими общими операциями.
+Contains helper functions for working with files, text,
+images, and other common operations.
 """

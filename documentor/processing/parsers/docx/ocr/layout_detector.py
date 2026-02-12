@@ -1,11 +1,11 @@
 """
-Layout detection для DOCX через Dots.OCR.
+Layout detection for DOCX via Dots.OCR.
 
-НЕ ИСПОЛЬЗУЕТСЯ: OCR-подход для DOCX отменён.
+NOT USED: OCR approach for DOCX has been cancelled.
 
-Этот модуль оставлен для возможного будущего использования,
-но в текущей реализации DOCX парсер не использует OCR.
-Вместо этого используются:
-1. Встроенная разметка заголовков (стили DOCX)
-2. LLM семантический анализ текста
+This module is kept for possible future use,
+but the current DOCX parser implementation does not use OCR.
+Instead, it uses:
+1. Built-in header markup (DOCX styles)
+2. LLM semantic text analysis
 """

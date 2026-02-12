@@ -1,8 +1,8 @@
 """
-Модуль для построения иерархии элементов документа.
+Module for building document element hierarchy.
 
-Содержит классы и функции для:
-- Назначения parent_id элементам
-- Построения дерева элементов
-- Валидации иерархии
+Contains classes and functions for:
+- Assigning parent_id to elements
+- Building element tree
+- Hierarchy validation
 """

@@ -1,16 +1,16 @@
 """
-Типы элементов layout, возвращаемые Dots.OCR.
+Layout element types returned by Dots.OCR.
 
-Используется для определения структуры страницы при OCR обработке.
-Типы маппятся в ElementType при структурировании документа.
+Used for determining page structure during OCR processing.
+Types are mapped to ElementType when structuring the document.
 
-См. также: ocr/dots_ocr.py для реализации layout detection
+See also: ocr/dots_ocr.py for layout detection implementation
 """
 from enum import Enum
 
 
 class LayoutTypeDotsOCR(str, Enum):
-    """Типы элементов layout, возвращаемые dots.ocr."""
+    """Layout element types returned by dots.ocr."""
     
     TEXT = "Text"
     PICTURE = "Picture"

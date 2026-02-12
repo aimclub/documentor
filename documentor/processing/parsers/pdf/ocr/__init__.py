@@ -1,11 +1,11 @@
 """
-OCR модули для PDF парсера.
+OCR modules for PDF parser.
 
-Содержит:
-- Layout detection через Dots.OCR
-- Рендеринг страниц в изображения
-- Прямой клиент для Dots.OCR API
-- Парсинг таблиц через Qwen2.5
+Contains:
+- Layout detection via Dots.OCR
+- Page rendering to images
+- Direct client for Dots.OCR API
+- Table parsing via Qwen2.5
 """
 
 from .layout_detector import PdfLayoutDetector

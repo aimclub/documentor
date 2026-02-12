@@ -1,14 +1,14 @@
 """
-Парсер для PDF документов.
+Parser for PDF documents.
 
-Поддерживает layout-based подход:
-- Layout detection через Dots.OCR для всех страниц
-- Построение иерархии от Section-header
-- Фильтрация лишних элементов (Page-header, боковой текст)
-- Извлечение текста через PyMuPDF по координатам
-- Склеивание близких текстовых блоков
-- Парсинг таблиц через Qwen2.5
-- Хранение изображений в метаданных
+Supports layout-based approach:
+- Layout detection via Dots.OCR for all pages
+- Building hierarchy from Section-header
+- Filtering unnecessary elements (Page-header, side text)
+- Text extraction via PyMuPDF by coordinates
+- Merging close text blocks
+- Table parsing via Qwen2.5
+- Storing images in metadata
 """
 
 from __future__ import annotations
@@ -43,26 +43,26 @@ logger = logging.getLogger(__name__)
 
 class PdfParser(BaseParser):
     """
-    Парсер для PDF документов.
+    Parser for PDF documents.
 
-    Использует layout-based подход:
-    - Layout detection через Dots.OCR для всех страниц
-    - Построение иерархии от Section-header
-    - Фильтрация лишних элементов
-    - Извлечение текста через PyMuPDF по координатам
-    - Склеивание близких текстовых блоков
-    - Парсинг таблиц через Qwen2.5
+    Uses layout-based approach:
+    - Layout detection via Dots.OCR for all pages
+    - Building hierarchy from Section-header
+    - Filtering unnecessary elements
+    - Text extraction via PyMuPDF by coordinates
+    - Merging close text blocks
+    - Table parsing via Qwen2.5
     """
 
     format = DocumentFormat.PDF
 
     def __init__(self, ocr_manager: Optional[Any] = None) -> None:
         """
-        Инициализация парсера.
+        Initialize parser.
         
         Args:
-            ocr_manager: Экземпляр DotsOCRManager для OCR обработки. 
-                        Если None, автоматически создается из .env при необходимости.
+            ocr_manager: DotsOCRManager instance for OCR processing. 
+                        If None, automatically created from .env when needed.
         """
         super().__init__()
         self.ocr_manager = ocr_manager
@@ -72,7 +72,7 @@ class PdfParser(BaseParser):
         self._load_config()
     
     def _load_config(self) -> None:
-        """Загружает конфигурацию из pdf_config.yaml."""
+        """Loads configuration from pdf_config.yaml."""
         config_path = Path(__file__).parent.parent.parent.parent / "config" / "pdf_config.yaml"
         if config_path.exists():
             with open(config_path, "r", encoding="utf-8") as f:
@@ -80,10 +80,10 @@ class PdfParser(BaseParser):
                 self._config = config.get("pdf_parser", {})
         else:
             self._config = {}
-            logger.warning(f"Конфигурационный файл не найден: {config_path}, используются значения по умолчанию")
+            logger.warning(f"Configuration file not found: {config_path}, using default values")
 
     def _get_config(self, key: str, default: Any = None) -> Any:
-        """Получает значение из конфигурации."""
+        """Gets value from configuration."""
         keys = key.split(".")
         value = self._config
         for k in keys:
@@ -97,46 +97,46 @@ class PdfParser(BaseParser):
     
     def _get_ocr_manager(self) -> Optional[Any]:
         """
-        Получает OCR менеджер, создавая его при необходимости.
+        Gets OCR manager, creating it if necessary.
         
         Returns:
-            DotsOCRManager или None, если .env не настроен
+            DotsOCRManager or None if .env is not configured
         """
         if self.ocr_manager is None:
             try:
                 from ....ocr.manager import DotsOCRManager
                 self.ocr_manager = DotsOCRManager(auto_load_models=True)
-                logger.debug("DotsOCRManager автоматически создан из .env")
+                logger.debug("DotsOCRManager automatically created from .env")
             except Exception as e:
-                logger.warning(f"Не удалось создать DotsOCRManager из .env: {e}")
+                logger.warning(f"Failed to create DotsOCRManager from .env: {e}")
                 return None
         return self.ocr_manager
 
     def parse(self, document: Document) -> ParsedDocument:
         """
-        Парсит PDF документ используя layout-based подход.
+        Parse PDF document using layout-based approach.
 
-        Процесс:
-        1. Проверка выделяемого текста
-        2. Layout detection через Dots.OCR для всех страниц
-        3. Построение иерархии от Section-header
-        4. Фильтрация лишних элементов
-        5. Извлечение текста через PyMuPDF по координатам
-        6. Склеивание близких текстовых блоков
-        7. Создание элементов и построение иерархии
-        8. Хранение изображений в метаданных
-        9. Парсинг таблиц через Qwen2.5
+        Process:
+        1. Check extractable text
+        2. Layout detection via Dots.OCR for all pages
+        3. Building hierarchy from Section-header
+        4. Filtering unnecessary elements
+        5. Text extraction via PyMuPDF by coordinates
+        6. Merging close text blocks
+        7. Creating elements and building hierarchy
+        8. Storing images in metadata
+        9. Table parsing via Qwen2.5
 
         Args:
-            document: LangChain Document с PDF контентом.
+            document: LangChain Document with PDF content.
 
         Returns:
-            ParsedDocument: Структурированное представление документа.
+            ParsedDocument: Structured document representation.
 
         Raises:
-            ValidationError: Если входные данные невалидны.
-            UnsupportedFormatError: Если формат документа не поддерживается.
-            ParsingError: Если произошла ошибка при парсинге.
+            ValidationError: If input data is invalid.
+            UnsupportedFormatError: If document format is not supported.
+            ParsingError: If parsing error occurred.
         """
         self._validate_input(document)
 
@@ -144,62 +144,62 @@ class PdfParser(BaseParser):
         self._log_parsing_start(source)
 
         try:
-            # Проверяем выделяемый ли текст
+            # Check if text is extractable
             is_text_extractable = self._is_text_extractable(source)
             
             if not is_text_extractable:
                 logger.warning(
-                    f"Текст не выделяется из PDF, используем layout-based подход (источник: {source})"
+                    f"Text cannot be extracted from PDF, using layout-based approach (source: {source})"
                 )
             
-            # Layout-based подход (всегда используем, даже если текст выделяется)
-            # Шаг 1: Layout Detection для всех страниц
+            # Layout-based approach (always use, even if text is extractable)
+            # Step 1: Layout Detection for all pages
             layout_elements = self._detect_layout_for_all_pages(source)
             
-            # Шаг 2: Фильтрация лишних элементов
-            logger.info("Шаг 2: Фильтрация элементов...")
+            # Step 2: Filtering unnecessary elements
+            logger.info("Step 2: Filtering elements...")
             filtered_elements = self._filter_layout_elements(layout_elements)
-            logger.info(f"Отфильтровано: {len(layout_elements)} -> {len(filtered_elements)} элементов")
+            logger.info(f"Filtered: {len(layout_elements)} -> {len(filtered_elements)} elements")
             
-            # Шаг 3: Анализ уровней заголовков (сначала определяем уровни)
-            logger.info("Шаг 3: Анализ уровней заголовков...")
+            # Step 3: Header level analysis (determine levels first)
+            logger.info("Step 3: Analyzing header levels...")
             analyzed_elements = self._analyze_header_levels_from_elements(filtered_elements, source)
-            logger.info(f"Проанализировано заголовков: {len([e for e in analyzed_elements if e.get('category') == 'Section-header'])}")
+            logger.info(f"Analyzed headers: {len([e for e in analyzed_elements if e.get('category') == 'Section-header'])}")
             
-            # Шаг 4: Построение иерархии от Section-header (с учетом уровней)
-            logger.info("Шаг 4: Построение иерархии...")
+            # Step 4: Building hierarchy from Section-header (with levels)
+            logger.info("Step 4: Building hierarchy...")
             hierarchy = self._build_hierarchy_from_section_headers(analyzed_elements)
-            logger.info(f"Построено секций: {len(hierarchy)}")
+            logger.info(f"Built sections: {len(hierarchy)}")
             
-            # Шаг 5: Извлечение текста через PyMuPDF или OCR
-            # Для сканированных PDF используем OCR через Qwen2.5
-            logger.info("Шаг 5: Извлечение текста...")
+            # Step 5: Text extraction via PyMuPDF or OCR
+            # For scanned PDFs use OCR via Qwen2.5
+            logger.info("Step 5: Extracting text...")
             text_elements = self._extract_text_by_bboxes(
                 source, analyzed_elements, use_ocr=not is_text_extractable
             )
-            logger.info(f"Извлечено текстовых элементов: {len(text_elements)}")
+            logger.info(f"Extracted text elements: {len(text_elements)}")
             
-            # Шаг 6: Склеивание подряд идущих Text элементов
-            logger.info("Шаг 6: Склеивание текстовых блоков...")
+            # Step 6: Merging consecutive Text elements
+            logger.info("Step 6: Merging text blocks...")
             merged_text_elements = self._merge_nearby_text_blocks(text_elements, max_chunk_size=3000)
-            logger.info(f"Склеено: {len(text_elements)} -> {len(merged_text_elements)} элементов")
+            logger.info(f"Merged: {len(text_elements)} -> {len(merged_text_elements)} elements")
             
-            # Шаг 7: Создание элементов из иерархии
-            logger.info("Шаг 7: Создание элементов из иерархии...")
+            # Step 7: Creating elements from hierarchy
+            logger.info("Step 7: Creating elements from hierarchy...")
             elements = self._create_elements_from_hierarchy(hierarchy, merged_text_elements, analyzed_elements)
-            logger.info(f"Создано элементов: {len(elements)}")
+            logger.info(f"Created elements: {len(elements)}")
             
-            # Шаг 8: Хранение изображений в метаданных
-            logger.info("Шаг 8: Хранение изображений в метаданных...")
+            # Step 8: Storing images in metadata
+            logger.info("Step 8: Storing images in metadata...")
             elements = self._store_images_in_metadata(elements, source)
-            logger.info("Изображения сохранены")
+            logger.info("Images stored")
             
-            # Шаг 9: Парсинг таблиц через Qwen2.5
-            logger.info("Шаг 9: Парсинг таблиц...")
+            # Step 9: Table parsing via Qwen2.5
+            logger.info("Step 9: Parsing tables...")
             elements = self._parse_tables_with_qwen(elements, source)
-            logger.info("Таблицы обработаны")
+            logger.info("Tables processed")
             
-            # Создание ParsedDocument
+            # Create ParsedDocument
             parsed_document = ParsedDocument(
                 source=source,
                 format=self.format,
@@ -222,24 +222,24 @@ class PdfParser(BaseParser):
             return parsed_document
 
         except Exception as e:
-            error_msg = f"Ошибка при парсинге PDF документа (источник: {source})"
-            logger.error(f"{error_msg}. Исходная ошибка: {e}")
+            error_msg = f"Error parsing PDF document (source: {source})"
+            logger.error(f"{error_msg}. Original error: {e}")
             raise ParsingError(error_msg, source=source, original_error=e) from e
 
     def _is_text_extractable(self, source: str) -> bool:
         """
-        Определяет, можно ли извлечь текст из PDF.
+        Determines if text can be extracted from PDF.
 
         Args:
-            source: Путь к PDF файлу.
+            source: Path to PDF file.
 
         Returns:
-            True, если текст можно извлечь, False иначе.
+            True if text can be extracted, False otherwise.
         """
         try:
             pdf_document = fitz.open(source)
             try:
-                # Проверяем первую страницу
+                # Check first page
                 if len(pdf_document) == 0:
                     return False
                 
@@ -250,11 +250,11 @@ class PdfParser(BaseParser):
             finally:
                 pdf_document.close()
         except Exception as e:
-            logger.warning(f"Ошибка при проверке выделяемого текста: {e}")
+            logger.warning(f"Error checking extractable text: {e}")
             return False
 
     def _get_page_count(self, source: str) -> int:
-        """Возвращает количество страниц в PDF."""
+        """Returns number of pages in PDF."""
         pdf_document = fitz.open(source)
         try:
             return len(pdf_document)
@@ -263,13 +263,13 @@ class PdfParser(BaseParser):
 
     def _detect_layout_for_all_pages(self, source: str) -> List[Dict[str, Any]]:
         """
-        Выполняет layout detection для всех страниц PDF.
+        Performs layout detection for all PDF pages.
 
         Args:
-            source: Путь к PDF файлу.
+            source: Path to PDF file.
 
         Returns:
-            Список элементов layout с полями bbox, category, page_num.
+            List of layout elements with bbox, category, page_num fields.
         """
         if self.page_renderer is None:
             render_scale = self._get_config("layout_detection.render_scale", 2.0)
@@ -283,15 +283,15 @@ class PdfParser(BaseParser):
             use_direct_api = self._get_config("layout_detection.use_direct_api", True)
             
             if use_direct_api:
-                # При использовании прямого API менеджер не нужен
+                # When using direct API, manager is not needed
                 ocr_manager = None
             else:
-                # При использовании DotsOCRManager нужен менеджер
+                # When using DotsOCRManager, manager is needed
                 ocr_manager = self._get_ocr_manager()
                 if ocr_manager is None:
                     raise RuntimeError(
-                        "OCR обработка недоступна: DotsOCRManager не может быть создан. "
-                        "Проверьте настройки в .env файле"
+                        "OCR processing unavailable: DotsOCRManager cannot be created. "
+                        "Check settings in .env file"
                     )
 
             self.layout_detector = PdfLayoutDetector(ocr_manager=ocr_manager, use_direct_api=use_direct_api)
@@ -300,9 +300,9 @@ class PdfParser(BaseParser):
         total_pages = self.page_renderer.get_page_count(pdf_path)
         all_layout_elements: List[Dict[str, Any]] = []
         
-        logger.info(f"Начинаем layout detection для {total_pages} страниц")
+        logger.info(f"Starting layout detection for {total_pages} pages")
         
-        for page_num in tqdm(range(total_pages), desc="Layout detection", unit="страница"):
+        for page_num in tqdm(range(total_pages), desc="Layout detection", unit="page"):
             try:
                 original_image, optimized_image = self.page_renderer.render_page(
                     pdf_path, page_num, return_original=True
@@ -310,28 +310,28 @@ class PdfParser(BaseParser):
                 
                 layout = self.layout_detector.detect_layout(optimized_image, origin_image=original_image)
                 
-                # Добавляем номер страницы к каждому элементу
+                # Add page number to each element
                 for element in layout:
                     element["page_num"] = page_num
                     all_layout_elements.append(element)
                 
-                logger.debug(f"Layout detection для страницы {page_num + 1}/{total_pages}: найдено {len(layout)} элементов")
+                logger.debug(f"Layout detection for page {page_num + 1}/{total_pages}: found {len(layout)} elements")
             except Exception as e:
-                logger.error(f"Ошибка при layout detection для страницы {page_num + 1}: {e}")
+                logger.error(f"Error in layout detection for page {page_num + 1}: {e}")
                 continue
         
-        logger.info(f"Layout detection завершен: всего найдено {len(all_layout_elements)} элементов")
+        logger.info(f"Layout detection completed: total {len(all_layout_elements)} elements found")
         return all_layout_elements
 
     def _filter_layout_elements(self, layout_elements: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
-        Фильтрует лишние элементы (Page-header, Page-footer, боковой текст).
+        Filters unnecessary elements (Page-header, Page-footer, side text).
 
         Args:
-            layout_elements: Список элементов layout.
+            layout_elements: List of layout elements.
 
         Returns:
-            Отфильтрованный список элементов.
+            Filtered list of elements.
         """
         filtered: List[Dict[str, Any]] = []
         
@@ -341,7 +341,7 @@ class PdfParser(BaseParser):
         for element in layout_elements:
             category = element.get("category", "")
             
-            # Удаляем Page-header и Page-footer
+            # Remove Page-header and Page-footer
             if remove_page_headers and category == "Page-header":
                 continue
             if remove_page_footers and category == "Page-footer":
@@ -349,22 +349,22 @@ class PdfParser(BaseParser):
             
             filtered.append(element)
         
-        logger.debug(f"Фильтрация: {len(layout_elements)} -> {len(filtered)} элементов")
+        logger.debug(f"Filtering: {len(layout_elements)} -> {len(filtered)} elements")
         return filtered
 
     def _build_hierarchy_from_section_headers(
         self, layout_elements: List[Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
         """
-        Строит иерархию элементов, группируя их по Section-header.
+        Builds element hierarchy, grouping them by Section-header.
 
         Args:
-            layout_elements: Список элементов layout.
+            layout_elements: List of layout elements.
 
         Returns:
-            Список секций с заголовками и дочерними элементами.
+            List of sections with headers and child elements.
         """
-        # Сортируем элементы по странице и Y координате
+        # Sort elements by page and Y coordinate
         sorted_elements = sorted(
             layout_elements,
             key=lambda e: (e.get("page_num", 0), e.get("bbox", [1, 0])[1] if len(e.get("bbox", [])) >= 2 else 0)
@@ -377,71 +377,71 @@ class PdfParser(BaseParser):
             category = element.get("category", "")
             
             if category == "Section-header":
-                # Сохраняем предыдущую секцию
+                # Save previous section
                 if current_section is not None:
                     sections.append(current_section)
                 
-                # Создаем новую секцию
+                # Create new section
                 current_section = {
                     "header": element,
                     "children": [],
                 }
             else:
-                # Добавляем элемент к текущей секции
+                # Add element to current section
                 if current_section is not None:
                     current_section["children"].append(element)
                 else:
-                    # Элементы до первого заголовка - создаем секцию без заголовка
+                    # Elements before first header - create section without header
                     current_section = {
                         "header": None,
                         "children": [element],
                     }
         
-        # Добавляем последнюю секцию
+        # Add last section
         if current_section is not None:
             sections.append(current_section)
         
-        logger.debug(f"Построена иерархия: {len(sections)} секций")
+        logger.debug(f"Hierarchy built: {len(sections)} sections")
         return sections
 
     def _analyze_header_levels_from_elements(
         self, layout_elements: List[Dict[str, Any]], source: str
     ) -> List[Dict[str, Any]]:
         """
-        Анализирует уровни заголовков из списка элементов (до построения иерархии).
+        Analyzes header levels from element list (before building hierarchy).
         
-        Учитывает контекст: если есть заголовок с нумерацией (например, "1.2"),
-        следующие заголовки без нумерации получают уровень на 1 больше.
+        Considers context: if there is a header with numbering (e.g., "1.2"),
+        following headers without numbering get level + 1.
 
         Args:
-            layout_elements: Список элементов layout.
-            source: Путь к PDF файлу.
+            layout_elements: List of layout elements.
+            source: Path to PDF file.
 
         Returns:
-            Список элементов с определенными уровнями заголовков.
+            List of elements with determined header levels.
         """
         pdf_document = fitz.open(source)
         try:
             analyzed_elements: List[Dict[str, Any]] = []
             render_scale = self._get_config("layout_detection.render_scale", 2.0)
             
-            # Последний уровень заголовка с явной нумерацией
+            # Last header level with explicit numbering
             last_numbered_level: Optional[int] = None
-            # История предыдущих заголовков для сравнения размера шрифта
+            # History of previous headers for font size comparison
             previous_headers: List[Dict[str, Any]] = []  # {level, font_size, page_num}
             
             for element in layout_elements:
                 category = element.get("category", "")
                 
                 if category == "Section-header":
-                    # Извлекаем текст заголовка через PyMuPDF
+                    # Extract header text via PyMuPDF
                     bbox = element.get("bbox", [])
                     page_num = element.get("page_num", 0)
                     
                     if len(bbox) >= 4 and page_num < len(pdf_document):
                         try:
                             page = pdf_document.load_page(page_num)
-                            # Приводим координаты к масштабу оригинального PDF
+                            # Convert coordinates to original PDF scale
                             x1, y1, x2, y2 = (
                                 bbox[0] / render_scale,
                                 bbox[1] / render_scale,
@@ -449,21 +449,27 @@ class PdfParser(BaseParser):
                                 bbox[3] / render_scale,
                             )
                             rect = fitz.Rect(x1, y1, x2, y2)
-                            text = page.get_text("text", clip=rect).strip()
                             
-                            # Получаем размер шрифта для сравнения
+                            # Try get_textbox first - more accurate method
+                            text = page.get_textbox(rect).strip()
+                            
+                            # If failed, use fallback
+                            if not text or len(text) < 2:
+                                text = page.get_text("text", clip=rect).strip()
+                            
+                            # Get font size for comparison
                             font_size = self._get_font_size(page, rect)
                             
-                            # Определяем уровень заголовка
+                            # Determine header level
                             level = self._determine_header_level(
                                 text, element, page, rect, last_numbered_level, previous_headers, font_size
                             )
                             
-                            # Если заголовок имеет явную нумерацию, обновляем last_numbered_level
+                            # If header has explicit numbering, update last_numbered_level
                             if self._has_explicit_numbering(text):
                                 last_numbered_level = level
                             
-                            # Сохраняем информацию о заголовке для сравнения с последующими
+                            # Save header info for comparison with subsequent headers
                             previous_headers.append({
                                 "level": level,
                                 "font_size": font_size,
@@ -476,7 +482,7 @@ class PdfParser(BaseParser):
                             element["level"] = level
                             element["element_type"] = element_type
                         except Exception as e:
-                            logger.warning(f"Ошибка при анализе заголовка: {e}")
+                            logger.warning(f"Error analyzing header: {e}")
                             element["level"] = 1
                             element["element_type"] = ElementType.HEADER_1
                             previous_headers.append({
@@ -503,20 +509,20 @@ class PdfParser(BaseParser):
         self, hierarchy: List[Dict[str, Any]], source: str
     ) -> List[Dict[str, Any]]:
         """
-        Анализирует уровни заголовков в уже построенной иерархии (legacy метод).
+        Analyzes header levels in already built hierarchy (legacy method).
 
         Args:
-            hierarchy: Список секций с заголовками.
-            source: Путь к PDF файлу.
+            hierarchy: List of sections with headers.
+            source: Path to PDF file.
 
         Returns:
-            Список секций с определенными уровнями заголовков.
+            List of sections with determined header levels.
         """
-        # Если заголовки уже проанализированы, просто возвращаем иерархию
+        # If headers are already analyzed, just return hierarchy
         for section in hierarchy:
             header = section.get("header")
             if header is not None and "level" not in header:
-                # Заголовок не проанализирован - используем старую логику
+                # Header not analyzed - use old logic
                 pdf_document = fitz.open(source)
                 try:
                     bbox = header.get("bbox", [])
@@ -533,7 +539,13 @@ class PdfParser(BaseParser):
                                 bbox[3] / render_scale,
                             )
                             rect = fitz.Rect(x1, y1, x2, y2)
-                            text = page.get_text("text", clip=rect).strip()
+                            
+                            # Try get_textbox first - more accurate method
+                            text = page.get_textbox(rect).strip()
+                            
+                            # If failed, use fallback
+                            if not text or len(text) < 2:
+                                text = page.get_text("text", clip=rect).strip()
                             
                             level = self._determine_header_level(text, header, page, rect, None, None, None)
                             element_type = getattr(ElementType, f"HEADER_{level}", ElementType.HEADER_1)
@@ -542,7 +554,7 @@ class PdfParser(BaseParser):
                             header["level"] = level
                             header["element_type"] = element_type
                         except Exception as e:
-                            logger.warning(f"Ошибка при анализе заголовка: {e}")
+                            logger.warning(f"Error analyzing header: {e}")
                             header["level"] = 1
                             header["element_type"] = ElementType.HEADER_1
                     else:
@@ -555,15 +567,15 @@ class PdfParser(BaseParser):
 
     def _has_explicit_numbering(self, text: str) -> bool:
         """
-        Проверяет, имеет ли заголовок явную нумерацию (цифры, буквы и т.д.).
+        Checks if header has explicit numbering (digits, letters, etc.).
 
         Args:
-            text: Текст заголовка.
+            text: Header text.
 
         Returns:
-            True, если заголовок имеет явную нумерацию.
+            True if header has explicit numbering.
         """
-        # Проверяем различные паттерны нумерации
+        # Check various numbering patterns
         patterns = [
             r'^\d+\s+',  # "1 ", "2 "
             r'^\d+\.\d+\s+',  # "1.1 ", "1.2 "
@@ -584,14 +596,14 @@ class PdfParser(BaseParser):
 
     def _get_font_size(self, page: fitz.Page, rect: fitz.Rect) -> Optional[float]:
         """
-        Извлекает максимальный размер шрифта из области заголовка.
+        Extracts maximum font size from header area.
 
         Args:
-            page: Страница PDF.
-            rect: Прямоугольник заголовка.
+            page: PDF page.
+            rect: Header rectangle.
 
         Returns:
-            Максимальный размер шрифта или None, если не удалось определить.
+            Maximum font size or None if cannot be determined.
         """
         try:
             text_dict = page.get_text("dict", clip=rect)
@@ -599,7 +611,7 @@ class PdfParser(BaseParser):
             
             font_sizes = []
             for block in blocks:
-                if block.get("type") == 0:  # Текстовый блок
+                if block.get("type") == 0:  # Text block
                     for line in block.get("lines", []):
                         for span in line.get("spans", []):
                             font_size = span.get("size", 0)
@@ -623,142 +635,142 @@ class PdfParser(BaseParser):
         font_size: Optional[float] = None,
     ) -> int:
         """
-        Определяет уровень заголовка на основе текста и размера шрифта.
+        Determines header level based on text and font size.
         
-        Если заголовок не имеет явной нумерации и есть last_numbered_level,
-        возвращает last_numbered_level + 1.
+        If header has no explicit numbering and last_numbered_level exists,
+        returns last_numbered_level + 1.
         
-        Если нет нумерации, сравнивает размер шрифта с предыдущими заголовками.
+        If no numbering, compares font size with previous headers.
 
         Args:
-            text: Текст заголовка.
-            header: Словарь с информацией о заголовке.
-            page: Страница PDF.
-            rect: Прямоугольник заголовка.
-            last_numbered_level: Уровень последнего заголовка с явной нумерацией.
-            previous_headers: Список предыдущих заголовков для сравнения размера шрифта.
-            font_size: Размер шрифта текущего заголовка.
+            text: Header text.
+            header: Dictionary with header information.
+            page: PDF page.
+            rect: Header rectangle.
+            last_numbered_level: Level of last header with explicit numbering.
+            previous_headers: List of previous headers for font size comparison.
+            font_size: Current header font size.
 
         Returns:
-            Уровень заголовка (1-6).
+            Header level (1-6).
         """
-        # Анализ нумерации
-        # Заголовки вида "1", "2", "3" -> HEADER_1
+        # Numbering analysis
+        # Headers like "1", "2", "3" -> HEADER_1
         if re.match(r'^\d+\s+[A-Z]', text):
             return 1
-        # Заголовки вида "1.1", "1.2" -> HEADER_2
+        # Headers like "1.1", "1.2" -> HEADER_2
         if re.match(r'^\d+\.\d+\s+', text):
             return 2
-        # Заголовки вида "1.1.1", "1.1.2" -> HEADER_3
+        # Headers like "1.1.1", "1.1.2" -> HEADER_3
         if re.match(r'^\d+\.\d+\.\d+\s+', text):
             return 3
-        # Заголовки вида "1.1.1.1" -> HEADER_4
+        # Headers like "1.1.1.1" -> HEADER_4
         if re.match(r'^\d+\.\d+\.\d+\.\d+\s+', text):
             return 4
         
-        # Если заголовок не имеет явной нумерации, но есть контекст с нумерацией
+        # If header has no explicit numbering but has context with numbering
         if last_numbered_level is not None:
-            # Возвращаем уровень на 1 больше последнего заголовка с нумерацией
-            return min(last_numbered_level + 1, 6)  # Ограничиваем максимум 6
+            # Return level + 1 from last numbered header
+            return min(last_numbered_level + 1, 6)  # Limit maximum to 6
         
-        # Если нет нумерации, обязательно сравниваем размер шрифта с предыдущими заголовками
+        # If no numbering, compare font size with previous headers
         if font_size is not None:
             if previous_headers:
-                # Ищем предыдущие заголовки с известным размером шрифта
+                # Find previous headers with known font size
                 previous_with_font = [
                     h for h in previous_headers
                     if h.get("font_size") is not None
                 ]
                 
                 if previous_with_font:
-                    # Берем последний заголовок с известным размером шрифта
+                    # Take last header with known font size
                     last_header = previous_with_font[-1]
                     last_font_size = last_header.get("font_size")
                     last_level = last_header.get("level", 1)
                     
-                    # Сравниваем размеры шрифта
-                    # Если шрифт значительно больше (>= 2pt разница) - уровень выше
+                    # Compare font sizes
+                    # If font is significantly larger (>= 2pt difference) - higher level
                     if font_size >= last_font_size + 2:
                         return max(1, last_level - 1)
-                    # Если шрифт значительно меньше (>= 2pt разница) - уровень ниже
+                    # If font is significantly smaller (>= 2pt difference) - lower level
                     elif font_size <= last_font_size - 2:
                         return min(6, last_level + 1)
-                    # Если размер примерно такой же - тот же уровень
+                    # If size is approximately the same - same level
                     else:
                         return last_level
             
-            # Если нет предыдущих заголовков для сравнения, используем абсолютные значения
-            # Шрифт >= 16pt -> обычно HEADER_1 или HEADER_2
+            # If no previous headers for comparison, use absolute values
+            # Font >= 16pt -> usually HEADER_1 or HEADER_2
             if font_size >= 16:
                 return 1
-            # Шрифт 12-16pt -> обычно HEADER_2 или HEADER_3
+            # Font 12-16pt -> usually HEADER_2 or HEADER_3
             elif font_size >= 12:
                 return 2
-            # Шрифт < 12pt -> обычно HEADER_3
+            # Font < 12pt -> usually HEADER_3
             else:
                 return 3
         
-        # По умолчанию HEADER_1
+        # Default HEADER_1
         return 1
 
     def _extract_text_by_bboxes(
         self, source: str, layout_elements: List[Dict[str, Any]], use_ocr: bool = False
     ) -> List[Dict[str, Any]]:
         """
-        Извлекает текст через PyMuPDF по координатам из layout elements.
-        Для сканированных PDF (use_ocr=True) использует Qwen2.5 OCR.
+        Extracts text via PyMuPDF by coordinates from layout elements.
+        For scanned PDFs (use_ocr=True) uses Qwen2.5 OCR.
 
         Args:
-            source: Путь к PDF файлу.
-            layout_elements: Список элементов layout с bbox.
-            use_ocr: Если True, использует OCR через Qwen2.5 вместо PyMuPDF.
+            source: Path to PDF file.
+            layout_elements: List of layout elements with bbox.
+            use_ocr: If True, uses OCR via Qwen2.5 instead of PyMuPDF.
 
         Returns:
-            Список элементов с извлеченным текстом.
+            List of elements with extracted text.
         """
         pdf_document = fitz.open(source)
         try:
             text_elements: List[Dict[str, Any]] = []
             render_scale = self._get_config("layout_detection.render_scale", 2.0)
             
-            # Для OCR нужно хранить оригинальные изображения страниц
+            # For OCR need to store original page images
             page_images: Dict[int, Image.Image] = {}
             
             if use_ocr:
-                logger.info("Начинаем OCR обработку: рендерим страницы...")
-                # Рендерим все страницы заранее для OCR
+                logger.info("Starting OCR processing: rendering pages...")
+                # Render all pages in advance for OCR
                 if self.page_renderer is None:
                     self.page_renderer = PdfPageRenderer(
                         render_scale=render_scale,
-                        optimize_for_ocr=False,  # Не применяем smart_resize для оригинальных изображений
+                        optimize_for_ocr=False,  # Don't apply smart_resize for original images
                     )
                 
                 pdf_path = Path(source)
-                for page_num in tqdm(range(len(pdf_document)), desc="Рендеринг страниц для OCR", unit="страница", leave=False):
+                for page_num in tqdm(range(len(pdf_document)), desc="Rendering pages for OCR", unit="page", leave=False):
                     original_image, _ = self.page_renderer.render_page(
                         pdf_path, page_num, return_original=True
                     )
                     page_images[page_num] = original_image
                 
-                # Подсчитываем количество элементов для OCR
+                # Count elements for OCR
                 ocr_elements = [
                     e for e in layout_elements 
                     if e.get("category", "") in ["Text", "Section-header", "Title", "Caption"]
                     and e.get("category", "") != "Picture"
                 ]
-                logger.info(f"Найдено {len(ocr_elements)} элементов для OCR обработки")
+                logger.info(f"Found {len(ocr_elements)} elements for OCR processing")
             
-            for element in tqdm(layout_elements, desc="Извлечение текста", unit="элемент", disable=not use_ocr, leave=False):
+            for element in tqdm(layout_elements, desc="Extracting text", unit="element", disable=not use_ocr, leave=False):
                 category = element.get("category", "")
                 bbox = element.get("bbox", [])
                 page_num = element.get("page_num", 0)
                 
-                # Пропускаем Picture - не делаем OCR для изображений
+                # Skip Picture - don't do OCR for images
                 if category == "Picture":
                     text_elements.append(element)
                     continue
                 
-                # Извлекаем текст только для текстовых элементов
+                # Extract text only for text elements
                 if category not in ["Text", "Section-header", "Title", "Caption"]:
                     text_elements.append(element)
                     continue
@@ -766,16 +778,16 @@ class PdfParser(BaseParser):
                 if len(bbox) >= 4 and page_num < len(pdf_document):
                     try:
                         if use_ocr:
-                            # Используем OCR через Qwen2.5
+                            # Use OCR via Qwen2.5
                             if page_num not in page_images:
-                                logger.warning(f"Изображение страницы {page_num} не найдено для OCR")
+                                logger.warning(f"Page image {page_num} not found for OCR")
                                 element["text"] = ""
                                 text_elements.append(element)
                                 continue
                             
                             page_image = page_images[page_num]
                             
-                            # Вырезаем элемент из изображения
+                            # Crop element from image
                             x1, y1, x2, y2 = bbox
                             padding = 5
                             x1_crop = max(0, int(x1) - padding)
@@ -785,13 +797,13 @@ class PdfParser(BaseParser):
                             
                             cropped_image = page_image.crop((x1_crop, y1_crop, x2_crop, y2_crop))
                             
-                            # OCR через Qwen2.5
+                            # OCR via Qwen2.5
                             text = ocr_text_with_qwen(cropped_image)
                             element["text"] = text.strip() if text else ""
                         else:
-                            # Используем PyMuPDF для выделяемого текста
+                            # Use PyMuPDF for extractable text
                             page = pdf_document.load_page(page_num)
-                            # Приводим координаты к масштабу оригинального PDF
+                            # Convert coordinates to original PDF scale
                             x1, y1, x2, y2 = (
                                 bbox[0] / render_scale,
                                 bbox[1] / render_scale,
@@ -799,10 +811,32 @@ class PdfParser(BaseParser):
                                 bbox[3] / render_scale,
                             )
                             rect = fitz.Rect(x1, y1, x2, y2)
-                            text = page.get_text("text", clip=rect).strip()
+                            
+                            # Try get_textbox first - more accurate method
+                            text = page.get_textbox(rect).strip()
+                            
+                            # If get_textbox failed, try another method
+                            if not text or len(text) < 2:
+                                # Try to get text with clip for better performance
+                                text_dict = page.get_text("dict", clip=rect)
+                                text_parts = []
+                                
+                                for block in text_dict.get("blocks", []):
+                                    if "lines" not in block:
+                                        continue
+                                    for line in block["lines"]:
+                                        for span in line.get("spans", []):
+                                            text_parts.append(span.get("text", ""))
+                                
+                                text = " ".join(text_parts).strip()
+                            
+                            # If that didn't help, use old method as fallback
+                            if not text or len(text) < 2:
+                                text = page.get_text("text", clip=rect).strip()
+                            
                             element["text"] = text
                     except Exception as e:
-                        logger.warning(f"Ошибка при извлечении текста для элемента: {e}")
+                        logger.warning(f"Error extracting text for element: {e}")
                         element["text"] = ""
                 else:
                     element["text"] = ""
@@ -817,16 +851,16 @@ class PdfParser(BaseParser):
         self, text_elements: List[Dict[str, Any]], max_chunk_size: int
     ) -> List[Dict[str, Any]]:
         """
-        Склеивает подряд идущие Text элементы.
+        Merges consecutive Text elements.
 
-        Если по очереди text, потом опять text - склеиваем их.
+        If text elements follow each other, merge them.
 
         Args:
-            text_elements: Список текстовых элементов.
-            max_chunk_size: Максимальный размер блока в символах.
+            text_elements: List of text elements.
+            max_chunk_size: Maximum block size in characters.
 
         Returns:
-            Список склеенных элементов.
+            List of merged elements.
         """
         if not text_elements:
             return []
@@ -834,7 +868,7 @@ class PdfParser(BaseParser):
         merged: List[Dict[str, Any]] = []
         current_block: Optional[Dict[str, Any]] = None
         
-        # Сортируем по странице и Y координате
+        # Sort by page and Y coordinate
         sorted_elements = sorted(
             text_elements,
             key=lambda e: (
@@ -847,7 +881,7 @@ class PdfParser(BaseParser):
             category = element.get("category", "")
             text = element.get("text", "")
             
-            # Склеиваем только Text элементы
+            # Merge only Text elements
             if category != "Text":
                 if current_block is not None:
                     merged.append(current_block)
@@ -859,14 +893,14 @@ class PdfParser(BaseParser):
                 current_block = element.copy()
                 continue
             
-            # Если текущий блок - Text и следующий элемент - тоже Text, склеиваем
+            # If current block is Text and next element is also Text, merge
             current_text = current_block.get("text", "")
             combined_text = f"{current_text} {text}".strip()
             
-            # Проверяем размер
+            # Check size
             if len(combined_text) <= max_chunk_size:
                 current_block["text"] = combined_text
-                # Обновляем bbox
+                # Update bbox
                 current_bbox = current_block.get("bbox", [])
                 element_bbox = element.get("bbox", [])
                 if len(current_bbox) >= 4 and len(element_bbox) >= 4:
@@ -878,15 +912,15 @@ class PdfParser(BaseParser):
                     ]
                 continue
             
-            # Не можем склеить (превышен размер) - сохраняем текущий блок и начинаем новый
+            # Cannot merge (size exceeded) - save current block and start new
             merged.append(current_block)
             current_block = element.copy()
         
-        # Добавляем последний блок
+        # Add last block
         if current_block is not None:
             merged.append(current_block)
         
-        logger.debug(f"Склеивание текста: {len(text_elements)} -> {len(merged)} элементов")
+        logger.debug(f"Text merging: {len(text_elements)} -> {len(merged)} elements")
         return merged
 
     def _create_elements_from_hierarchy(
@@ -896,30 +930,30 @@ class PdfParser(BaseParser):
         layout_elements: List[Dict[str, Any]],
     ) -> List[Element]:
         """
-        Создает элементы из иерархии.
+        Creates elements from hierarchy.
 
         Args:
-            hierarchy: Список секций с заголовками.
-            merged_text_elements: Список склеенных текстовых элементов.
-            layout_elements: Все элементы layout (для поиска текста).
+            hierarchy: List of sections with headers.
+            merged_text_elements: List of merged text elements.
+            layout_elements: All layout elements (for text search).
 
         Returns:
-            Список элементов Element.
+            List of Element elements.
         """
         elements: List[Element] = []
-        header_stack: List[Tuple[int, str]] = []  # (уровень, element_id)
+        header_stack: List[Tuple[int, str]] = []  # (level, element_id)
         
-        # Создаем индекс текстовых элементов по bbox для быстрого поиска
+        # Create index of text elements by bbox for fast lookup
         text_elements_by_bbox: Dict[Tuple[int, int, int, int, int], Dict[str, Any]] = {}
         for elem in merged_text_elements:
             bbox = elem.get("bbox", [])
             page_num = elem.get("page_num", 0)
             if len(bbox) >= 4:
-                # Используем округленные координаты для поиска
+                # Use rounded coordinates for search
                 key = (page_num, int(bbox[0]), int(bbox[1]), int(bbox[2]), int(bbox[3]))
                 text_elements_by_bbox[key] = elem
         
-        # Также создаем индекс для всех layout элементов
+        # Also create index for all layout elements
         layout_elements_by_bbox: Dict[Tuple[int, int, int, int, int], Dict[str, Any]] = {}
         for elem in layout_elements:
             bbox = elem.get("bbox", [])
@@ -932,13 +966,13 @@ class PdfParser(BaseParser):
             header = section.get("header")
             children = section.get("children", [])
             
-            # Создаем элемент заголовка
+            # Create header element
             if header is not None:
                 level = header.get("level", 1)
                 element_type = header.get("element_type", ElementType.HEADER_1)
                 text = header.get("text", "")
                 
-                # Обновляем стек заголовков
+                # Update header stack
                 while header_stack and header_stack[-1][0] >= level:
                     header_stack.pop()
                 
@@ -949,6 +983,8 @@ class PdfParser(BaseParser):
                     content=text,
                     parent_id=parent_id,
                     metadata={
+                        "source": "ocr",
+                        "level": level,
                         "bbox": header.get("bbox", []),
                         "page_num": header.get("page_num", 0),
                         "category": header.get("category", ""),
@@ -960,23 +996,23 @@ class PdfParser(BaseParser):
             else:
                 current_parent_id = header_stack[-1][1] if header_stack else None
             
-            # Создаем элементы для дочерних элементов
+            # Create elements for child elements
             for child in children:
                 category = child.get("category", "")
                 bbox = child.get("bbox", [])
                 page_num = child.get("page_num", 0)
                 
                 if category == "Text":
-                    # Ищем текст в merged_text_elements (склеенных блоках)
+                    # Search text in merged_text_elements (merged blocks)
                     text = ""
                     if len(bbox) >= 4:
-                        # Пытаемся найти точное совпадение
+                        # Try to find exact match
                         key = (page_num, int(bbox[0]), int(bbox[1]), int(bbox[2]), int(bbox[3]))
                         merged_elem = text_elements_by_bbox.get(key)
                         if merged_elem:
                             text = merged_elem.get("text", "")
                         else:
-                            # Если точного совпадения нет, используем текст из child
+                            # If no exact match, use text from child
                             text = child.get("text", "")
                     else:
                         text = child.get("text", "")
@@ -987,6 +1023,7 @@ class PdfParser(BaseParser):
                             content=text,
                             parent_id=current_parent_id,
                             metadata={
+                                "source": "ocr",
                                 "bbox": bbox,
                                 "page_num": page_num,
                                 "category": category,
@@ -994,12 +1031,13 @@ class PdfParser(BaseParser):
                         )
                         elements.append(element)
                 elif category == "Table":
-                    # Таблицы будут обработаны позже через Qwen
+                    # Tables will be processed later via Qwen
                     element = self._create_element(
                         type=ElementType.TABLE,
-                        content="",  # будет заполнено при парсинге
+                        content="",  # will be filled during parsing
                         parent_id=current_parent_id,
                         metadata={
+                            "source": "ocr",
                             "bbox": bbox,
                             "page_num": page_num,
                             "category": category,
@@ -1009,9 +1047,10 @@ class PdfParser(BaseParser):
                 elif category == "Picture":
                     element = self._create_element(
                         type=ElementType.IMAGE,
-                        content="",  # изображение будет в метаданных
+                        content="",  # image will be in metadata
                         parent_id=current_parent_id,
                         metadata={
+                            "source": "ocr",
                             "bbox": bbox,
                             "page_num": page_num,
                             "category": category,
@@ -1025,6 +1064,7 @@ class PdfParser(BaseParser):
                         content=text,
                         parent_id=current_parent_id,
                         metadata={
+                            "source": "ocr",
                             "bbox": bbox,
                             "page_num": page_num,
                             "category": category,
@@ -1036,8 +1076,9 @@ class PdfParser(BaseParser):
                     element = self._create_element(
                         type=ElementType.TITLE,
                         content=text,
-                        parent_id=None,  # Title не имеет родителя
+                        parent_id=None,  # Title has no parent
                         metadata={
+                            "source": "ocr",
                             "bbox": bbox,
                             "page_num": page_num,
                             "category": category,
@@ -1051,20 +1092,20 @@ class PdfParser(BaseParser):
         self, elements: List[Element], source: str
     ) -> List[Element]:
         """
-        Сохраняет изображения в метаданных Caption элементов.
+        Stores images in Caption element metadata.
         
-        Логика:
-        - Находит IMAGE элементы
-        - Находит соответствующие CAPTION элементы (по близости bbox)
-        - Сохраняет изображение в метаданных CAPTION
-        - CAPTION уже привязан к Header через parent_id
+        Logic:
+        - Finds IMAGE elements
+        - Finds corresponding CAPTION elements (by bbox proximity)
+        - Saves image in CAPTION metadata
+        - CAPTION is already linked to Header via parent_id
 
         Args:
-            elements: Список элементов.
-            source: Путь к PDF файлу.
+            elements: List of elements.
+            source: Path to PDF file.
 
         Returns:
-            Список элементов с обновленными метаданными.
+            List of elements with updated metadata.
         """
         pdf_document = fitz.open(source)
         try:
@@ -1073,7 +1114,7 @@ class PdfParser(BaseParser):
             image_elements = [e for e in elements if e.type == ElementType.IMAGE]
             caption_elements = [e for e in elements if e.type == ElementType.CAPTION]
             
-            for image_element in tqdm(image_elements, desc="Обработка изображений", unit="изображение", leave=False):
+            for image_element in tqdm(image_elements, desc="Processing images", unit="image", leave=False):
                 image_bbox = image_element.metadata.get("bbox", [])
                 image_page = image_element.metadata.get("page_num", 0)
                 
@@ -1081,7 +1122,7 @@ class PdfParser(BaseParser):
                     continue
                 
                 try:
-                    # Извлекаем изображение
+                    # Extract image
                     page = pdf_document.load_page(image_page)
                     x1, y1, x2, y2 = (
                         image_bbox[0] / render_scale,
@@ -1095,8 +1136,8 @@ class PdfParser(BaseParser):
                     import base64
                     img_base64 = base64.b64encode(img_data).decode("utf-8")
                     
-                    # Ищем соответствующий Caption элемент
-                    # Ищем ближайший Caption на той же странице
+                    # Find corresponding Caption element
+                    # Find nearest Caption on same page
                     best_caption = None
                     min_distance = float('inf')
                     
@@ -1107,26 +1148,26 @@ class PdfParser(BaseParser):
                         if caption_page != image_page or len(caption_bbox) < 4:
                             continue
                         
-                        # Проверяем близость: Caption обычно ниже изображения
-                        # Расстояние по вертикали между нижним краем изображения и верхним краем Caption
+                        # Check proximity: Caption is usually below image
+                        # Vertical distance between bottom edge of image and top edge of Caption
                         distance = abs(caption_bbox[1] - image_bbox[3])
                         
-                        # Caption должен быть ниже изображения (или очень близко)
+                        # Caption should be below image (or very close)
                         if caption_bbox[1] >= image_bbox[1] - 50 and distance < min_distance:
                             min_distance = distance
                             best_caption = caption_element
                     
-                    # Если нашли Caption, сохраняем изображение в его метаданных
+                    # If Caption found, save image in its metadata
                     if best_caption is not None:
                         best_caption.metadata["image_data"] = f"data:image/png;base64,{img_base64}"
-                        logger.debug(f"Изображение сохранено в метаданных Caption {best_caption.id}")
+                        logger.debug(f"Image saved in Caption metadata {best_caption.id}")
                     else:
-                        # Если Caption не найден, сохраняем в метаданных IMAGE (fallback)
+                        # If Caption not found, save in IMAGE metadata (fallback)
                         image_element.metadata["image_data"] = f"data:image/png;base64,{img_base64}"
-                        logger.warning(f"Caption не найден для изображения {image_element.id}, изображение сохранено в IMAGE")
+                        logger.warning(f"Caption not found for image {image_element.id}, image saved in IMAGE")
                         
                 except Exception as e:
-                    logger.warning(f"Ошибка при извлечении изображения {image_element.id}: {e}")
+                    logger.warning(f"Error extracting image {image_element.id}: {e}")
         
         finally:
             pdf_document.close()
@@ -1137,14 +1178,14 @@ class PdfParser(BaseParser):
         self, elements: List[Element], source: str
     ) -> List[Element]:
         """
-        Парсит таблицы через Qwen2.5.
+        Parses tables via Qwen2.5.
 
         Args:
-            elements: Список элементов.
-            source: Путь к PDF файлу.
+            elements: List of elements.
+            source: Path to PDF file.
 
         Returns:
-            Список элементов с распарсенными таблицами.
+            List of elements with parsed tables.
         """
         table_elements = [e for e in elements if e.type == ElementType.TABLE]
         
@@ -1158,17 +1199,17 @@ class PdfParser(BaseParser):
         try:
             render_scale = self._get_config("layout_detection.render_scale", 2.0)
             
-            for element in tqdm(table_elements, desc="Парсинг таблиц", unit="таблица", leave=False):
+            for element in tqdm(table_elements, desc="Parsing tables", unit="table", leave=False):
                 bbox = element.metadata.get("bbox", [])
                 page_num = element.metadata.get("page_num", 0)
                 
                 if len(bbox) < 4 or page_num >= len(pdf_document):
-                    logger.warning(f"Пропуск таблицы с невалидным bbox или page_num: {element.id}")
+                    logger.warning(f"Skipping table with invalid bbox or page_num: {element.id}")
                     continue
                 
                 try:
                     page = pdf_document.load_page(page_num)
-                    # Приводим координаты к масштабу оригинального PDF
+                    # Convert coordinates to original PDF scale
                     x1, y1, x2, y2 = (
                         bbox[0] / render_scale,
                         bbox[1] / render_scale,
@@ -1177,52 +1218,54 @@ class PdfParser(BaseParser):
                     )
                     rect = fitz.Rect(x1, y1, x2, y2)
                     
-                    # Рендерим область таблицы
-                    mat = fitz.Matrix(2.0, 2.0)  # Увеличиваем для лучшего качества
+                    # Render table area
+                    mat = fitz.Matrix(2.0, 2.0)  # Increase for better quality
                     pix = page.get_pixmap(matrix=mat, clip=rect)
                     img_data = pix.tobytes("png")
                     
-                    # Сохраняем изображение таблицы в base64 (как для обычных изображений)
+                    # Save table image in base64 (as for regular images)
                     import base64
                     img_base64 = base64.b64encode(img_data).decode("utf-8")
                     element.metadata["image_data"] = f"data:image/png;base64,{img_base64}"
                     
-                    # Конвертируем для парсинга через Qwen
+                    # Convert for parsing via Qwen
                     table_image = Image.open(BytesIO(img_data)).convert("RGB")
                     
-                    # Парсим таблицу через Qwen
+                    # Parse table via Qwen
                     markdown_content, dataframe, success = parse_table_with_qwen(
                         table_image,
                         method=method,
                     )
                     
                     if not success:
-                        logger.warning(f"Не удалось распарсить таблицу {element.id}")
+                        logger.warning(f"Failed to parse table {element.id}")
                         element.content = ""
                         element.metadata["parsing_error"] = "Failed to parse table with Qwen"
                         continue
                     
-                    # Обработка склеенных таблиц
+                    # Process merged tables
                     if detect_merged and markdown_content:
                         tables = detect_merged_tables(markdown_content)
                         
                         if len(tables) > 1:
-                            # Несколько таблиц склеены - создаем отдельные элементы
-                            logger.info(f"Обнаружено {len(tables)} склеенных таблиц в элементе {element.id}")
+                            # Multiple tables merged - create separate elements
+                            logger.info(f"Detected {len(tables)} merged tables in element {element.id}")
                             
-                            # Обновляем первый элемент
+                            # Update first element
                             element.content = tables[0]
                             if dataframe is not None:
                                 element.metadata["dataframe"] = dataframe
                             element.metadata["parsing_method"] = method
                             element.metadata["merged_tables"] = True
                             element.metadata["table_count"] = len(tables)
-                            # Изображение уже сохранено выше
+                            element.metadata["rows_count"] = len(dataframe) if dataframe is not None else 0
+                            element.metadata["cols_count"] = len(dataframe.columns) if dataframe is not None else 0
+                            # Image already saved above
                             
-                            # Создаем дополнительные элементы для остальных таблиц
+                            # Create additional elements for remaining tables
                             parent_id = element.parent_id
                             for i, table_md in enumerate(tables[1:], start=1):
-                                # Парсим каждую таблицу отдельно
+                                # Parse each table separately
                                 table_df = markdown_to_dataframe(table_md) if method == "markdown" else None
                                 
                                 new_element = self._create_element(
@@ -1230,38 +1273,44 @@ class PdfParser(BaseParser):
                                     content=table_md,
                                     parent_id=parent_id,
                                     metadata={
-                                        "bbox": bbox,  # Тот же bbox, так как таблицы склеены
+                                        "source": "ocr",
+                                        "bbox": bbox,  # Same bbox, as tables are merged
                                         "page_num": page_num,
                                         "category": "Table",
                                         "parsing_method": method,
                                         "merged_tables": True,
                                         "table_index": i,
-                                        "image_data": f"data:image/png;base64,{img_base64}",  # То же изображение
+                                        "image_data": f"data:image/png;base64,{img_base64}",  # Same image
                                     },
                                 )
                                 if table_df is not None:
                                     new_element.metadata["dataframe"] = table_df
+                                    new_element.metadata["rows_count"] = len(table_df)
+                                    new_element.metadata["cols_count"] = len(table_df.columns)
+                                else:
+                                    new_element.metadata["rows_count"] = 0
+                                    new_element.metadata["cols_count"] = 0
                                 
-                                # Вставляем после текущего элемента
+                                # Insert after current element
                                 element_idx = elements.index(element)
                                 elements.insert(element_idx + i, new_element)
                         else:
-                            # Одна таблица
+                            # Single table
                             element.content = markdown_content
                             if dataframe is not None:
                                 element.metadata["dataframe"] = dataframe
                             element.metadata["parsing_method"] = method
                     else:
-                        # Без обработки склеенных таблиц
+                        # Without merged table processing
                         element.content = markdown_content
                         if dataframe is not None:
                             element.metadata["dataframe"] = dataframe
                         element.metadata["parsing_method"] = method
                     
-                    logger.debug(f"Таблица {element.id} успешно распарсена")
+                    logger.debug(f"Table {element.id} successfully parsed")
                 
                 except Exception as e:
-                    logger.error(f"Ошибка при парсинге таблицы {element.id}: {e}")
+                    logger.error(f"Error parsing table {element.id}: {e}")
                     element.content = ""
                     element.metadata["parsing_error"] = str(e)
                     continue

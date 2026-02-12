@@ -1,7 +1,7 @@
 """
-Ядро библиотеки documentor.
+Core of the documentor library.
 
-Содержит основные компоненты и утилиты ядра системы.
+Contains core components and system utilities.
 """
 
 from .load_env import load_env_file

@@ -1,16 +1,16 @@
 """
-Токенизация Markdown текста.
+Markdown text tokenization.
 
-Содержит классы для:
-- Разбиения Markdown на блоки
-- Определения типов блоков (заголовки, таблицы, списки и т.д.)
-- Обработки специальных конструкций (код-блоки, цитаты)
+Contains classes for:
+- Splitting Markdown into blocks
+- Determining block types (headers, tables, lists, etc.)
+- Processing special constructs (code blocks, quotes)
 """
 
-# TODO: Реализовать класс MarkdownTokenizer:
-# - tokenize() - разбиение на блоки
-# - _detect_heading() - определение заголовков
-# - _detect_table() - определение таблиц
-# - _detect_list() - определение списков
-# - _detect_code_block() - определение код-блоков
-# - _detect_quote() - определение цитат
+# TODO: Implement MarkdownTokenizer class:
+# - tokenize() - splitting into blocks
+# - _detect_heading() - detecting headers
+# - _detect_table() - detecting tables
+# - _detect_list() - detecting lists
+# - _detect_code_block() - detecting code blocks
+# - _detect_quote() - detecting quotes

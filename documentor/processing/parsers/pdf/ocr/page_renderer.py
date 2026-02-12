@@ -1,10 +1,10 @@
 """
-Рендеринг страниц PDF в изображения.
+PDF page rendering to images.
 
-Содержит классы для:
-- Конвертации страниц PDF в изображения
-- Работы с различными форматами изображений
-- Оптимизации изображений для OCR
+Contains classes for:
+- Converting PDF pages to images
+- Working with various image formats
+- Optimizing images for OCR
 """
 
 from __future__ import annotations
@@ -16,19 +16,19 @@ from io import BytesIO
 from PIL import Image
 import fitz
 
-# Импортируем утилиты из documentor.utils
+# Import utilities from documentor.utils
 from documentor.utils.ocr_consts import MIN_PIXELS, MAX_PIXELS
 from documentor.utils.ocr_image_utils import fetch_image
 
 
 class PdfPageRenderer:
     """
-    Рендерер страниц PDF в изображения.
+    PDF page renderer to images.
     
-    Поддерживает:
-    - Рендеринг всех страниц или отдельных страниц
-    - Увеличение разрешения при рендеринге (2x для лучшего качества OCR)
-    - Оптимизацию изображений для OCR через smart_resize
+    Supports:
+    - Rendering all pages or individual pages
+    - Resolution scaling during rendering (2x for better OCR quality)
+    - Image optimization for OCR via smart_resize
     """
     
     def __init__(
@@ -39,13 +39,13 @@ class PdfPageRenderer:
         max_pixels: Optional[int] = None,
     ) -> None:
         """
-        Инициализация рендерера.
+        Initialize renderer.
         
         Args:
-            render_scale: Масштаб рендеринга (2.0 = увеличение в 2 раза)
-            optimize_for_ocr: Применять ли smart_resize для оптимизации под OCR
-            min_pixels: Минимальное число пикселей (если None - используется из dots.ocr)
-            max_pixels: Максимальное число пикселей (если None - используется из dots.ocr)
+            render_scale: Render scale (2.0 = 2x increase)
+            optimize_for_ocr: Whether to apply smart_resize for OCR optimization
+            min_pixels: Minimum number of pixels (if None - uses from dots.ocr)
+            max_pixels: Maximum number of pixels (if None - uses from dots.ocr)
         """
         self.render_scale = render_scale
         self.optimize_for_ocr = optimize_for_ocr
@@ -65,15 +65,15 @@ class PdfPageRenderer:
         return_original: bool = False,
     ) -> Union[Image.Image, Tuple[Image.Image, Image.Image]]:
         """
-        Рендерит одну страницу PDF в изображение.
+        Renders a single PDF page to an image.
         
         Args:
-            pdf_path: Путь к PDF файлу
-            page_num: Номер страницы (0-based)
-            return_original: Если True, возвращает кортеж (original_image, optimized_image)
+            pdf_path: Path to PDF file
+            page_num: Page number (0-based)
+            return_original: If True, returns tuple (original_image, optimized_image)
         
         Returns:
-            Image.Image или tuple[Image.Image, Image.Image] если return_original=True
+            Image.Image or tuple[Image.Image, Image.Image] if return_original=True
         """
         pdf_document = fitz.open(str(pdf_path))
         try:
@@ -105,15 +105,15 @@ class PdfPageRenderer:
         return_originals: bool = False,
     ) -> Union[List[Image.Image], List[Tuple[Image.Image, Image.Image]]]:
         """
-        Рендерит несколько страниц PDF в изображения.
+        Renders multiple PDF pages to images.
         
         Args:
-            pdf_path: Путь к PDF файлу
-            page_nums: Список номеров страниц (0-based). Если None - рендерит все страницы
-            return_originals: Если True, возвращает кортежи (original_image, optimized_image)
+            pdf_path: Path to PDF file
+            page_nums: List of page numbers (0-based). If None - renders all pages
+            return_originals: If True, returns tuples (original_image, optimized_image)
         
         Returns:
-            List[Image.Image] или List[tuple[Image.Image, Image.Image]]
+            List[Image.Image] or List[tuple[Image.Image, Image.Image]]
         """
         pdf_document = fitz.open(str(pdf_path))
         try:
@@ -125,7 +125,7 @@ class PdfPageRenderer:
             images = []
             for page_num in page_nums:
                 if page_num < 0 or page_num >= total_pages:
-                    raise ValueError(f"Номер страницы {page_num} вне диапазона [0, {total_pages})")
+                    raise ValueError(f"Page number {page_num} is out of range [0, {total_pages})")
                 
                 result = self.render_page(pdf_path, page_num, return_original=return_originals)
                 images.append(result)
@@ -136,13 +136,13 @@ class PdfPageRenderer:
     
     def get_page_count(self, pdf_path: Path) -> int:
         """
-        Возвращает количество страниц в PDF.
+        Returns number of pages in PDF.
         
         Args:
-            pdf_path: Путь к PDF файлу
+            pdf_path: Path to PDF file
         
         Returns:
-            Количество страниц
+            Number of pages
         """
         pdf_document = fitz.open(str(pdf_path))
         try:

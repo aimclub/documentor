@@ -1,14 +1,14 @@
 """
-Построение иерархии для Markdown парсера.
+Building hierarchy for Markdown parser.
 
-Содержит логику для:
-- Построения иерархии на основе заголовков
-- Работы со стеком заголовков (header_stack)
-- Назначения parent_id элементам
+Contains logic for:
+- Building hierarchy based on headers
+- Working with header stack (header_stack)
+- Assigning parent_id to elements
 """
 
-# TODO: Реализовать класс MarkdownHierarchyBuilder:
-# - build_hierarchy() - построение иерархии
-# - _process_header() - обработка заголовка
-# - _process_content() - обработка контента
-# - Использовать header_stack для отслеживания текущих заголовков
+# TODO: Implement MarkdownHierarchyBuilder class:
+# - build_hierarchy() - building hierarchy
+# - _process_header() - header processing
+# - _process_content() - content processing
+# - Use header_stack to track current headers

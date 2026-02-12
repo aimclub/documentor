@@ -1,11 +1,11 @@
 """
-Детектирование заголовков с помощью LLM.
+Header detection using LLM.
 
-Содержит логику для:
-- Определения заголовков в тексте
-- Определения уровней заголовков
-- Построения иерархии заголовков
-- Валидации логики иерархии (внутри HEADER_2 не может быть HEADER_1)
+Contains logic for:
+- Detecting headers in text
+- Determining header levels
+- Building header hierarchy
+- Validating hierarchy logic (HEADER_1 cannot be inside HEADER_2)
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ from ..domain import ElementType
 
 
 class HeaderInfo:
-    """Информация о заголовке."""
+    """Header information."""
     
     def __init__(
         self,
@@ -26,13 +26,13 @@ class HeaderInfo:
         element_type: ElementType,
     ) -> None:
         """
-        Инициализация информации о заголовке.
+        Initialize header information.
         
         Args:
-            text: Текст заголовка.
-            level: Уровень заголовка (1-6).
-            position: Позиция в тексте (символ или индекс).
-            element_type: Тип элемента (HEADER_1, HEADER_2 и т.д.).
+            text: Header text.
+            level: Header level (1-6).
+            position: Position in text (character or index).
+            element_type: Element type (HEADER_1, HEADER_2, etc.).
         """
         self.text = text
         self.level = level
@@ -42,13 +42,13 @@ class HeaderInfo:
 
 class HeaderDetector:
     """
-    Детектирует заголовки в тексте с помощью LLM.
+    Detects headers in text using LLM.
     
-    Поддерживает:
-    - Детектирование заголовков в чанках текста
-    - Валидацию логики иерархии
-    - Построение дерева заголовков
-    - Объединение заголовков из разных чанков
+    Supports:
+    - Header detection in text chunks
+    - Hierarchy logic validation
+    - Header tree building
+    - Merging headers from different chunks
     """
 
     def __init__(
@@ -58,17 +58,17 @@ class HeaderDetector:
         overlap_size: int = 500,
     ) -> None:
         """
-        Инициализация детектора заголовков.
+        Initialize header detector.
         
         Args:
-            llm_client: Клиент LLM для запросов (если None - будет создан позже).
-            chunk_size: Размер чанка для обработки (~3000 символов).
-            overlap_size: Размер перекрытия между чанками (~1 параграф).
+            llm_client: LLM client for requests (if None - will be created later).
+            chunk_size: Chunk size for processing (~3000 characters).
+            overlap_size: Overlap size between chunks (~1 paragraph).
         """
         self.llm_client = llm_client
         self.chunk_size = chunk_size
         self.overlap_size = overlap_size
-        # TODO: Инициализировать LLM клиент при необходимости
+        # TODO: Initialize LLM client if needed
 
     def detect_headers(
         self,
@@ -76,75 +76,75 @@ class HeaderDetector:
         previous_headers: Optional[List[HeaderInfo]] = None,
     ) -> List[HeaderInfo]:
         """
-        Детектирует заголовки в чанке текста.
+        Detects headers in text chunk.
         
         Args:
-            chunk: Чанк текста для анализа.
-            previous_headers: Список заголовков из предыдущих чанков (для контекста).
+            chunk: Text chunk for analysis.
+            previous_headers: List of headers from previous chunks (for context).
             
         Returns:
-            Список найденных заголовков.
+            List of found headers.
         """
-        # TODO: Реализовать детектирование заголовков через LLM
-        # - Подготовить промпт с текстом чанка
-        # - Передать предыдущие заголовки для контекста
-        # - Вызвать LLM для определения заголовков и уровней
-        # - Парсить JSON ответ от LLM
-        # - Валидировать логику иерархии
-        raise NotImplementedError("Метод detect_headers() требует реализации")
+        # TODO: Implement header detection via LLM
+        # - Prepare prompt with chunk text
+        # - Pass previous headers for context
+        # - Call LLM to determine headers and levels
+        # - Parse JSON response from LLM
+        # - Validate hierarchy logic
+        raise NotImplementedError("detect_headers() method requires implementation")
 
     def validate_hierarchy(self, headers: List[HeaderInfo]) -> bool:
         """
-        Проверяет логику иерархии заголовков.
+        Validates header hierarchy logic.
         
-        Правила:
-        - Внутри HEADER_2 не может быть HEADER_1
-        - Уровни должны быть последовательными (не должно быть HEADER_1 → HEADER_3)
+        Rules:
+        - HEADER_1 cannot be inside HEADER_2
+        - Levels must be sequential (no HEADER_1 → HEADER_3)
         
         Args:
-            headers: Список заголовков для проверки.
+            headers: List of headers to validate.
             
         Returns:
-            True, если иерархия корректна, False иначе.
+            True if hierarchy is correct, False otherwise.
         """
-        # TODO: Реализовать валидацию иерархии
-        # - Проверить последовательность уровней
-        # - Проверить, что нет пропусков уровней без причины
-        # - Проверить логику вложенности
-        raise NotImplementedError("Метод validate_hierarchy() требует реализации")
+        # TODO: Implement hierarchy validation
+        # - Check level sequence
+        # - Check that there are no level skips without reason
+        # - Check nesting logic
+        raise NotImplementedError("Method validate_hierarchy() requires implementation")
 
     def build_header_tree(self, headers: List[HeaderInfo]) -> Dict[str, any]:
         """
-        Строит дерево заголовков с иерархией.
+        Builds a header tree with hierarchy.
         
         Args:
-            headers: Список заголовков.
+            headers: List of headers.
             
         Returns:
-            Дерево заголовков в виде словаря с полями:
-            - header: информация о заголовке
-            - children: список дочерних заголовков
+            Header tree as a dictionary with fields:
+            - header: header information
+            - children: list of child headers
         """
-        # TODO: Реализовать построение дерева заголовков
-        # - Определить parent_id для каждого заголовка
-        # - Построить иерархическую структуру
-        raise NotImplementedError("Метод build_header_tree() требует реализации")
+        # TODO: Implement header tree building
+        # - Determine parent_id for each header
+        # - Build hierarchical structure
+        raise NotImplementedError("Method build_header_tree() requires implementation")
 
     def merge_headers(
         self,
         headers_list: List[List[HeaderInfo]],
     ) -> List[HeaderInfo]:
         """
-        Объединяет заголовки из разных чанков.
+        Merges headers from different chunks.
         
         Args:
-            headers_list: Список списков заголовков из разных чанков.
+            headers_list: List of header lists from different chunks.
             
         Returns:
-            Объединённый и отсортированный список заголовков.
+            Merged and sorted list of headers.
         """
-        # TODO: Реализовать объединение заголовков
-        # - Убрать дубликаты (одинаковые заголовки в перекрытии)
-        # - Отсортировать по позиции в документе
-        # - Валидировать финальную иерархию
-        raise NotImplementedError("Метод merge_headers() требует реализации")
+        # TODO: Implement header merging
+        # - Remove duplicates (same headers in overlap)
+        # - Sort by position in document
+        # - Validate final hierarchy
+        raise NotImplementedError("Method merge_headers() requires implementation")

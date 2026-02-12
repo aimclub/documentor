@@ -1,13 +1,13 @@
 """
-Реализация клиента для работы с Qwen LLM.
+Qwen LLM client implementation.
 
-Содержит классы для:
-- Текстового анализа (Qwen для детектирования заголовков)
-- Визуального анализа (Qwen VL для OCR и анализа изображений)
-- Обработки ответов от LLM
+Contains classes for:
+- Text analysis (Qwen for header detection)
+- Visual analysis (Qwen VL for OCR and image analysis)
+- LLM response processing
 """
 
-# TODO: Реализовать классы:
-# - QwenTextClient - для текстового анализа
-# - QwenVLClient - для визуального анализа (OCR)
-# - QwenResponseParser - парсинг ответов от LLM
+# TODO: Implement classes:
+# - QwenTextClient - for text analysis
+# - QwenVLClient - for visual analysis (OCR)
+# - QwenResponseParser - parsing LLM responses

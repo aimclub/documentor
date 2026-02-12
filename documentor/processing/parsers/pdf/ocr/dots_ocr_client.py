@@ -1,8 +1,8 @@
 """
-Клиент для прямого вызова Dots.OCR API.
+Client for direct Dots.OCR API calls.
 
-Содержит функции для работы с Dots.OCR API напрямую,
-используя тот же подход, что и в pdf_pipeline_dots_ocr.py.
+Contains functions for working with Dots.OCR API directly,
+using the same approach as in pdf_pipeline_dots_ocr.py.
 """
 
 from __future__ import annotations
@@ -16,18 +16,18 @@ from PIL import Image
 import openai
 import base64
 
-# Загружаем переменные окружения из .env файла
+# Load environment variables from .env file
 from documentor.core.load_env import load_env_file
 load_env_file()
 
-# Импортируем утилиты из documentor.utils
+# Import utilities from documentor.utils
 from documentor.utils.ocr_consts import MIN_PIXELS, MAX_PIXELS
 from documentor.utils.ocr_image_utils import fetch_image
 from documentor.utils.ocr_layout_utils import post_process_output
 
 
 def _image_to_base64(image: Image.Image) -> str:
-    """Конвертирует PIL Image в base64 data URL."""
+    """Converts PIL Image to base64 data URL."""
     buffer = BytesIO()
     image.save(buffer, format="PNG")
     encoded = base64.b64encode(buffer.getvalue()).decode("utf-8")
@@ -45,20 +45,20 @@ def run_inference(
     timeout: Optional[int] = None,
 ) -> Optional[str]:
     """
-    Выполняет inference через dots.ocr API.
+    Performs inference via dots.ocr API.
     
     Args:
-        input_image: Изображение для обработки
-        prompt: Текст промпта
-        base_url: Базовый URL API (по умолчанию из env)
-        api_key: API ключ (по умолчанию из env)
-        temperature: Температура генерации (по умолчанию из env)
-        max_tokens: Максимальное число токенов (по умолчанию из env)
-        model_name: Имя модели (по умолчанию из env)
-        timeout: Таймаут запроса в секундах (по умолчанию из env)
+        input_image: Image for processing
+        prompt: Prompt text
+        base_url: API base URL (default from env)
+        api_key: API key (default from env)
+        temperature: Generation temperature (default from env)
+        max_tokens: Maximum number of tokens (default from env)
+        model_name: Model name (default from env)
+        timeout: Request timeout in seconds (default from env)
     
     Returns:
-        Строка с ответом от модели или None в случае ошибки
+        String with model response or None in case of error
     """
     if base_url is None:
         base_url = os.getenv("DOTS_OCR_BASE_URL")
@@ -73,10 +73,10 @@ def run_inference(
     if timeout is None:
         timeout = int(os.getenv("DOTS_OCR_TIMEOUT", "120"))
     
-    # Удаляем пробелы и проверяем base_url
+    # Remove spaces and check base_url
     if base_url:
         base_url = base_url.strip()
-        # Убеждаемся, что URL заканчивается на /v1 без пробелов
+        # Ensure URL ends with /v1 without spaces
         if base_url.endswith(" "):
             base_url = base_url.rstrip()
         if not base_url.endswith("/v1"):
@@ -88,7 +88,7 @@ def run_inference(
                 base_url = f"{base_url}v1"
     
     if not base_url:
-        raise ValueError("DOTS_OCR_BASE_URL не установлен или пуст")
+        raise ValueError("DOTS_OCR_BASE_URL is not set or empty")
     
     client = openai.OpenAI(
         base_url=base_url,
@@ -151,28 +151,28 @@ def process_layout_detection(
     retry_delay: float = 2.0,
 ) -> Tuple[Optional[list], Optional[str], bool]:
     """
-    Выполняет layout detection для изображения.
+    Performs layout detection for an image.
     
     Args:
-        image: Изображение для обработки (уже подготовленное через smart_resize)
-        origin_image: Оригинальное изображение (для post_process_output)
-        prompt: Промпт для layout detection
-        base_url: Базовый URL API
-        api_key: API ключ
-        temperature: Температура генерации
-        max_tokens: Максимальное число токенов
-        model_name: Имя модели
-        timeout: Таймаут запроса
-        min_pixels: Минимальное число пикселей
-        max_pixels: Максимальное число пикселей
-        max_retries: Максимальное число попыток при пустом ответе
-        retry_delay: Задержка между попытками
+        image: Image to process (already prepared via smart_resize)
+        origin_image: Original image (for post_process_output)
+        prompt: Prompt for layout detection
+        base_url: API base URL
+        api_key: API key
+        temperature: Generation temperature
+        max_tokens: Maximum number of tokens
+        model_name: Model name
+        timeout: Request timeout
+        min_pixels: Minimum number of pixels
+        max_pixels: Maximum number of pixels
+        max_retries: Maximum number of retries on empty response
+        retry_delay: Delay between retries
     
     Returns:
         tuple[Optional[list], Optional[str], bool]:
-            - layout_cells: Список элементов layout или None
-            - raw_response: Сырой ответ от модели или None
-            - success: Успешность операции
+            - layout_cells: List of layout elements or None
+            - raw_response: Raw response from model or None
+            - success: Operation success status
     """
     if prompt is None:
         prompt = "Please output the layout information from this PDF image, including each layout's bbox and its category. The bbox should be in the format [x1, y1, x2, y2]. The layout categories for the PDF document include ['Caption', 'Footnote', 'Formula', 'List-item', 'Page-footer', 'Page-header', 'Picture', 'Section-header', 'Table', 'Text', 'Title']. Do not output the corresponding text. The layout result should be in JSON format."

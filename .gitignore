@@ -43,3 +43,5 @@ test_md_output.py
 /dots.ocr
 /documentor/test_pdf_parser.py
 /documentor/test_scanned_pdf_parser.py
+/documentor/test_docx_parser.py
+/documentor/ELEMENT_METADATA_STANDARD.md

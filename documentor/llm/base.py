@@ -1,12 +1,12 @@
 """
-Базовый класс для работы с LLM.
+Base class for working with LLM.
 
-Определяет интерфейс для работы с различными LLM провайдерами
-(Qwen, OpenAI, и т.д.).
+Defines interface for working with various LLM providers
+(Qwen, OpenAI, etc.).
 """
 
-# TODO: Реализовать базовый класс LLMClient:
-# - Абстрактный метод для отправки запросов
-# - Обработка ошибок
-# - Логирование запросов
-# - Кэширование результатов
+# TODO: Implement base LLMClient class:
+# - Abstract method for sending requests
+# - Error handling
+# - Request logging
+# - Result caching

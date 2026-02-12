@@ -1,5 +1,5 @@
 """
-Утилиты для обработки layout результатов OCR.
+Utilities for processing OCR layout results.
 """
 
 import json
@@ -63,18 +63,18 @@ def post_process_cells(
 
 def post_process_output(response, prompt_mode, origin_image, input_image, min_pixels=None, max_pixels=None):
     """
-    Пост-обработка ответа от OCR модели.
+    Post-processes OCR model response.
     
     Args:
-        response: Сырой ответ от модели (строка или список)
-        prompt_mode: Режим промпта
-        origin_image: Оригинальное изображение
-        input_image: Изображение, отправленное на сервер
-        min_pixels: Минимальное количество пикселей
-        max_pixels: Максимальное количество пикселей
+        response: Raw model response (string or list)
+        prompt_mode: Prompt mode
+        origin_image: Original image
+        input_image: Image sent to server
+        min_pixels: Minimum number of pixels
+        max_pixels: Maximum number of pixels
         
     Returns:
-        Tuple[Union[List[Dict], str], bool]: Обработанные данные и флаг фильтрации
+        Tuple[Union[List[Dict], str], bool]: Processed data and filtering flag
     """
     if prompt_mode in ["prompt_ocr", "prompt_table_html", "prompt_table_latex", "prompt_formula_latex"]:
         return response

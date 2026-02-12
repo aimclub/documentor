@@ -1,18 +1,18 @@
 """
-Валидация структуры документа через LLM с XML разметкой.
+Document structure validation via LLM with XML markup.
 
-Содержит классы для:
-- Проверки LLM разметки на основе XML разметки DOCX
-- Сравнения структур через LLM
-- Корректировки уровней заголовков через LLM
-- Обнаружения несоответствий в разметке
+Contains classes for:
+- Validating LLM markup based on DOCX XML markup
+- Comparing structures via LLM
+- Correcting header levels via LLM
+- Detecting markup inconsistencies
 """
 
-# TODO: Реализовать класс LLMStructureValidator:
-# - validate_structure_with_xml() - валидация структуры через LLM с XML
-#   - Отправить LLM свою разметку + XML разметку DOCX
-#   - Попросить LLM проверить свою разметку
-#   - Сравнить с XML и скорректировать уровни
-# - check_markup_consistency() - проверка согласованности разметки
-# - correct_levels_with_xml() - корректировка уровней на основе XML
-# - find_discrepancies() - поиск несоответствий
+# TODO: Implement LLMStructureValidator class:
+# - validate_structure_with_xml() - structure validation via LLM with XML
+#   - Send LLM its markup + DOCX XML markup
+#   - Ask LLM to validate its markup
+#   - Compare with XML and correct levels
+# - check_markup_consistency() - markup consistency check
+# - correct_levels_with_xml() - level correction based on XML
+# - find_discrepancies() - finding discrepancies

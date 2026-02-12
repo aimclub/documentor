@@ -1,7 +1,7 @@
 """
-OCR через Qwen2.5 для извлечения текста из изображений.
+OCR via Qwen2.5 for extracting text from images.
 
-Используется для сканированных PDF без выделяемого текста.
+Used for scanned PDFs without extractable text.
 """
 
 from __future__ import annotations
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 def _image_to_base64(image: Image.Image) -> str:
-    """Конвертирует PIL Image в base64 data URL."""
+    """Converts PIL Image to base64 data URL."""
     buffer = BytesIO()
     image.save(buffer, format="PNG")
     encoded = base64.b64encode(buffer.getvalue()).decode("utf-8")
@@ -38,19 +38,19 @@ def ocr_text_with_qwen(
     timeout: Optional[int] = None,
 ) -> Optional[str]:
     """
-    Выполняет OCR элемента через Qwen2.5 API.
+    Performs OCR of element via Qwen2.5 API.
     
     Args:
-        element_image: Изображение элемента для OCR
-        base_url: Базовый URL API (по умолчанию из env)
-        api_key: API ключ (по умолчанию из env)
-        temperature: Температура генерации (по умолчанию из env)
-        max_tokens: Максимальное число токенов (по умолчанию из env)
-        model_name: Имя модели (по умолчанию из env)
-        timeout: Таймаут запроса в секундах (по умолчанию из env)
+        element_image: Element image for OCR
+        base_url: API base URL (default from env)
+        api_key: API key (default from env)
+        temperature: Generation temperature (default from env)
+        max_tokens: Maximum number of tokens (default from env)
+        model_name: Model name (default from env)
+        timeout: Request timeout in seconds (default from env)
     
     Returns:
-        Извлеченный текст или None в случае ошибки
+        Extracted text or None in case of error
     """
     if base_url is None:
         base_url_raw = os.getenv("QWEN_BASE_URL")
@@ -77,7 +77,7 @@ def ocr_text_with_qwen(
         timeout = int(os.getenv("QWEN_TIMEOUT", "180"))
     
     if not base_url:
-        raise ValueError("QWEN_BASE_URL не установлен")
+        raise ValueError("QWEN_BASE_URL is not set")
     if not base_url.endswith("/v1"):
         if base_url.endswith("/"):
             base_url = f"{base_url}v1"
@@ -94,7 +94,7 @@ def ocr_text_with_qwen(
 
 Extract the text:"""
     
-    # Подготавливаем изображение
+    # Prepare image
     optimized_image = fetch_image(
         element_image,
         min_pixels=None,
@@ -129,5 +129,5 @@ Extract the text:"""
         content = response.choices[0].message.content
         return content.strip() if content else None
     except Exception as e:
-        logger.error(f"Ошибка OCR через Qwen: {e}")
+        logger.error(f"OCR error via Qwen: {e}")
         return None

@@ -17,24 +17,24 @@ class DocumentFormat(str, Enum):
 
 
 class ElementType(str, Enum):
-    TITLE = "title"  # Заголовок документа
-    HEADER_1 = "header_1"  # Заголовок уровня 1
-    HEADER_2 = "header_2"  # Заголовок уровня 2
-    HEADER_3 = "header_3"  # Заголовок уровня 3
-    HEADER_4 = "header_4"  # Заголовок уровня 4
-    HEADER_5 = "header_5"  # Заголовок уровня 5
-    HEADER_6 = "header_6"  # Заголовок уровня 6
-    TEXT = "text"  # Текст
-    IMAGE = "image"  # Изображение
-    TABLE = "table"  # Таблица
-    FORMULA = "formula"  # Формула
-    LIST_ITEM = "list_item"  # Элемент списка
-    CAPTION = "caption"  # Подпись
-    FOOTNOTE = "footnote"  # Сноска
-    PAGE_HEADER = "page_header"  # Колонтитул верхний
-    PAGE_FOOTER = "page_footer"  # Колонтитул нижний
-    LINK = "link"  # Ссылка
-    CODE_BLOCK = "code_block"  # Блок кода
+    TITLE = "title"  # Document title
+    HEADER_1 = "header_1"  # Level 1 header
+    HEADER_2 = "header_2"  # Level 2 header
+    HEADER_3 = "header_3"  # Level 3 header
+    HEADER_4 = "header_4"  # Level 4 header
+    HEADER_5 = "header_5"  # Level 5 header
+    HEADER_6 = "header_6"  # Level 6 header
+    TEXT = "text"  # Text content
+    IMAGE = "image"  # Image
+    TABLE = "table"  # Table
+    FORMULA = "formula"  # Formula
+    LIST_ITEM = "list_item"  # List item
+    CAPTION = "caption"  # Caption
+    FOOTNOTE = "footnote"  # Footnote
+    PAGE_HEADER = "page_header"  # Page header
+    PAGE_FOOTER = "page_footer"  # Page footer
+    LINK = "link"  # Link
+    CODE_BLOCK = "code_block"  # Code block
 
 @dataclass(slots=True)
 class Element:
@@ -45,15 +45,15 @@ class Element:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
-        """Валидация элемента после инициализации."""
+        """Validate element after initialization."""
         self.validate()
 
     def _validate_basic_fields(self) -> None:
         """
-        Валидация базовых полей элемента (без проверки parent_id).
+        Validate basic element fields (without parent_id check).
         
         Raises:
-            ValueError: Если базовые поля невалидны
+            ValueError: If basic fields are invalid
         """
         if not self.id or not isinstance(self.id, str) or not self.id.strip():
             raise ValueError(f"Element id must be a non-empty string, got: {self.id!r}")
@@ -72,16 +72,16 @@ class Element:
 
     def validate(self) -> None:
         """
-        Валидация элемента.
+        Validate element.
         
-        Проверяет:
-        - id не пустой
-        - type валидный ElementType
-        - content не None
-        - parent_id валидный (если указан)
+        Checks:
+        - id is not empty
+        - type is valid ElementType
+        - content is not None
+        - parent_id is valid (if specified)
         
         Raises:
-            ValueError: Если элемент невалиден
+            ValueError: If element is invalid
         """
         self._validate_basic_fields()
         
@@ -90,7 +90,7 @@ class Element:
                 raise ValueError(f"Element parent_id must be a non-empty string or None, got: {self.parent_id!r}")
 
     def __repr__(self) -> str:
-        """Строковое представление для отладки."""
+        """String representation for debugging."""
         content_preview = (
             self.content[:50] + "..." if len(self.content) > 50 else self.content
         ).replace("\n", "\\n")
@@ -102,7 +102,7 @@ class Element:
         )
 
     def __str__(self) -> str:
-        """Человекочитаемое строковое представление."""
+        """Human-readable string representation."""
         content_preview = (
             self.content[:30] + "..." if len(self.content) > 30 else self.content
         ).replace("\n", " ")
@@ -111,10 +111,10 @@ class Element:
 
     def to_dict(self) -> Dict[str, Any]:
         """
-        Сериализация элемента в словарь.
+        Serialize element to dictionary.
         
         Returns:
-            Dict[str, Any]: Словарь с данными элемента
+            Dict[str, Any]: Dictionary with element data
         """
         result: Dict[str, Any] = {
             "id": self.id,
@@ -130,17 +130,17 @@ class Element:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> Element:
         """
-        Десериализация элемента из словаря.
+        Deserialize element from dictionary.
         
         Args:
-            data: Словарь с данными элемента
+            data: Dictionary with element data
         
         Returns:
-            Element: Экземпляр элемента
+            Element: Element instance
         
         Raises:
-            ValueError: Если данные невалидны
-            KeyError: Если отсутствуют обязательные поля
+            ValueError: If data is invalid
+            KeyError: If required fields are missing
         """
         if not isinstance(data, dict):
             raise ValueError(f"Expected dict, got {type(data).__name__}")
@@ -166,13 +166,13 @@ class Element:
 
     def to_json(self) -> str:
         """
-        Сериализация элемента в JSON строку.
+        Serialize element to JSON string.
         
         Returns:
-            str: JSON строка
+            str: JSON string
         
         Raises:
-            TypeError: Если данные не сериализуемы в JSON
+            TypeError: If data cannot be serialized to JSON
         """
         try:
             return json.dumps(self.to_dict(), ensure_ascii=False, indent=2)
@@ -182,17 +182,17 @@ class Element:
     @classmethod
     def from_json(cls, json_str: str) -> Element:
         """
-        Десериализация элемента из JSON строки.
+        Deserialize element from JSON string.
         
         Args:
-            json_str: JSON строка
+            json_str: JSON string
         
         Returns:
-            Element: Экземпляр элемента
+            Element: Element instance
         
         Raises:
-            ValueError: Если JSON невалиден или данные некорректны
-            json.JSONDecodeError: Если JSON не может быть распарсен
+            ValueError: If JSON is invalid or data is incorrect
+            json.JSONDecodeError: If JSON cannot be parsed
         """
         if not isinstance(json_str, str):
             raise ValueError(f"Expected str, got {type(json_str).__name__}")
@@ -207,11 +207,11 @@ class Element:
     @property
     def dataframe(self) -> Optional["pd.DataFrame"]:
         """
-        Возвращает pandas DataFrame для элементов типа TABLE.
+        Returns pandas DataFrame for TABLE type elements.
 
         Returns:
-            pandas.DataFrame или None, если элемент не является таблицей
-            или DataFrame не был создан при парсинге
+            pandas.DataFrame or None if element is not a table
+            or DataFrame was not created during parsing
         """
         if self.type != ElementType.TABLE:
             return None
@@ -226,23 +226,23 @@ class ParsedDocument:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
-        """Валидация документа после инициализации."""
+        """Validate document after initialization."""
         self.validate()
 
     def validate(self) -> None:
         """
-        Валидация документа.
+        Validate document.
         
-        Проверяет:
-        - source не пустой
-        - format валидный DocumentFormat
-        - elements не пустой список
-        - целостность иерархии (parent_id ссылаются на существующие элементы)
-        - отсутствие циклов в иерархии
-        - уникальность id элементов
+        Checks:
+        - source is not empty
+        - format is valid DocumentFormat
+        - elements is a list
+        - hierarchy integrity (parent_id references existing elements)
+        - no cycles in hierarchy
+        - unique element ids
         
         Raises:
-            ValueError: Если документ невалиден
+            ValueError: If document is invalid
         """
         if not self.source or not isinstance(self.source, str) or not self.source.strip():
             raise ValueError(f"Document source must be a non-empty string, got: {self.source!r}")
@@ -253,11 +253,11 @@ class ParsedDocument:
         if not isinstance(self.elements, list):
             raise ValueError(f"Document elements must be a list, got: {type(self.elements).__name__}")
         
-        # Разрешаем пустые документы (могут быть валидными для некоторых случаев)
+        # Allow empty documents (may be valid for some cases)
         # if not self.elements:
         #     raise ValueError("Document must contain at least one element")
         
-        # Валидация каждого элемента (базовые поля, parent_id проверяется в validate_hierarchy)
+        # Validate each element (basic fields, parent_id is checked in validate_hierarchy)
         for element in self.elements:
             if not isinstance(element, Element):
                 raise ValueError(f"All elements must be Element instances, got: {type(element).__name__}")
@@ -266,38 +266,38 @@ class ParsedDocument:
             except ValueError as e:
                 raise ValueError(f"Invalid element {element.id}: {e}") from e
         
-        # Проверка уникальности id
+        # Check id uniqueness
         element_ids = [elem.id for elem in self.elements]
         duplicate_ids = [eid for eid in element_ids if element_ids.count(eid) > 1]
         if duplicate_ids:
             raise ValueError(f"Duplicate element ids found: {set(duplicate_ids)}")
         
-        # Валидация иерархии
+        # Validate hierarchy
         self.validate_hierarchy()
         
-        # Валидация metadata
+        # Validate metadata
         if not isinstance(self.metadata, dict):
             raise ValueError(f"Document metadata must be a dict, got: {type(self.metadata).__name__}")
 
     def validate_hierarchy(self) -> None:
         """
-        Валидация иерархии элементов.
+        Validate element hierarchy.
         
-        Проверяет:
-        - все parent_id ссылаются на существующие элементы
-        - отсутствие циклов в иерархии
+        Checks:
+        - all parent_id references point to existing elements
+        - no cycles in hierarchy
         
-        Примечание:
-        - Разрешается любая структура заголовков (например, header_1 -> header_2 -> header_1 без родителя)
-        - Заголовки могут "сбрасывать" иерархию, создавая новые разделы на том же или более высоком уровне
+        Note:
+        - Any header structure is allowed (e.g., header_1 -> header_2 -> header_1 without parent)
+        - Headers can "reset" hierarchy, creating new sections at the same or higher level
         
         Raises:
-            ValueError: Если иерархия невалидна
+            ValueError: If hierarchy is invalid
         """
-        # Создаем индекс элементов по id для быстрого поиска
+        # Create element index by id for fast lookup
         element_by_id: Dict[str, Element] = {elem.id: elem for elem in self.elements}
         
-        # Проверка ссылок parent_id
+        # Check parent_id references
         for element in self.elements:
             if element.parent_id is not None:
                 if element.parent_id not in element_by_id:
@@ -305,16 +305,16 @@ class ParsedDocument:
                         f"Element {element.id} references non-existent parent_id: {element.parent_id}"
                     )
                 
-                # Проверка на самоссылку
+                # Check for self-reference
                 if element.parent_id == element.id:
                     raise ValueError(f"Element {element.id} cannot be its own parent")
         
-        # Проверка на циклы в иерархии (DFS)
+        # Check for cycles in hierarchy (DFS)
         visited: set[str] = set()
         rec_stack: set[str] = set()
         
         def has_cycle(element_id: str) -> bool:
-            """Проверяет наличие цикла, начиная с элемента."""
+            """Check for cycle starting from element."""
             if element_id in rec_stack:
                 return True
             if element_id in visited:
@@ -337,7 +337,7 @@ class ParsedDocument:
                     raise ValueError(f"Cycle detected in hierarchy starting from element {element.id}")
 
     def __repr__(self) -> str:
-        """Строковое представление для отладки."""
+        """String representation for debugging."""
         metadata_str = f", metadata={self.metadata!r}" if self.metadata else ""
         return (
             f"ParsedDocument(source={self.source!r}, format={self.format.value!r}, "
@@ -345,26 +345,26 @@ class ParsedDocument:
         )
 
     def __str__(self) -> str:
-        """Человекочитаемое строковое представление."""
+        """Human-readable string representation."""
         source_name = self.source.split("/")[-1] if "/" in self.source else self.source
         source_name = source_name.split("\\")[-1] if "\\" in source_name else source_name
         return f"ParsedDocument({self.format.value}): {source_name} ({len(self.elements)} elements)"
 
     def to_dicts(self) -> List[Dict[str, Any]]:
         """
-        Сериализация элементов документа в список словарей.
+        Serialize document elements to list of dictionaries.
         
         Returns:
-            List[Dict[str, Any]]: Список словарей с данными элементов
+            List[Dict[str, Any]]: List of dictionaries with element data
         """
         return [element.to_dict() for element in self.elements]
 
     def to_dict(self) -> Dict[str, Any]:
         """
-        Сериализация документа в словарь.
+        Serialize document to dictionary.
         
         Returns:
-            Dict[str, Any]: Словарь с данными документа
+            Dict[str, Any]: Dictionary with document data
         """
         result: Dict[str, Any] = {
             "source": self.source,
@@ -378,17 +378,17 @@ class ParsedDocument:
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> ParsedDocument:
         """
-        Десериализация документа из словаря.
+        Deserialize document from dictionary.
         
         Args:
-            data: Словарь с данными документа
+            data: Dictionary with document data
         
         Returns:
-            ParsedDocument: Экземпляр документа
+            ParsedDocument: Document instance
         
         Raises:
-            ValueError: Если данные невалидны
-            KeyError: Если отсутствуют обязательные поля
+            ValueError: If data is invalid
+            KeyError: If required fields are missing
         """
         if not isinstance(data, dict):
             raise ValueError(f"Expected dict, got {type(data).__name__}")
@@ -421,13 +421,13 @@ class ParsedDocument:
 
     def to_json(self) -> str:
         """
-        Сериализация документа в JSON строку.
+        Serialize document to JSON string.
         
         Returns:
-            str: JSON строка
+            str: JSON string
         
         Raises:
-            TypeError: Если данные не сериализуемы в JSON
+            TypeError: If data cannot be serialized to JSON
         """
         try:
             return json.dumps(self.to_dict(), ensure_ascii=False, indent=2)
@@ -437,17 +437,17 @@ class ParsedDocument:
     @classmethod
     def from_json(cls, json_str: str) -> ParsedDocument:
         """
-        Десериализация документа из JSON строки.
+        Deserialize document from JSON string.
         
         Args:
-            json_str: JSON строка
+            json_str: JSON string
         
         Returns:
-            ParsedDocument: Экземпляр документа
+            ParsedDocument: Document instance
         
         Raises:
-            ValueError: Если JSON невалиден или данные некорректны
-            json.JSONDecodeError: Если JSON не может быть распарсен
+            ValueError: If JSON is invalid or data is incorrect
+            json.JSONDecodeError: If JSON cannot be parsed
         """
         if not isinstance(json_str, str):
             raise ValueError(f"Expected str, got {type(json_str).__name__}")
@@ -461,34 +461,34 @@ class ParsedDocument:
 
     def get_elements_by_type(self, element_type: ElementType) -> List[Element]:
         """
-        Возвращает все элементы указанного типа.
+        Returns all elements of the specified type.
 
         Args:
-            element_type: Тип элементов для поиска
+            element_type: Element type to search for
 
         Returns:
-            Список элементов указанного типа
+            List of elements of the specified type
         """
         return [elem for elem in self.elements if elem.type == element_type]
 
     def get_tables(self) -> List[Element]:
         """
-        Возвращает все элементы-таблицы.
+        Returns all table elements.
 
         Returns:
-            Список элементов типа TABLE
+            List of TABLE type elements
         """
         return self.get_elements_by_type(ElementType.TABLE)
 
     def get_headers(self, level: Optional[int] = None) -> List[Element]:
         """
-        Возвращает все заголовки, опционально фильтруя по уровню.
+        Returns all headers, optionally filtered by level.
 
         Args:
-            level: Уровень заголовка (1-6). Если None, возвращает все заголовки.
+            level: Header level (1-6). If None, returns all headers.
 
         Returns:
-            Список элементов-заголовков
+            List of header elements
         """
         if level is None:
             header_types = [
@@ -510,7 +510,7 @@ class ParsedDocument:
 class ElementIdGenerator:
     def __init__(self, start: int = 1, width: int = 8) -> None:
         self._counter = start
-        self._width = width  # размерность индекса в знаках
+        self._width = width  # Index width in characters
 
     def next_id(self) -> str:
         value = f"{self._counter:0{self._width}d}"
@@ -521,7 +521,7 @@ class ElementIdGenerator:
         self._counter = start
 
     def __repr__(self) -> str:
-        """Строковое представление для отладки."""
+        """String representation for debugging."""
         next_id_preview = f"{self._counter:0{self._width}d}"
         return (
             f"ElementIdGenerator(counter={self._counter}, width={self._width}, "
@@ -529,5 +529,5 @@ class ElementIdGenerator:
         )
 
     def __str__(self) -> str:
-        """Человекочитаемое строковое представление."""
+        """Human-readable string representation."""
         return f"ElementIdGenerator(width={self._width}, next_id={self._counter:0{self._width}d})"

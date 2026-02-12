@@ -1,15 +1,15 @@
 """
-Разрешение ссылок на структурные элементы в тексте.
+Resolving references to structural elements in text.
 
-Содержит классы для:
-- Поиска ссылок на элементы (см. рис. 1, см. табл. 2)
-- Разрешения ссылок через regex
-- Разрешения сложных ссылок через LLM
-- Создания связей между элементами
+Contains classes for:
+- Finding references to elements (see fig. 1, see table 2)
+- Resolving references via regex
+- Resolving complex references via LLM
+- Creating links between elements
 """
 
-# TODO: Реализовать класс LinkResolver:
-# - detect_links() - поиск ссылок в тексте
-# - resolve_references() - разрешение ссылок
-# - _regex_match() - поиск через regex
-# - _llm_match() - поиск через LLM для сложных случаев
+# TODO: Implement LinkResolver class:
+# - detect_links() - finding references in text
+# - resolve_references() - resolving references
+# - _regex_match() - searching via regex
+# - _llm_match() - searching via LLM for complex cases

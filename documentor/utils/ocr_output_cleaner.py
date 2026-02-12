@@ -1,5 +1,5 @@
 """
-Очистка вывода OCR модели.
+OCR model output cleaning.
 """
 
 import json

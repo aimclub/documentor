@@ -1,20 +1,20 @@
 """
 Documentor (LangChain-first).
 
-Новый пакет под пайплайн структурирования документов для RAG.
+New package for document structuring pipeline for RAG.
 
-Ключевые цели:
-- единый контракт выходных данных (элементы + иерархия)
-- интеграция с LangChain `Document`
-- возможность переиспользовать старые парсеры через адаптеры
+Key goals:
+- unified output contract (elements + hierarchy)
+- integration with LangChain `Document`
+- ability to reuse old parsers through adapters
 
-Пример использования:
+Usage example:
     ```python
     from langchain_core.documents import Document
     from documentor import Pipeline
 
     pipeline = Pipeline()
-    doc = Document(page_content="# Заголовок", metadata={"source": "test.md"})
+    doc = Document(page_content="# Header", metadata={"source": "test.md"})
     result = pipeline.parse(doc)
     print(f"Parsed {len(result.elements)} elements")
     ```

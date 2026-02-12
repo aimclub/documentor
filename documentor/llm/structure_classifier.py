@@ -1,13 +1,13 @@
 """
-Классификация элементов структуры документа с помощью LLM.
+Document structure element classification using LLM.
 
-Содержит логику для:
-- Классификации элементов (абзац, подпись, заголовок и т.д.)
-- Определения типов элементов
-- Построения структуры документа
+Contains logic for:
+- Classifying elements (paragraph, caption, header, etc.)
+- Determining element types
+- Building document structure
 """
 
-# TODO: Реализовать класс StructureClassifier:
-# - classify_elements() - классификация элементов
-# - detect_element_types() - определение типов
-# - build_structure() - построение структуры
+# TODO: Implement StructureClassifier class:
+# - classify_elements() - element classification
+# - detect_element_types() - type detection
+# - build_structure() - structure building

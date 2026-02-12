@@ -1,10 +1,10 @@
 """
-Парсинг таблиц через Qwen2.5 API.
+Table parsing via Qwen2.5 API.
 
-Содержит функции для:
-- Вызова Qwen API для парсинга таблиц из изображений
-- Парсинга ответа в Markdown или DataFrame
-- Обработки склеенных таблиц
+Contains functions for:
+- Calling Qwen API to parse tables from images
+- Parsing response to Markdown or DataFrame
+- Processing merged tables
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 def _image_to_base64(image: Image.Image) -> str:
-    """Конвертирует PIL Image в base64 data URL."""
+    """Converts PIL Image to base64 data URL."""
     buffer = BytesIO()
     image.save(buffer, format="PNG")
     encoded = base64.b64encode(buffer.getvalue()).decode("utf-8")
@@ -42,29 +42,29 @@ def parse_table_with_qwen(
     timeout: Optional[int] = None,
 ) -> Tuple[Optional[str], Optional[Any], bool]:
     """
-    Парсит таблицу из изображения через Qwen2.5 API.
+    Parses table from image via Qwen2.5 API.
     
     Args:
-        table_image: Изображение таблицы
-        method: Метод парсинга ("markdown" или "dataframe")
-        base_url: Базовый URL API (по умолчанию из env)
-        api_key: API ключ (по умолчанию из env)
-        temperature: Температура генерации (по умолчанию из env)
-        max_tokens: Максимальное число токенов (по умолчанию из env)
-        model_name: Имя модели (по умолчанию из env)
-        timeout: Таймаут запроса в секундах (по умолчанию из env)
+        table_image: Table image
+        method: Parsing method ("markdown" or "dataframe")
+        base_url: API base URL (default from env)
+        api_key: API key (default from env)
+        temperature: Generation temperature (default from env)
+        max_tokens: Maximum number of tokens (default from env)
+        model_name: Model name (default from env)
+        timeout: Request timeout in seconds (default from env)
     
     Returns:
         tuple[str, Any, bool]:
-            - markdown_content: Markdown таблица или None
-            - dataframe: pandas DataFrame или None
-            - success: Успешность операции
+            - markdown_content: Markdown table or None
+            - dataframe: pandas DataFrame or None
+            - success: Operation success status
     """
     if base_url is None:
         base_url_raw = os.getenv("QWEN_BASE_URL")
         if base_url_raw:
-            # Обрабатываем несколько URL (через запятую или перенос строки)
-            # Берем первый валидный URL
+            # Process multiple URLs (via comma or newline)
+            # Take the first valid URL
             base_url = None
             for line in base_url_raw.split('\n'):
                 for url in line.split(','):
@@ -88,10 +88,10 @@ def parse_table_with_qwen(
         timeout = int(os.getenv("QWEN_TIMEOUT"))
     
     if not base_url or not api_key:
-        logger.error("QWEN_BASE_URL или QWEN_API_KEY не настроены")
+        logger.error("QWEN_BASE_URL or QWEN_API_KEY not configured")
         return None, None, False
     
-    # Промпт для парсинга таблицы
+    # Prompt for table parsing
     if method == "markdown":
         system_prompt = """You are Qwen, created by Alibaba Cloud. You are a helpful assistant.
 
@@ -141,7 +141,7 @@ Output only valid JSON, no additional text."""
     
     image_base64 = _image_to_base64(table_image)
     
-    # Формируем messages с System и User ролями
+    # Form messages with System and User roles
     messages = []
     if system_prompt:
         messages.append({
@@ -169,15 +169,15 @@ Output only valid JSON, no additional text."""
         content = response.choices[0].message.content
         
         if not content or len(content.strip()) == 0:
-            logger.warning("Пустой ответ от Qwen для парсинга таблицы")
+            logger.warning("Empty response from Qwen for table parsing")
             return None, None, False
         
-        # Проверяем, нет ли таблиц
+        # Check if there are no tables
         if "<!-- NO_TABLE -->" in content:
-            logger.info("Qwen сообщил, что таблиц в изображении нет")
+            logger.info("Qwen reported that there are no tables in the image")
             return None, None, False
         
-        # Парсим ответ
+        # Parse response
         if method == "markdown":
             markdown_content = content.strip()
             dataframe = markdown_to_dataframe(markdown_content)
@@ -189,16 +189,16 @@ Output only valid JSON, no additional text."""
                 markdown_content = _dataframe_to_markdown(dataframe) if dataframe is not None else None
                 return markdown_content, dataframe, True
             except json.JSONDecodeError as e:
-                logger.error(f"Ошибка парсинга JSON от Qwen: {e}")
+                logger.error(f"Error parsing JSON from Qwen: {e}")
                 return None, None, False
     
     except Exception as e:
-        logger.error(f"Ошибка при вызове Qwen API для парсинга таблицы: {e}")
+        logger.error(f"Error calling Qwen API for table parsing: {e}")
         return None, None, False
 
 
 def markdown_to_dataframe(markdown: str) -> Optional[Any]:
-    """Конвертирует Markdown таблицу в pandas DataFrame."""
+    """Converts Markdown table to pandas DataFrame."""
     try:
         import pandas as pd
         
@@ -206,13 +206,13 @@ def markdown_to_dataframe(markdown: str) -> Optional[Any]:
         if not lines:
             return None
         
-        # Удаляем разделитель (вторую строку с |---|---|)
+        # Remove separator (second line with |---|---|)
         filtered_lines = []
         for i, line in enumerate(lines):
             if i == 0 or not re.match(r'^\|[\s\-\|:]+\|$', line):
                 filtered_lines.append(line)
         
-        # Парсим строки
+        # Parse rows
         rows = []
         for line in filtered_lines:
             if line.startswith("|") and line.endswith("|"):
@@ -222,7 +222,7 @@ def markdown_to_dataframe(markdown: str) -> Optional[Any]:
         if len(rows) < 2:
             return None
         
-        # Первая строка - заголовки
+        # First row is headers
         headers = rows[0]
         data_rows = rows[1:]
         
@@ -230,17 +230,17 @@ def markdown_to_dataframe(markdown: str) -> Optional[Any]:
         return df
     
     except Exception as e:
-        logger.warning(f"Ошибка при конвертации Markdown в DataFrame: {e}")
+        logger.warning(f"Error converting Markdown to DataFrame: {e}")
         return None
 
 
 def _json_to_dataframe(data: Any) -> Optional[Any]:
-    """Конвертирует JSON данные в pandas DataFrame."""
+    """Converts JSON data to pandas DataFrame."""
     try:
         import pandas as pd
         
         if isinstance(data, list) and len(data) > 0:
-            # Если первый элемент - тоже список, значит это одна таблица
+            # If first element is also a list, it's a single table
             if isinstance(data[0], list):
                 if len(data) < 2:
                     return None
@@ -248,9 +248,9 @@ def _json_to_dataframe(data: Any) -> Optional[Any]:
                 rows = data[1:]
                 df = pd.DataFrame(rows, columns=headers)
                 return df
-            # Если первый элемент - словарь, значит это массив таблиц
+            # If first element is a dict, it's an array of tables
             elif isinstance(data[0], dict):
-                # Берем первую таблицу
+                # Take first table
                 first_table = data[0]
                 if "headers" in first_table and "rows" in first_table:
                     df = pd.DataFrame(first_table["rows"], columns=first_table["headers"])
@@ -259,28 +259,28 @@ def _json_to_dataframe(data: Any) -> Optional[Any]:
         return None
     
     except Exception as e:
-        logger.warning(f"Ошибка при конвертации JSON в DataFrame: {e}")
+        logger.warning(f"Error converting JSON to DataFrame: {e}")
         return None
 
 
 def _dataframe_to_markdown(df: Any) -> Optional[str]:
-    """Конвертирует pandas DataFrame в Markdown таблицу."""
+    """Converts pandas DataFrame to Markdown table."""
     try:
         if df is None:
             return None
         
         markdown_lines = []
         
-        # Заголовки
+        # Headers
         headers = list(df.columns)
         header_line = "| " + " | ".join(str(h) for h in headers) + " |"
         markdown_lines.append(header_line)
         
-        # Разделитель
+        # Separator
         separator = "| " + " | ".join(["---"] * len(headers)) + " |"
         markdown_lines.append(separator)
         
-        # Данные
+        # Data
         for _, row in df.iterrows():
             row_line = "| " + " | ".join(str(val) for val in row.values) + " |"
             markdown_lines.append(row_line)
@@ -288,39 +288,39 @@ def _dataframe_to_markdown(df: Any) -> Optional[str]:
         return "\n".join(markdown_lines)
     
     except Exception as e:
-        logger.warning(f"Ошибка при конвертации DataFrame в Markdown: {e}")
+        logger.warning(f"Error converting DataFrame to Markdown: {e}")
         return None
 
 
 def detect_merged_tables(markdown: str) -> List[str]:
     """
-    Определяет, содержит ли Markdown несколько склеенных таблиц.
+    Determines if Markdown contains multiple merged tables.
     
     Args:
-        markdown: Markdown таблица
+        markdown: Markdown table
     
     Returns:
-        Список отдельных таблиц (если найдены) или список с одной таблицей
+        List of separate tables (if found) or list with one table
     """
     lines = [line.strip() for line in markdown.split("\n") if line.strip()]
     
     if len(lines) < 3:
         return [markdown]
     
-    # Ищем повторяющиеся заголовки (признак склеенных таблиц)
+    # Look for repeating headers (sign of merged tables)
     tables: List[List[str]] = []
     current_table: List[str] = []
     
     for i, line in enumerate(lines):
         if line.startswith("|") and line.endswith("|"):
-            # Проверяем, является ли это заголовком (следующая строка - разделитель)
+            # Check if this is a header (next line is separator)
             if i + 1 < len(lines) and re.match(r'^\|[\s\-\|:]+\|$', lines[i + 1]):
-                # Если уже есть таблица и текущая строка похожа на заголовок предыдущей
+                # If table already exists and current line is similar to previous header
                 if current_table and len(current_table) > 2:
-                    # Проверяем, похож ли заголовок
+                    # Check if header is similar
                     prev_header = current_table[0]
                     if line == prev_header:
-                        # Начинаем новую таблицу
+                        # Start new table
                         tables.append(current_table)
                         current_table = [line]
                         continue
@@ -329,7 +329,7 @@ def detect_merged_tables(markdown: str) -> List[str]:
             else:
                 current_table.append(line)
         else:
-            # Пустая строка или не таблица - возможный разделитель
+            # Empty line or not a table - possible separator
             if current_table and len(current_table) > 2:
                 tables.append(current_table)
                 current_table = []
@@ -337,7 +337,7 @@ def detect_merged_tables(markdown: str) -> List[str]:
     if current_table:
         tables.append(current_table)
     
-    # Если найдено несколько таблиц, возвращаем их
+    # If multiple tables found, return them
     if len(tables) > 1:
         return ["\n".join(table) for table in tables]
     

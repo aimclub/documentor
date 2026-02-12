@@ -1,14 +1,14 @@
 """
-Построение иерархии элементов документа.
+Building document element hierarchy.
 
-Содержит логику для:
-- Назначения parent_id на основе заголовков
-- Построения дерева элементов
-- Валидации корректности иерархии
+Contains logic for:
+- Assigning parent_id based on headers
+- Building element tree
+- Validating hierarchy correctness
 """
 
-# TODO: Реализовать класс HierarchyBuilder:
-# - assign_parents_by_headers() - назначение parent_id по заголовкам
-# - build_tree() - построение дерева элементов
-# - validate_hierarchy() - валидация иерархии
-# - Использовать header_stack для отслеживания текущих заголовков
+# TODO: Implement HierarchyBuilder class:
+# - assign_parents_by_headers() - assigning parent_id by headers
+# - build_tree() - building element tree
+# - validate_hierarchy() - hierarchy validation
+# - Use header_stack to track current headers

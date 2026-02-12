@@ -1,10 +1,10 @@
 """
-Извлечение текста из PDF с помощью PdfPlumber.
+Text extraction from PDF using PdfPlumber.
 
-Содержит классы для:
-- Извлечения текста из PDF
-- Извлечения базовой структуры (абзацы, таблицы)
-- Определения качества извлечённого текста
+Contains classes for:
+- Text extraction from PDF
+- Basic structure extraction (paragraphs, tables)
+- Extracted text quality assessment
 """
 
 from __future__ import annotations
@@ -17,99 +17,99 @@ from langchain_core.documents import Document
 
 class PdfTextExtractor:
     """
-    Извлекает текст из PDF документов с помощью PdfPlumber.
+    Extracts text from PDF documents using PdfPlumber.
     
-    Поддерживает:
-    - Извлечение текста по страницам
-    - Извлечение базовой структуры (абзацы, таблицы)
-    - Определение качества извлечённого текста
+    Supports:
+    - Text extraction by pages
+    - Basic structure extraction (paragraphs, tables)
+    - Text quality assessment
     """
 
     def __init__(self) -> None:
-        """Инициализация экстрактора."""
-        # TODO: Инициализировать PdfPlumber при необходимости
+        """Initialize extractor."""
+        # TODO: Initialize PdfPlumber if needed
 
     def is_text_extractable(self, source: str | Path) -> bool:
         """
-        Проверяет, можно ли извлечь текст из PDF.
+        Checks if text can be extracted from PDF.
         
         Args:
-            source: Путь к PDF файлу или строка с путём.
+            source: Path to PDF file or string with path.
             
         Returns:
-            True, если текст можно извлечь, False иначе.
+            True if text can be extracted, False otherwise.
         """
-        # TODO: Реализовать проверку возможности извлечения текста
-        # - Попытка открыть PDF через PdfPlumber
-        # - Проверка наличия текстового слоя
-        # - Оценка качества текста
-        raise NotImplementedError("Метод is_text_extractable() требует реализации")
+        # TODO: Implement text extractability check
+        # - Try to open PDF via PdfPlumber
+        # - Check for text layer presence
+        # - Assess text quality
+        raise NotImplementedError("is_text_extractable() method requires implementation")
 
     def extract_text(self, source: str | Path) -> str:
         """
-        Извлекает текст из PDF.
+        Extracts text from PDF.
         
         Args:
-            source: Путь к PDF файлу или строка с путём.
+            source: Path to PDF file or string with path.
             
         Returns:
-            Извлечённый текст.
+            Extracted text.
         """
-        # TODO: Реализовать извлечение текста через PdfPlumber
-        # - Открыть PDF
-        # - Извлечь текст по страницам
-        # - Объединить текст со всех страниц
-        raise NotImplementedError("Метод extract_text() требует реализации")
+        # TODO: Implement text extraction via PdfPlumber
+        # - Open PDF
+        # - Extract text by pages
+        # - Merge text from all pages
+        raise NotImplementedError("extract_text() method requires implementation")
 
     def extract_text_by_pages(self, source: str | Path) -> List[Dict[str, Any]]:
         """
-        Извлекает текст из PDF по страницам с метаданными.
+        Extracts text from PDF by pages with metadata.
         
         Args:
-            source: Путь к PDF файлу или строка с путём.
+            source: Path to PDF file or string with path.
             
         Returns:
-            Список словарей с полями:
-            - page_num: номер страницы
-            - text: текст страницы
-            - metadata: дополнительные метаданные (bbox, font и т.д.)
+            List of dictionaries with fields:
+            - page_num: page number
+            - text: page text
+            - metadata: additional metadata (bbox, font, etc.)
         """
-        # TODO: Реализовать извлечение текста по страницам
-        # - Открыть PDF
-        # - Для каждой страницы извлечь текст и метаданные
-        raise NotImplementedError("Метод extract_text_by_pages() требует реализации")
+        # TODO: Implement text extraction by pages
+        # - Open PDF
+        # - For each page extract text and metadata
+        raise NotImplementedError("extract_text_by_pages() method requires implementation")
 
     def extract_structure(self, source: str | Path) -> Dict[str, Any]:
         """
-        Извлекает базовую структуру из PDF (абзацы, таблицы).
+        Extracts basic structure from PDF (paragraphs, tables).
         
         Args:
-            source: Путь к PDF файлу или строка с путём.
+            source: Path to PDF file or string with path.
             
         Returns:
-            Словарь со структурой:
-            - paragraphs: список абзацев
-            - tables: список таблиц
-            - metadata: метаданные документа
+            Dictionary with structure:
+            - paragraphs: list of paragraphs
+            - tables: list of tables
+            - metadata: document metadata
         """
-        # TODO: Реализовать извлечение структуры
-        # - Извлечь абзацы с координатами
-        # - Извлечь таблицы
-        # - Сохранить метаданные (шрифты, размеры и т.д.)
-        raise NotImplementedError("Метод extract_structure() требует реализации")
+        # TODO: Implement structure extraction
+        # - Extract paragraphs with coordinates
+        # - Extract tables
+        # - Save metadata (fonts, sizes, etc.)
+        raise NotImplementedError("extract_structure() method requires implementation")
 
     def get_text_quality(self, text: str) -> float:
         """
-        Оценивает качество извлечённого текста.
+        Assesses quality of extracted text.
         
         Args:
-            text: Извлечённый текст.
+            text: Extracted text.
             
         Returns:
-            Оценка качества от 0.0 до 1.0 (1.0 - отличное качество).
+            Quality score from 0.0 to 1.0 (1.0 - excellent quality).
         """
-        # TODO: Реализовать оценку качества текста
-        # - Проверка на наличие осмысленного текста
-        # - Проверка на наличие специальных символов (много "?" или "")
-        # - Проверка на длину слов и предложений
-        raise NotImplementedError("Метод get_text_quality() требует реализации")
+        # TODO: Implement text quality assessment
+        # - Check for meaningful text presence
+        # - Check for special characters (many "?" or "")
+        # - Check word and sentence length
+        raise NotImplementedError("get_text_quality() method requires implementation")

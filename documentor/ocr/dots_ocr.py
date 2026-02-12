@@ -1,12 +1,12 @@
 """
-Интеграция с Dots.OCR для layout detection.
+Integration with Dots.OCR for layout detection.
 
-Содержит классы для:
-- Определения структуры страницы (layout detection)
-- Определения типов элементов (Text, Picture, Caption, Table и т.д.)
-- Получения координат элементов (bbox)
+Contains classes for:
+- Page structure detection (layout detection)
+- Element type detection (Text, Picture, Caption, Table, etc.)
+- Element coordinate extraction (bbox)
 
-Использует строгие промпты из официальной документации Dots.OCR.
+Uses strict prompts from official Dots.OCR documentation.
 """
 
 from __future__ import annotations
@@ -19,9 +19,9 @@ import yaml
 from ..processing.parsers.docx.ocr.layout_dots import LayoutTypeDotsOCR
 
 
-# Строгие промпты из Dots.OCR (официальные)
+# Strict prompts from Dots.OCR (official)
 DOTS_OCR_PROMPTS = {
-    # Полное извлечение layout с текстом в JSON формате
+    # Full layout extraction with text in JSON format
     "prompt_layout_all_en": """Please output the layout information from the PDF image, including each layout element's bbox, its category, and the corresponding text content within the bbox.
 
 1. Bbox format: [x1, y1, x2, y2]
@@ -41,13 +41,13 @@ DOTS_OCR_PROMPTS = {
 5. Final Output: The entire output must be a single JSON object.
 """,
 
-    # Только определение layout без текста
+    # Layout detection only without text
     "prompt_layout_only_en": """Please output the layout information from this PDF image, including each layout's bbox and its category. The bbox should be in the format [x1, y1, x2, y2]. The layout categories for the PDF document include ['Caption', 'Footnote', 'Formula', 'List-item', 'Page-footer', 'Page-header', 'Picture', 'Section-header', 'Table', 'Text', 'Title']. Do not output the corresponding text. The layout result should be in JSON format.""",
 
-    # Извлечение текста из изображения (кроме Page-header и Page-footer)
+    # Text extraction from image (except Page-header and Page-footer)
     "prompt_ocr": """Extract the text content from this image.""",
 
-    # Извлечение текста из заданного bounding box
+    # Text extraction from given bounding box
     "prompt_grounding_ocr": """Extract text from the given bounding box on the image (format: [x1, y1, x2, y2]).
 Bounding Box:
 """,
@@ -56,30 +56,30 @@ Bounding Box:
 
 def load_prompts_from_config(config_path: Optional[Path] = None) -> Dict[str, str]:
     """
-    Загрузить промпты из конфигурационного файла.
+    Load prompts from configuration file.
     
     Args:
-        config_path: Путь к ocr_config.yaml (если None - используется стандартный)
+        config_path: Path to ocr_config.yaml (if None - uses standard path)
     
     Returns:
-        Dict[str, str]: Словарь промптов
+        Dict[str, str]: Dictionary of prompts
     """
     if config_path is None:
-        # Стандартный путь к конфигурации
+        # Standard configuration path
         config_path = Path(__file__).parent.parent / "config" / "ocr_config.yaml"
     
     if not config_path.exists():
-        # Если конфигурации нет, возвращаем стандартные промпты
+        # If configuration doesn't exist, return standard prompts
         return DOTS_OCR_PROMPTS.copy()
     
     with open(config_path, "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
     
-    # Извлекаем промпты из конфигурации
+    # Extract prompts from configuration
     dots_ocr_config = config.get("dots_ocr", {})
     prompts_config = dots_ocr_config.get("prompts", {})
     
-    # Объединяем с стандартными промптами (конфигурация имеет приоритет)
+    # Merge with standard prompts (configuration has priority)
     prompts = DOTS_OCR_PROMPTS.copy()
     prompts.update(prompts_config)
     
@@ -88,26 +88,26 @@ def load_prompts_from_config(config_path: Optional[Path] = None) -> Dict[str, st
 
 def get_system_prompt(image_width: int, image_height: int) -> str:
     """
-    Возвращает system prompt для layout detection.
+    Returns system prompt for layout detection.
     
     Args:
-        image_width: Ширина изображения в пикселях
-        image_height: Высота изображения в пикселях
+        image_width: Image width in pixels
+        image_height: Image height in pixels
     
     Returns:
-        str: System prompt с информацией о размере изображения
+        str: System prompt with image size information
     """
     return f"You are a precise document layout analyzer. The input image is exactly {image_width}x{image_height} pixels."
 
 
 class DotsOCRLayoutDetector:
     """
-    Детектор layout для Dots.OCR.
+    Layout detector for Dots.OCR.
     
-    Использует строгие промпты из официальной документации Dots.OCR
-    для определения структуры страницы.
+    Uses strict prompts from official Dots.OCR documentation
+    for page structure detection.
     
-    Промпты можно загрузить из конфигурации (ocr_config.yaml) или использовать стандартные.
+    Prompts can be loaded from configuration (ocr_config.yaml) or use standard ones.
     """
     
     def __init__(
@@ -119,20 +119,20 @@ class DotsOCRLayoutDetector:
         config_path: Optional[Path] = None,
     ) -> None:
         """
-        Инициализация детектора.
+        Initialize detector.
         
         Args:
-            endpoint: URL или путь к сервису Dots.OCR (если None - локальный)
-            timeout: Таймаут запроса в секундах
-            prompt_mode: Режим промпта (prompt_layout_all_en, prompt_layout_only_en, prompt_ocr, prompt_grounding_ocr)
-            prompts: Кастомные промпты (если None - загружаются из конфигурации или используются стандартные)
-            config_path: Путь к конфигурационному файлу (если None - используется стандартный)
+            endpoint: URL or path to Dots.OCR service (if None - local)
+            timeout: Request timeout in seconds
+            prompt_mode: Prompt mode (prompt_layout_all_en, prompt_layout_only_en, prompt_ocr, prompt_grounding_ocr)
+            prompts: Custom prompts (if None - loaded from configuration or use standard)
+            config_path: Path to configuration file (if None - uses standard)
         """
         self.endpoint = endpoint
         self.timeout = timeout
         self.prompt_mode = prompt_mode
         
-        # Загружаем промпты: сначала из config_path, потом из prompts, потом стандартные
+        # Load prompts: first from config_path, then from prompts, then standard
         if prompts is None:
             self.prompts = load_prompts_from_config(config_path)
         else:
@@ -140,17 +140,17 @@ class DotsOCRLayoutDetector:
     
     def get_prompt(self, mode: Optional[str] = None) -> str:
         """
-        Получить промпт для указанного режима.
+        Get prompt for specified mode.
         
         Args:
-            mode: Режим промпта (если None - используется self.prompt_mode)
+            mode: Prompt mode (if None - uses self.prompt_mode)
         
         Returns:
-            str: Текст промпта
+            str: Prompt text
         """
         mode = mode or self.prompt_mode
         if mode not in self.prompts:
-            raise ValueError(f"Неизвестный режим промпта: {mode}. Доступные: {list(self.prompts.keys())}")
+            raise ValueError(f"Unknown prompt mode: {mode}. Available: {list(self.prompts.keys())}")
         return self.prompts[mode]
     
     def detect_layout(
@@ -159,41 +159,41 @@ class DotsOCRLayoutDetector:
         mode: Optional[str] = None,
     ) -> List[Dict[str, Any]]:
         """
-        Определить layout страницы.
+        Detect page layout.
         
         Args:
-            image: Изображение страницы
-            mode: Режим промпта (если None - используется self.prompt_mode)
+            image: Page image
+            mode: Prompt mode (if None - uses self.prompt_mode)
         
         Returns:
-            List[Dict[str, Any]]: Список элементов layout с полями:
+            List[Dict[str, Any]]: List of layout elements with fields:
                 - bbox: [x1, y1, x2, y2]
-                - category: тип элемента (LayoutTypeDotsOCR)
-                - text: текст элемента (если доступен)
+                - category: element type (LayoutTypeDotsOCR)
+                - text: element text (if available)
         
-        TODO: Реализовать вызов API Dots.OCR
+        TODO: Implement Dots.OCR API call
         """
         prompt = self.get_prompt(mode)
-        # TODO: Реализовать вызов API Dots.OCR с использованием prompt
-        # TODO: Парсинг JSON ответа
-        # TODO: Валидация и нормализация результатов
-        raise NotImplementedError("Метод detect_layout() требует реализации")
+        # TODO: Implement Dots.OCR API call using prompt
+        # TODO: Parse JSON response
+        # TODO: Validate and normalize results
+        raise NotImplementedError("detect_layout() method requires implementation")
     
     def get_element_types(self, layout_result: List[Dict[str, Any]]) -> List[LayoutTypeDotsOCR]:
         """
-        Получить типы элементов из результата layout detection.
+        Get element types from layout detection result.
         
         Args:
-            layout_result: Результат detect_layout()
+            layout_result: Result of detect_layout()
         
         Returns:
-            List[LayoutTypeDotsOCR]: Список типов элементов
+            List[LayoutTypeDotsOCR]: List of element types
         """
         types = []
         for element in layout_result:
             category = element.get("category", "Unknown")
             try:
-                # Маппинг строки в LayoutTypeDotsOCR
+                # Map string to LayoutTypeDotsOCR
                 layout_type = LayoutTypeDotsOCR(category)
                 types.append(layout_type)
             except ValueError:
@@ -202,13 +202,13 @@ class DotsOCRLayoutDetector:
     
     def get_bboxes(self, layout_result: List[Dict[str, Any]]) -> List[List[int]]:
         """
-        Получить координаты элементов из результата layout detection.
+        Get element coordinates from layout detection result.
         
         Args:
-            layout_result: Результат detect_layout()
+            layout_result: Result of detect_layout()
         
         Returns:
-            List[List[int]]: Список bbox в формате [[x1, y1, x2, y2], ...]
+            List[List[int]]: List of bbox in format [[x1, y1, x2, y2], ...]
         """
         bboxes = []
         for element in layout_result:

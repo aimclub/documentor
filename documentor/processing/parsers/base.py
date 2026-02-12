@@ -1,16 +1,16 @@
 """
-Базовый класс для всех парсеров документов.
+Base class for all document parsers.
 
-Определяет интерфейс для парсинга документов различных форматов.
-Все парсеры (MarkdownParser, PdfParser, DocxParser) наследуются от этого класса.
+Defines interface for parsing documents of various formats.
+All parsers (MarkdownParser, PdfParser, DocxParser) inherit from this class.
 
-Основные методы:
-- parse() - парсинг документа (абстрактный метод)
-- can_parse() - проверка возможности парсинга документа
-- get_source() - получение источника документа
-- Валидация входных данных
-- Обработка ошибок
-- Логирование
+Main methods:
+- parse() - document parsing (abstract method)
+- can_parse() - check if parser can handle document
+- get_source() - get document source
+- Input validation
+- Error handling
+- Logging
 """
 
 from __future__ import annotations
@@ -30,102 +30,102 @@ logger = logging.getLogger(__name__)
 
 class BaseParser(ABC):
     """
-    Базовый класс для всех парсеров документов.
+    Base class for all document parsers.
 
-    Предоставляет общий интерфейс и функциональность для парсинга документов
-    различных форматов. Все конкретные парсеры должны наследоваться от этого класса.
+    Provides common interface and functionality for parsing documents
+    of various formats. All concrete parsers should inherit from this class.
     """
 
     format: DocumentFormat = DocumentFormat.UNKNOWN
 
     def __init__(self, id_generator: Optional[ElementIdGenerator] = None) -> None:
         """
-        Инициализация базового парсера.
+        Initialize base parser.
 
         Args:
-            id_generator: Генератор ID для элементов. Если не указан, создается новый.
+            id_generator: ID generator for elements. If not specified, a new one is created.
         """
         self._id_generator = id_generator or ElementIdGenerator()
-        logger.debug(f"Инициализирован парсер для формата {self.format.value}")
+        logger.debug(f"Initialized parser for format {self.format.value}")
 
     @property
     def id_generator(self) -> ElementIdGenerator:
-        """Возвращает генератор ID для элементов."""
+        """Returns ID generator for elements."""
         return self._id_generator
 
     def can_parse(self, document: Document) -> bool:
         """
-        Проверяет, может ли парсер обработать документ.
+        Checks if parser can handle the document.
 
         Args:
-            document: LangChain Document для проверки
+            document: LangChain Document to check
 
         Returns:
-            bool: True если парсер может обработать документ, False иначе
+            bool: True if parser can handle document, False otherwise
         """
         try:
             format_ = detect_document_format(document)
             result = format_ == self.format
-            logger.debug(f"Проверка возможности парсинга: формат={format_.value}, парсер={self.format.value}, результат={result}")
+            logger.debug(f"Parsing capability check: format={format_.value}, parser={self.format.value}, result={result}")
             return result
         except Exception as e:
-            logger.warning(f"Ошибка при проверке возможности парсинга: {e}")
+            logger.warning(f"Error checking parsing capability: {e}")
             return False
 
     def get_source(self, document: Document) -> str:
         """
-        Получает источник документа из метаданных.
+        Gets document source from metadata.
 
         Args:
             document: LangChain Document
 
         Returns:
-            str: Путь к источнику документа или "unknown" если не найден
+            str: Path to document source or "unknown" if not found
         """
         return get_document_source(document)
 
     def _validate_input(self, document: Document) -> None:
         """
-        Валидирует входные данные перед парсингом.
+        Validates input data before parsing.
 
-        Проверяет:
-        - Документ не None
-        - Документ является экземпляром Document
-        - Документ валиден (через validate_document)
-        - Формат документа соответствует формату парсера
+        Checks:
+        - Document is not None
+        - Document is an instance of Document
+        - Document is valid (via validate_document)
+        - Document format matches parser format
 
         Args:
-            document: LangChain Document для валидации
+            document: LangChain Document to validate
 
         Raises:
-            ValidationError: Если документ невалиден
-            UnsupportedFormatError: Если формат документа не поддерживается парсером
+            ValidationError: If document is invalid
+            UnsupportedFormatError: If document format is not supported by parser
         """
         if document is None:
-            raise ValidationError("Документ не может быть None")
+            raise ValidationError("Document cannot be None")
 
         if not isinstance(document, Document):
             raise ValidationError(
-                f"Ожидается Document, получен {type(document).__name__}",
+                f"Expected Document, got {type(document).__name__}",
                 field="document",
             )
 
-        # Валидация через loader
+        # Validation via loader
         try:
             validate_document(document)
         except (ValueError, TypeError) as e:
-            raise ValidationError(f"Документ невалиден: {e}", field="document") from e
+            raise ValidationError(f"Document is invalid: {e}", field="document") from e
 
-        # Проверка формата
+        # Format check
         try:
             format_ = detect_document_format(document)
             if format_ != self.format:
                 raise UnsupportedFormatError(
                     format_value=format_.value,
-                    message=f"Парсер {self.format.value} не может обработать формат {format_.value}",
+                    message=f"Parser {self.format.value} cannot handle format {format_.value}",
                 )
         except ValueError as e:
-            raise ValidationError(f"Не удалось определить формат документа: {e}", field="format") from e
+            raise ValidationError(f"Failed to detect document format: {e}", field="format") from e
 
     def _create_element(
         self,
@@ -135,18 +135,18 @@ class BaseParser(ABC):
         metadata: Optional[dict] = None,
     ) -> Element:
         """
-        Создает элемент с автоматической генерацией ID.
+        Creates element with automatic ID generation.
 
-        Вспомогательный метод для упрощения создания элементов в конкретных парсерах.
+        Helper method to simplify element creation in concrete parsers.
 
         Args:
-            type: Тип элемента
-            content: Содержимое элемента
-            parent_id: ID родительского элемента (опционально)
-            metadata: Метаданные элемента (опционально)
+            type: Element type
+            content: Element content
+            parent_id: Parent element ID (optional)
+            metadata: Element metadata (optional)
 
         Returns:
-            Element: Созданный элемент с уникальным ID
+            Element: Created element with unique ID
         """
         element_id = self._id_generator.next_id()
         element = Element(
@@ -156,65 +156,65 @@ class BaseParser(ABC):
             parent_id=parent_id,
             metadata=metadata or {},
         )
-        logger.debug(f"Создан элемент: id={element_id}, type={type.value}, parent_id={parent_id}")
+        logger.debug(f"Created element: id={element_id}, type={type.value}, parent_id={parent_id}")
         return element
 
     def _validate_parsed_document(self, parsed_document: ParsedDocument) -> None:
         """
-        Валидирует результат парсинга перед возвратом.
+        Validates parsing result before returning.
 
         Args:
-            parsed_document: Результат парсинга для валидации
+            parsed_document: Parsing result to validate
 
         Raises:
-            ValidationError: Если результат парсинга невалиден
+            ValidationError: If parsing result is invalid
         """
         try:
             parsed_document.validate()
-            logger.debug(f"Валидация ParsedDocument прошла успешно: {len(parsed_document.elements)} элементов")
+            logger.debug(f"ParsedDocument validation passed successfully: {len(parsed_document.elements)} elements")
         except ValueError as e:
-            raise ValidationError(f"Результат парсинга невалиден: {e}", field="parsed_document") from e
+            raise ValidationError(f"Parsing result is invalid: {e}", field="parsed_document") from e
 
     def _log_parsing_start(self, source: str) -> None:
         """
-        Логирует начало парсинга документа.
+        Logs document parsing start.
 
         Args:
-            source: Источник документа
+            source: Document source
         """
-        logger.info(f"Начало парсинга документа: источник={source}, формат={self.format.value}")
+        logger.info(f"Starting document parsing: source={source}, format={self.format.value}")
 
     def _log_parsing_end(self, source: str, elements_count: int) -> None:
         """
-        Логирует завершение парсинга документа.
+        Logs document parsing completion.
 
         Args:
-            source: Источник документа
-            elements_count: Количество извлеченных элементов
+            source: Document source
+            elements_count: Number of extracted elements
         """
-        logger.info(f"Парсинг завершен: источник={source}, извлечено элементов={elements_count}")
+        logger.info(f"Parsing completed: source={source}, extracted elements={elements_count}")
 
     @abstractmethod
     def parse(self, document: Document) -> ParsedDocument:
         """
-        Парсит документ и возвращает структурированное представление.
+        Parse document and return structured representation.
 
-        Этот метод должен быть реализован в каждом конкретном парсере.
-        Рекомендуется использовать вспомогательные методы базового класса:
-        - _validate_input() - для валидации входных данных
-        - _create_element() - для создания элементов
-        - _validate_parsed_document() - для валидации результата
-        - _log_parsing_start() / _log_parsing_end() - для логирования
+        This method must be implemented in each concrete parser.
+        It is recommended to use helper methods from base class:
+        - _validate_input() - for input validation
+        - _create_element() - for element creation
+        - _validate_parsed_document() - for result validation
+        - _log_parsing_start() / _log_parsing_end() - for logging
 
         Args:
-            document: LangChain Document для парсинга
+            document: LangChain Document to parse
 
         Returns:
-            ParsedDocument: Структурированное представление документа
+            ParsedDocument: Structured document representation
 
         Raises:
-            ValidationError: Если входные данные невалидны
-            UnsupportedFormatError: Если формат документа не поддерживается
-            ParsingError: Если произошла ошибка при парсинге
+            ValidationError: If input data is invalid
+            UnsupportedFormatError: If document format is not supported
+            ParsingError: If parsing error occurred
         """
         raise NotImplementedError

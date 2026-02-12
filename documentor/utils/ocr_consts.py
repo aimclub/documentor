@@ -1,5 +1,5 @@
 """
-Константы для OCR обработки изображений.
+Constants for OCR image processing.
 """
 
 MIN_PIXELS = 3136

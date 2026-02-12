@@ -1,115 +1,115 @@
-# Конфигурация для работы с LLM (Large Language Models)
+# Configuration for working with LLM (Large Language Models)
 
-# Настройки провайдеров LLM
+# LLM provider settings
 providers:
   qwen:
-    # Qwen для текстового анализа
+    # Qwen for text analysis
     text:
-      model: "qwen2.5-7b-instruct"  # или другая модель
-      base_url: null  # URL для API, если null - используется локальная модель
+      model: "qwen2.5-7b-instruct"  # or other model
+      base_url: null  # API URL, if null - uses local model
       temperature: 0.1
       max_tokens: 4096
       timeout: 60
     
-    # Qwen VL для визуального анализа (OCR)
+    # Qwen VL for visual analysis (OCR)
     visual:
-      model: "qwen2-vl-7b-instruct"  # или другая VL модель
+      model: "qwen2-vl-7b-instruct"  # or other VL model
       base_url: null
       temperature: 0.1
       max_tokens: 4096
       timeout: 120
   
   openai:
-    # Опциональная поддержка OpenAI
+    # Optional OpenAI support
     model: "gpt-4o"
     base_url: null
     temperature: 0.1
     max_tokens: 4096
     timeout: 60
 
-# Настройки разбиения текста на чанки
+# Text chunking settings
 chunking:
-  # Размер чанка для LLM анализа
-  chunk_size: 3000  # символов
+  # Chunk size for LLM analysis
+  chunk_size: 3000  # characters
   
-  # Перекрытие между чанками
-  overlap: 1  # параграфов
+  # Overlap between chunks
+  overlap: 1  # paragraphs
   
-  # Минимальный размер чанка (если меньше - объединить с предыдущим)
+  # Minimum chunk size (if smaller - merge with previous)
   min_chunk_size: 100
 
-# Промпты для различных задач
+# Prompts for various tasks
 prompts:
-  # Детектирование заголовков в тексте
+  # Header detection in text
   header_detection: |
-    Проанализируй следующий текст и определи все заголовки с их уровнями.
+    Analyze the following text and identify all headers with their levels.
     
-    Правила:
-    - Заголовки должны быть выделены из обычного текста
-    - Определи уровень заголовка (1-6, где 1 - самый верхний уровень)
-    - Учти существующую иерархию: {previous_headers}
-    - Проверь логику: внутри заголовка уровня N не может быть заголовка уровня < N
+    Rules:
+    - Headers should be distinguished from regular text
+    - Determine header level (1-6, where 1 is the top level)
+    - Consider existing hierarchy: {previous_headers}
+    - Check logic: a header of level N cannot contain a header of level < N
     
-    Текст:
+    Text:
     {text}
     
-    Верни результат в формате JSON:
+    Return result in JSON format:
     {{
       "headers": [
-        {{"level": 1, "text": "Заголовок", "position": 0}},
-        {{"level": 2, "text": "Подзаголовок", "position": 150}}
+        {{"level": 1, "text": "Header", "position": 0}},
+        {{"level": 2, "text": "Subheader", "position": 150}}
       ]
     }}
   
-  # Классификация элементов документа
+  # Document element classification
   structure_classification: |
-    Проанализируй следующий текст и классифицируй элементы документа.
+    Analyze the following text and classify document elements.
     
-    Определи типы элементов:
-    - Заголовки (с уровнями)
-    - Обычный текст (параграфы)
-    - Подписи к изображениям
-    - Подписи к таблицам
-    - Списки
-    - Цитаты
+    Identify element types:
+    - Headers (with levels)
+    - Regular text (paragraphs)
+    - Image captions
+    - Table captions
+    - Lists
+    - Quotes
     
-    Текст:
+    Text:
     {text}
     
-    Верни результат в формате JSON с элементами и их типами.
+    Return result in JSON format with elements and their types.
   
-  # Визуальный анализ структуры документа
+  # Visual document structure analysis
   visual_structure_analysis: |
-    Проанализируй изображение документа и определи его структуру.
+    Analyze the document image and determine its structure.
     
-    Найди:
-    - Заголовки и их уровни
-    - Текст параграфов
-    - Изображения и их подписи
-    - Таблицы
-    - Другие структурные элементы
+    Find:
+    - Headers and their levels
+    - Paragraph text
+    - Images and their captions
+    - Tables
+    - Other structural elements
     
-    Верни результат в структурированном формате.
+    Return result in structured format.
 
-# Настройки для работы с заголовками
+# Header processing settings
 headers:
-  # Максимальный уровень заголовка
+  # Maximum header level
   max_level: 6
   
-  # Минимальный уровень заголовка
+  # Minimum header level
   min_level: 1
   
-  # Валидация иерархии (проверка логики уровней)
+  # Hierarchy validation (checking level logic)
   validate_hierarchy: true
 
-# Настройки для обработки ответов от LLM
+# LLM response processing settings
 response_processing:
-  # Парсинг JSON ответов
+  # JSON response parsing
   parse_json: true
   
-  # Обработка ошибок парсинга
+  # Parse error handling
   handle_parse_errors: true
   
-  # Повторные попытки при ошибках
+  # Retries on errors
   retry_on_error: true
   max_retries: 3

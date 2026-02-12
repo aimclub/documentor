@@ -1,11 +1,11 @@
 """
-Утилиты для работы с текстом.
+Text utilities.
 
-Содержит функции для:
-- Разбиения текста на чанки с перекрытием
-- Очистки текста
-- Нормализации текста
-- Поиска паттернов в тексте
+Contains functions for:
+- Splitting text into chunks with overlap
+- Text cleaning
+- Text normalization
+- Pattern searching in text
 """
 
 from __future__ import annotations
@@ -20,71 +20,71 @@ def split_with_overlap(
     separator: str = "\n\n",
 ) -> List[str]:
     """
-    Разбивает текст на чанки с перекрытием.
+    Splits text into chunks with overlap.
     
     Args:
-        text: Текст для разбиения.
-        chunk_size: Размер чанка в символах (~3000).
-        overlap_size: Размер перекрытия в символах (~1 параграф).
-        separator: Разделитель для разбиения (по умолчанию двойной перенос строки).
+        text: Text to split.
+        chunk_size: Chunk size in characters (~3000).
+        overlap_size: Overlap size in characters (~1 paragraph).
+        separator: Separator for splitting (default is double newline).
         
     Returns:
-        Список чанков с перекрытием.
+        List of chunks with overlap.
     """
-    # TODO: Реализовать разбиение на чанки с перекрытием
-    # - Разбить текст по разделителю (параграфы)
-    # - Собрать чанки размером ~chunk_size
-    # - Добавить перекрытие (overlap_size символов из предыдущего чанка)
-    # - Убедиться, что перекрытие не дублирует целые параграфы
-    raise NotImplementedError("Функция split_with_overlap() требует реализации")
+    # TODO: Implement chunk splitting with overlap
+    # - Split text by separator (paragraphs)
+    # - Collect chunks of size ~chunk_size
+    # - Add overlap (overlap_size characters from previous chunk)
+    # - Ensure overlap doesn't duplicate whole paragraphs
+    raise NotImplementedError("split_with_overlap() function requires implementation")
 
 
 def clean_text(text: str) -> str:
     """
-    Очищает текст от лишних символов и форматирования.
+    Cleans text from extra characters and formatting.
     
     Args:
-        text: Текст для очистки.
+        text: Text to clean.
         
     Returns:
-        Очищенный текст.
+        Cleaned text.
     """
-    # TODO: Реализовать очистку текста
-    # - Удалить лишние пробелы
-    # - Нормализовать переносы строк
-    # - Удалить специальные символы (если нужно)
-    raise NotImplementedError("Функция clean_text() требует реализации")
+    # TODO: Implement text cleaning
+    # - Remove extra spaces
+    # - Normalize line breaks
+    # - Remove special characters (if needed)
+    raise NotImplementedError("clean_text() function requires implementation")
 
 
 def normalize_text(text: str) -> str:
     """
-    Нормализует текст (приводит к единому формату).
+    Normalizes text (converts to unified format).
     
     Args:
-        text: Текст для нормализации.
+        text: Text to normalize.
         
     Returns:
-        Нормализованный текст.
+        Normalized text.
     """
-    # TODO: Реализовать нормализацию текста
-    # - Привести к единому регистру (если нужно)
-    # - Нормализовать пробелы
-    # - Убрать лишние символы
-    raise NotImplementedError("Функция normalize_text() требует реализации")
+    # TODO: Implement text normalization
+    # - Convert to unified case (if needed)
+    # - Normalize spaces
+    # - Remove extra characters
+    raise NotImplementedError("normalize_text() function requires implementation")
 
 
 def find_patterns(text: str, pattern: str) -> List[str]:
     """
-    Находит паттерны в тексте с помощью регулярных выражений.
+    Finds patterns in text using regular expressions.
     
     Args:
-        text: Текст для поиска.
-        pattern: Регулярное выражение.
+        text: Text to search.
+        pattern: Regular expression.
         
     Returns:
-        Список найденных совпадений.
+        List of found matches.
     """
-    # TODO: Реализовать поиск паттернов
-    # - Использовать re для поиска
-    # - Вернуть список совпадений
-    raise NotImplementedError("Функция find_patterns() требует реализации")
+    # TODO: Implement pattern search
+    # - Use re for search
+    # - Return list of matches
+    raise NotImplementedError("find_patterns() function requires implementation")

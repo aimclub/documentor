@@ -1,5 +1,5 @@
 """
-Утилиты для работы с изображениями в OCR.
+Utilities for working with images in OCR.
 """
 
 import math
@@ -67,7 +67,7 @@ def smart_resize(
 
 
 def to_rgb(pil_image: Image.Image) -> Image.Image:
-    """Конвертирует изображение в RGB формат."""
+    """Converts image to RGB format."""
     if pil_image.mode == 'RGBA':
         white_background = Image.new("RGB", pil_image.size, (255, 255, 255))
         white_background.paste(pil_image, mask=pil_image.split()[3])  # Use alpha channel as mask
@@ -84,16 +84,16 @@ def fetch_image(
     resized_width=None,
 ) -> Image.Image:
     """
-    Загружает и обрабатывает изображение для OCR.
+    Loads and processes image for OCR.
     
-    Поддерживает:
+    Supports:
     - PIL.Image
     - HTTP/HTTPS URL
     - file:// URL
     - data:image base64
-    - Локальный путь к файлу
+    - Local file path
     
-    Применяет smart_resize для оптимизации размера изображения.
+    Applies smart_resize to optimize image size.
     """
     assert image is not None, f"image not found, maybe input format error: {image}"
     image_obj = None

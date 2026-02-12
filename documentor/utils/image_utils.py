@@ -1,15 +1,15 @@
 """
-Утилиты для работы с изображениями.
+Image utilities.
 
-Содержит функции для:
-- Конвертации изображений
-- Изменения размера изображений
-- Работы с координатами (bbox)
-- Сохранения изображений
+Contains functions for:
+- Image conversion
+- Image resizing
+- Working with coordinates (bbox)
+- Saving images
 """
 
-# TODO: Реализовать функции:
-# - convert_image() - конвертация форматов
-# - resize_image() - изменение размера
-# - extract_bbox() - извлечение области изображения
-# - save_image() - сохранение изображения
+# TODO: Implement functions:
+# - convert_image() - format conversion
+# - resize_image() - resizing
+# - extract_bbox() - extracting image region
+# - save_image() - saving image

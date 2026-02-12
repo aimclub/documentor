@@ -1,25 +1,25 @@
-# Конфигурация для PDF парсера
+# Configuration for PDF parser
 
 pdf_parser:
   # Layout Detection
   layout_detection:
-    render_scale: 2.0  # увеличение при рендеринге
+    render_scale: 2.0  # scale increase for rendering
     optimize_for_ocr: true
-    use_direct_api: true  # использовать прямой вызов API
+    use_direct_api: true  # use direct API call
   
-  # Фильтрация элементов
+  # Element filtering
   filtering:
     remove_page_headers: true
     remove_page_footers: true
   
-  # Парсинг таблиц
+  # Table parsing
   table_parsing:
-    method: "markdown"  # "markdown" или "dataframe"
-    qwen_model: "qwen2.5-7b-vl-instruct"  # модель для парсинга таблиц
-    detect_merged_tables: true  # определять склеенные таблицы
+    method: "markdown"  # "markdown" or "dataframe"
+    qwen_model: "qwen2.5-7b-vl-instruct"  # model for table parsing
+    detect_merged_tables: true  # detect merged tables
   
-  # Анализ заголовков
+  # Header analysis
   header_analysis:
-    use_font_size: true  # использовать размер шрифта для определения уровня
-    use_position: true  # использовать позицию для определения уровня
-    min_font_size_diff: 2  # минимальная разница в размере шрифта для разных уровней
+    use_font_size: true  # use font size to determine level
+    use_position: true  # use position to determine level
+    min_font_size_diff: 2  # minimum font size difference for different levels

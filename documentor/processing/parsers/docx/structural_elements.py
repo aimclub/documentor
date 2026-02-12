@@ -1,18 +1,18 @@
 """
-Извлечение и обработка структурных элементов DOCX.
+Extraction and processing of DOCX structural elements.
 
-Содержит классы для:
-- Извлечения изображений из DOCX
-- Извлечения таблиц из DOCX
-- Извлечения формул из DOCX
-- Решения проблемы порядка изображений
+Contains classes for:
+- Extracting images from DOCX
+- Extracting tables from DOCX
+- Extracting formulas from DOCX
+- Solving image order issues
 """
 
-# TODO: Реализовать классы:
-# - ImageExtractor - извлечение изображений
-# - TableExtractor - извлечение таблиц
-# - FormulaExtractor - извлечение формул
-# - ImageOrderFixer - исправление порядка изображений
-#   - match_by_page_position() - сопоставление по позиции на странице
-#   - match_by_context() - сопоставление по контексту
-#   - match_by_llm_comparison() - сопоставление через LLM
+# TODO: Implement classes:
+# - ImageExtractor - image extraction
+# - TableExtractor - table extraction
+# - FormulaExtractor - formula extraction
+# - ImageOrderFixer - fixing image order
+#   - match_by_page_position() - matching by page position
+#   - match_by_context() - matching by context
+#   - match_by_llm_comparison() - matching via LLM

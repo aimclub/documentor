@@ -1,19 +1,19 @@
 """
-Корректировка структуры документа на основе проверки.
+Document structure correction based on validation.
 
-Содержит классы для:
-- Сравнения LLM структуры со встроенными стилями
-- Корректировки уровней заголовков
-- Применения исправлений к структуре
-- Объединения результатов проверки
+Contains classes for:
+- Comparing LLM structure with built-in styles
+- Correcting header levels
+- Applying corrections to structure
+- Merging validation results
 """
 
-# TODO: Реализовать класс StructureCorrector:
-# - correct_with_styles() - корректировка на основе встроенных стилей
-#   - Сравнить LLM структуру со стилями
-#   - Найти несоответствия в уровнях заголовков
-#   - Скорректировать уровни на основе стилей
-#   - Сохранить семантику LLM, но исправить уровни
-# - compare_structures() - сравнение двух структур
-# - apply_corrections() - применение корректировок
-# - merge_corrections() - объединение корректировок
+# TODO: Implement StructureCorrector class:
+# - correct_with_styles() - correction based on built-in styles
+#   - Compare LLM structure with styles
+#   - Find header level inconsistencies
+#   - Correct levels based on styles
+#   - Preserve LLM semantics but fix levels
+# - compare_structures() - comparing two structures
+# - apply_corrections() - applying corrections
+# - merge_corrections() - merging corrections

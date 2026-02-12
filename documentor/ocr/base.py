@@ -1,10 +1,10 @@
 """
-Базовые классы для работы с OCR.
+Base classes for working with OCR.
 
-Определяет интерфейсы для:
+Defines interfaces for:
 - Layout detection
 - Text recognition
-- Reading order построения
+- Reading order building
 """
 
 from __future__ import annotations
@@ -17,65 +17,65 @@ from PIL import Image
 
 class BaseLayoutDetector(ABC):
     """
-    Базовый класс для layout detection.
+    Base class for layout detection.
     
-    Определяет интерфейс для определения структуры страницы документа.
+    Defines interface for determining document page structure.
     """
     
     @abstractmethod
     def detect_layout(self, image: Image.Image) -> List[Dict[str, Any]]:
         """
-        Определяет layout страницы.
+        Detects page layout.
         
         Args:
-            image: Изображение страницы
+            image: Page image
             
         Returns:
-            List[Dict[str, Any]]: Список элементов layout с полями:
+            List[Dict[str, Any]]: List of layout elements with fields:
                 - bbox: [x1, y1, x2, y2]
-                - category: тип элемента
-                - text: текст элемента (если доступен)
+                - category: element type
+                - text: element text (if available)
         """
         raise NotImplementedError
 
 
 class BaseOCR(ABC):
     """
-    Базовый класс для распознавания текста.
+    Base class for text recognition.
     
-    Определяет интерфейс для OCR обработки изображений.
+    Defines interface for OCR image processing.
     """
     
     @abstractmethod
     def recognize_text(self, image: Image.Image) -> str:
         """
-        Распознает текст из изображения.
+        Recognizes text from image.
         
         Args:
-            image: Изображение для распознавания
+            image: Image for recognition
             
         Returns:
-            str: Распознанный текст
+            str: Recognized text
         """
         raise NotImplementedError
 
 
 class BaseReadingOrderBuilder(ABC):
     """
-    Базовый класс для построения порядка чтения.
+    Base class for building reading order.
     
-    Определяет интерфейс для определения порядка чтения элементов на странице.
+    Defines interface for determining reading order of elements on a page.
     """
     
     @abstractmethod
     def build_reading_order(self, layout_elements: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
-        Строит порядок чтения элементов.
+        Builds reading order of elements.
         
         Args:
-            layout_elements: Список элементов layout
+            layout_elements: List of layout elements
             
         Returns:
-            List[Dict[str, Any]]: Элементы в порядке чтения
+            List[Dict[str, Any]]: Elements in reading order
         """
         raise NotImplementedError

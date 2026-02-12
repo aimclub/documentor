@@ -1,17 +1,17 @@
 """
-Извлечение текста, метаданных и стилей из DOCX.
+Extracting text, metadata, and styles from DOCX.
 
-Содержит классы для:
-- Извлечения текста из DOCX (python-docx или аналог)
-- Извлечения стилей параграфов (Heading 1-6, Title и т.д.)
-- Извлечения метаданных (форматирование)
-- Получения параграфов с сохранением структуры и стилей
+Contains classes for:
+- Extracting text from DOCX (python-docx or similar)
+- Extracting paragraph styles (Heading 1-6, Title, etc.)
+- Extracting metadata (formatting)
+- Getting paragraphs with preserved structure and styles
 """
 
-# TODO: Реализовать класс DocxExtractor:
-# - extract_text() - извлечение текста
-# - extract_styles() - извлечение стилей параграфов (важно для проверки)
-# - extract_xml_markup() - извлечение XML разметки DOCX (для варианта 2 проверки)
-# - extract_metadata() - извлечение метаданных
-# - get_paragraphs() - получение параграфов с текстом и стилями
-# - has_heading_styles() - проверка наличия стилей заголовков в документе
+# TODO: Implement DocxExtractor class:
+# - extract_text() - text extraction
+# - extract_styles() - extracting paragraph styles (important for validation)
+# - extract_xml_markup() - extracting DOCX XML markup (for validation option 2)
+# - extract_metadata() - extracting metadata
+# - get_paragraphs() - getting paragraphs with text and styles
+# - has_heading_styles() - checking for heading styles in document
