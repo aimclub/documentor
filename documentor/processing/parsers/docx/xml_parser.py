@@ -286,14 +286,14 @@ class DocxXmlParser:
                     return tables_data
                 
                 all_elements = list(body)
-                tables = body.findall('.//w:tbl', NAMESPACES)
+                # Find tables by iterating through body elements directly
+                # This ensures xml_position matches with extract_all_elements()
+                tables = []
+                for xml_idx, elem in enumerate(all_elements):
+                    if elem.tag.endswith('}tbl'):
+                        tables.append((xml_idx, elem))
                 
-                for table_idx, table_elem in enumerate(tables):
-                    table_xml_position = None
-                    for xml_idx, elem in enumerate(all_elements):
-                        if table_elem in elem.findall('.//w:tbl', NAMESPACES) or elem == table_elem:
-                            table_xml_position = xml_idx
-                            break
+                for table_idx, (table_xml_position, table_elem) in enumerate(tables):
                     
                     table_info = {
                         'index': table_idx,

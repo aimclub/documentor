@@ -193,7 +193,7 @@ class PdfParser(BaseParser):
             
             # Step 7: Creating elements from hierarchy
             logger.info("Step 7: Creating elements from hierarchy...")
-            elements = self._create_elements_from_hierarchy(hierarchy, merged_text_elements, analyzed_elements)
+            elements = self._create_elements_from_hierarchy(hierarchy, merged_text_elements, analyzed_elements, source)
             logger.info(f"Created elements: {len(elements)}")
             
             # Step 8: Storing images in metadata
@@ -942,11 +942,65 @@ class PdfParser(BaseParser):
         logger.debug(f"Text merging: {len(text_elements)} -> {len(merged)} elements")
         return merged
 
+    def _extract_links_from_text(self, text: str) -> List[str]:
+        """
+        Extracts URLs from text using regex pattern.
+        
+        Args:
+            text: Text to search for URLs.
+            
+        Returns:
+            List of found URLs.
+        """
+        if not text:
+            return []
+        
+        links = URL_PATTERN.findall(text)
+        # Normalize URLs (add http:// if starts with www.)
+        normalized_links = []
+        for link in links:
+            if link.startswith("www."):
+                normalized_links.append(f"http://{link}")
+            else:
+                normalized_links.append(link)
+        
+        return list(set(normalized_links))  # Remove duplicates
+
+    def _extract_links_from_pdf_page(self, page: fitz.Page, rect: Optional[fitz.Rect] = None) -> List[Dict[str, str]]:
+        """
+        Extracts hyperlinks from PDF page annotations.
+        
+        Args:
+            page: PyMuPDF page object.
+            rect: Optional rectangle to filter links by area.
+            
+        Returns:
+            List of dictionaries with link information (uri, type).
+        """
+        links = []
+        try:
+            link_list = page.get_links()
+            for link in link_list:
+                if link.get("kind") == fitz.LINK_URI:
+                    uri = link.get("uri", "")
+                    if uri:
+                        # If rect is provided, check if link is within the rectangle
+                        if rect is not None:
+                            link_rect = fitz.Rect(link.get("from", (0, 0, 0, 0)))
+                            if not rect.intersects(link_rect):
+                                continue
+                        links.append({"uri": uri, "type": "uri"})
+        except Exception as e:
+            logger.debug(f"Error extracting links from PDF page: {e}")
+        
+        return links
+
     def _create_elements_from_hierarchy(
         self,
         hierarchy: List[Dict[str, Any]],
         merged_text_elements: List[Dict[str, Any]],
         layout_elements: List[Dict[str, Any]],
+        source: str | Path,
     ) -> List[Element]:
         """
         Creates elements from hierarchy.

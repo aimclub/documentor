@@ -342,10 +342,8 @@ class TestLinksInMetadata:
         docx_path = tmp_path / "test_links.docx"
         doc = DocxDocument()
         
-        # Добавляем текст с URL
-        p1 = doc.add_paragraph("Visit ")
-        p1.add_run("https://example.com").add_hyperlink("https://example.com", "https://example.com")
-        p1.add_run(" for more info")
+        # Добавляем текст с URL (парсер должен извлечь ссылки из текста)
+        doc.add_paragraph("Visit https://example.com for more info")
         
         # Добавляем еще текст с URL в тексте
         doc.add_paragraph("Check www.google.com and http://test.org")

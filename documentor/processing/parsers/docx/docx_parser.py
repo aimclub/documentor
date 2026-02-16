@@ -216,21 +216,41 @@ def _check_docx_text_content(
     xml_parser = DocxXmlParser(docx_path)
     all_elements = xml_parser.extract_all_elements()
     images = xml_parser.extract_images()
+    tables = xml_parser.extract_tables()
     
     text_length = 0
     text_paragraphs = 0
     
+    # Count text from paragraphs
     for elem in all_elements:
         text = elem.get('text', '').strip()
         if text and len(text) > 10:
             text_length += len(text)
             text_paragraphs += 1
     
+    # Count text from tables
+    for table in tables:
+        rows = table.get('rows', [])
+        for row in rows:
+            cells = row.get('cells', [])
+            for cell in cells:
+                cell_text = cell.get('text', '').strip()
+                if cell_text:
+                    text_length += len(cell_text)
+                    # Count table rows as text paragraphs for ratio calculation
+                    if len(cell_text) > 10:
+                        text_paragraphs += 1
+    
     images_count = len(images)
+    tables_count = len(tables)
     has_text = text_length > min_text_length
     
+    # Documents with tables should not be considered scanned, as tables contain structured text
     is_scanned = False
-    if not has_text or (images_count > 0 and text_length < min_text_for_non_scanned and images_count > text_paragraphs * images_to_text_ratio):
+    if tables_count > 0:
+        # If document has tables, it's likely not scanned (tables contain structured text)
+        is_scanned = False
+    elif not has_text or (images_count > 0 and text_length < min_text_for_non_scanned and images_count > text_paragraphs * images_to_text_ratio):
         is_scanned = True
     
     return {
@@ -324,25 +344,34 @@ class DocxParser(BaseParser):
                 
                 with tempfile.TemporaryDirectory() as temp_dir:
                     temp_pdf_path = Path(temp_dir) / "temp.pdf"
-                    convert_docx_to_pdf(docx_path, temp_pdf_path)
-                    
-                    pdf_document = Document(page_content="", metadata={"source": str(temp_pdf_path)})
-                    pdf_parser = PdfParser()
-                    parsed_document = pdf_parser.parse(pdf_document)
-                    
-                    parsed_document.source = source
-                    parsed_document.format = DocumentFormat.DOCX
-                    parsed_document.metadata.update({
-                        'parser': 'docx',
-                        'original_format': 'DOCX',
-                        'processing_method': 'scanned_docx_to_pdf_ocr',
-                        'content_info': content_info,
-                    })
-                    
-                    self._validate_parsed_document(parsed_document)
-                    self._log_parsing_end(source, len(parsed_document.elements))
-                    
-                    return parsed_document
+                    try:
+                        convert_docx_to_pdf(docx_path, temp_pdf_path)
+                        
+                        # Conversion successful, use PDF parser
+                        pdf_document = Document(page_content="", metadata={"source": str(temp_pdf_path)})
+                        pdf_parser = PdfParser()
+                        parsed_document = pdf_parser.parse(pdf_document)
+                        
+                        parsed_document.source = source
+                        parsed_document.format = DocumentFormat.DOCX
+                        parsed_document.metadata.update({
+                            'parser': 'docx',
+                            'original_format': 'DOCX',
+                            'processing_method': 'scanned_docx_to_pdf_ocr',
+                            'content_info': content_info,
+                        })
+                        
+                        self._validate_parsed_document(parsed_document)
+                        self._log_parsing_end(source, len(parsed_document.elements))
+                        
+                        return parsed_document
+                    except Exception as e:
+                        logger.warning(
+                            f"Failed to convert DOCX to PDF for OCR processing: {e}. "
+                            f"Falling back to regular DOCX parsing."
+                        )
+                        # Fallback to regular parsing if conversion fails
+                        # Continue with regular parsing below
 
             with tempfile.TemporaryDirectory() as temp_dir:
                 temp_pdf_path = Path(temp_dir) / "temp.pdf"

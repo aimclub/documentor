@@ -639,7 +639,7 @@ class TestGetConfig:
 class TestCreateElementsFromHierarchy:
     """Тесты метода _create_elements_from_hierarchy."""
 
-    def test_create_elements_from_hierarchy(self, pdf_parser):
+    def test_create_elements_from_hierarchy(self, pdf_parser, tmp_path):
         """Тест создания элементов из иерархии."""
         hierarchy = [
             {
@@ -661,8 +661,21 @@ class TestCreateElementsFromHierarchy:
             {"category": "Section-header", "bbox": [0, 0, 100, 50], "level": 1},
             {"category": "Text", "bbox": [0, 60, 100, 110]},
         ]
+
+        # Создаем временный PDF файл для теста используя tmp_path фикстуру
+        import fitz
         
-        elements = pdf_parser._create_elements_from_hierarchy(hierarchy, text_elements, analyzed_elements)
+        tmp_pdf_path = tmp_path / "test_hierarchy.pdf"
+        
+        doc = fitz.open()
+        try:
+            page = doc.new_page()
+            page.insert_text((50, 50), "Test PDF Content")
+            doc.save(str(tmp_pdf_path))
+        finally:
+            doc.close()
+        
+        elements = pdf_parser._create_elements_from_hierarchy(hierarchy, text_elements, analyzed_elements, str(tmp_pdf_path))
         assert len(elements) > 0
         assert any(e.type.name.startswith("HEADER") for e in elements)
         assert any(e.type == ElementType.TEXT for e in elements)
