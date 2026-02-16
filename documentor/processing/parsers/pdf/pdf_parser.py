@@ -20,10 +20,17 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import fitz
+import pandas as pd
 import yaml
 from langchain_core.documents import Document
 from PIL import Image
 from tqdm import tqdm
+
+# URL pattern for extracting links from text
+URL_PATTERN = re.compile(
+    r'(?:https?://|www\.|ftp://)[^\s<>"{}|\\^`\[\]]+[^\s<>"{}|\\^`\[\].,;:!?]',
+    re.IGNORECASE
+)
 
 from ....domain import DocumentFormat, Element, ElementType, ParsedDocument
 from ....exceptions import ParsingError
@@ -990,17 +997,26 @@ class PdfParser(BaseParser):
                 
                 parent_id = header_stack[-1][1] if header_stack else None
                 
+                # Extract links from header text
+                links_in_text = self._extract_links_from_text(text)
+                
+                metadata = {
+                    "source": "ocr",
+                    "level": level,
+                    "bbox": header.get("bbox", []),
+                    "page_num": header.get("page_num", 0),
+                    "category": header.get("category", ""),
+                }
+                
+                # Add links to metadata if found
+                if links_in_text:
+                    metadata["links"] = links_in_text
+                
                 header_element = self._create_element(
                     type=element_type,
                     content=text,
                     parent_id=parent_id,
-                    metadata={
-                        "source": "ocr",
-                        "level": level,
-                        "bbox": header.get("bbox", []),
-                        "page_num": header.get("page_num", 0),
-                        "category": header.get("category", ""),
-                    },
+                    metadata=metadata,
                 )
                 elements.append(header_element)
                 header_stack.append((level, header_element.id))
@@ -1030,16 +1046,55 @@ class PdfParser(BaseParser):
                         text = child.get("text", "")
                     
                     if text:
+                        # Extract links from text
+                        links_in_text = self._extract_links_from_text(text)
+                        
+                        metadata = {
+                            "source": "ocr",
+                            "bbox": bbox,
+                            "page_num": page_num,
+                            "category": category,
+                        }
+                        
+                        # Add links to metadata if found
+                        if links_in_text:
+                            metadata["links"] = links_in_text
+                        
+                        # Also try to extract hyperlinks from PDF page
+                        try:
+                            pdf_document = fitz.open(source)
+                            try:
+                                page = pdf_document.load_page(page_num)
+                                render_scale = self._get_config("layout_detection.render_scale", 2.0)
+                                if len(bbox) >= 4:
+                                    x1, y1, x2, y2 = (
+                                        bbox[0] / render_scale,
+                                        bbox[1] / render_scale,
+                                        bbox[2] / render_scale,
+                                        bbox[3] / render_scale,
+                                    )
+                                    rect = fitz.Rect(x1, y1, x2, y2)
+                                    pdf_links = self._extract_links_from_pdf_page(page, rect)
+                                    if pdf_links:
+                                        if "links" not in metadata:
+                                            metadata["links"] = []
+                                        # Add PDF hyperlinks (avoid duplicates)
+                                        existing_uris = set(links_in_text)
+                                        for pdf_link in pdf_links:
+                                            uri = pdf_link.get("uri", "")
+                                            if uri and uri not in existing_uris:
+                                                metadata["links"].append(uri)
+                                                existing_uris.add(uri)
+                            finally:
+                                pdf_document.close()
+                        except Exception as e:
+                            logger.debug(f"Error extracting PDF hyperlinks: {e}")
+                        
                         element = self._create_element(
                             type=ElementType.TEXT,
                             content=text,
                             parent_id=current_parent_id,
-                            metadata={
-                                "source": "ocr",
-                                "bbox": bbox,
-                                "page_num": page_num,
-                                "category": category,
-                            },
+                            metadata=metadata,
                         )
                         elements.append(element)
                 elif category == "Table":
@@ -1071,16 +1126,25 @@ class PdfParser(BaseParser):
                     elements.append(element)
                 elif category == "Caption":
                     text = child.get("text", "")
+                    # Extract links from caption text
+                    links_in_text = self._extract_links_from_text(text)
+                    
+                    metadata = {
+                        "source": "ocr",
+                        "bbox": bbox,
+                        "page_num": page_num,
+                        "category": category,
+                    }
+                    
+                    # Add links to metadata if found
+                    if links_in_text:
+                        metadata["links"] = links_in_text
+                    
                     element = self._create_element(
                         type=ElementType.CAPTION,
                         content=text,
                         parent_id=current_parent_id,
-                        metadata={
-                            "source": "ocr",
-                            "bbox": bbox,
-                            "page_num": page_num,
-                            "category": category,
-                        },
+                        metadata=metadata,
                     )
                     elements.append(element)
                 elif category == "Title":
@@ -1253,6 +1317,10 @@ class PdfParser(BaseParser):
                         logger.warning(f"Failed to parse table {element.id}")
                         element.content = ""
                         element.metadata["parsing_error"] = "Failed to parse table with Qwen"
+                        # Create empty DataFrame
+                        element.metadata["dataframe"] = pd.DataFrame()
+                        element.metadata["rows_count"] = 0
+                        element.metadata["cols_count"] = 0
                         continue
                     
                     # Process merged tables
@@ -1267,6 +1335,9 @@ class PdfParser(BaseParser):
                             element.content = tables[0]
                             if dataframe is not None:
                                 element.metadata["dataframe"] = dataframe
+                            else:
+                                # Create empty DataFrame if parsing failed
+                                element.metadata["dataframe"] = pd.DataFrame()
                             element.metadata["parsing_method"] = method
                             element.metadata["merged_tables"] = True
                             element.metadata["table_count"] = len(tables)
@@ -1300,6 +1371,8 @@ class PdfParser(BaseParser):
                                     new_element.metadata["rows_count"] = len(table_df)
                                     new_element.metadata["cols_count"] = len(table_df.columns)
                                 else:
+                                    # Create empty DataFrame if parsing failed
+                                    new_element.metadata["dataframe"] = pd.DataFrame()
                                     new_element.metadata["rows_count"] = 0
                                     new_element.metadata["cols_count"] = 0
                                 
@@ -1311,12 +1384,18 @@ class PdfParser(BaseParser):
                             element.content = markdown_content
                             if dataframe is not None:
                                 element.metadata["dataframe"] = dataframe
+                            else:
+                                # Create empty DataFrame if parsing failed
+                                element.metadata["dataframe"] = pd.DataFrame()
                             element.metadata["parsing_method"] = method
                     else:
                         # Without merged table processing
                         element.content = markdown_content
                         if dataframe is not None:
                             element.metadata["dataframe"] = dataframe
+                        else:
+                            # Create empty DataFrame if parsing failed
+                            element.metadata["dataframe"] = pd.DataFrame()
                         element.metadata["parsing_method"] = method
                     
                     logger.debug(f"Table {element.id} successfully parsed")

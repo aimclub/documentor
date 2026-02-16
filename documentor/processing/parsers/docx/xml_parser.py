@@ -4,6 +4,7 @@ Parsing DOCX XML markup for extracting document structure.
 
 from __future__ import annotations
 
+import re
 import zipfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -11,6 +12,12 @@ from typing import Dict, List, Any, Optional
 from io import BytesIO
 
 from PIL import Image
+
+# URL pattern for extracting links from text
+URL_PATTERN = re.compile(
+    r'(?:https?://|www\.|ftp://)[^\s<>"{}|\\^`\[\]]+[^\s<>"{}|\\^`\[\].,;:!?]',
+    re.IGNORECASE
+)
 
 
 NAMESPACES = {
@@ -30,6 +37,57 @@ def extract_text_from_element(elem: ET.Element, namespaces: Dict[str, str]) -> s
         if text_elem.text:
             texts.append(text_elem.text)
     return ''.join(texts).strip()
+
+
+def extract_hyperlinks_from_element(elem: ET.Element, namespaces: Dict[str, str], docx_path: Path) -> List[str]:
+    """
+    Extracts hyperlinks from DOCX element.
+    
+    Args:
+        elem: XML element to extract links from.
+        namespaces: XML namespaces dictionary.
+        docx_path: Path to DOCX file for resolving relationships.
+        
+    Returns:
+        List of hyperlink URIs.
+    """
+    links = []
+    try:
+        # Find all hyperlink elements
+        hyperlinks = elem.findall('.//w:hyperlink', namespaces)
+        
+        # Load relationships if needed
+        rels = {}
+        try:
+            with zipfile.ZipFile(docx_path, 'r') as zip_file:
+                try:
+                    rels_xml = zip_file.read('word/_rels/document.xml.rels')
+                    root = ET.fromstring(rels_xml)
+                    
+                    for rel in root.findall('.//{*}Relationship'):
+                        rel_id = rel.get('Id')
+                        rel_type = rel.get('Type', '')
+                        target = rel.get('Target')
+                        if rel_id and target and 'hyperlink' in rel_type.lower():
+                            rels[rel_id] = target
+                except KeyError:
+                    pass
+        except Exception:
+            pass
+        
+        for hyperlink in hyperlinks:
+            # Get relationship ID
+            r_id = hyperlink.get(f'{{{namespaces["r"]}}}id')
+            if r_id and r_id in rels:
+                links.append(rels[r_id])
+            # Also check for direct anchor attribute
+            anchor = hyperlink.get('w:anchor')
+            if anchor:
+                links.append(anchor)
+    except Exception:
+        pass
+    
+    return links
 
 
 class DocxXmlParser:
@@ -96,6 +154,7 @@ class DocxXmlParser:
                     elem_type = None
                     text = ''
                     has_image = False
+                    links = []
                     
                     if elem.tag.endswith('}p'):
                         elem_type = 'paragraph'
@@ -104,6 +163,14 @@ class DocxXmlParser:
                         blips = elem.findall('.//a:blip', NAMESPACES)
                         if blips:
                             has_image = True
+                        
+                        # Extract hyperlinks from element
+                        hyperlinks = extract_hyperlinks_from_element(elem, NAMESPACES, self.docx_path)
+                        links.extend(hyperlinks)
+                        
+                        # Also extract URLs from text
+                        text_urls = URL_PATTERN.findall(text)
+                        links.extend(text_urls)
                     
                     elif elem.tag.endswith('}tbl'):
                         elem_type = 'table'
@@ -114,6 +181,7 @@ class DocxXmlParser:
                             'type': elem_type,
                             'text': text,
                             'has_image': has_image,
+                            'links': list(set(links)) if links else [],  # Remove duplicates
                             'element': elem
                         })
         

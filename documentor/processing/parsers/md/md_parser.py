@@ -243,9 +243,14 @@ class MarkdownParser(BaseParser):
                         "cols_count": len(df.columns),
                     }
                 except Exception as e:
-                    # If failed to parse to DataFrame, save only text
+                    # If failed to parse to DataFrame, create empty DataFrame
                     logger.warning(f"Failed to parse table to DataFrame: {e}")
-                    metadata = {"source": "markdown"}
+                    metadata = {
+                        "source": "markdown",
+                        "dataframe": pd.DataFrame(),  # Always create DataFrame, even if empty
+                        "rows_count": 0,
+                        "cols_count": 0,
+                    }
                 
                 blocks.append(
                     MarkdownBlock(
@@ -345,11 +350,19 @@ class MarkdownParser(BaseParser):
                     # Add remaining text
                     clean_text = self.INLINE_CODE_PATTERN.sub(r'\1', line_without_images).strip()
                     if clean_text:
+                        # Extract links from remaining text
+                        remaining_links = list(self.LINK_PATTERN.finditer(clean_text))
+                        links_in_text = [match.group(2) for match in remaining_links]
+                        
+                        metadata = {"source": "markdown"}
+                        if links_in_text:
+                            metadata["links"] = links_in_text
+                        
                         blocks.append(
                             MarkdownBlock(
                                 type=ElementType.TEXT,
                                 content=clean_text,
-                                metadata={"source": "markdown"},
+                                metadata=metadata,
                                 line_number=i
                             )
                         )
@@ -398,11 +411,19 @@ class MarkdownParser(BaseParser):
                     line_without_links = self.LINK_PATTERN.sub(r'\1', line).strip()
                     clean_text = self.INLINE_CODE_PATTERN.sub(r'\1', line_without_links).strip()
                     if clean_text:
+                        # Extract any remaining links from text (if any escaped or malformed)
+                        remaining_links = list(self.LINK_PATTERN.finditer(clean_text))
+                        links_in_text = [match.group(2) for match in remaining_links]
+                        
+                        metadata = {"source": "markdown"}
+                        if links_in_text:
+                            metadata["links"] = links_in_text
+                        
                         blocks.append(
                             MarkdownBlock(
                                 type=ElementType.TEXT,
                                 content=clean_text,
-                                metadata={"source": "markdown"},
+                                metadata=metadata,
                                 line_number=i
                             )
                         )

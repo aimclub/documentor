@@ -4,12 +4,15 @@ Building document hierarchy from XML elements.
 
 from __future__ import annotations
 
+import base64
 import json
 import re
+from io import BytesIO
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 
 import pandas as pd
+from PIL import Image
 
 from ....domain import Element, ElementType
 from .header_finder import extract_paragraph_properties
@@ -270,16 +273,34 @@ def build_hierarchy(
         
         text_content = '\n\n'.join(current_text_block)
         if text_content.strip():
+            # Collect links from all text positions
+            all_links = []
+            for pos in current_text_positions:
+                if pos < len(all_xml_elements):
+                    elem = all_xml_elements[pos]
+                    elem_links = elem.get('links', [])
+                    if elem_links:
+                        all_links.extend(elem_links)
+            
+            # Remove duplicates
+            all_links = list(set(all_links)) if all_links else []
+            
+            metadata = {
+                'source': 'xml',
+                'position': list(current_text_positions),
+                'size': len(text_content)
+            }
+            
+            # Add links to metadata if found
+            if all_links:
+                metadata['links'] = all_links
+            
             text_element = Element(
                 id=id_generator.next_id(),
                 type=ElementType.TEXT,
                 content=text_content,
                 parent_id=header_stack[-1][1] if header_stack else None,
-                metadata={
-                    'source': 'xml',
-                    'position': list(current_text_positions),
-                    'size': len(text_content)
-                }
+                metadata=metadata
             )
             elements.append(text_element)
         
@@ -303,6 +324,12 @@ def build_hierarchy(
         
         parent_id = header_stack[-1][1] if header_stack else None
         
+        # Extract links from header element
+        header_links = []
+        if xml_pos < len(all_xml_elements):
+            header_elem = all_xml_elements[xml_pos]
+            header_links = header_elem.get('links', [])
+        
         if ocr_header:
             source = 'ocr_then_xml'
             metadata = {
@@ -319,6 +346,10 @@ def build_hierarchy(
                 'position': xml_pos,
                 'level': level,
             }
+        
+        # Add links to metadata if found
+        if header_links:
+            metadata['links'] = list(set(header_links))  # Remove duplicates
         
         header_element = Element(
             id=id_generator.next_id(),
@@ -351,9 +382,12 @@ def build_hierarchy(
                     'cols_count': table_data.get('cols_count', 0),
                 }
                 
-                # Add DataFrame to metadata if creation succeeded
+                # Always add DataFrame to metadata (create empty if parsing failed)
                 if dataframe is not None:
                     metadata['dataframe'] = dataframe
+                else:
+                    # Create empty DataFrame if parsing failed
+                    metadata['dataframe'] = pd.DataFrame()
                 
                 elements.append(Element(
                     id=id_generator.next_id(),
@@ -376,6 +410,43 @@ def build_hierarchy(
             flush_text_block()
             image_data = images_by_position[xml_pos]
             image_path = image_data.get('image_path', '')
+            image_bytes = image_data.get('image_bytes')
+            
+            # Convert image to base64
+            image_base64 = None
+            if image_bytes:
+                try:
+                    # Determine image format from bytes or path
+                    image_format = 'png'  # Default
+                    
+                    # Try to determine format from image bytes
+                    try:
+                        img = Image.open(BytesIO(image_bytes))
+                        image_format = img.format.lower() if img.format else 'png'
+                        # Normalize format names
+                        if image_format in ['jpg', 'jpeg']:
+                            image_format = 'jpeg'
+                        elif image_format not in ['png', 'gif', 'webp', 'bmp']:
+                            image_format = 'png'  # Fallback to PNG
+                    except Exception:
+                        # If PIL can't determine format, try from path
+                        if image_path:
+                            ext = Path(image_path).suffix.lower()
+                            if ext in ['.jpg', '.jpeg']:
+                                image_format = 'jpeg'
+                            elif ext == '.gif':
+                                image_format = 'gif'
+                            elif ext == '.webp':
+                                image_format = 'webp'
+                            elif ext == '.bmp':
+                                image_format = 'bmp'
+                    
+                    img_base64_encoded = base64.b64encode(image_bytes).decode("utf-8")
+                    image_base64 = f"data:image/{image_format};base64,{img_base64_encoded}"
+                except Exception as e:
+                    import logging
+                    logger = logging.getLogger(__name__)
+                    logger.warning(f"Error converting image to base64: {e}")
             
             elements.append(Element(
                 id=id_generator.next_id(),
@@ -386,7 +457,8 @@ def build_hierarchy(
                     'source': 'xml',
                     'position': xml_pos,
                     'image_index': image_data.get('index', 0),
-                    'image_path': image_path,
+                    'image_path': image_path,  # Keep for backward compatibility
+                    'image_data': image_base64,  # Base64 encoded image
                     'width': image_data.get('width'),
                     'height': image_data.get('height'),
                 }
@@ -455,7 +527,8 @@ def build_hierarchy(
             if i + 1 < len(elements) and elements[i + 1].type == ElementType.CAPTION and _is_image_caption(elements[i + 1].content):
                 elem.parent_id = elements[i + 1].id
                 elements[i + 1].metadata['image'] = {
-                    'image_path': elem.metadata.get('image_path', ''),
+                    'image_path': elem.metadata.get('image_path', ''),  # Keep for backward compatibility
+                    'image_data': elem.metadata.get('image_data'),  # Base64 encoded image
                     'image_index': elem.metadata.get('image_index', 0),
                     'content': elem.content
                 }
