@@ -3,12 +3,15 @@ Parser for PDF documents.
 
 Supports layout-based approach:
 - Layout detection via Dots.OCR for all pages
+- For scanned PDFs: uses prompt_layout_all_en to extract text, tables (HTML), and formulas (LaTeX) directly
+- For PDFs with extractable text: uses prompt_layout_only_en, then extracts text via PyMuPDF
 - Building hierarchy from Section-header
 - Filtering unnecessary elements (Page-header, side text)
-- Text extraction via PyMuPDF by coordinates
+- Text extraction via PyMuPDF (for extractable text) or from Dots OCR (for scanned PDFs)
 - Merging close text blocks
-- Table parsing via Qwen2.5
-- Storing images in metadata
+- Table parsing from Dots OCR HTML (for scanned PDFs) or via Qwen2.5 (fallback)
+- Storing images in metadata (base64)
+- Formula extraction in LaTeX format from Dots OCR
 """
 
 from __future__ import annotations
@@ -42,7 +45,11 @@ from .ocr.qwen_table_parser import (
     detect_merged_tables,
     markdown_to_dataframe,
 )
-from .ocr.qwen_ocr import ocr_text_with_qwen
+from .ocr.html_table_parser import (
+    parse_table_from_html,
+)
+# Note: ocr_text_with_qwen is no longer used for scanned PDFs
+# Text is extracted directly from Dots OCR (prompt_layout_all_en)
 
 
 logger = logging.getLogger(__name__)
@@ -126,13 +133,20 @@ class PdfParser(BaseParser):
         Process:
         1. Check extractable text
         2. Layout detection via Dots.OCR for all pages
+           - For scanned PDFs: uses prompt_layout_all_en (layout + text + tables + formulas)
+           - For PDFs with text: uses prompt_layout_only_en (layout only)
         3. Building hierarchy from Section-header
         4. Filtering unnecessary elements
-        5. Text extraction via PyMuPDF by coordinates
+        5. Text extraction:
+           - For scanned PDFs: text already extracted by Dots OCR
+           - For PDFs with text: via PyMuPDF by coordinates
         6. Merging close text blocks
         7. Creating elements and building hierarchy
-        8. Storing images in metadata
-        9. Table parsing via Qwen2.5
+        8. Storing images in metadata (base64)
+        9. Table parsing:
+           - For scanned PDFs: from Dots OCR HTML
+           - Fallback: via Qwen2.5
+        10. Formula extraction: LaTeX from Dots OCR (for scanned PDFs)
 
         Args:
             document: LangChain Document with PDF content.
@@ -146,6 +160,9 @@ class PdfParser(BaseParser):
             ParsingError: If parsing error occurred.
         """
         self._validate_input(document)
+        
+        # Reset ID generator for each new document
+        self._reset_id_generator()
 
         source = self.get_source(document)
         self._log_parsing_start(source)
@@ -155,13 +172,14 @@ class PdfParser(BaseParser):
             is_text_extractable = self._is_text_extractable(source)
             
             if not is_text_extractable:
-                logger.warning(
-                    f"Text cannot be extracted from PDF, using layout-based approach (source: {source})"
+                logger.info(
+                    f"Scanned PDF detected, using prompt_layout_all_en for text extraction via Dots OCR (source: {source})"
                 )
             
             # Layout-based approach (always use, even if text is extractable)
             # Step 1: Layout Detection for all pages
-            layout_elements = self._detect_layout_for_all_pages(source)
+            # For scanned PDFs, use prompt_layout_all_en to get text directly from Dots OCR
+            layout_elements = self._detect_layout_for_all_pages(source, use_text_extraction=not is_text_extractable)
             
             # Step 2: Filtering unnecessary elements
             logger.info("Step 2: Filtering elements...")
@@ -178,8 +196,8 @@ class PdfParser(BaseParser):
             hierarchy = self._build_hierarchy_from_section_headers(analyzed_elements)
             logger.info(f"Built sections: {len(hierarchy)}")
             
-            # Step 5: Text extraction via PyMuPDF or OCR
-            # For scanned PDFs use OCR via Qwen2.5
+            # Step 5: Text extraction via PyMuPDF or from Dots OCR
+            # For scanned PDFs, text is already extracted by Dots OCR (prompt_layout_all_en)
             logger.info("Step 5: Extracting text...")
             text_elements = self._extract_text_by_bboxes(
                 source, analyzed_elements, use_ocr=not is_text_extractable
@@ -201,9 +219,9 @@ class PdfParser(BaseParser):
             elements = self._store_images_in_metadata(elements, source)
             logger.info("Images stored")
             
-            # Step 9: Table parsing via Qwen2.5
+            # Step 9: Table parsing from Dots OCR HTML or via Qwen2.5 (fallback)
             logger.info("Step 9: Parsing tables...")
-            elements = self._parse_tables_with_qwen(elements, source)
+            elements = self._parse_tables(elements, source, use_dots_ocr_html=not is_text_extractable)
             logger.info("Tables processed")
             
             # Create ParsedDocument
@@ -268,15 +286,18 @@ class PdfParser(BaseParser):
         finally:
             pdf_document.close()
 
-    def _detect_layout_for_all_pages(self, source: str) -> List[Dict[str, Any]]:
+    def _detect_layout_for_all_pages(self, source: str, use_text_extraction: bool = False) -> List[Dict[str, Any]]:
         """
         Performs layout detection for all PDF pages.
 
         Args:
             source: Path to PDF file.
+            use_text_extraction: If True, uses prompt_layout_all_en to extract text directly from Dots OCR.
+                                If False, uses prompt_layout_only_en (layout only, text via PyMuPDF).
 
         Returns:
             List of layout elements with bbox, category, page_num fields.
+            If use_text_extraction=True, elements also contain 'text' field from Dots OCR.
         """
         if self.page_renderer is None:
             render_scale = self._get_config("layout_detection.render_scale", 2.0)
@@ -316,13 +337,37 @@ class PdfParser(BaseParser):
         else:
             logger.info(f"Starting layout detection for {total_pages} pages")
         
+        # Load prompt for text extraction if needed
+        prompt = None
+        if use_text_extraction:
+            from documentor.ocr.dots_ocr import load_prompts_from_config
+            config_path = Path(__file__).parent.parent.parent.parent / "config" / "ocr_config.yaml"
+            prompts = load_prompts_from_config(config_path)
+            prompt = prompts.get("prompt_layout_all_en")
+            if not prompt:
+                logger.warning("prompt_layout_all_en not found in config, falling back to prompt_layout_only_en")
+                use_text_extraction = False
+        
         for page_num in tqdm(range(start_page, total_pages), desc="Layout detection", unit="page"):
             try:
                 original_image, optimized_image = self.page_renderer.render_page(
                     pdf_path, page_num, return_original=True
                 )
                 
-                layout = self.layout_detector.detect_layout(optimized_image, origin_image=original_image)
+                if use_text_extraction:
+                    # Use direct API call with prompt_layout_all_en to get text
+                    from .ocr.dots_ocr_client import process_layout_detection
+                    layout, _, success = process_layout_detection(
+                        image=optimized_image,
+                        origin_image=original_image,
+                        prompt=prompt,
+                    )
+                    if not success or layout is None:
+                        logger.warning(f"Layout detection failed for page {page_num + 1}, trying fallback")
+                        layout = self.layout_detector.detect_layout(optimized_image, origin_image=original_image)
+                else:
+                    # Use standard layout detection (prompt_layout_only_en)
+                    layout = self.layout_detector.detect_layout(optimized_image, origin_image=original_image)
                 
                 # Add page number to each element
                 for element in layout:
@@ -439,6 +484,9 @@ class PdfParser(BaseParser):
             analyzed_elements: List[Dict[str, Any]] = []
             render_scale = self._get_config("layout_detection.render_scale", 2.0)
             
+            # Check if text is extractable (to determine if we should use Dots OCR text)
+            is_text_extractable = self._is_text_extractable(source)
+            
             # Last header level with explicit numbering
             last_numbered_level: Optional[int] = None
             # History of previous headers for font size comparison
@@ -448,11 +496,31 @@ class PdfParser(BaseParser):
                 category = element.get("category", "")
                 
                 if category == "Section-header":
-                    # Extract header text via PyMuPDF
+                    # For scanned PDFs, text is already in element from Dots OCR
+                    # For PDFs with extractable text, extract via PyMuPDF
                     bbox = element.get("bbox", [])
                     page_num = element.get("page_num", 0)
+                    text = element.get("text", "")  # Try to get text from Dots OCR first
+                    font_size = None
                     
-                    if len(bbox) >= 4 and page_num < len(pdf_document):
+                    if not is_text_extractable and text:
+                        # For scanned PDFs: use text from Dots OCR
+                        # Still need font_size for level determination, try to get it
+                        if len(bbox) >= 4 and page_num < len(pdf_document):
+                            try:
+                                page = pdf_document.load_page(page_num)
+                                x1, y1, x2, y2 = (
+                                    bbox[0] / render_scale,
+                                    bbox[1] / render_scale,
+                                    bbox[2] / render_scale,
+                                    bbox[3] / render_scale,
+                                )
+                                rect = fitz.Rect(x1, y1, x2, y2)
+                                font_size = self._get_font_size(page, rect)
+                            except Exception:
+                                pass
+                    elif len(bbox) >= 4 and page_num < len(pdf_document):
+                        # For PDFs with extractable text: extract via PyMuPDF
                         try:
                             page = pdf_document.load_page(page_num)
                             # Convert coordinates to original PDF scale
@@ -473,47 +541,74 @@ class PdfParser(BaseParser):
                             
                             # Get font size for comparison
                             font_size = self._get_font_size(page, rect)
-                            
-                            # Determine header level
-                            level = self._determine_header_level(
-                                text, element, page, rect, last_numbered_level, previous_headers, font_size
-                            )
-                            
-                            # If header has explicit numbering, update last_numbered_level
-                            if self._has_explicit_numbering(text):
-                                last_numbered_level = level
-                            
-                            # Save header info for comparison with subsequent headers
-                            previous_headers.append({
-                                "level": level,
-                                "font_size": font_size,
-                                "page_num": page_num,
-                            })
-                            
-                            element_type = getattr(ElementType, f"HEADER_{level}", ElementType.HEADER_1)
-                            
-                            element["text"] = text
-                            element["level"] = level
-                            element["element_type"] = element_type
                         except Exception as e:
                             logger.warning(f"Error analyzing header: {e}")
-                            element["level"] = 1
-                            element["element_type"] = ElementType.HEADER_1
-                            previous_headers.append({
-                                "level": 1,
-                                "font_size": None,
-                                "page_num": page_num,
-                            })
+                            text = ""
+                    
+                    if text:
+                        # Remove markdown formatting from header text
+                        # 1. Remove all # symbols from the beginning (Dots OCR adds ## to headers)
+                        cleaned_text = text.strip()
+                        while cleaned_text.startswith('#'):
+                            cleaned_text = cleaned_text.lstrip('#').strip()
+                        
+                        # 2. Remove markdown bold formatting (**text** or __text__)
+                        cleaned_text = re.sub(r'\*\*([^*]+)\*\*', r'\1', cleaned_text)  # **bold** -> bold
+                        cleaned_text = re.sub(r'__([^_]+)__', r'\1', cleaned_text)  # __bold__ -> bold
+                        # Also handle single asterisks/underscores (but be careful not to remove valid characters)
+                        cleaned_text = re.sub(r'(?<!\*)\*([^*]+)\*(?!\*)', r'\1', cleaned_text)  # *italic* -> italic (if not part of **)
+                        cleaned_text = re.sub(r'(?<!_)_([^_]+)_(?!_)', r'\1', cleaned_text)  # _italic_ -> italic (if not part of __)
+                        cleaned_text = cleaned_text.strip()
+                        
+                        # Check if header ends with colon - if so, convert to Text (not a header)
+                        # Headers like "Задачи:", "Плюсы:", "Минусы:" should be text, not headers
+                        if cleaned_text.endswith(':'):
+                            element["category"] = "Text"
+                            element["text"] = cleaned_text
+                            analyzed_elements.append(element)
+                            continue
+                        
+                        # Determine header level (use cleaned text for level detection)
+                        level = self._determine_header_level(
+                            cleaned_text, element, None, None, last_numbered_level, previous_headers, font_size
+                        )
+                        
+                        # If header has explicit numbering, update last_numbered_level
+                        if self._has_explicit_numbering(cleaned_text):
+                            last_numbered_level = level
+                        
+                        # Save header info for comparison with subsequent headers
+                        previous_headers.append({
+                            "level": level,
+                            "font_size": font_size,
+                            "page_num": page_num,
+                            "text": cleaned_text,  # Save text to check for letter-based numbering context
+                        })
+                        
+                        element_type = getattr(ElementType, f"HEADER_{level}", ElementType.HEADER_1)
+                        
+                        # Save cleaned text (without markdown symbols)
+                        element["text"] = cleaned_text
+                        element["level"] = level
+                        element["element_type"] = element_type
                     else:
+                        # If no text found, default to HEADER_1
+                        logger.warning(f"Header text not found for element on page {page_num + 1}")
+                        element["text"] = ""
                         element["level"] = 1
                         element["element_type"] = ElementType.HEADER_1
                         previous_headers.append({
                             "level": 1,
                             "font_size": None,
                             "page_num": page_num,
+                            "text": "",  # No text available
                         })
                 
-                analyzed_elements.append(element)
+                    # Add header element to analyzed_elements
+                    analyzed_elements.append(element)
+                else:
+                    # Add non-header elements to analyzed_elements
+                    analyzed_elements.append(element)
             
             return analyzed_elements
         finally:
@@ -669,11 +764,28 @@ class PdfParser(BaseParser):
             Header level (1-6).
         """
         # Numbering analysis
-        # Headers like "1", "2", "3" -> HEADER_1
-        if re.match(r'^\d+\s+[A-Z]', text):
+        # Headers with Roman numerals (I, II, III, IV, V, VI, etc.) -> HEADER_1
+        # Pattern matches: "I. ", "II. ", "III. ", "IV. ", "V. ", "VI. ", etc.
+        if re.match(r'^[IVX]+\.\s+', text, re.IGNORECASE):
             return 1
+        # Headers like "1", "2", "3" -> HEADER_1
+        # Supports both Latin and Cyrillic letters
+        # Pattern: digit(s) + one or more spaces + uppercase letter (Latin or Cyrillic)
+        # This should match "5 Работа...", "6 Подведение..." etc.
+        text_stripped = text.strip()
+        if re.match(r'^\d+\s+[A-ZА-ЯЁ]', text_stripped):
+            return 1
+        # Headers like "A.1", "B.1", "C.1" -> HEADER_3 (subsections under letter headers)
+        if re.match(r'^[A-Z]\.\d+\s+', text):
+            return 3
         # Headers like "1.1", "1.2" -> HEADER_2
         if re.match(r'^\d+\.\d+\s+', text):
+            return 2
+        # Headers like "A. ", "B. ", "C. " -> HEADER_2 (letter-based sections with dot)
+        if re.match(r'^[A-Z]\.\s+', text):
+            return 2
+        # Headers like "A ", "B ", "C " -> HEADER_2 (letter-based sections without dot)
+        if re.match(r'^[A-Z]\s+[A-Z]', text):
             return 2
         # Headers like "1.1.1", "1.1.2" -> HEADER_3
         if re.match(r'^\d+\.\d+\.\d+\s+', text):
@@ -681,6 +793,58 @@ class PdfParser(BaseParser):
         # Headers like "1.1.1.1" -> HEADER_4
         if re.match(r'^\d+\.\d+\.\d+\.\d+\s+', text):
             return 4
+        # Special headers like "References", "Bibliography", "Abstract" -> HEADER_1
+        text_upper = text.strip().upper()
+        if text_upper in ["REFERENCES", "BIBLIOGRAPHY", "ABSTRACT", "INTRODUCTION", "CONCLUSION", "CONCLUSIONS", "ACKNOWLEDGEMENT", "ACKNOWLEDGMENTS", "СПИСОК ЛИТЕРАТУРЫ", "СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ", "ЛИТЕРАТУРА"]:
+            return 1
+        
+        # Headers like "Приложение А.", "Приложение Б.", "Appendix A.", "Приложение 1." -> HEADER_2
+        # Pattern: "Приложение" or "Appendix" + space + letter or digit + optional dot
+        # These are subsections under "ПРИЛОЖЕНИЯ" (HEADER_1)
+        if re.match(r'^(ПРИЛОЖЕНИЕ|APPENDIX)\s+[A-ZА-ЯЁ0-9]\.?', text_upper):
+            return 2
+        
+        # Headers like "Приложения", "Appendices", "Appendix" -> HEADER_1
+        if text_upper in ["ПРИЛОЖЕНИЯ", "APPENDICES", "APPENDIX", "ПРИЛОЖЕНИЕ"]:
+            return 1
+        
+        # Check if we're inside letter-based numbering context (e.g., "H", "H.2")
+        # If header has no explicit numbering and previous headers have letter-based numbering,
+        # this header should be one level below the last letter-based header
+        if previous_headers:
+            # Check recent previous headers for letter-based numbering
+            # Look at last few headers (up to 5) to find letter-based context
+            recent_headers = previous_headers[-5:] if len(previous_headers) > 5 else previous_headers
+            for prev_header in reversed(recent_headers):
+                prev_text = prev_header.get("text", "")
+                if prev_text:
+                    # Check if previous header has letter-based numbering
+                    # Pattern: "H ", "H.2 ", "A ", "A.1 ", etc.
+                    if re.match(r'^[A-Z](\.\d+)?\s+', prev_text):
+                        # We're inside letter-based numbering context
+                        # Headers without explicit numbering should be one level below the last letter-based header
+                        prev_level = prev_header.get("level", 2)  # Default to 2 if level not found
+                        return min(prev_level + 1, 6)  # Limit maximum to 6
+        
+        # Check if we're inside numeric numbering context (e.g., "2", "2.1", "2.1.1")
+        # If header has no explicit numbering and previous headers have numeric numbering,
+        # this header should be one level below the last numeric header
+        # IMPORTANT: Only apply this if the current header does NOT have explicit numeric numbering
+        # Headers with explicit numbering (like "5 ", "6 ") should already be handled above
+        if previous_headers:
+            # Check recent previous headers for numeric numbering
+            # Look at last few headers (up to 5) to find numeric context
+            recent_headers = previous_headers[-5:] if len(previous_headers) > 5 else previous_headers
+            for prev_header in reversed(recent_headers):
+                prev_text = prev_header.get("text", "")
+                if prev_text:
+                    # Check if previous header has numeric numbering
+                    # Pattern: "2 ", "2.1 ", "2.1.1 ", etc.
+                    if re.match(r'^\d+(\.\d+)*\s+', prev_text):
+                        # We're inside numeric numbering context
+                        # Headers without explicit numbering should be one level below the last numeric header
+                        prev_level = prev_header.get("level", 1)  # Default to 1 if level not found
+                        return min(prev_level + 1, 6)  # Limit maximum to 6
         
         # If header has no explicit numbering but has context with numbering
         if last_numbered_level is not None:
@@ -727,17 +891,59 @@ class PdfParser(BaseParser):
         # Default HEADER_1
         return 1
 
+    def _remove_markdown_formatting(self, text: str) -> str:
+        """
+        Remove markdown formatting (**text**, __text__, *text*) from text.
+        Preserves single asterisks (*) used as list markers at the start of lines.
+        
+        Args:
+            text: Text with potential markdown formatting
+            
+        Returns:
+            Text with markdown formatting removed
+        """
+        if not text:
+            return text
+        
+        # First, remove **text** (bold) -> text
+        cleaned_text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)
+        # Remove __text__ (bold) -> text
+        cleaned_text = re.sub(r'__([^_]+)__', r'\1', cleaned_text)
+        
+        # Remove *text* (italic) but preserve list markers (* at start of line or after newline)
+        # Split by lines to handle list markers correctly
+        lines = cleaned_text.split('\n')
+        cleaned_lines = []
+        for line in lines:
+            # If line starts with "* " (list marker), preserve it and remove *text* from the rest
+            if line.strip().startswith('* '):
+                # Keep the "* " prefix, remove *text* from the rest
+                prefix = line[:line.find('* ') + 2]  # "* " + everything before it
+                rest = line[line.find('* ') + 2:]
+                # Remove *text* from the rest
+                rest_cleaned = re.sub(r'\*([^*]+)\*', r'\1', rest)
+                cleaned_lines.append(prefix + rest_cleaned)
+            else:
+                # Remove all *text* (italic) from the line
+                cleaned_line = re.sub(r'\*([^*]+)\*', r'\1', line)
+                cleaned_lines.append(cleaned_line)
+        
+        cleaned_text = '\n'.join(cleaned_lines)
+        
+        return cleaned_text.strip()
+
     def _extract_text_by_bboxes(
         self, source: str, layout_elements: List[Dict[str, Any]], use_ocr: bool = False
     ) -> List[Dict[str, Any]]:
         """
         Extracts text via PyMuPDF by coordinates from layout elements.
-        For scanned PDFs (use_ocr=True) uses Qwen2.5 OCR.
+        For scanned PDFs (use_ocr=True), text is already extracted by Dots OCR (prompt_layout_all_en).
 
         Args:
             source: Path to PDF file.
             layout_elements: List of layout elements with bbox.
-            use_ocr: If True, uses OCR via Qwen2.5 instead of PyMuPDF.
+            use_ocr: If True, text is already in elements from Dots OCR, just use it.
+                     If False, extracts text via PyMuPDF.
 
         Returns:
             List of elements with extracted text.
@@ -747,79 +953,54 @@ class PdfParser(BaseParser):
             text_elements: List[Dict[str, Any]] = []
             render_scale = self._get_config("layout_detection.render_scale", 2.0)
             
-            # For OCR need to store original page images
-            page_images: Dict[int, Image.Image] = {}
-            
             if use_ocr:
-                logger.info("Starting OCR processing: rendering pages...")
-                # Render all pages in advance for OCR
-                if self.page_renderer is None:
-                    self.page_renderer = PdfPageRenderer(
-                        render_scale=render_scale,
-                        optimize_for_ocr=False,  # Don't apply smart_resize for original images
-                    )
+                # For scanned PDFs, text is already extracted by Dots OCR (prompt_layout_all_en)
+                # Just use the text from layout_elements
+                logger.info("Using text from Dots OCR (prompt_layout_all_en)")
                 
-                pdf_path = Path(source)
-                # Check if we should skip title page
-                skip_title_page = self._get_config("processing.skip_title_page", False)
-                start_page = 1 if skip_title_page else 0
-                
-                # Render pages that might be needed (all pages, as elements may reference any page)
-                for page_num in tqdm(range(len(pdf_document)), desc="Rendering pages for OCR", unit="page", leave=False):
-                    original_image, _ = self.page_renderer.render_page(
-                        pdf_path, page_num, return_original=True
-                    )
-                    page_images[page_num] = original_image
-                
-                # Count elements for OCR
-                ocr_elements = [
-                    e for e in layout_elements 
-                    if e.get("category", "") in ["Text", "Section-header", "Title", "Caption"]
-                    and e.get("category", "") != "Picture"
-                ]
-                logger.info(f"Found {len(ocr_elements)} elements for OCR processing")
-            
-            for element in tqdm(layout_elements, desc="Extracting text", unit="element", disable=not use_ocr, leave=False):
-                category = element.get("category", "")
-                bbox = element.get("bbox", [])
-                page_num = element.get("page_num", 0)
-                
-                # Skip Picture - don't do OCR for images
-                if category == "Picture":
-                    text_elements.append(element)
-                    continue
-                
-                # Extract text only for text elements
-                if category not in ["Text", "Section-header", "Title", "Caption"]:
-                    text_elements.append(element)
-                    continue
-                
-                if len(bbox) >= 4 and page_num < len(pdf_document):
-                    try:
-                        if use_ocr:
-                            # Use OCR via Qwen2.5
-                            if page_num not in page_images:
-                                logger.warning(f"Page image {page_num} not found for OCR")
-                                element["text"] = ""
-                                text_elements.append(element)
-                                continue
-                            
-                            page_image = page_images[page_num]
-                            
-                            # Crop element from image
-                            x1, y1, x2, y2 = bbox
-                            padding = 5
-                            x1_crop = max(0, int(x1) - padding)
-                            y1_crop = max(0, int(y1) - padding)
-                            x2_crop = min(page_image.width, int(x2) + padding)
-                            y2_crop = min(page_image.height, int(y2) + padding)
-                            
-                            cropped_image = page_image.crop((x1_crop, y1_crop, x2_crop, y2_crop))
-                            
-                            # OCR via Qwen2.5
-                            text = ocr_text_with_qwen(cropped_image)
-                            element["text"] = text.strip() if text else ""
+                for element in tqdm(layout_elements, desc="Processing text from Dots OCR", unit="element", leave=False):
+                    category = element.get("category", "")
+                    
+                    # Skip Picture - no text for images
+                    if category == "Picture":
+                        text_elements.append(element)
+                        continue
+                    
+                    # For text elements, use text from Dots OCR if available
+                    if category in ["Text", "Section-header", "Title", "Caption", "Formula", "List-item"]:
+                        # Text should already be in element from Dots OCR
+                        # Clean and normalize if needed
+                        text = element.get("text", "")
+                        if text:
+                            # Remove markdown formatting (**text** or __text__)
+                            # BUT: Do NOT apply to Formula - LaTeX may contain *, **, _, __ as part of syntax
+                            if category != "Formula":
+                                text = self._remove_markdown_formatting(text)
+                            # Remove extra whitespace but preserve structure
+                            element["text"] = text.strip()
                         else:
+                            element["text"] = ""
+                    
+                    text_elements.append(element)
+            else:
+                # For PDFs with extractable text, use PyMuPDF
+                for element in tqdm(layout_elements, desc="Extracting text via PyMuPDF", unit="element", leave=False):
+                    category = element.get("category", "")
+                    bbox = element.get("bbox", [])
+                    page_num = element.get("page_num", 0)
+                    
+                    # Skip Picture - don't extract text for images
+                    if category == "Picture":
+                        text_elements.append(element)
+                        continue
+                    
+                    # Extract text only for text elements
+                    if category not in ["Text", "Section-header", "Title", "Caption"]:
+                        text_elements.append(element)
+                        continue
+                    
+                    if len(bbox) >= 4 and page_num < len(pdf_document):
+                        try:
                             # Use PyMuPDF for extractable text
                             page = pdf_document.load_page(page_num)
                             # Convert coordinates to original PDF scale
@@ -854,11 +1035,11 @@ class PdfParser(BaseParser):
                                 text = page.get_text("text", clip=rect).strip()
                             
                             element["text"] = text
-                    except Exception as e:
-                        logger.warning(f"Error extracting text for element: {e}")
+                        except Exception as e:
+                            logger.warning(f"Error extracting text for element: {e}")
+                            element["text"] = ""
+                    else:
                         element["text"] = ""
-                else:
-                    element["text"] = ""
                 
                 text_elements.append(element)
             
@@ -1043,7 +1224,28 @@ class PdfParser(BaseParser):
             if header is not None:
                 level = header.get("level", 1)
                 element_type = header.get("element_type", ElementType.HEADER_1)
+                # Get text from header - it should be there from _analyze_header_levels_from_elements
                 text = header.get("text", "")
+                
+                # If text is still empty, try to get it from merged_text_elements or layout_elements
+                if not text:
+                    bbox = header.get("bbox", [])
+                    page_num = header.get("page_num", 0)
+                    if len(bbox) >= 4:
+                        # Try to find in merged_text_elements first
+                        key = (page_num, int(bbox[0]), int(bbox[1]), int(bbox[2]), int(bbox[3]))
+                        merged_elem = text_elements_by_bbox.get(key)
+                        if merged_elem:
+                            text = merged_elem.get("text", "")
+                        # If still no text, try from layout_elements
+                        if not text:
+                            layout_elem = layout_elements_by_bbox.get(key)
+                            if layout_elem:
+                                text = layout_elem.get("text", "")
+                
+                # If still no text, log warning but create header anyway
+                if not text:
+                    logger.warning(f"Header text is empty for header on page {header.get('page_num', 0) + 1}, bbox: {header.get('bbox', [])}")
                 
                 # Update header stack
                 while header_stack and header_stack[-1][0] >= level:
@@ -1100,8 +1302,11 @@ class PdfParser(BaseParser):
                         text = child.get("text", "")
                     
                     if text:
+                        # Remove markdown formatting (**text** or __text__)
+                        cleaned_text = self._remove_markdown_formatting(text)
+                        
                         # Extract links from text
-                        links_in_text = self._extract_links_from_text(text)
+                        links_in_text = self._extract_links_from_text(cleaned_text)
                         
                         metadata = {
                             "source": "ocr",
@@ -1146,13 +1351,16 @@ class PdfParser(BaseParser):
                         
                         element = self._create_element(
                             type=ElementType.TEXT,
-                            content=text,
+                            content=cleaned_text,
                             parent_id=current_parent_id,
                             metadata=metadata,
                         )
                         elements.append(element)
                 elif category == "Table":
-                    # Tables will be processed later via Qwen
+                    # For scanned PDFs, HTML is already in layout_elements from Dots OCR
+                    # Store it in metadata for later parsing
+                    table_html = child.get("text", "")  # HTML from Dots OCR (prompt_layout_all_en)
+                    
                     element = self._create_element(
                         type=ElementType.TABLE,
                         content="",  # will be filled during parsing
@@ -1162,6 +1370,50 @@ class PdfParser(BaseParser):
                             "bbox": bbox,
                             "page_num": page_num,
                             "category": category,
+                            "table_html": table_html,  # Store HTML for parsing
+                        },
+                    )
+                    elements.append(element)
+                elif category == "Formula":
+                    # Formulas are in LaTeX format from Dots OCR
+                    formula_latex = child.get("text", "")  # LaTeX from Dots OCR
+                    # DO NOT remove markdown formatting from formulas!
+                    # LaTeX syntax may contain *, **, _, __ as valid operators/symbols
+                    # (e.g., x^2 * y^2, x_1, etc.)
+                    # Only strip whitespace
+                    formula_latex = formula_latex.strip()
+                    
+                    element = self._create_element(
+                        type=ElementType.TEXT,  # Formula is stored as TEXT with LaTeX in metadata
+                        content=formula_latex,  # LaTeX content
+                        parent_id=current_parent_id,
+                        metadata={
+                            "source": "ocr",
+                            "bbox": bbox,
+                            "page_num": page_num,
+                            "category": category,
+                            "formula_latex": formula_latex,  # Store LaTeX in metadata
+                            "is_formula": True,
+                        },
+                    )
+                    elements.append(element)
+                elif category == "List-item":
+                    # List items from Dots OCR
+                    list_text = child.get("text", "")
+                    
+                    # Remove markdown bold formatting (**text** or __text__) but preserve list markers (*)
+                    cleaned_list_text = self._remove_markdown_formatting(list_text)
+                    
+                    element = self._create_element(
+                        type=ElementType.LIST_ITEM,
+                        content=cleaned_list_text,
+                        parent_id=current_parent_id,
+                        metadata={
+                            "source": "ocr",
+                            "bbox": bbox,
+                            "page_num": page_num,
+                            "category": category,
+                            "is_list_item": True,
                         },
                     )
                     elements.append(element)
@@ -1180,8 +1432,10 @@ class PdfParser(BaseParser):
                     elements.append(element)
                 elif category == "Caption":
                     text = child.get("text", "")
+                    # Remove markdown formatting (**text** or __text__)
+                    cleaned_text = self._remove_markdown_formatting(text)
                     # Extract links from caption text
-                    links_in_text = self._extract_links_from_text(text)
+                    links_in_text = self._extract_links_from_text(cleaned_text)
                     
                     metadata = {
                         "source": "ocr",
@@ -1196,16 +1450,18 @@ class PdfParser(BaseParser):
                     
                     element = self._create_element(
                         type=ElementType.CAPTION,
-                        content=text,
+                        content=cleaned_text,
                         parent_id=current_parent_id,
                         metadata=metadata,
                     )
                     elements.append(element)
                 elif category == "Title":
                     text = child.get("text", "")
+                    # Remove markdown formatting (**text** or __text__)
+                    cleaned_text = self._remove_markdown_formatting(text)
                     element = self._create_element(
                         type=ElementType.TITLE,
-                        content=text,
+                        content=cleaned_text,
                         parent_id=None,  # Title has no parent
                         metadata={
                             "source": "ocr",
@@ -1248,28 +1504,113 @@ class PdfParser(BaseParser):
                 image_bbox = image_element.metadata.get("bbox", [])
                 image_page = image_element.metadata.get("page_num", 0)
                 
-                if len(image_bbox) < 4 or image_page >= len(pdf_document):
+                if len(image_bbox) < 4:
+                    logger.warning(f"Image {image_element.id} has invalid bbox: {image_bbox}")
+                    continue
+                
+                if image_page >= len(pdf_document):
+                    logger.warning(f"Image {image_element.id} has invalid page number: {image_page} (max: {len(pdf_document) - 1})")
                     continue
                 
                 try:
                     # Extract image
                     page = pdf_document.load_page(image_page)
+                    
+                    # Convert coordinates: bbox is in render_scale coordinates, need to convert to PDF coordinates
+                    # For scanned PDFs, bbox comes from Dots OCR which uses render_scale
                     x1, y1, x2, y2 = (
                         image_bbox[0] / render_scale,
                         image_bbox[1] / render_scale,
                         image_bbox[2] / render_scale,
                         image_bbox[3] / render_scale,
                     )
+                    
+                    # Ensure coordinates are within page bounds
+                    page_rect = page.rect
+                    x1 = max(0, min(x1, page_rect.width))
+                    y1 = max(0, min(y1, page_rect.height))
+                    x2 = max(x1, min(x2, page_rect.width))
+                    y2 = max(y1, min(y2, page_rect.height))
+                    
+                    # Validate that rect has positive area
+                    if x2 <= x1 or y2 <= y1:
+                        logger.warning(f"Image {image_element.id} has invalid rect after conversion: ({x1}, {y1}, {x2}, {y2})")
+                        continue
+                    
                     rect = fitz.Rect(x1, y1, x2, y2)
-                    pix = page.get_pixmap(clip=rect)
-                    img_data = pix.tobytes("png")
+                    
+                    # Calculate image dimensions in PDF coordinates
+                    img_width = x2 - x1
+                    img_height = y2 - y1
+                    
+                    # Limit maximum image size to avoid huge base64 strings
+                    # Target: max 1280px on the longest side, maintain aspect ratio
+                    # This significantly reduces file size while maintaining reasonable quality
+                    max_dimension = 1280
+                    scale_factor = 1.0
+                    
+                    if img_width > max_dimension or img_height > max_dimension:
+                        if img_width > img_height:
+                            scale_factor = max_dimension / img_width
+                        else:
+                            scale_factor = max_dimension / img_height
+                    
+                    # Render image with reasonable quality
+                    # Use calculated scale_factor to limit size, but don't go below 1.0x
+                    render_scale = max(1.0, min(1.5, scale_factor * 1.5))
+                    mat = fitz.Matrix(render_scale, render_scale)
+                    pix = page.get_pixmap(matrix=mat, clip=rect)
+                    
+                    if pix is None or pix.width == 0 or pix.height == 0:
+                        logger.warning(f"Image {image_element.id} rendered as empty pixmap")
+                        continue
+                    
+                    # Convert to PIL Image for compression
+                    import io
+                    
+                    # Convert pixmap to PIL Image
+                    img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+                    
+                    # Resize if still too large (double-check after rendering)
+                    final_max_dimension = 1280
+                    if img.width > final_max_dimension or img.height > final_max_dimension:
+                        if img.width > img.height:
+                            new_width = final_max_dimension
+                            new_height = int(img.height * (final_max_dimension / img.width))
+                        else:
+                            new_height = final_max_dimension
+                            new_width = int(img.width * (final_max_dimension / img.height))
+                        img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+                    
+                    # Compress as JPEG with quality 75 (good balance between quality and size)
+                    # Quality 75 provides good visual quality while significantly reducing file size
+                    output = io.BytesIO()
+                    img.save(output, format="JPEG", quality=75, optimize=True)
+                    img_data = output.getvalue()
+                    
+                    if not img_data or len(img_data) == 0:
+                        logger.warning(f"Image {image_element.id} has empty image data after compression")
+                        continue
+                    
                     import base64
                     img_base64 = base64.b64encode(img_data).decode("utf-8")
                     
+                    # Log image size for debugging
+                    logger.debug(f"Image {image_element.id}: {pix.width}x{pix.height}, base64 size: {len(img_base64)} chars, compressed: {len(img_data)} bytes")
+                    
+                    if not img_base64 or len(img_base64) == 0:
+                        logger.warning(f"Image {image_element.id} has empty base64 data")
+                        continue
+                    
                     # Find corresponding Caption element
-                    # Find nearest Caption on same page
+                    # Caption can be above or below image
+                    # Also need to distinguish: if caption is followed by table, it's for table, not for image
                     best_caption = None
                     min_distance = float('inf')
+                    
+                    # Get all elements to check what comes after caption
+                    all_elements = elements
+                    image_element_idx = all_elements.index(image_element) if image_element in all_elements else -1
                     
                     for caption_element in caption_elements:
                         caption_bbox = caption_element.metadata.get("bbox", [])
@@ -1278,41 +1619,79 @@ class PdfParser(BaseParser):
                         if caption_page != image_page or len(caption_bbox) < 4:
                             continue
                         
-                        # Check proximity: Caption is usually below image
-                        # Vertical distance between bottom edge of image and top edge of Caption
-                        distance = abs(caption_bbox[1] - image_bbox[3])
+                        # Check if this caption is for a table (if table follows immediately after caption)
+                        caption_element_idx = all_elements.index(caption_element) if caption_element in all_elements else -1
+                        if caption_element_idx >= 0 and caption_element_idx + 1 < len(all_elements):
+                            next_element = all_elements[caption_element_idx + 1]
+                            if next_element.type == ElementType.TABLE:
+                                # This caption is for table, skip it
+                                continue
                         
-                        # Caption should be below image (or very close)
-                        if caption_bbox[1] >= image_bbox[1] - 50 and distance < min_distance:
+                        # Check proximity: Caption can be above or below image
+                        # Convert to same scale for comparison
+                        caption_y1 = caption_bbox[1] / render_scale
+                        caption_y3 = caption_bbox[3] / render_scale
+                        image_y1 = image_bbox[1] / render_scale
+                        image_y3 = image_bbox[3] / render_scale
+                        
+                        # Calculate distance: caption can be above (caption_y3 < image_y1) or below (caption_y1 > image_y3)
+                        if caption_y3 < image_y1:
+                            # Caption is above image
+                            distance = abs(caption_y3 - image_y1)
+                        elif caption_y1 > image_y3:
+                            # Caption is below image
+                            distance = abs(caption_y1 - image_y3)
+                        else:
+                            # Caption overlaps with image (shouldn't happen, but handle it)
+                            distance = 0
+                        
+                        # Check horizontal overlap (caption should be near image horizontally)
+                        caption_x1 = caption_bbox[0] / render_scale
+                        caption_x2 = caption_bbox[2] / render_scale
+                        image_x1 = image_bbox[0] / render_scale
+                        image_x2 = image_bbox[2] / render_scale
+                        
+                        # Check if there's horizontal overlap or they're close
+                        horizontal_overlap = not (caption_x2 < image_x1 or caption_x1 > image_x2)
+                        horizontal_distance = min(abs(caption_x2 - image_x1), abs(caption_x1 - image_x2)) if not horizontal_overlap else 0
+                        
+                        # Prefer captions with horizontal overlap or close horizontally (within 100px)
+                        if (horizontal_overlap or horizontal_distance < 100) and distance < min_distance:
                             min_distance = distance
                             best_caption = caption_element
                     
-                    # If Caption found, save image in its metadata
+                    # Save image ONLY in CAPTION metadata (not in IMAGE)
                     if best_caption is not None:
-                        best_caption.metadata["image_data"] = f"data:image/png;base64,{img_base64}"
-                        logger.debug(f"Image saved in Caption metadata {best_caption.id}")
+                        best_caption.metadata["image_data"] = f"data:image/jpeg;base64,{img_base64}"
+                        # Update IMAGE parent_id to point to CAPTION
+                        image_element.parent_id = best_caption.id
+                        logger.debug(f"Image {image_element.id} saved in Caption metadata {best_caption.id}, IMAGE parent_id updated to {best_caption.id} (size: {len(img_base64)} chars)")
                     else:
-                        # If Caption not found, save in IMAGE metadata (fallback)
-                        image_element.metadata["image_data"] = f"data:image/png;base64,{img_base64}"
-                        logger.warning(f"Caption not found for image {image_element.id}, image saved in IMAGE")
+                        # If Caption not found, save in IMAGE metadata as fallback
+                        image_element.metadata["image_data"] = f"data:image/jpeg;base64,{img_base64}"
+                        logger.warning(f"Caption not found for image {image_element.id}, image saved in IMAGE metadata only (size: {len(img_base64)} chars)")
                         
                 except Exception as e:
                     logger.warning(f"Error extracting image {image_element.id}: {e}")
+                    import traceback
+                    logger.debug(traceback.format_exc())
         
         finally:
             pdf_document.close()
         
         return elements
 
-    def _parse_tables_with_qwen(
-        self, elements: List[Element], source: str
+    def _parse_tables(
+        self, elements: List[Element], source: str, use_dots_ocr_html: bool = False
     ) -> List[Element]:
         """
-        Parses tables via Qwen2.5.
+        Parses tables from Dots OCR HTML (for scanned PDFs) or via Qwen2.5 (fallback).
 
         Args:
             elements: List of elements.
             source: Path to PDF file.
+            use_dots_ocr_html: If True, uses HTML from Dots OCR (prompt_layout_all_en).
+                              If False, uses Qwen2.5 for table parsing.
 
         Returns:
             List of elements with parsed tables.
@@ -1328,6 +1707,10 @@ class PdfParser(BaseParser):
         pdf_document = fitz.open(source)
         try:
             render_scale = self._get_config("layout_detection.render_scale", 2.0)
+            
+            # For scanned PDFs, we need to get HTML from layout_elements
+            # Store layout_elements in a way accessible to this method
+            # We'll pass it through metadata or find it from analyzed_elements
             
             for element in tqdm(table_elements, desc="Parsing tables", unit="table", leave=False):
                 bbox = element.metadata.get("bbox", [])
@@ -1348,7 +1731,7 @@ class PdfParser(BaseParser):
                     )
                     rect = fitz.Rect(x1, y1, x2, y2)
                     
-                    # Render table area
+                    # Render table area for image storage
                     mat = fitz.Matrix(2.0, 2.0)  # Increase for better quality
                     pix = page.get_pixmap(matrix=mat, clip=rect)
                     img_data = pix.tobytes("png")
@@ -1358,19 +1741,40 @@ class PdfParser(BaseParser):
                     img_base64 = base64.b64encode(img_data).decode("utf-8")
                     element.metadata["image_data"] = f"data:image/png;base64,{img_base64}"
                     
-                    # Convert for parsing via Qwen
-                    table_image = Image.open(BytesIO(img_data)).convert("RGB")
+                    # Parse table: use HTML from Dots OCR or Qwen as fallback
+                    markdown_content = None
+                    dataframe = None
+                    success = False
                     
-                    # Parse table via Qwen
-                    markdown_content, dataframe, success = parse_table_with_qwen(
-                        table_image,
-                        method=method,
-                    )
+                    if use_dots_ocr_html:
+                        # Try to get HTML from element metadata (stored during element creation)
+                        table_html = element.metadata.get("table_html")
+                        if table_html:
+                            # Parse HTML table from Dots OCR
+                            from .ocr.html_table_parser import parse_table_from_html
+                            markdown_content, dataframe, success = parse_table_from_html(
+                                table_html,
+                                method=method,
+                            )
+                            if success:
+                                logger.debug(f"Table {element.id} parsed from Dots OCR HTML")
+                    
+                    # Fallback to Qwen if HTML parsing failed or not available
+                    if not success:
+                        # Convert for parsing via Qwen
+                        table_image = Image.open(BytesIO(img_data)).convert("RGB")
+                        
+                        # Parse table via Qwen
+                        markdown_content, dataframe, success = parse_table_with_qwen(
+                            table_image,
+                            method=method,
+                        )
                     
                     if not success:
                         logger.warning(f"Failed to parse table {element.id}")
                         element.content = ""
-                        element.metadata["parsing_error"] = "Failed to parse table with Qwen"
+                        error_source = "Dots OCR HTML" if use_dots_ocr_html else "Qwen"
+                        element.metadata["parsing_error"] = f"Failed to parse table with {error_source}"
                         # Create empty DataFrame
                         element.metadata["dataframe"] = pd.DataFrame()
                         element.metadata["rows_count"] = 0
