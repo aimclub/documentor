@@ -129,18 +129,10 @@ def _is_image_caption(text: str) -> bool:
 
 
 def _is_structural_keyword(text: str) -> bool:
-    """Checks if text is a structural keyword."""
-    text_stripped = text.strip().lower()
-    structural_keywords = [
-        'введение', 'заключение', 'список литературы',
-        'список использованных источников', 'библиографический список',
-        'литература', 'приложение', 'приложения', 'содержание', 'оглавление',
-        'термины и определения', 'перечень сокращений и обозначений',
-        'аннотация', 'реферат', 'abstract', 'referat',
-        'introduction', 'conclusion', 'references', 'bibliography',
-        'appendix', 'appendices', 'contents', 'table of contents'
-    ]
-    return text_stripped in structural_keywords
+    """Checks if text is a structural keyword (HEADER_1 level)."""
+    from ...utils.header_consts import SPECIAL_HEADER_1
+    text_upper = text.strip().upper()
+    return text_upper in SPECIAL_HEADER_1
 
 
 def _determine_header_level(

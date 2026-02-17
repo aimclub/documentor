@@ -24,7 +24,6 @@ Main configuration file containing general settings and parser configurations.
     - `remove_page_footers`: Remove page footers from content
   - `table_parsing`: Table parsing configuration
     - `method`: Method ("markdown" or "dataframe")
-    - `qwen_model`: Model for table parsing
     - `detect_merged_tables`: Detect merged tables across pages
   - `header_analysis`: Header analysis settings
     - `use_font_size`: Use font size to determine header level

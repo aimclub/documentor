@@ -306,9 +306,15 @@ def process_layout_detection(
     if raw_response is None or len(raw_response.strip()) == 0:
         return None, None, False
     
+    # Determine prompt mode based on prompt content
+    # If prompt contains "text content" or "text content within", it's prompt_layout_all_en
+    prompt_mode = "prompt_layout_only_en"
+    if prompt and ("text content" in prompt.lower() or "corresponding text" in prompt.lower()):
+        prompt_mode = "prompt_layout_all_en"
+    
     parsed_cells, filtered = post_process_output(
         raw_response,
-        "prompt_layout_only_en",
+        prompt_mode,
         origin_image,
         image,
         min_pixels=min_pixels,

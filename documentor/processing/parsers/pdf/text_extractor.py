@@ -1,115 +1,245 @@
 """
-Text extraction from PDF using PdfPlumber.
+PDF text extraction processor.
 
-Contains classes for:
-- Text extraction from PDF
-- Basic structure extraction (paragraphs, tables)
-- Extracted text quality assessment
+Handles text extraction from PDF documents using PyMuPDF or Dots OCR.
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any, Dict, List, Optional
+import logging
+import re
+from typing import Any, Dict, List
 
-from langchain_core.documents import Document
+import fitz
+from tqdm import tqdm
+
+from ....utils.config_loader import ConfigLoader
+from ....utils.pdf_text_extractor import PdfTextExtractorUtil
+
+logger = logging.getLogger(__name__)
 
 
 class PdfTextExtractor:
     """
-    Extracts text from PDF documents using PdfPlumber.
+    Processor for PDF text extraction.
     
-    Supports:
-    - Text extraction by pages
-    - Basic structure extraction (paragraphs, tables)
-    - Text quality assessment
+    Handles:
+    - Text extraction via PyMuPDF (for extractable text)
+    - Text extraction from Dots OCR (for scanned PDFs)
+    - Text merging and normalization
     """
 
-    def __init__(self) -> None:
-        """Initialize extractor."""
-        # TODO: Initialize PdfPlumber if needed
-
-    def is_text_extractable(self, source: str | Path) -> bool:
+    def __init__(self, config: Dict[str, Any]) -> None:
         """
-        Checks if text can be extracted from PDF.
+        Initialize text extractor.
         
         Args:
-            source: Path to PDF file or string with path.
-            
-        Returns:
-            True if text can be extracted, False otherwise.
+            config: Configuration dictionary.
         """
-        # TODO: Implement text extractability check
-        # - Try to open PDF via PdfPlumber
-        # - Check for text layer presence
-        # - Assess text quality
-        raise NotImplementedError("is_text_extractable() method requires implementation")
+        self.config = config
 
-    def extract_text(self, source: str | Path) -> str:
+    def _get_config(self, key: str, default: Any = None) -> Any:
+        """Gets value from configuration."""
+        return ConfigLoader.get_config_value(self.config, key, default)
+
+    def extract_text_by_bboxes(
+        self, source: str, layout_elements: List[Dict[str, Any]], use_ocr: bool = False
+    ) -> List[Dict[str, Any]]:
         """
-        Extracts text from PDF.
+        Extracts text via PyMuPDF by coordinates from layout elements.
+        For scanned PDFs (use_ocr=True), text is already extracted by Dots OCR (prompt_layout_all_en).
+
+        Args:
+            source: Path to PDF file.
+            layout_elements: List of layout elements with bbox.
+            use_ocr: If True, text is already in elements from Dots OCR, just use it.
+                     If False, extracts text via PyMuPDF.
+
+        Returns:
+            List of elements with extracted text.
+        """
+        pdf_document = fitz.open(source)
+        try:
+            text_elements: List[Dict[str, Any]] = []
+            render_scale = self._get_config("layout_detection.render_scale", 2.0)
+            
+            if use_ocr:
+                # For scanned PDFs, text is already extracted by Dots OCR (prompt_layout_all_en)
+                # Just use the text from layout_elements
+                logger.info("Using text from Dots OCR (prompt_layout_all_en)")
+                
+                for element in tqdm(layout_elements, desc="Processing text from Dots OCR", unit="element", leave=False):
+                    category = element.get("category", "")
+                    
+                    # Skip Picture - no text for images
+                    if category == "Picture":
+                        text_elements.append(element)
+                        continue
+                    
+                    # For text elements, use text from Dots OCR if available
+                    if category in ["Text", "Section-header", "Title", "Caption", "Formula", "List-item"]:
+                        # Text should already be in element from Dots OCR
+                        # Clean and normalize if needed
+                        text = element.get("text", "")
+                        if text:
+                            # Remove markdown formatting (**text** or __text__)
+                            # BUT: Do NOT apply to Formula - LaTeX may contain *, **, _, __ as part of syntax
+                            if category != "Formula":
+                                text = self._remove_markdown_formatting(text)
+                            # Remove extra whitespace but preserve structure
+                            element["text"] = text.strip()
+                        else:
+                            element["text"] = ""
+                    
+                    text_elements.append(element)
+            else:
+                # For PDFs with extractable text, use PyMuPDF
+                for element in tqdm(layout_elements, desc="Extracting text via PyMuPDF", unit="element", leave=False):
+                    category = element.get("category", "")
+                    bbox = element.get("bbox", [])
+                    page_num = element.get("page_num", 0)
+                    
+                    # Skip Picture - don't extract text for images
+                    if category == "Picture":
+                        text_elements.append(element)
+                        continue
+                    
+                    # Extract text only for text elements
+                    if category not in ["Text", "Section-header", "Title", "Caption"]:
+                        text_elements.append(element)
+                        continue
+                    
+                    if len(bbox) >= 4 and page_num < len(pdf_document):
+                        try:
+                            # Use PyMuPDF for extractable text
+                            page = pdf_document.load_page(page_num)
+                            text = PdfTextExtractorUtil.extract_text_by_bbox(page, bbox, render_scale)
+                            element["text"] = text
+                        except Exception as e:
+                            logger.warning(f"Error extracting text for element: {e}")
+                            element["text"] = ""
+                    else:
+                        element["text"] = ""
+                    
+                    text_elements.append(element)
+            
+            return text_elements
+        finally:
+            pdf_document.close()
+
+    def _remove_markdown_formatting(self, text: str) -> str:
+        """
+        Remove markdown formatting (**text**, __text__, *text*) from text.
+        Preserves single asterisks (*) used as list markers at the start of lines.
         
         Args:
-            source: Path to PDF file or string with path.
+            text: Text with potential markdown formatting
             
         Returns:
-            Extracted text.
+            Text with markdown formatting removed
         """
-        # TODO: Implement text extraction via PdfPlumber
-        # - Open PDF
-        # - Extract text by pages
-        # - Merge text from all pages
-        raise NotImplementedError("extract_text() method requires implementation")
-
-    def extract_text_by_pages(self, source: str | Path) -> List[Dict[str, Any]]:
-        """
-        Extracts text from PDF by pages with metadata.
+        if not text:
+            return text
         
-        Args:
-            source: Path to PDF file or string with path.
-            
-        Returns:
-            List of dictionaries with fields:
-            - page_num: page number
-            - text: page text
-            - metadata: additional metadata (bbox, font, etc.)
-        """
-        # TODO: Implement text extraction by pages
-        # - Open PDF
-        # - For each page extract text and metadata
-        raise NotImplementedError("extract_text_by_pages() method requires implementation")
-
-    def extract_structure(self, source: str | Path) -> Dict[str, Any]:
-        """
-        Extracts basic structure from PDF (paragraphs, tables).
+        # First, remove **text** (bold) -> text
+        cleaned_text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)
+        # Remove __text__ (bold) -> text
+        cleaned_text = re.sub(r'__([^_]+)__', r'\1', cleaned_text)
         
-        Args:
-            source: Path to PDF file or string with path.
-            
-        Returns:
-            Dictionary with structure:
-            - paragraphs: list of paragraphs
-            - tables: list of tables
-            - metadata: document metadata
-        """
-        # TODO: Implement structure extraction
-        # - Extract paragraphs with coordinates
-        # - Extract tables
-        # - Save metadata (fonts, sizes, etc.)
-        raise NotImplementedError("extract_structure() method requires implementation")
-
-    def get_text_quality(self, text: str) -> float:
-        """
-        Assesses quality of extracted text.
+        # Remove *text* (italic) but preserve list markers (* at start of line or after newline)
+        # Split by lines to handle list markers correctly
+        lines = cleaned_text.split('\n')
+        cleaned_lines = []
+        for line in lines:
+            # If line starts with "* " (list marker), preserve it and remove *text* from the rest
+            if line.strip().startswith('* '):
+                # Keep the "* " prefix, remove *text* from the rest
+                prefix = line[:line.find('* ') + 2]  # "* " + everything before it
+                rest = line[line.find('* ') + 2:]
+                # Remove *text* from the rest
+                rest_cleaned = re.sub(r'\*([^*]+)\*', r'\1', rest)
+                cleaned_lines.append(prefix + rest_cleaned)
+            else:
+                # Remove all *text* (italic) from the line
+                cleaned_line = re.sub(r'\*([^*]+)\*', r'\1', line)
+                cleaned_lines.append(cleaned_line)
         
-        Args:
-            text: Extracted text.
-            
-        Returns:
-            Quality score from 0.0 to 1.0 (1.0 - excellent quality).
+        cleaned_text = '\n'.join(cleaned_lines)
+        
+        return cleaned_text.strip()
+
+    def merge_nearby_text_blocks(
+        self, text_elements: List[Dict[str, Any]], max_chunk_size: int
+    ) -> List[Dict[str, Any]]:
         """
-        # TODO: Implement text quality assessment
-        # - Check for meaningful text presence
-        # - Check for special characters (many "?" or "")
-        # - Check word and sentence length
-        raise NotImplementedError("get_text_quality() method requires implementation")
+        Merges consecutive Text elements.
+
+        If text elements follow each other, merge them.
+
+        Args:
+            text_elements: List of text elements.
+            max_chunk_size: Maximum block size in characters.
+
+        Returns:
+            List of merged elements.
+        """
+        if not text_elements:
+            return []
+        
+        merged: List[Dict[str, Any]] = []
+        current_block: Optional[Dict[str, Any]] = None
+        
+        # Sort by page and Y coordinate
+        sorted_elements = sorted(
+            text_elements,
+            key=lambda e: (
+                e.get("page_num", 0),
+                e.get("bbox", [1, 0])[1] if len(e.get("bbox", [])) >= 2 else 0,
+            ),
+        )
+        
+        for element in sorted_elements:
+            category = element.get("category", "")
+            text = element.get("text", "")
+            
+            # Merge only Text elements
+            if category != "Text":
+                if current_block is not None:
+                    merged.append(current_block)
+                    current_block = None
+                merged.append(element)
+                continue
+            
+            if current_block is None:
+                current_block = element.copy()
+                continue
+            
+            # If current block is Text and next element is also Text, merge
+            current_text = current_block.get("text", "")
+            combined_text = f"{current_text} {text}".strip()
+            
+            # Check size
+            if len(combined_text) <= max_chunk_size:
+                current_block["text"] = combined_text
+                # Update bbox
+                current_bbox = current_block.get("bbox", [])
+                element_bbox = element.get("bbox", [])
+                if len(current_bbox) >= 4 and len(element_bbox) >= 4:
+                    current_block["bbox"] = [
+                        min(current_bbox[0], element_bbox[0]),
+                        min(current_bbox[1], element_bbox[1]),
+                        max(current_bbox[2], element_bbox[2]),
+                        max(current_bbox[3], element_bbox[3]),
+                    ]
+                continue
+            
+            # Cannot merge (size exceeded) - save current block and start new
+            merged.append(current_block)
+            current_block = element.copy()
+        
+        # Add last block
+        if current_block is not None:
+            merged.append(current_block)
+        
+        logger.debug(f"Text merging: {len(text_elements)} -> {len(merged)} elements")
+        return merged

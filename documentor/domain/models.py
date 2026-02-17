@@ -5,6 +5,11 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
+try:
+    import pandas as pd
+except ImportError:
+    pd = None  # pandas is optional
+
 if TYPE_CHECKING:
     import pandas as pd
 
@@ -124,7 +129,20 @@ class Element:
         if self.parent_id is not None:
             result["parent_id"] = self.parent_id
         if self.metadata:
-            result["metadata"] = self.metadata
+            # Convert DataFrame to dict for JSON serialization
+            metadata_serialized = {}
+            for key, value in self.metadata.items():
+                if pd is not None and isinstance(value, pd.DataFrame):
+                    # Convert DataFrame to dict format
+                    metadata_serialized[key] = {
+                        "_type": "DataFrame",
+                        "data": value.to_dict(orient="records"),
+                        "columns": value.columns.tolist(),
+                        "index": value.index.tolist(),
+                    }
+                else:
+                    metadata_serialized[key] = value
+            result["metadata"] = metadata_serialized
         return result
 
     @classmethod
@@ -155,12 +173,31 @@ class Element:
         except ValueError as e:
             raise ValueError(f"Invalid ElementType: {data['type']}") from e
         
+        # Deserialize metadata, converting DataFrame dicts back to DataFrames
+        metadata = {}
+        if "metadata" in data:
+            for key, value in data["metadata"].items():
+                if isinstance(value, dict) and value.get("_type") == "DataFrame" and pd is not None:
+                    # Convert dict back to DataFrame
+                    try:
+                        df = pd.DataFrame(value["data"])
+                        if "columns" in value:
+                            df.columns = value["columns"]
+                        if "index" in value:
+                            df.index = value["index"]
+                        metadata[key] = df
+                    except Exception:
+                        # If conversion fails, keep as dict
+                        metadata[key] = value
+                else:
+                    metadata[key] = value
+        
         element = cls(
             id=str(data["id"]),
             type=element_type,
             content=str(data["content"]),
             parent_id=str(data["parent_id"]) if data.get("parent_id") is not None else None,
-            metadata=dict(data.get("metadata", {})),
+            metadata=metadata,
         )
         return element
 

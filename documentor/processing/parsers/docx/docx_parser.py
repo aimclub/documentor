@@ -14,180 +14,26 @@ from __future__ import annotations
 
 import logging
 import re
-import tempfile
 from pathlib import Path
 from typing import Dict, List, Any, Optional
-from io import BytesIO
 
-import fitz
-import yaml
+import tempfile
 from langchain_core.documents import Document
-from PIL import Image
 from tqdm import tqdm
 
 from ....domain import DocumentFormat, Element, ElementType, ParsedDocument
 from ....exceptions import ParsingError
+from ....utils.config_loader import ConfigLoader
 from ..base import BaseParser
 from ..pdf.pdf_parser import PdfParser
-from ..pdf.ocr.dots_ocr_client import process_layout_detection
-from ..pdf.ocr.page_renderer import PdfPageRenderer
-from .converter import convert_docx_to_pdf
+from .converter_wrapper import DocxConverter
+from .header_processor import DocxHeaderProcessor
+from .layout_detector import DocxLayoutDetector
 from .xml_parser import DocxXmlParser
 from .toc_parser import parse_toc_from_docx
-from .header_finder import find_header_in_xml, build_header_rules, extract_paragraph_properties
 from .hierarchy_builder import build_hierarchy
 
 logger = logging.getLogger(__name__)
-
-
-def _extract_text_from_pdf_by_bbox(
-    ocr_elements: List[Dict[str, Any]],
-    pdf_doc: fitz.Document,
-    render_scale: float = 2.0
-) -> List[Dict[str, Any]]:
-    """Extracts text from PDF by bbox found via DOTS OCR, using PyMuPDF."""
-    results = []
-    
-    for element in tqdm(ocr_elements, desc="Extracting text from PDF", unit="element", leave=False):
-        category = element.get("category", "")
-        bbox = element.get("bbox", [])
-        page_num = element.get("page_num", 0)
-        
-        if category not in ["Section-header", "Caption"]:
-            continue
-        
-        if not bbox or len(bbox) < 4:
-            continue
-        
-        if page_num >= len(pdf_doc):
-            continue
-        
-        try:
-            page = pdf_doc[page_num]
-            page_rect = page.rect
-            
-            # Convert bbox from image coordinates to PDF page coordinates
-            # bbox from DOTS OCR is in image coordinates, rendered with render_scale
-            # So coordinates need to be divided by render_scale
-            x1, y1, x2, y2 = bbox
-            
-            # Scale coordinates back to PDF page coordinates
-            pdf_x1 = x1 / render_scale
-            pdf_y1 = y1 / render_scale
-            pdf_x2 = x2 / render_scale
-            pdf_y2 = y2 / render_scale
-            
-            # Create rectangle for text extraction in PDF coordinates
-            rect = fitz.Rect(pdf_x1, pdf_y1, pdf_x2, pdf_y2)
-            
-            # Extract text from rectangle
-            text = page.get_textbox(rect)
-            
-            # If get_textbox didn't work, try another method
-            if not text or len(text.strip()) < 2:
-                # Try to get all page text and find text in the required area
-                text_dict = page.get_text("dict")
-                text_parts = []
-                
-                for block in text_dict.get("blocks", []):
-                    if "lines" not in block:
-                        continue
-                    for line in block["lines"]:
-                        for span in line.get("spans", []):
-                            span_bbox = span.get("bbox", [])
-                            if len(span_bbox) >= 4:
-                                # Check intersection of span bbox with our bbox
-                                span_rect = fitz.Rect(span_bbox)
-                                if rect.intersects(span_rect):
-                                    text_parts.append(span.get("text", ""))
-                
-                text = " ".join(text_parts)
-            
-            if text and text.strip():
-                element_result = {
-                    "category": category,
-                    "bbox": bbox,
-                    "page_num": page_num,
-                    "text": text.strip(),
-                    "text_length": len(text.strip())
-                }
-                results.append(element_result)
-        except Exception as e:
-            logger.debug(f"Error extracting text from PDF: {e}")
-            continue
-    
-    return results
-
-
-def _is_numbered_header(text: str) -> bool:
-    """Checks if text is a numbered header."""
-    text_stripped = text.strip()
-    patterns = [
-        r'^\d+\.\s+[А-ЯЁA-Z]',
-        r'^\d+\.\d+\.\s+[А-ЯЁA-Z]',
-        r'^\d+\.\d+\.\d+\.\s+[А-ЯЁA-Z]',
-    ]
-    return any(re.match(pattern, text_stripped) for pattern in patterns)
-
-
-def _is_definition_pattern(text: str) -> bool:
-    """Checks if text is a definition."""
-    text_stripped = text.strip()
-    if not text_stripped or re.match(r'^\d+', text_stripped):
-        return False
-    
-    dash_patterns = [' – ', ' — ', ' - ']
-    for dash in dash_patterns:
-        idx = text_stripped.find(dash)
-        if idx > 0:
-            term = text_stripped[:idx].strip()
-            definition = text_stripped[idx + len(dash):].strip()
-            term_words = len(term.split())
-            if 1 <= term_words <= 5 and len(definition) > 0:
-                return True
-    
-    return False
-
-
-def _is_separator_line(text: str) -> bool:
-    """Checks if text is a separator line."""
-    text_stripped = text.strip()
-    if not text_stripped or len(text_stripped) < 3:
-        return False
-    
-    separator_chars = {'.', '–', '—', '-', '_', '=', '…', ' '}
-    non_separator_chars = set(text_stripped) - separator_chars
-    
-    if len(non_separator_chars) == 0:
-        return True
-    
-    if re.match(r'^[.\-–—_=…\s]+[\d]+$', text_stripped):
-        return True
-    
-    return False
-
-
-def _is_list_item_pattern(text: str) -> bool:
-    """Checks if text is a list item."""
-    text_stripped = text.strip()
-    if not text_stripped:
-        return False
-    
-    list_patterns = [
-        r'^[а-яёa-z]\)\s+',
-        r'^[А-ЯЁA-Z]\)\s+',
-        r'^\d+\)\s+',
-        r'^[-•·▪▫]\s+',
-    ]
-    
-    for pattern in list_patterns:
-        if re.match(pattern, text_stripped, re.IGNORECASE):
-            return True
-    
-    if text_stripped.startswith(('- ', '• ', '· ', '▪ ', '▫ ')):
-        return True
-    
-    return False
 
 
 def _check_docx_text_content(
@@ -272,30 +118,19 @@ class DocxParser(BaseParser):
         super().__init__()
         self._config: Optional[Dict[str, Any]] = None
         self._load_config()
+        
+        # Initialize specialized processors
+        self.converter = DocxConverter()
+        self.layout_detector = DocxLayoutDetector(config=self._config)
+        self.header_processor = DocxHeaderProcessor(config=self._config)
 
     def _load_config(self) -> None:
         """Loads configuration from config.yaml."""
-        config_path = Path(__file__).parent.parent.parent.parent / "config" / "config.yaml"
-        if config_path.exists():
-            with open(config_path, "r", encoding="utf-8") as f:
-                config = yaml.safe_load(f)
-                self._config = config.get("docx_parser", {})
-        else:
-            self._config = {}
-            logger.warning(f"Configuration file not found: {config_path}, using default values")
+        self._config = ConfigLoader.load_config("docx_parser")
 
     def _get_config(self, key: str, default: Any = None) -> Any:
         """Gets value from configuration."""
-        keys = key.split(".")
-        value = self._config
-        for k in keys:
-            if isinstance(value, dict):
-                value = value.get(k)
-            else:
-                return default
-            if value is None:
-                return default
-        return value if value is not None else default
+        return ConfigLoader.get_config_value(self._config, key, default)
 
     def parse(self, document: Document) -> ParsedDocument:
         """
@@ -313,6 +148,9 @@ class DocxParser(BaseParser):
             ParsingError: If parsing error occurred.
         """
         self._validate_input(document)
+        
+        # Reset ID generator for each new document
+        self._reset_id_generator()
 
         source = self.get_source(document)
         self._log_parsing_start(source)
@@ -345,7 +183,7 @@ class DocxParser(BaseParser):
                 with tempfile.TemporaryDirectory() as temp_dir:
                     temp_pdf_path = Path(temp_dir) / "temp.pdf"
                     try:
-                        convert_docx_to_pdf(docx_path, temp_pdf_path)
+                        self.converter.convert_to_pdf(docx_path, temp_pdf_path)
                         
                         # Conversion successful, use PDF parser
                         pdf_document = Document(page_content="", metadata={"source": str(temp_pdf_path)})
@@ -376,50 +214,24 @@ class DocxParser(BaseParser):
             with tempfile.TemporaryDirectory() as temp_dir:
                 temp_pdf_path = Path(temp_dir) / "temp.pdf"
                 
-                convert_docx_to_pdf(docx_path, temp_pdf_path)
+                self.converter.convert_to_pdf(docx_path, temp_pdf_path)
                 
-                render_scale = self._get_config("layout_detection.render_scale", 2.0)
-                renderer = PdfPageRenderer(render_scale=render_scale)
+                # Layout detection
+                ocr_elements, page_images = self.layout_detector.detect_layout_for_all_pages(temp_pdf_path)
+                
                 pdf_doc = fitz.open(str(temp_pdf_path))
-                
                 try:
                     total_pages = len(pdf_doc)
                     
-                    # Check if we should skip title page
-                    skip_title_page = self._get_config("processing.skip_title_page", False)
-                    start_page = 1 if skip_title_page else 0
-                    
-                    if skip_title_page and total_pages > 1:
-                        logger.info(f"Skipping title page (page 1), processing pages 2-{total_pages}")
-                    
-                    ocr_elements = []
-                    page_images = {}
-                    
-                    for page_num in tqdm(range(start_page, total_pages), desc="Processing PDF pages", unit="page", leave=False):
-                        page_image = renderer.render_page(temp_pdf_path, page_num)
-                        if page_image is None:
-                            continue
-                        
-                        page_images[page_num] = page_image
-                        
-                        try:
-                            layout_cells, _, success = process_layout_detection(
-                                image=page_image,
-                                origin_image=page_image
-                            )
-                            
-                            if success and layout_cells:
-                                for element in layout_cells:
-                                    element["page_num"] = page_num
-                                    ocr_elements.append(element)
-                        except Exception:
-                            continue
+                    render_scale = self._get_config("layout_detection.render_scale", 2.0)
                     
                     section_headers = [e for e in ocr_elements if e.get("category") == "Section-header"]
                     captions = [e for e in ocr_elements if e.get("category") == "Caption"]
                     
                     elements_to_extract = section_headers + captions
-                    ocr_results = _extract_text_from_pdf_by_bbox(elements_to_extract, pdf_doc, render_scale)
+                    ocr_results = self.layout_detector.extract_text_from_pdf_by_bbox(
+                        elements_to_extract, pdf_doc, render_scale
+                    )
                     
                     headers_with_text = [r for r in ocr_results if r.get("category") == "Section-header"]
                     captions_with_text = [r for r in ocr_results if r.get("category") == "Caption"]
@@ -443,114 +255,13 @@ class DocxParser(BaseParser):
                                     'original_title': title
                                 }
                     
-                    sorted_headers = sorted(
+                    # Process headers
+                    header_positions = self.header_processor.process_headers(
                         headers_with_text,
-                        key=lambda h: (h.get('page_num', 0), h.get('bbox', [0, 0, 0, 0])[1] if h.get('bbox') else 0)
+                        all_xml_elements,
+                        toc_headers_map,
+                        docx_path,
                     )
-                    
-                    header_positions = []
-                    for header in tqdm(sorted_headers, desc="Processing headers", unit="header", leave=False):
-                        header_text = header.get('text', '')
-                        if not header_text:
-                            continue
-                        
-                        start_from = header_positions[-1]['xml_position'] + 1 if header_positions else 0
-                        xml_pos = find_header_in_xml(header_text, all_xml_elements, start_from)
-                        
-                        if xml_pos is None and start_from > 0:
-                            xml_pos = find_header_in_xml(header_text, all_xml_elements, 0)
-                        
-                        if xml_pos is not None:
-                            properties = extract_paragraph_properties(docx_path, xml_pos)
-                            is_heading_style = properties.get('is_heading_style', False)
-                            
-                            text_stripped = header_text.strip()
-                            is_numbered_header = _is_numbered_header(text_stripped)
-                            
-                            if properties.get('is_list_item') and not is_numbered_header and not is_heading_style:
-                                continue
-                            
-                            if _is_definition_pattern(header_text) and not is_heading_style:
-                                continue
-                            
-                            if _is_separator_line(header_text) and not is_heading_style:
-                                continue
-                            
-                            if _is_list_item_pattern(header_text) and not is_heading_style:
-                                continue
-                            
-                            detected_level = None
-                            normalized_header_text = re.sub(r'\s+', ' ', header_text.lower().strip())
-                            if normalized_header_text in toc_headers_map:
-                                toc_info = toc_headers_map[normalized_header_text]
-                                detected_level = toc_info['level']
-                            elif is_heading_style and properties.get('level'):
-                                detected_level = properties.get('level')
-                            else:
-                                match = re.match(r'^(\d+)(?:\.(\d+))?(?:\.(\d+))?', text_stripped)
-                                if match:
-                                    if match.group(3):
-                                        detected_level = 3
-                                    elif match.group(2):
-                                        detected_level = 2
-                                    elif match.group(1):
-                                        detected_level = 1
-                            
-                            header_positions.append({
-                                'ocr_header': header,
-                                'xml_position': xml_pos,
-                                'text': header_text,
-                                'is_numbered_header': is_numbered_header,
-                                'level': detected_level,
-                                'from_toc': normalized_header_text in toc_headers_map
-                            })
-                        else:
-                            normalized_header_text = re.sub(r'\s+', ' ', header_text.lower().strip())
-                            if normalized_header_text in toc_headers_map:
-                                toc_info = toc_headers_map[normalized_header_text]
-                                original_title = toc_info['original_title']
-                                
-                                xml_pos_from_toc = find_header_in_xml(original_title, all_xml_elements, 0)
-                                
-                                if xml_pos_from_toc is not None:
-                                    detected_level = toc_info['level']
-                                    
-                                    header_positions.append({
-                                        'ocr_header': None,
-                                        'xml_position': xml_pos_from_toc,
-                                        'text': original_title,
-                                        'is_numbered_header': _is_numbered_header(original_title.strip()),
-                                        'level': detected_level,
-                                        'from_toc': True
-                                    })
-                    
-                    if toc_headers_map:
-                        for normalized_title, toc_info in tqdm(toc_headers_map.items(), desc="Validating via TOC", unit="header", leave=False):
-                            found_texts = {re.sub(r'\s+', ' ', h.get('text', '').lower().strip()) for h in header_positions}
-                            if normalized_title not in found_texts:
-                                original_title = toc_info['original_title']
-                                level = toc_info['level']
-                                
-                                xml_pos_from_toc = find_header_in_xml(original_title, all_xml_elements, 0)
-                                
-                                if xml_pos_from_toc is not None:
-                                    found_positions = [h['xml_position'] for h in header_positions]
-                                    if xml_pos_from_toc not in found_positions:
-                                        properties = extract_paragraph_properties(docx_path, xml_pos_from_toc)
-                                        
-                                        if (not properties.get('is_list_item') or properties.get('is_heading_style')):
-                                            if not _is_definition_pattern(original_title) and not _is_separator_line(original_title):
-                                                header_positions.append({
-                                                    'ocr_header': None,
-                                                    'xml_position': xml_pos_from_toc,
-                                                    'text': original_title,
-                                                    'is_numbered_header': _is_numbered_header(original_title.strip()),
-                                                    'level': level,
-                                                    'from_toc': True,
-                                                    'found_by_toc': True
-                                                })
-                    
-                    header_positions.sort(key=lambda h: h['xml_position'])
                     
                     max_text_block_size = self._get_config("hierarchy.max_text_block_size", 3000)
                     max_paragraphs_per_block = self._get_config("hierarchy.max_paragraphs_per_block", 10)

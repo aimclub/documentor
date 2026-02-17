@@ -83,6 +83,16 @@ class BaseParser(ABC):
             str: Path to document source or "unknown" if not found
         """
         return get_document_source(document)
+    
+    def _reset_id_generator(self) -> None:
+        """
+        Resets ID generator to start from 1 for each new document.
+        
+        This ensures that each document gets IDs starting from 00000001,
+        rather than continuing from the previous document.
+        """
+        self._id_generator.reset(start=1)
+        logger.debug("ID generator reset to start from 1")
 
     def _validate_input(self, document: Document) -> None:
         """

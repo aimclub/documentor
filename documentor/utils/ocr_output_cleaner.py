@@ -33,7 +33,7 @@ class OutputCleaner:
     def clean_list_data(self, data: List[Dict], case_id: int) -> CleanedData:
         """Cleans list-type data"""
         
-        print(f"🔧 Cleaning List data - Case {case_id}")
+        print(f"Cleaning List data - Case {case_id}")
         print(f"  Original items: {len(data)}")
         
         cleaned_data = []
@@ -55,7 +55,7 @@ class OutputCleaner:
                 
                 # Check bbox length - core logic
                 if isinstance(bbox, list) and len(bbox) == 3:
-                    print(f"  ⚠️ Item {i}: bbox has only 3 coordinates. Removing bbox, keeping category and text.")
+                    print(f"  WARNING: Item {i}: bbox has only 3 coordinates. Removing bbox, keeping category and text.")
                     # Keep only category and text, ensuring order is preserved
                     new_item = {}
                     if 'category' in item:
@@ -73,7 +73,7 @@ class OutputCleaner:
                     cleaned_data.append(item.copy())
                     continue
                 else:
-                    print(f"  ❌ Item {i}: Abnormal bbox format, skipping.")
+                    print(f"  ERROR: Item {i}: Abnormal bbox format, skipping.")
                     operations['removed_items'] += 1
                     continue
             else:
@@ -85,7 +85,7 @@ class OutputCleaner:
                     operations['removed_items'] += 1
         
         operations['final_count'] = len(cleaned_data)
-        print(f"  ✅ Cleaning complete: {len(cleaned_data)} items, {operations['bbox_fixes']} bbox fixes, {operations['removed_items']} items removed")
+        print(f"  Cleaning complete: {len(cleaned_data)} items, {operations['bbox_fixes']} bbox fixes, {operations['removed_items']} items removed")
         
         result = CleanedData(
             case_id=case_id,
@@ -104,7 +104,7 @@ class OutputCleaner:
     def clean_string_data(self, data_str: str, case_id: int) -> CleanedData:
         """Cleans string-type data"""
         
-        print(f"🔧 Cleaning String data - Case {case_id}")
+        print(f"Cleaning String data - Case {case_id}")
         print(f"  Original length: {len(data_str):,}")
         
         operations = {
@@ -139,7 +139,7 @@ class OutputCleaner:
             
             if final_data is not None:
                 operations['final_objects'] = len(final_data)
-                print(f"  ✅ Cleaning complete: {len(final_data)} objects")
+                print(f"  Cleaning complete: {len(final_data)} objects")
                 
                 result = CleanedData(
                     case_id=case_id,
@@ -158,7 +158,7 @@ class OutputCleaner:
                 raise Exception("Could not parse the cleaned data")
                 
         except Exception as e:
-            print(f"  ❌ Cleaning failed: {e}")
+            print(f"  ERROR: Cleaning failed: {e}")
             result = CleanedData(
                 case_id=case_id,
                 original_type='str',
@@ -174,10 +174,11 @@ class OutputCleaner:
             return result
     
     def _fix_missing_delimiters(self, text: str) -> Tuple[str, int]:
-        """Fixes missing delimiters"""
+        """Fixes missing delimiters between JSON objects"""
         
         fixes = 0
         
+        # Pattern 1: Fix } { (missing comma between objects)
         def replace_delimiter(match):
             nonlocal fixes
             fixes += 1
@@ -185,8 +186,37 @@ class OutputCleaner:
         
         text = self.missing_delimiter_pattern.sub(replace_delimiter, text)
         
+        # Pattern 2: Fix } " (missing comma before string key in next object)
+        # This handles cases like: } "category": {...}
+        pattern2 = re.compile(r'\}\s*"([^"]+)"\s*:', re.DOTALL)
+        def replace_delimiter2(match):
+            nonlocal fixes
+            fixes += 1
+            return '}, "' + match.group(1) + '":'
+        
+        text = pattern2.sub(replace_delimiter2, text)
+        
+        # Pattern 3: Fix } \n { (missing comma with newline)
+        pattern3 = re.compile(r'\}\s*\n\s*\{', re.MULTILINE)
+        def replace_delimiter3(match):
+            nonlocal fixes
+            fixes += 1
+            return '},\n{'
+        
+        text = pattern3.sub(replace_delimiter3, text)
+        
+        # Pattern 4: More aggressive - find } followed by whitespace and then {
+        # This catches cases that might have been missed
+        pattern4 = re.compile(r'\}\s+(?=\{)', re.DOTALL)
+        def replace_delimiter4(match):
+            nonlocal fixes
+            fixes += 1
+            return '},'
+        
+        text = pattern4.sub(replace_delimiter4, text)
+        
         if fixes > 0:
-            print(f"    ✅ Fixed {fixes} missing delimiters")
+            print(f"    Fixed {fixes} missing delimiters")
         
         return text, fixes
     
@@ -205,7 +235,7 @@ class OutputCleaner:
             
             # If there is only one dict object, do not truncate to avoid deleting the only object
             if bbox_count <= 1:
-                print(f"    ⚠️ Only {bbox_count} dict objects found, skipping truncation to avoid deleting all content")
+                print(f"    WARNING: Only {bbox_count} dict objects found, skipping truncation to avoid deleting all content")
                 return text, False
             
             # Find the position of the last '{"bbox":'
@@ -219,7 +249,7 @@ class OutputCleaner:
                 if truncated_text.endswith(','):
                     truncated_text = truncated_text[:-1]
                 
-                print(f"    ✂️ Truncated the last incomplete element, length reduced from {len(text):,} to {len(truncated_text):,}")
+                print(f"    Truncated the last incomplete element, length reduced from {len(text):,} to {len(truncated_text):,}")
                 return truncated_text, True
         
         return text, False
@@ -233,7 +263,7 @@ class OutputCleaner:
         if not dict_matches:
             return text, 0
         
-        print(f"    📊 Found {len(dict_matches)} dict objects")
+        print(f"    Found {len(dict_matches)} dict objects")
         
         # Deduplication while preserving order: only keep the first occurrence of a dict
         unique_dicts = []
@@ -252,10 +282,10 @@ class OutputCleaner:
         if total_duplicates > 0:
             # Reconstruct the JSON array, preserving the original order
             new_text = '[' + ', '.join(unique_dicts) + ']'
-            print(f"    ✅ Removed {total_duplicates} duplicate dicts, keeping {len(unique_dicts)} unique dicts (order preserved)")
+            print(f"    Removed {total_duplicates} duplicate dicts, keeping {len(unique_dicts)} unique dicts (order preserved)")
             return new_text, total_duplicates
         else:
-            print(f"    ✅ No duplicate dict objects found")
+            print(f"    No duplicate dict objects found")
             return text, 0
     
     def _ensure_json_format(self, text: str) -> str:
@@ -281,9 +311,25 @@ class OutputCleaner:
             if isinstance(data, list):
                 return data
         except json.JSONDecodeError as e:
-            print(f"    ❌ JSON parsing failed: {e}")
+            print(f"    ERROR: JSON parsing failed: {e}")
             
-            # fallback1: Extract valid dict objects
+            # fallback1: Try to fix common JSON issues and retry
+            try:
+                # Try to fix missing commas between objects more aggressively
+                fixed_text = re.sub(r'\}\s*(?=\{)', '},', text)
+                # Try to fix missing commas before string keys
+                fixed_text = re.sub(r'\}\s*"([^"]+)"\s*:', r'}, "\1":', fixed_text)
+                # Try to fix trailing commas before closing bracket
+                fixed_text = re.sub(r',\s*\]', ']', fixed_text)
+                
+                data = json.loads(fixed_text)
+                if isinstance(data, list):
+                    print(f"    Successfully parsed after aggressive fixes")
+                    return data
+            except:
+                pass
+            
+            # fallback2: Extract valid dict objects using regex
             valid_dicts = []
             
             for match in self.dict_pattern.finditer(text):
@@ -292,13 +338,21 @@ class OutputCleaner:
                     dict_obj = json.loads(dict_str)
                     valid_dicts.append(dict_obj)
                 except:
-                    continue
+                    # Try to fix the dict string and retry
+                    try:
+                        # Try to add missing closing brace
+                        if dict_str.count('{') > dict_str.count('}'):
+                            dict_str += '}'
+                        dict_obj = json.loads(dict_str)
+                        valid_dicts.append(dict_obj)
+                    except:
+                        continue
             
             if valid_dicts:
-                print(f"    ✅ Extracted {len(valid_dicts)} valid dicts")
+                print(f"    Extracted {len(valid_dicts)} valid dicts")
                 return valid_dicts
             
-            # fallback2: Special handling for a single incomplete dict
+            # fallback3: Special handling for a single incomplete dict
             return self._handle_single_incomplete_dict(text)
         
         return None
@@ -342,21 +396,21 @@ class OutputCleaner:
             if text_content:
                 fixed_dict["text"] = text_content
             
-            print(f"    🔧 Special fix: single incomplete dict → {fixed_dict}")
+            print(f"    Special fix: single incomplete dict -> {fixed_dict}")
             return [fixed_dict]
             
         except Exception as e:
-            print(f"    ❌ Special fix failed: {e}")
+            print(f"    ERROR: Special fix failed: {e}")
             return None
     
     def remove_duplicate_category_text_pairs_and_bbox(self, data_list: List[dict], case_id: int) -> List[dict]:
         """Removes duplicate category-text pairs and duplicate bboxes"""
         
         if not data_list or len(data_list) <= 1:
-            print(f"    📊 Data length {len(data_list)} <= 1, skipping deduplication check")
+            print(f"    Data length {len(data_list)} <= 1, skipping deduplication check")
             return data_list
         
-        print(f"    📊 Original data length: {len(data_list)}")
+        print(f"    Original data length: {len(data_list)}")
         
         # 1. Count occurrences and positions of each category-text pair
         category_text_pairs = {}
@@ -389,7 +443,7 @@ class OutputCleaner:
                 positions_to_remove = positions[1:]
                 duplicates_to_remove.update(positions_to_remove)
                 
-                print(f"    🔍 Found duplicate category-text pair: category='{category}', first 50 chars of text='{text[:50]}...'")
+                print(f"    Found duplicate category-text pair: category='{category}', first 50 chars of text='{text[:50]}...'")
                 print(f"        Count: {len(positions)}, removing at positions: {positions_to_remove}")
         
         # 3b. Process bboxes that appear 2 or more times
@@ -399,11 +453,11 @@ class OutputCleaner:
                 positions_to_remove = positions[1:]
                 duplicates_to_remove.update(positions_to_remove)
                 
-                print(f"    🔍 Found duplicate bbox: {list(bbox_key)}")
+                print(f"    Found duplicate bbox: {list(bbox_key)}")
                 print(f"        Count: {len(positions)}, removing at positions: {positions_to_remove}")
         
         if not duplicates_to_remove:
-            print(f"    ✅ No category-text pairs or bboxes found exceeding the duplication threshold")
+            print(f"    No category-text pairs or bboxes found exceeding the duplication threshold")
             return data_list
         
         # 4. Remove duplicate items from the original data (preserving order)
@@ -415,8 +469,8 @@ class OutputCleaner:
             else:
                 removed_count += 1
         
-        print(f"    ✅ Deduplication complete: Removed {removed_count} duplicate items")
-        print(f"    📊 Cleaned data length: {len(cleaned_data)}")
+        print(f"    Deduplication complete: Removed {removed_count} duplicate items")
+        print(f"    Cleaned data length: {len(cleaned_data)}")
         
         return cleaned_data
 
@@ -436,5 +490,5 @@ class OutputCleaner:
                 result.cleaned_data = deduplicated_data
             return result.cleaned_data
         except Exception as e:
-            print(f"❌ Case cleaning failed: {e}")
+            print(f"ERROR: Case cleaning failed: {e}")
             return model_output

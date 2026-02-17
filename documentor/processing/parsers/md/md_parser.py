@@ -80,6 +80,9 @@ class MarkdownParser(BaseParser):
         """
         # Input validation via BaseParser
         self._validate_input(document)
+        
+        # Reset ID generator for each new document
+        self._reset_id_generator()
 
         source = self.get_source(document)
         self._log_parsing_start(source)

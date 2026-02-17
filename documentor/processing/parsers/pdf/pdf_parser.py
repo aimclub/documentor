@@ -3,13 +3,12 @@ Parser for PDF documents.
 
 Supports layout-based approach:
 - Layout detection via Dots.OCR for all pages
-- For scanned PDFs: uses prompt_layout_all_en to extract text, tables (HTML), and formulas (LaTeX) directly
-- For PDFs with extractable text: uses prompt_layout_only_en, then extracts text via PyMuPDF
+- Always uses prompt_layout_all_en to extract text, tables (HTML), and formulas (LaTeX) directly from Dots OCR
 - Building hierarchy from Section-header
 - Filtering unnecessary elements (Page-header, side text)
-- Text extraction via PyMuPDF (for extractable text) or from Dots OCR (for scanned PDFs)
+- Text extraction from Dots OCR (prompt_layout_all_en)
 - Merging close text blocks
-- Table parsing from Dots OCR HTML (for scanned PDFs) or via Qwen2.5 (fallback)
+- Table parsing from Dots OCR HTML
 - Storing images in metadata (base64)
 - Formula extraction in LaTeX format from Dots OCR
 """
@@ -24,7 +23,6 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import fitz
 import pandas as pd
-import yaml
 from langchain_core.documents import Document
 from PIL import Image
 from tqdm import tqdm
@@ -37,19 +35,13 @@ URL_PATTERN = re.compile(
 
 from ....domain import DocumentFormat, Element, ElementType, ParsedDocument
 from ....exceptions import ParsingError
+from ....utils.config_loader import ConfigLoader
 from ..base import BaseParser
-from .ocr.layout_detector import PdfLayoutDetector
-from .ocr.page_renderer import PdfPageRenderer
-from .ocr.qwen_table_parser import (
-    parse_table_with_qwen,
-    detect_merged_tables,
-    markdown_to_dataframe,
-)
-from .ocr.html_table_parser import (
-    parse_table_from_html,
-)
-# Note: ocr_text_with_qwen is no longer used for scanned PDFs
-# Text is extracted directly from Dots OCR (prompt_layout_all_en)
+from .hierarchy_builder import PdfHierarchyBuilder
+from .image_processor import PdfImageProcessor
+from .layout_processor import PdfLayoutProcessor
+from .table_parser import PdfTableParser
+from .text_extractor import PdfTextExtractor
 
 
 logger = logging.getLogger(__name__)
@@ -61,11 +53,16 @@ class PdfParser(BaseParser):
 
     Uses layout-based approach:
     - Layout detection via Dots.OCR for all pages
+    - For scanned PDFs: uses prompt_layout_all_en to extract text, tables (HTML), and formulas
+    - For text-extractable PDFs:
+      * Uses prompt_layout_only_en for layout detection
+      * If tables found, re-processes pages with tables using prompt_layout_all_en to get HTML
+      * Extracts text via PyMuPDF by coordinates
     - Building hierarchy from Section-header
     - Filtering unnecessary elements
-    - Text extraction via PyMuPDF by coordinates
+    - Text extraction via PyMuPDF (for extractable text) or from Dots OCR (for scanned PDFs)
     - Merging close text blocks
-    - Table parsing via Qwen2.5
+    - Table parsing from Dots OCR HTML
     """
 
     format = DocumentFormat.PDF
@@ -80,34 +77,23 @@ class PdfParser(BaseParser):
         """
         super().__init__()
         self.ocr_manager = ocr_manager
-        self.layout_detector: Optional[PdfLayoutDetector] = None
-        self.page_renderer: Optional[PdfPageRenderer] = None
         self._config: Optional[Dict[str, Any]] = None
         self._load_config()
+        
+        # Initialize specialized processors
+        self.layout_processor = PdfLayoutProcessor(ocr_manager=ocr_manager, config=self._config)
+        self.text_extractor = PdfTextExtractor(config=self._config)
+        self.table_parser = PdfTableParser(config=self._config)
+        self.image_processor = PdfImageProcessor(config=self._config)
+        self.hierarchy_builder = PdfHierarchyBuilder(config=self._config, id_generator=self.id_generator)
     
     def _load_config(self) -> None:
         """Loads configuration from config.yaml."""
-        config_path = Path(__file__).parent.parent.parent.parent / "config" / "config.yaml"
-        if config_path.exists():
-            with open(config_path, "r", encoding="utf-8") as f:
-                config = yaml.safe_load(f)
-                self._config = config.get("pdf_parser", {})
-        else:
-            self._config = {}
-            logger.warning(f"Configuration file not found: {config_path}, using default values")
+        self._config = ConfigLoader.load_config("pdf_parser")
 
     def _get_config(self, key: str, default: Any = None) -> Any:
         """Gets value from configuration."""
-        keys = key.split(".")
-        value = self._config
-        for k in keys:
-            if isinstance(value, dict):
-                value = value.get(k)
-            else:
-                return default
-            if value is None:
-                return default
-        return value if value is not None else default
+        return ConfigLoader.get_config_value(self._config, key, default)
     
     def _get_ocr_manager(self) -> Optional[Any]:
         """
@@ -131,22 +117,21 @@ class PdfParser(BaseParser):
         Parse PDF document using layout-based approach.
 
         Process:
-        1. Check extractable text
+        1. Check if text is extractable
         2. Layout detection via Dots.OCR for all pages
            - For scanned PDFs: uses prompt_layout_all_en (layout + text + tables + formulas)
-           - For PDFs with text: uses prompt_layout_only_en (layout only)
-        3. Building hierarchy from Section-header
-        4. Filtering unnecessary elements
-        5. Text extraction:
-           - For scanned PDFs: text already extracted by Dots OCR
-           - For PDFs with text: via PyMuPDF by coordinates
-        6. Merging close text blocks
-        7. Creating elements and building hierarchy
-        8. Storing images in metadata (base64)
-        9. Table parsing:
-           - For scanned PDFs: from Dots OCR HTML
-           - Fallback: via Qwen2.5
-        10. Formula extraction: LaTeX from Dots OCR (for scanned PDFs)
+           - For text-extractable PDFs: uses prompt_layout_only_en (layout only)
+        3. For text-extractable PDFs: if tables found, re-process pages with tables using prompt_layout_all_en to get HTML
+        4. Building hierarchy from Section-header
+        5. Filtering unnecessary elements
+        6. Text extraction:
+           - For scanned PDFs: text already extracted by Dots OCR (prompt_layout_all_en)
+           - For text-extractable PDFs: via PyMuPDF by coordinates
+        7. Merging close text blocks
+        8. Creating elements and building hierarchy
+        9. Storing images in metadata (base64)
+        10. Table parsing from Dots OCR HTML
+        11. Formula extraction: LaTeX from Dots OCR (for scanned PDFs)
 
         Args:
             document: LangChain Document with PDF content.
@@ -175,53 +160,69 @@ class PdfParser(BaseParser):
                 logger.info(
                     f"Scanned PDF detected, using prompt_layout_all_en for text extraction via Dots OCR (source: {source})"
                 )
+            else:
+                logger.info(
+                    f"Text-extractable PDF detected, using prompt_layout_only_en for layout, then prompt_layout_all_en for tables, PyMuPDF for text (source: {source})"
+                )
             
-            # Layout-based approach (always use, even if text is extractable)
+            # Layout-based approach
             # Step 1: Layout Detection for all pages
-            # For scanned PDFs, use prompt_layout_all_en to get text directly from Dots OCR
-            layout_elements = self._detect_layout_for_all_pages(source, use_text_extraction=not is_text_extractable)
+            # For scanned PDFs: use prompt_layout_all_en to get text, tables (HTML), and formulas
+            # For text-extractable PDFs: use prompt_layout_only_en for layout, then prompt_layout_all_en for tables only
+            layout_elements = self.layout_processor.detect_layout_for_all_pages(
+                source, use_text_extraction=not is_text_extractable
+            )
+            
+            # Step 1.5: For text-extractable PDFs, if tables found, re-process pages with tables using prompt_layout_all_en
+            if is_text_extractable:
+                layout_elements = self.layout_processor.reprocess_tables_with_all_en(source, layout_elements)
             
             # Step 2: Filtering unnecessary elements
             logger.info("Step 2: Filtering elements...")
-            filtered_elements = self._filter_layout_elements(layout_elements)
+            filtered_elements = self.layout_processor.filter_layout_elements(layout_elements)
             logger.info(f"Filtered: {len(layout_elements)} -> {len(filtered_elements)} elements")
             
             # Step 3: Header level analysis (determine levels first)
             logger.info("Step 3: Analyzing header levels...")
-            analyzed_elements = self._analyze_header_levels_from_elements(filtered_elements, source)
+            analyzed_elements = self.hierarchy_builder.analyze_header_levels_from_elements(
+                filtered_elements, source, is_text_extractable
+            )
             logger.info(f"Analyzed headers: {len([e for e in analyzed_elements if e.get('category') == 'Section-header'])}")
             
             # Step 4: Building hierarchy from Section-header (with levels)
             logger.info("Step 4: Building hierarchy...")
-            hierarchy = self._build_hierarchy_from_section_headers(analyzed_elements)
+            hierarchy = self.hierarchy_builder.build_hierarchy_from_section_headers(analyzed_elements)
             logger.info(f"Built sections: {len(hierarchy)}")
             
-            # Step 5: Text extraction via PyMuPDF or from Dots OCR
-            # For scanned PDFs, text is already extracted by Dots OCR (prompt_layout_all_en)
+            # Step 5: Text extraction
+            # For scanned PDFs: text is already extracted by Dots OCR (prompt_layout_all_en)
+            # For text-extractable PDFs: extract text via PyMuPDF by coordinates
             logger.info("Step 5: Extracting text...")
-            text_elements = self._extract_text_by_bboxes(
+            text_elements = self.text_extractor.extract_text_by_bboxes(
                 source, analyzed_elements, use_ocr=not is_text_extractable
             )
             logger.info(f"Extracted text elements: {len(text_elements)}")
             
             # Step 6: Merging consecutive Text elements
             logger.info("Step 6: Merging text blocks...")
-            merged_text_elements = self._merge_nearby_text_blocks(text_elements, max_chunk_size=3000)
+            merged_text_elements = self.text_extractor.merge_nearby_text_blocks(text_elements, max_chunk_size=3000)
             logger.info(f"Merged: {len(text_elements)} -> {len(merged_text_elements)} elements")
             
             # Step 7: Creating elements from hierarchy
             logger.info("Step 7: Creating elements from hierarchy...")
-            elements = self._create_elements_from_hierarchy(hierarchy, merged_text_elements, analyzed_elements, source)
+            elements = self.hierarchy_builder.create_elements_from_hierarchy(
+                hierarchy, merged_text_elements, analyzed_elements, source
+            )
             logger.info(f"Created elements: {len(elements)}")
             
             # Step 8: Storing images in metadata
             logger.info("Step 8: Storing images in metadata...")
-            elements = self._store_images_in_metadata(elements, source)
+            elements = self.image_processor.store_images_in_metadata(elements, source)
             logger.info("Images stored")
             
-            # Step 9: Table parsing from Dots OCR HTML or via Qwen2.5 (fallback)
+            # Step 9: Table parsing from Dots OCR HTML
             logger.info("Step 9: Parsing tables...")
-            elements = self._parse_tables(elements, source, use_dots_ocr_html=not is_text_extractable)
+            elements = self.table_parser.parse_tables(elements, source, use_dots_ocr_html=True)
             logger.info("Tables processed")
             
             # Create ParsedDocument
@@ -292,8 +293,8 @@ class PdfParser(BaseParser):
 
         Args:
             source: Path to PDF file.
-            use_text_extraction: If True, uses prompt_layout_all_en to extract text directly from Dots OCR.
-                                If False, uses prompt_layout_only_en (layout only, text via PyMuPDF).
+            use_text_extraction: If True, uses prompt_layout_all_en to extract text, tables (HTML), and formulas.
+                               If False, uses prompt_layout_only_en for layout only (text via PyMuPDF).
 
         Returns:
             List of layout elements with bbox, category, page_num fields.
@@ -337,9 +338,10 @@ class PdfParser(BaseParser):
         else:
             logger.info(f"Starting layout detection for {total_pages} pages")
         
-        # Load prompt for text extraction if needed
+        # Load prompt based on use_text_extraction flag
         prompt = None
         if use_text_extraction:
+            # For scanned PDFs: use prompt_layout_all_en to get text, tables (HTML), and formulas
             from documentor.ocr.dots_ocr import load_prompts_from_config
             config_path = Path(__file__).parent.parent.parent.parent / "config" / "ocr_config.yaml"
             prompts = load_prompts_from_config(config_path)
@@ -354,8 +356,8 @@ class PdfParser(BaseParser):
                     pdf_path, page_num, return_original=True
                 )
                 
-                if use_text_extraction:
-                    # Use direct API call with prompt_layout_all_en to get text
+                if use_text_extraction and prompt:
+                    # For scanned PDFs: use direct API call with prompt_layout_all_en to get text, tables, and formulas
                     from .ocr.dots_ocr_client import process_layout_detection
                     layout, _, success = process_layout_detection(
                         image=optimized_image,
@@ -366,7 +368,7 @@ class PdfParser(BaseParser):
                         logger.warning(f"Layout detection failed for page {page_num + 1}, trying fallback")
                         layout = self.layout_detector.detect_layout(optimized_image, origin_image=original_image)
                 else:
-                    # Use standard layout detection (prompt_layout_only_en)
+                    # For text-extractable PDFs: use prompt_layout_only_en for layout only (text via PyMuPDF)
                     layout = self.layout_detector.detect_layout(optimized_image, origin_image=original_image)
                 
                 # Add page number to each element
@@ -381,6 +383,99 @@ class PdfParser(BaseParser):
         
         logger.info(f"Layout detection completed: total {len(all_layout_elements)} elements found")
         return all_layout_elements
+
+    def _reprocess_tables_with_all_en(
+        self, source: str, layout_elements: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """
+        For text-extractable PDFs: re-process pages with tables using prompt_layout_all_en to get HTML.
+        
+        Args:
+            source: Path to PDF file.
+            layout_elements: List of layout elements from prompt_layout_only_en.
+        
+        Returns:
+            Updated layout elements with table_html for table elements.
+        """
+        # Find pages with tables
+        pages_with_tables = set()
+        table_elements_by_page: Dict[int, List[Dict[str, Any]]] = {}
+        
+        for element in layout_elements:
+            category = element.get("category", "")
+            if category == "Table":
+                page_num = element.get("page_num", 0)
+                pages_with_tables.add(page_num)
+                if page_num not in table_elements_by_page:
+                    table_elements_by_page[page_num] = []
+                table_elements_by_page[page_num].append(element)
+        
+        if not pages_with_tables:
+            return layout_elements
+        
+        logger.info(f"Found tables on {len(pages_with_tables)} pages, re-processing with prompt_layout_all_en to get HTML")
+        
+        # Load prompt_layout_all_en
+        from documentor.ocr.dots_ocr import load_prompts_from_config
+        config_path = Path(__file__).parent.parent.parent.parent / "config" / "ocr_config.yaml"
+        prompts = load_prompts_from_config(config_path)
+        prompt = prompts.get("prompt_layout_all_en")
+        if not prompt:
+            logger.warning("prompt_layout_all_en not found in config, cannot get table HTML")
+            return layout_elements
+        
+        pdf_path = Path(source)
+        render_scale = self._get_config("layout_detection.render_scale", 2.0)
+        
+        # Re-process each page with tables
+        for page_num in tqdm(sorted(pages_with_tables), desc="Re-processing pages with tables", unit="page", leave=False):
+            try:
+                original_image, optimized_image = self.page_renderer.render_page(
+                    pdf_path, page_num, return_original=True
+                )
+                
+                # Use prompt_layout_all_en to get HTML for tables
+                from .ocr.dots_ocr_client import process_layout_detection
+                layout_all, _, success = process_layout_detection(
+                    image=optimized_image,
+                    origin_image=original_image,
+                    prompt=prompt,
+                )
+                
+                if not success or layout_all is None:
+                    logger.warning(f"Failed to re-process page {page_num + 1} with prompt_layout_all_en")
+                    continue
+                
+                # Match table elements by bbox and update with HTML
+                table_elements_on_page = table_elements_by_page.get(page_num, [])
+                for table_element in table_elements_on_page:
+                    table_bbox = table_element.get("bbox", [])
+                    if len(table_bbox) < 4:
+                        continue
+                    
+                    # Find matching table in layout_all result
+                    for all_element in layout_all:
+                        if all_element.get("category") == "Table":
+                            all_bbox = all_element.get("bbox", [])
+                            if len(all_bbox) >= 4:
+                                # Check if bboxes match (with some tolerance)
+                                tolerance = 10  # pixels
+                                if (abs(table_bbox[0] - all_bbox[0]) < tolerance and
+                                    abs(table_bbox[1] - all_bbox[1]) < tolerance and
+                                    abs(table_bbox[2] - all_bbox[2]) < tolerance and
+                                    abs(table_bbox[3] - all_bbox[3]) < tolerance):
+                                    # Found matching table, update with HTML
+                                    table_html = all_element.get("text", "")  # HTML from prompt_layout_all_en
+                                    if table_html:
+                                        table_element["table_html"] = table_html
+                                        logger.debug(f"Updated table on page {page_num + 1} with HTML (length: {len(table_html)})")
+                                    break
+                
+            except Exception as e:
+                logger.warning(f"Error re-processing page {page_num + 1} with tables: {e}")
+                continue
+        
+        return layout_elements
 
     def _filter_layout_elements(self, layout_elements: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
@@ -484,7 +579,7 @@ class PdfParser(BaseParser):
             analyzed_elements: List[Dict[str, Any]] = []
             render_scale = self._get_config("layout_detection.render_scale", 2.0)
             
-            # Check if text is extractable (to determine if we should use Dots OCR text)
+            # Check if text is extractable (to determine if we should use Dots OCR text or PyMuPDF)
             is_text_extractable = self._is_text_extractable(source)
             
             # Last header level with explicit numbering
@@ -561,7 +656,7 @@ class PdfParser(BaseParser):
                         cleaned_text = cleaned_text.strip()
                         
                         # Check if header ends with colon - if so, convert to Text (not a header)
-                        # Headers like "Задачи:", "Плюсы:", "Минусы:" should be text, not headers
+                        # Headers ending with colon (e.g., "Tasks:", "Pros:", "Cons:") should be text, not headers
                         if cleaned_text.endswith(':'):
                             element["category"] = "Text"
                             element["text"] = cleaned_text
@@ -795,18 +890,14 @@ class PdfParser(BaseParser):
             return 4
         # Special headers like "References", "Bibliography", "Abstract" -> HEADER_1
         text_upper = text.strip().upper()
-        if text_upper in ["REFERENCES", "BIBLIOGRAPHY", "ABSTRACT", "INTRODUCTION", "CONCLUSION", "CONCLUSIONS", "ACKNOWLEDGEMENT", "ACKNOWLEDGMENTS", "СПИСОК ЛИТЕРАТУРЫ", "СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ", "ЛИТЕРАТУРА"]:
+        if text_upper in SPECIAL_HEADER_1:
             return 1
         
         # Headers like "Приложение А.", "Приложение Б.", "Appendix A.", "Приложение 1." -> HEADER_2
         # Pattern: "Приложение" or "Appendix" + space + letter or digit + optional dot
         # These are subsections under "ПРИЛОЖЕНИЯ" (HEADER_1)
-        if re.match(r'^(ПРИЛОЖЕНИЕ|APPENDIX)\s+[A-ZА-ЯЁ0-9]\.?', text_upper):
+        if re.match(APPENDIX_HEADER_PATTERN, text_upper):
             return 2
-        
-        # Headers like "Приложения", "Appendices", "Appendix" -> HEADER_1
-        if text_upper in ["ПРИЛОЖЕНИЯ", "APPENDICES", "APPENDIX", "ПРИЛОЖЕНИЕ"]:
-            return 1
         
         # Check if we're inside letter-based numbering context (e.g., "H", "H.2")
         # If header has no explicit numbering and previous headers have letter-based numbering,
@@ -1040,8 +1131,8 @@ class PdfParser(BaseParser):
                             element["text"] = ""
                     else:
                         element["text"] = ""
-                
-                text_elements.append(element)
+                    
+                    text_elements.append(element)
             
             return text_elements
         finally:
@@ -1357,9 +1448,9 @@ class PdfParser(BaseParser):
                         )
                         elements.append(element)
                 elif category == "Table":
-                    # For scanned PDFs, HTML is already in layout_elements from Dots OCR
-                    # Store it in metadata for later parsing
-                    table_html = child.get("text", "")  # HTML from Dots OCR (prompt_layout_all_en)
+                    # HTML is in table_html field (from prompt_layout_all_en re-processing for text-extractable PDFs)
+                    # or in text field (from prompt_layout_all_en for scanned PDFs)
+                    table_html = child.get("table_html", "") or child.get("text", "")
                     
                     element = self._create_element(
                         type=ElementType.TABLE,
@@ -1682,16 +1773,16 @@ class PdfParser(BaseParser):
         return elements
 
     def _parse_tables(
-        self, elements: List[Element], source: str, use_dots_ocr_html: bool = False
+        self, elements: List[Element], source: str, use_dots_ocr_html: bool = True
     ) -> List[Element]:
         """
-        Parses tables from Dots OCR HTML (for scanned PDFs) or via Qwen2.5 (fallback).
+        Parses tables from Dots OCR HTML.
 
         Args:
             elements: List of elements.
             source: Path to PDF file.
             use_dots_ocr_html: If True, uses HTML from Dots OCR (prompt_layout_all_en).
-                              If False, uses Qwen2.5 for table parsing.
+                              Always True now, Qwen fallback removed.
 
         Returns:
             List of elements with parsed tables.
@@ -1701,8 +1792,8 @@ class PdfParser(BaseParser):
         if not table_elements:
             return elements
         
-        method = self._get_config("table_parsing.method", "markdown")
-        detect_merged = self._get_config("table_parsing.detect_merged_tables", True)
+        # NOTE: detect_merged_tables works with markdown, currently disabled
+        # detect_merged = self._get_config("table_parsing.detect_merged_tables", True)
         
         pdf_document = fitz.open(source)
         try:
@@ -1741,40 +1832,28 @@ class PdfParser(BaseParser):
                     img_base64 = base64.b64encode(img_data).decode("utf-8")
                     element.metadata["image_data"] = f"data:image/png;base64,{img_base64}"
                     
-                    # Parse table: use HTML from Dots OCR or Qwen as fallback
-                    markdown_content = None
+                    # Parse table: use HTML from Dots OCR
+                    # NOTE: markdown_content is no longer used, only DataFrame
+                    # markdown_content = None
                     dataframe = None
                     success = False
                     
-                    if use_dots_ocr_html:
-                        # Try to get HTML from element metadata (stored during element creation)
-                        table_html = element.metadata.get("table_html")
-                        if table_html:
-                            # Parse HTML table from Dots OCR
-                            from .ocr.html_table_parser import parse_table_from_html
-                            markdown_content, dataframe, success = parse_table_from_html(
-                                table_html,
-                                method=method,
-                            )
-                            if success:
-                                logger.debug(f"Table {element.id} parsed from Dots OCR HTML")
-                    
-                    # Fallback to Qwen if HTML parsing failed or not available
-                    if not success:
-                        # Convert for parsing via Qwen
-                        table_image = Image.open(BytesIO(img_data)).convert("RGB")
-                        
-                        # Parse table via Qwen
-                        markdown_content, dataframe, success = parse_table_with_qwen(
-                            table_image,
-                            method=method,
+                    # Try to get HTML from element metadata (stored during element creation)
+                    table_html = element.metadata.get("table_html")
+                    if table_html:
+                        # Parse HTML table from Dots OCR
+                        from .ocr.html_table_parser import parse_table_from_html
+                        _, dataframe, success = parse_table_from_html(
+                            table_html,
+                            method="dataframe",  # Use only DataFrame
                         )
+                        if success:
+                            logger.debug(f"Table {element.id} parsed from Dots OCR HTML")
                     
                     if not success:
-                        logger.warning(f"Failed to parse table {element.id}")
+                        logger.warning(f"Failed to parse table {element.id} - no HTML from Dots OCR")
                         element.content = ""
-                        error_source = "Dots OCR HTML" if use_dots_ocr_html else "Qwen"
-                        element.metadata["parsing_error"] = f"Failed to parse table with {error_source}"
+                        element.metadata["parsing_error"] = "Failed to parse table: no HTML from Dots OCR"
                         # Create empty DataFrame
                         element.metadata["dataframe"] = pd.DataFrame()
                         element.metadata["rows_count"] = 0
@@ -1782,79 +1861,89 @@ class PdfParser(BaseParser):
                         continue
                     
                     # Process merged tables
-                    if detect_merged and markdown_content:
-                        tables = detect_merged_tables(markdown_content)
-                        
-                        if len(tables) > 1:
-                            # Multiple tables merged - create separate elements
-                            logger.info(f"Detected {len(tables)} merged tables in element {element.id}")
-                            
-                            # Update first element
-                            element.content = tables[0]
-                            if dataframe is not None:
-                                element.metadata["dataframe"] = dataframe
-                            else:
-                                # Create empty DataFrame if parsing failed
-                                element.metadata["dataframe"] = pd.DataFrame()
-                            element.metadata["parsing_method"] = method
-                            element.metadata["merged_tables"] = True
-                            element.metadata["table_count"] = len(tables)
-                            element.metadata["rows_count"] = len(dataframe) if dataframe is not None else 0
-                            element.metadata["cols_count"] = len(dataframe.columns) if dataframe is not None else 0
-                            # Image already saved above
-                            
-                            # Create additional elements for remaining tables
-                            parent_id = element.parent_id
-                            for i, table_md in enumerate(tables[1:], start=1):
-                                # Parse each table separately
-                                table_df = markdown_to_dataframe(table_md) if method == "markdown" else None
-                                
-                                new_element = self._create_element(
-                                    type=ElementType.TABLE,
-                                    content=table_md,
-                                    parent_id=parent_id,
-                                    metadata={
-                                        "source": "ocr",
-                                        "bbox": bbox,  # Same bbox, as tables are merged
-                                        "page_num": page_num,
-                                        "category": "Table",
-                                        "parsing_method": method,
-                                        "merged_tables": True,
-                                        "table_index": i,
-                                        "image_data": f"data:image/png;base64,{img_base64}",  # Same image
-                                    },
-                                )
-                                if table_df is not None:
-                                    new_element.metadata["dataframe"] = table_df
-                                    new_element.metadata["rows_count"] = len(table_df)
-                                    new_element.metadata["cols_count"] = len(table_df.columns)
-                                else:
-                                    # Create empty DataFrame if parsing failed
-                                    new_element.metadata["dataframe"] = pd.DataFrame()
-                                    new_element.metadata["rows_count"] = 0
-                                    new_element.metadata["cols_count"] = 0
-                                
-                                # Insert after current element
-                                element_idx = elements.index(element)
-                                elements.insert(element_idx + i, new_element)
-                        else:
-                            # Single table
-                            element.content = markdown_content
-                            if dataframe is not None:
-                                element.metadata["dataframe"] = dataframe
-                            else:
-                                # Create empty DataFrame if parsing failed
-                                element.metadata["dataframe"] = pd.DataFrame()
-                            element.metadata["parsing_method"] = method
+                    # NOTE: detect_merged_tables works with markdown, currently disabled
+                    # if detect_merged and markdown_content:
+                    #     tables = detect_merged_tables(markdown_content)
+                    #     
+                    #     if len(tables) > 1:
+                    #         # Multiple tables merged - create separate elements
+                    #         logger.info(f"Detected {len(tables)} merged tables in element {element.id}")
+                    #         
+                    #         # Update first element
+                    #         element.content = tables[0]
+                    #         if dataframe is not None:
+                    #             element.metadata["dataframe"] = dataframe
+                    #         else:
+                    #             # Create empty DataFrame if parsing failed
+                    #             element.metadata["dataframe"] = pd.DataFrame()
+                    #         element.metadata["parsing_method"] = method
+                    #         element.metadata["merged_tables"] = True
+                    #         element.metadata["table_count"] = len(tables)
+                    #         element.metadata["rows_count"] = len(dataframe) if dataframe is not None else 0
+                    #         element.metadata["cols_count"] = len(dataframe.columns) if dataframe is not None else 0
+                    #         # Image already saved above
+                    #         
+                    #         # Create additional elements for remaining tables
+                    #         parent_id = element.parent_id
+                    #         for i, table_md in enumerate(tables[1:], start=1):
+                    #             # Parse each table separately
+                    #             table_df = markdown_to_dataframe(table_md) if method == "markdown" else None
+                    #             
+                    #             new_element = self._create_element(
+                    #                 type=ElementType.TABLE,
+                    #                 content=table_md,
+                    #                 parent_id=parent_id,
+                    #                 metadata={
+                    #                     "source": "ocr",
+                    #                     "bbox": bbox,  # Same bbox, as tables are merged
+                    #                     "page_num": page_num,
+                    #                     "category": "Table",
+                    #                     "parsing_method": method,
+                    #                     "merged_tables": True,
+                    #                     "table_index": i,
+                    #                     "image_data": f"data:image/png;base64,{img_base64}",  # Same image
+                    #                 },
+                    #             )
+                    #             if table_df is not None:
+                    #                 new_element.metadata["dataframe"] = table_df
+                    #                 new_element.metadata["rows_count"] = len(table_df)
+                    #                 new_element.metadata["cols_count"] = len(table_df.columns)
+                    #             else:
+                    #                 # Create empty DataFrame if parsing failed
+                    #                 new_element.metadata["dataframe"] = pd.DataFrame()
+                    #                 new_element.metadata["rows_count"] = 0
+                    #                 new_element.metadata["cols_count"] = 0
+                    #             
+                    #             # Insert after current element
+                    #             element_idx = elements.index(element)
+                    #             elements.insert(element_idx + i, new_element)
+                    #     else:
+                    #         # Single table
+                    #         element.content = markdown_content
+                    #         if dataframe is not None:
+                    #             element.metadata["dataframe"] = dataframe
+                    #         else:
+                    #             # Create empty DataFrame if parsing failed
+                    #             element.metadata["dataframe"] = pd.DataFrame()
+                    #         element.metadata["parsing_method"] = method
+                    # else:
+                    #     # Without merged table processing
+                    #     element.content = markdown_content
+                    #     if dataframe is not None:
+                    #         element.metadata["dataframe"] = dataframe
+                    #     else:
+                    #         # Create empty DataFrame if parsing failed
+                    #         element.metadata["dataframe"] = pd.DataFrame()
+                    #     element.metadata["parsing_method"] = method
+                    
+                    # Use only DataFrame
+                    element.content = ""  # NOTE: markdown is no longer saved
+                    if dataframe is not None:
+                        element.metadata["dataframe"] = dataframe
                     else:
-                        # Without merged table processing
-                        element.content = markdown_content
-                        if dataframe is not None:
-                            element.metadata["dataframe"] = dataframe
-                        else:
-                            # Create empty DataFrame if parsing failed
-                            element.metadata["dataframe"] = pd.DataFrame()
-                        element.metadata["parsing_method"] = method
+                        element.metadata["dataframe"] = pd.DataFrame()
+                    element.metadata["rows_count"] = len(dataframe) if dataframe is not None else 0
+                    element.metadata["cols_count"] = len(dataframe.columns) if dataframe is not None else 0
                     
                     logger.debug(f"Table {element.id} successfully parsed")
                 
