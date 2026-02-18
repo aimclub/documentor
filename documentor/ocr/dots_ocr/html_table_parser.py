@@ -1,8 +1,9 @@
 """
-HTML table parsing from Dots.OCR to markdown and pandas DataFrame.
+HTML table parsing from Dots.OCR.
 
 Dots.OCR returns tables in HTML format according to prompt_layout_all_en.
-This module converts HTML to markdown and DataFrame for use in the parser.
+This module validates HTML tables from Dots OCR.
+Tables are stored as HTML strings in element.content.
 
 This module is specific to Dots.OCR HTML format.
 For other OCR models, create similar parsers in their respective modules.
@@ -33,31 +34,28 @@ logger = logging.getLogger(__name__)
 
 def parse_table_from_html(
     html_content: str,
-    method: str = "markdown",
-) -> Tuple[Optional[str], Optional[Any], bool]:
+) -> Tuple[Optional[str], bool]:
     """
-    Parse HTML table from Dots OCR to markdown or DataFrame.
+    Parse HTML table from Dots OCR and return HTML.
     
     Args:
         html_content: HTML string with table (may contain one or more tables)
-        method: Parsing method ("markdown" or "dataframe")
     
     Returns:
-        tuple[str, Any, bool]:
-            - markdown_content: Markdown table or None
-            - dataframe: pandas DataFrame or None
+        tuple[str, bool]:
+            - html_content: HTML string or None
             - success: Operation success status
     """
     if not html_content or not html_content.strip():
         logger.warning("Empty HTML content provided")
-        return None, None, False
+        return None, False
     
     if not HAS_BS4:
         logger.error("beautifulsoup4 is required for HTML table parsing")
-        return None, None, False
+        return None, False
     
     try:
-        # Parse HTML
+        # Parse HTML to validate it's a valid table
         soup = BeautifulSoup(html_content, 'html.parser')
         
         # Find all tables
@@ -65,92 +63,10 @@ def parse_table_from_html(
         
         if not tables:
             logger.warning("No tables found in HTML content")
-            return None, None, False
+            return None, False
         
-        # Take first table (if multiple, logic can be extended)
-        table = tables[0]
-        
-        # Parse table into list of rows
-        rows = []
-        for tr in table.find_all('tr'):
-            cells = []
-            for td in tr.find_all(['td', 'th']):
-                # Extract text, preserving structure
-                cell_text = td.get_text(separator=' ', strip=True)
-                # Handle merged cells (rowspan/colspan)
-                rowspan = int(td.get('rowspan', 1))
-                colspan = int(td.get('colspan', 1))
-                
-                # For simplicity, ignore rowspan/colspan for now
-                # More complex logic can be added in the future
-                cells.append(cell_text)
-            
-            if cells:  # Ignore empty rows
-                rows.append(cells)
-        
-        if not rows:
-            logger.warning("Table has no rows")
-            return None, None, False
-        
-        # Create DataFrame
-        if HAS_PANDAS:
-            # Determine if there is a header
-            # Check if first row has th or all rows have same number of columns
-            has_header = False
-            if rows:
-                # Check first row for th
-                first_row_has_th = any(td.name == 'th' for tr in table.find_all('tr', limit=1) for td in tr.find_all(['td', 'th']))
-                
-                # If first row has th or if there are more than 1 rows and first row looks like header
-                if first_row_has_th or (len(rows) > 1 and len(rows[0]) > 0):
-                    # Check if first row differs from others (usually header is shorter or has different format)
-                    if len(rows) > 1:
-                        # If first row has fewer columns or all rows have same number
-                        if len(rows[0]) <= max(len(row) for row in rows[1:]) if rows[1:] else len(rows[0]):
-                            has_header = True
-                    else:
-                        has_header = first_row_has_th
-            
-            try:
-                if has_header and len(rows) > 1:
-                    # Use first row as header
-                    # Normalize number of columns
-                    max_cols = max(len(row) for row in rows)
-                    header = list(rows[0]) + [''] * (max_cols - len(rows[0]))
-                    data_rows = []
-                    for row in rows[1:]:
-                        normalized_row = list(row) + [''] * (max_cols - len(row))
-                        data_rows.append(normalized_row[:max_cols])
-                    df = pd.DataFrame(data_rows, columns=header[:max_cols])
-                else:
-                    # No header, use all rows as data
-                    max_cols = max(len(row) for row in rows) if rows else 0
-                    normalized_rows = []
-                    for row in rows:
-                        normalized_row = list(row) + [''] * (max_cols - len(row))
-                        normalized_rows.append(normalized_row[:max_cols])
-                    df = pd.DataFrame(normalized_rows)
-            except Exception as e:
-                logger.warning(f"Error creating DataFrame: {e}, trying without header")
-                # Fallback: create DataFrame without header
-                max_cols = max(len(row) for row in rows) if rows else 0
-                normalized_rows = []
-                for row in rows:
-                    normalized_row = list(row) + [''] * (max_cols - len(row))
-                    normalized_rows.append(normalized_row[:max_cols])
-                df = pd.DataFrame(normalized_rows)
-        else:
-            df = None
-        
-        # Convert to markdown
-        # NOTE: Only DataFrame is used
-        # if method == "markdown" or method == "both":
-        #     markdown = _dataframe_to_markdown(rows, df if HAS_PANDAS else None)
-        # else:
-        #     markdown = None
-        markdown = None
-        
-        return markdown, df, True
+        # Return the HTML as-is (validated)
+        return html_content, True
         
     except Exception as e:
         logger.error(f"Error parsing HTML table: {e}")

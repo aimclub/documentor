@@ -207,7 +207,7 @@ class MyCustomTableParser(BaseTableParser):
         self, 
         image: Image.Image, 
         bbox: List[float]
-    ) -> Tuple[Optional[pd.DataFrame], Optional[str], bool]:
+    ) -> Tuple[Optional[str], bool]:
         """
         Parse table from image.
         
@@ -217,18 +217,16 @@ class MyCustomTableParser(BaseTableParser):
             
         Returns:
             Tuple containing:
-                - DataFrame or None (if pandas available)
-                - HTML/markdown string or None
+                - HTML string or None
                 - success: bool indicating if parsing was successful
         """
         try:
             # Your custom implementation
             # Use your model to parse the table
-            dataframe = pd.DataFrame(...)  # Your parsed table
-            html_markdown = None  # Optional: HTML or markdown representation
+            table_html = "<table>...</table>"  # Your parsed table as HTML
             success = True
             
-            return dataframe, html_markdown, success
+            return table_html, success
         except Exception as e:
             return None, None, False
 ```

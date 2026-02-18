@@ -9,7 +9,7 @@ The Markdown parser uses regex-based parsing:
 1. **Tokenization**: Tokenize Markdown content
 2. **Element Extraction**: Extract headers, text, tables, lists, etc.
 3. **Hierarchy Building**: Build document hierarchy
-4. **Table Conversion**: Convert Markdown tables to Pandas DataFrames
+4. **Table Conversion**: Convert Markdown tables to HTML format
 
 ## Modules
 
@@ -25,7 +25,7 @@ Hierarchy building for Markdown documents.
 ## Features
 
 - **Header Parsing**: Supports headers levels 1-6
-- **Table Extraction**: Converts Markdown tables to Pandas DataFrames
+- **Table Extraction**: Converts Markdown tables to HTML format (stored in element.content)
 - **List Support**: Ordered and unordered lists
 - **Link Support**: Extracts links with URLs
 - **Image Support**: Extracts images with alt text and URLs

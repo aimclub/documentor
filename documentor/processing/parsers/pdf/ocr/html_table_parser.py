@@ -1,8 +1,10 @@
 """
-HTML table parsing from Dots OCR to markdown and pandas DataFrame.
+DEPRECATED: This module is deprecated and no longer used.
 
-Dots OCR returns tables in HTML format according to prompt_layout_all_en.
-This module converts HTML to markdown and DataFrame for use in the parser.
+HTML table parsing functionality has been moved to documentor.ocr.dots_ocr.html_table_parser.
+This file is kept for backward compatibility only.
+
+Tables are now stored as HTML strings in element.content, not as DataFrames.
 """
 
 from __future__ import annotations

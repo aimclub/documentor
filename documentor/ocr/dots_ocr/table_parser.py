@@ -38,7 +38,7 @@ class DotsOCRTableParser(BaseTableParser):
         self, 
         image: Image.Image, 
         bbox: List[float]
-    ) -> Tuple[Optional[Any], Optional[str], bool]:
+    ) -> Tuple[Optional[str], bool]:
         """
         Parse table from image using Dots OCR.
         
@@ -48,7 +48,6 @@ class DotsOCRTableParser(BaseTableParser):
         
         Returns:
             Tuple containing:
-                - DataFrame or None (if pandas available)
                 - HTML string or None
                 - success: bool indicating if parsing was successful
         """
@@ -62,28 +61,19 @@ class DotsOCRTableParser(BaseTableParser):
         )
         
         if not success or layout_cells is None:
-            return None, None, False
+            return None, False
         
         # Find table element by bbox
         table_element = self._find_table_by_bbox(layout_cells, bbox)
         if not table_element:
-            return None, None, False
+            return None, False
         
         # Extract HTML from text field
         table_html = table_element.get("text", "")
         if not table_html:
-            return None, None, False
+            return None, False
         
-        # Parse HTML to DataFrame
-        _, dataframe, parse_success = parse_table_from_html(
-            table_html,
-            method="dataframe",
-        )
-        
-        if not parse_success:
-            return None, table_html, False
-        
-        return dataframe, table_html, True
+        return table_html, True
     
     def _find_table_by_bbox(
         self, 

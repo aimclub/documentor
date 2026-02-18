@@ -30,8 +30,7 @@ pdf_parser:
   
   # Table parsing
   table_parsing:
-    # Method: "markdown" or "dataframe" (currently only "dataframe" is used)
-    method: "dataframe"
+    # Tables are stored as HTML in element.content
     # Detect merged tables across pages
     detect_merged_tables: true
   

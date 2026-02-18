@@ -167,27 +167,19 @@ class MyCustomTableParser(BaseTableParser):
             bbox: Bounding box [x1, y1, x2, y2]
             
         Returns:
-            Tuple[DataFrame or None, HTML/markdown or None, success: bool]
+            Tuple[HTML string or None, success: bool]
         """
         # TODO: Replace with your actual table recognition model
         try:
             # Use your model to parse the table
-            if HAS_PANDAS:
-                # Create example DataFrame
-                dataframe = pd.DataFrame({
-                    "Column1": ["Value1", "Value2"],
-                    "Column2": ["Value3", "Value4"]
-                })
-            else:
-                dataframe = None
-            
-            html_markdown = "<table>...</table>"  # Optional
+            # Return HTML table string
+            table_html = "<table><thead><tr><th>Column1</th><th>Column2</th></tr></thead><tbody><tr><td>Value1</td><td>Value3</td></tr><tr><td>Value2</td><td>Value4</td></tr></tbody></table>"
             success = True
             
-            return dataframe, html_markdown, success
+            return table_html, success
         except Exception as e:
             print(f"Error parsing table: {e}")
-            return None, None, False
+            return None, False
 
 
 # ============================================================================

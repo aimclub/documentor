@@ -23,7 +23,7 @@ The DOCX parser uses a multi-stage approach:
     - Group text blocks
     - Split numbered lists into LIST_ITEM elements
     - Enrich tables and images with caption information
-11. **Table Conversion**: Convert XML tables to Pandas DataFrames
+11. **Table Conversion**: Convert XML tables to HTML format
 
 ## Modules
 
@@ -97,7 +97,7 @@ DOCX to PDF conversion using:
 - **TOC Validation**: Uses table of contents to validate and improve header detection
 - **Numbered Header Support**: Supports headers with/without spaces after numbers (e.g., "1Анализ", "1. Анализ")
 - **List Item Detection**: Automatically identifies and splits numbered list items
-- **Table Extraction**: Converts XML tables to Pandas DataFrames
+- **Table Extraction**: Converts XML tables to HTML format (stored in element.content)
 - **Image Handling**: Extracts images and links them with captions
 - **Progress Tracking**: tqdm progress bars for all operations
 

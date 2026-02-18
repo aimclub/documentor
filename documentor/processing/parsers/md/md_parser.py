@@ -236,29 +236,24 @@ class MarkdownParser(BaseParser):
                     i += 1
                 table_content = '\n'.join(table_lines)
                 
-                # Parse table to DataFrame
+                # Convert markdown table to HTML
                 try:
-                    df = self._parse_table_to_dataframe(table_lines, delimiter_line)
+                    table_html = self._markdown_table_to_html(table_lines, delimiter_line)
                     metadata = {
                         "source": "markdown",
-                        "dataframe": df,
-                        "rows_count": len(df),
-                        "cols_count": len(df.columns),
                     }
                 except Exception as e:
-                    # If failed to parse to DataFrame, create empty DataFrame
-                    logger.warning(f"Failed to parse table to DataFrame: {e}")
+                    # If failed to convert to HTML, use empty string
+                    logger.warning(f"Failed to convert table to HTML: {e}")
+                    table_html = ""
                     metadata = {
                         "source": "markdown",
-                        "dataframe": pd.DataFrame(),  # Always create DataFrame, even if empty
-                        "rows_count": 0,
-                        "cols_count": 0,
                     }
                 
                 blocks.append(
                     MarkdownBlock(
                         type=ElementType.TABLE,
-                        content=table_content,
+                        content=table_html,
                         metadata=metadata,
                         line_number=i - len(table_lines),
                     )
@@ -450,6 +445,73 @@ class MarkdownParser(BaseParser):
 
         return blocks
 
+    def _markdown_table_to_html(self, table_lines: List[str], delimiter_line: Optional[str] = None) -> str:
+        """
+        Convert markdown table to HTML.
+        
+        Args:
+            table_lines: List of markdown table lines
+            delimiter_line: Delimiter line (optional)
+            
+        Returns:
+            HTML string
+        """
+        if not table_lines:
+            return ""
+        
+        # Parse rows
+        rows = []
+        for line in table_lines:
+            # Remove leading/trailing pipes and split by pipe
+            cells = [cell.strip() for cell in line.strip('|').split('|')]
+            if cells:
+                rows.append(cells)
+        
+        if not rows:
+            return ""
+        
+        # Determine max columns
+        max_cols = max(len(row) for row in rows) if rows else 0
+        if max_cols == 0:
+            return ""
+        
+        # Normalize rows
+        normalized_rows = []
+        for row in rows:
+            normalized_row = list(row) + [''] * (max_cols - len(row))
+            normalized_rows.append(normalized_row[:max_cols])
+        
+        # Build HTML
+        html_parts = ['<table>']
+        
+        # First row as header if delimiter exists
+        if delimiter_line and len(normalized_rows) > 0:
+            html_parts.append('<thead><tr>')
+            for cell in normalized_rows[0]:
+                cell_text = cell.strip() if cell else ""
+                # Escape HTML
+                cell_text = cell_text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+                html_parts.append(f'<th>{cell_text}</th>')
+            html_parts.append('</tr></thead>')
+            data_rows = normalized_rows[1:]
+        else:
+            data_rows = normalized_rows
+        
+        # Data rows
+        html_parts.append('<tbody>')
+        for row in data_rows:
+            html_parts.append('<tr>')
+            for cell in row:
+                cell_text = cell.strip() if cell else ""
+                # Escape HTML
+                cell_text = cell_text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+                html_parts.append(f'<td>{cell_text}</td>')
+            html_parts.append('</tr>')
+        html_parts.append('</tbody>')
+        
+        html_parts.append('</table>')
+        return ''.join(html_parts)
+    
     def _parse_table_to_dataframe(self, table_lines: List[str], delimiter_line: Optional[str] = None) -> pd.DataFrame:
         """
         Parses Markdown table to pandas DataFrame.

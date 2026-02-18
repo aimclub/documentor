@@ -43,7 +43,7 @@ Text extraction processor:
 ### `table_parser.py`
 Table parsing processor:
 - Parses tables from OCR HTML (default: Dots OCR, supports custom parsers)
-- Converts to pandas DataFrame
+- Stores tables as HTML in element.content
 - Stores table images
 
 ### `image_processor.py`
@@ -72,7 +72,7 @@ Hierarchy building processor:
   - Text-extractable PDFs: Layout only, then reprocesses tables
 - **Layout-based Parsing**: Uses OCR layout detection for structure (default: Dots OCR)
 - **Header Hierarchy**: Builds complete header hierarchy (levels 1-6)
-- **Table Extraction**: Parses tables from OCR HTML and converts to Pandas DataFrames (default: Dots OCR)
+- **Table Extraction**: Parses tables from OCR HTML and stores as HTML strings in element.content (default: Dots OCR)
 - **Formula Extraction**: Extracts formulas in LaTeX format (default: Dots OCR)
 - **Image Extraction**: Extracts images and stores in metadata (base64)
 - **Specialized Processors**: Modular architecture with separate processors for each task

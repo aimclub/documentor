@@ -1802,117 +1802,27 @@ class PdfParser(BaseParser):
                     element.metadata["image_data"] = f"data:image/png;base64,{img_base64}"
                     
                     # Parse table: use HTML from Dots OCR
-                    # NOTE: markdown_content is no longer used, only DataFrame
-                    # markdown_content = None
-                    dataframe = None
+                    table_html = None
                     success = False
                     
                     # Try to get HTML from element metadata (stored during element creation)
                     table_html = element.metadata.get("table_html")
                     if table_html:
-                        # Parse HTML table from Dots OCR
+                        # Validate HTML
                         from documentor.ocr.dots_ocr.html_table_parser import parse_table_from_html
-                        _, dataframe, success = parse_table_from_html(
-                            table_html,
-                            method="dataframe",  # Use only DataFrame
-                        )
+                        _, success = parse_table_from_html(table_html)
                         if success:
-                            logger.debug(f"Table {element.id} parsed from Dots OCR HTML")
+                            logger.debug(f"Table {element.id} validated from Dots OCR HTML")
                     
-                    if not success:
+                    if not success or not table_html:
                         logger.warning(f"Failed to parse table {element.id} - no HTML from Dots OCR")
                         element.content = ""
                         element.metadata["parsing_error"] = "Failed to parse table: no HTML from Dots OCR"
-                        # Create empty DataFrame
-                        element.metadata["dataframe"] = pd.DataFrame()
-                        element.metadata["rows_count"] = 0
-                        element.metadata["cols_count"] = 0
                         continue
                     
-                    # Process merged tables
-                    # NOTE: detect_merged_tables works with markdown, currently disabled
-                    # if detect_merged and markdown_content:
-                    #     tables = detect_merged_tables(markdown_content)
-                    #     
-                    #     if len(tables) > 1:
-                    #         # Multiple tables merged - create separate elements
-                    #         logger.info(f"Detected {len(tables)} merged tables in element {element.id}")
-                    #         
-                    #         # Update first element
-                    #         element.content = tables[0]
-                    #         if dataframe is not None:
-                    #             element.metadata["dataframe"] = dataframe
-                    #         else:
-                    #             # Create empty DataFrame if parsing failed
-                    #             element.metadata["dataframe"] = pd.DataFrame()
-                    #         element.metadata["parsing_method"] = method
-                    #         element.metadata["merged_tables"] = True
-                    #         element.metadata["table_count"] = len(tables)
-                    #         element.metadata["rows_count"] = len(dataframe) if dataframe is not None else 0
-                    #         element.metadata["cols_count"] = len(dataframe.columns) if dataframe is not None else 0
-                    #         # Image already saved above
-                    #         
-                    #         # Create additional elements for remaining tables
-                    #         parent_id = element.parent_id
-                    #         for i, table_md in enumerate(tables[1:], start=1):
-                    #             # Parse each table separately
-                    #             table_df = markdown_to_dataframe(table_md) if method == "markdown" else None
-                    #             
-                    #             new_element = self._create_element(
-                    #                 type=ElementType.TABLE,
-                    #                 content=table_md,
-                    #                 parent_id=parent_id,
-                    #                 metadata={
-                    #                     "source": "ocr",
-                    #                     "bbox": bbox,  # Same bbox, as tables are merged
-                    #                     "page_num": page_num,
-                    #                     "category": "Table",
-                    #                     "parsing_method": method,
-                    #                     "merged_tables": True,
-                    #                     "table_index": i,
-                    #                     "image_data": f"data:image/png;base64,{img_base64}",  # Same image
-                    #                 },
-                    #             )
-                    #             if table_df is not None:
-                    #                 new_element.metadata["dataframe"] = table_df
-                    #                 new_element.metadata["rows_count"] = len(table_df)
-                    #                 new_element.metadata["cols_count"] = len(table_df.columns)
-                    #             else:
-                    #                 # Create empty DataFrame if parsing failed
-                    #                 new_element.metadata["dataframe"] = pd.DataFrame()
-                    #                 new_element.metadata["rows_count"] = 0
-                    #                 new_element.metadata["cols_count"] = 0
-                    #             
-                    #             # Insert after current element
-                    #             element_idx = elements.index(element)
-                    #             elements.insert(element_idx + i, new_element)
-                    #     else:
-                    #         # Single table
-                    #         element.content = markdown_content
-                    #         if dataframe is not None:
-                    #             element.metadata["dataframe"] = dataframe
-                    #         else:
-                    #             # Create empty DataFrame if parsing failed
-                    #             element.metadata["dataframe"] = pd.DataFrame()
-                    #         element.metadata["parsing_method"] = method
-                    # else:
-                    #     # Without merged table processing
-                    #     element.content = markdown_content
-                    #     if dataframe is not None:
-                    #         element.metadata["dataframe"] = dataframe
-                    #     else:
-                    #         # Create empty DataFrame if parsing failed
-                    #         element.metadata["dataframe"] = pd.DataFrame()
-                    #     element.metadata["parsing_method"] = method
-                    
-                    # Use only DataFrame
-                    element.content = ""  # NOTE: markdown is no longer saved
-                    if dataframe is not None:
-                        element.metadata["dataframe"] = dataframe
-                    else:
-                        element.metadata["dataframe"] = pd.DataFrame()
-                    element.metadata["rows_count"] = len(dataframe) if dataframe is not None else 0
-                    element.metadata["cols_count"] = len(dataframe.columns) if dataframe is not None else 0
+                    # Store HTML in content
+                    element.content = table_html
+                    element.metadata["parsing_method"] = "dots_ocr_html"
                     
                     logger.debug(f"Table {element.id} successfully parsed")
                 

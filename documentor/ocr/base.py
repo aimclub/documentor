@@ -128,7 +128,7 @@ class BaseTableParser(ABC):
         self, 
         image: Image.Image, 
         bbox: List[float]
-    ) -> Tuple[Optional[Any], Optional[str], bool]:
+    ) -> Tuple[Optional[str], bool]:
         """
         Parse table from image.
         
@@ -138,8 +138,7 @@ class BaseTableParser(ABC):
             
         Returns:
             Tuple containing:
-                - DataFrame or None (if pandas available)
-                - HTML/markdown string or None
+                - HTML string or None
                 - success: bool indicating if parsing was successful
         """
         raise NotImplementedError

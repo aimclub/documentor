@@ -10,7 +10,6 @@ import logging
 from typing import Any, Dict, List, Optional
 
 import fitz
-import pandas as pd
 from PIL import Image
 from tqdm import tqdm
 
@@ -28,8 +27,8 @@ class PdfTableParser:
     
     Handles:
     - Parsing HTML tables from OCR
-    - Converting to DataFrame
-    - Storing table images
+    - Storing HTML tables in content
+    - Storing table images in base64
     """
 
     def __init__(self, config: Dict[str, Any], table_parser: Optional[Any] = None) -> None:
@@ -101,14 +100,14 @@ class PdfTableParser:
                     element.metadata["image_data"] = img_base64
                     
                     # Parse table: use HTML from OCR
-                    dataframe = None
+                    # Use custom table parser if provided
+                    table_html = None
                     success = False
                     
-                    # Use custom table parser if provided
                     if self.custom_table_parser:
                         try:
-                            # BaseTableParser.parse_table returns (dataframe, html_or_markdown, success)
-                            dataframe, html_or_markdown, success = self.custom_table_parser.parse_table(
+                            # BaseTableParser.parse_table returns (html, success)
+                            table_html, success = self.custom_table_parser.parse_table(
                                 img, bbox
                             )
                             if success:
@@ -118,55 +117,35 @@ class PdfTableParser:
                         except Exception as e:
                             logger.warning(f"Custom table parser failed for {element.id}: {e}")
                             success = False
-                            dataframe = None
+                            table_html = None
                     else:
                         # Try to get HTML from element metadata (stored during element creation)
                         table_html = element.metadata.get("table_html")
                         if table_html:
-                            # Parse HTML table from OCR
-                            _, dataframe, success = parse_table_from_html(
-                                table_html,
-                                method="dataframe",  # Use only DataFrame
-                            )
+                            # Validate HTML
+                            _, success = parse_table_from_html(table_html)
                             if success:
-                                logger.debug(f"Table {element.id} parsed from OCR HTML")
+                                logger.debug(f"Table {element.id} validated from OCR HTML")
                             else:
-                                logger.warning(f"Failed to parse table {element.id} from HTML")
+                                logger.warning(f"Failed to validate table {element.id} HTML")
                         else:
                             logger.warning(f"Table {element.id} has no HTML and no custom parser provided")
                             success = False
                     
-                    if not success:
+                    if not success or not table_html:
                         logger.warning(f"Failed to parse table {element.id}")
                         element.content = ""
                         element.metadata["parsing_error"] = "Failed to parse table: no HTML from layout detector and no custom parser"
-                        # Create empty DataFrame
-                        element.metadata["dataframe"] = pd.DataFrame()
-                        element.metadata["rows_count"] = 0
-                        element.metadata["cols_count"] = 0
-                        # Don't skip - keep element with empty DataFrame for user to know table was detected but not parsed
                         continue
                     
-                    # Use only DataFrame
-                    element.content = ""  # NOTE: markdown is no longer saved
-                    if dataframe is not None:
-                        element.metadata["dataframe"] = dataframe
-                        element.metadata["rows_count"] = len(dataframe)
-                        element.metadata["cols_count"] = len(dataframe.columns) if len(dataframe) > 0 else 0
-                        element.metadata["parsing_method"] = "dots_ocr_html"
-                    else:
-                        element.metadata["parsing_error"] = "DataFrame creation failed"
-                        element.metadata["dataframe"] = pd.DataFrame()
-                        element.metadata["rows_count"] = 0
-                        element.metadata["cols_count"] = 0
+                    # Store HTML in content
+                    element.content = table_html
+                    element.metadata["parsing_method"] = "dots_ocr_html" if not self.custom_table_parser else "custom_parser"
                 
                 except Exception as e:
                     logger.error(f"Error parsing table {element.id}: {e}")
                     element.content = ""
                     element.metadata["parsing_error"] = str(e)
-                    element.metadata["dataframe"] = pd.DataFrame()
-                    element.metadata["rows_count"] = 0
-                    element.metadata["cols_count"] = 0
             
             return elements
         finally:

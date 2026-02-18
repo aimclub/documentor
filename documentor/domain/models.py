@@ -129,20 +129,7 @@ class Element:
         if self.parent_id is not None:
             result["parent_id"] = self.parent_id
         if self.metadata:
-            # Convert DataFrame to dict for JSON serialization
-            metadata_serialized = {}
-            for key, value in self.metadata.items():
-                if pd is not None and isinstance(value, pd.DataFrame):
-                    # Convert DataFrame to dict format
-                    metadata_serialized[key] = {
-                        "_type": "DataFrame",
-                        "data": value.to_dict(orient="records"),
-                        "columns": value.columns.tolist(),
-                        "index": value.index.tolist(),
-                    }
-                else:
-                    metadata_serialized[key] = value
-            result["metadata"] = metadata_serialized
+            result["metadata"] = self.metadata
         return result
 
     @classmethod
@@ -173,24 +160,10 @@ class Element:
         except ValueError as e:
             raise ValueError(f"Invalid ElementType: {data['type']}") from e
         
-        # Deserialize metadata, converting DataFrame dicts back to DataFrames
+        # Deserialize metadata
         metadata = {}
         if "metadata" in data:
-            for key, value in data["metadata"].items():
-                if isinstance(value, dict) and value.get("_type") == "DataFrame" and pd is not None:
-                    # Convert dict back to DataFrame
-                    try:
-                        df = pd.DataFrame(value["data"])
-                        if "columns" in value:
-                            df.columns = value["columns"]
-                        if "index" in value:
-                            df.index = value["index"]
-                        metadata[key] = df
-                    except Exception:
-                        # If conversion fails, keep as dict
-                        metadata[key] = value
-                else:
-                    metadata[key] = value
+            metadata = dict(data["metadata"])
         
         element = cls(
             id=str(data["id"]),
@@ -241,18 +214,6 @@ class Element:
 
         return cls.from_dict(data)
 
-    @property
-    def dataframe(self) -> Optional["pd.DataFrame"]:
-        """
-        Returns pandas DataFrame for TABLE type elements.
-
-        Returns:
-            pandas.DataFrame or None if element is not a table
-            or DataFrame was not created during parsing
-        """
-        if self.type != ElementType.TABLE:
-            return None
-        return self.metadata.get("dataframe")
 
 
 @dataclass(slots=True)

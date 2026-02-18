@@ -88,7 +88,7 @@ Regex-based Markdown parser.
 
 **Key Features:**
 - Header parsing (levels 1-6)
-- Table extraction to Pandas DataFrame
+- Table extraction to HTML format (stored in element.content)
 - List, link, image, and code block support
 - Hierarchy building
 

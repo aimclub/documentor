@@ -342,15 +342,12 @@ def process_document(
             
             # Для таблиц
             if element_type_name == "TABLE":
-                has_dataframe = "dataframe" in element.metadata
+                has_html = bool(element.content and element.content.strip())
                 has_image = "image_data" in element.metadata
-                elem_data["has_dataframe"] = has_dataframe
+                elem_data["has_html"] = has_html
                 elem_data["has_image"] = has_image
-                if has_dataframe:
-                    df = element.metadata["dataframe"]
-                    if df is not None:
-                        elem_data["dataframe_shape"] = f"{df.shape[0]}x{df.shape[1]}"
-                        elem_data["dataframe_columns"] = list(df.columns) if hasattr(df, "columns") else []
+                if has_html:
+                    elem_data["html_length"] = len(element.content)
                 if "parsing_method" in element.metadata:
                     elem_data["parsing_method"] = element.metadata["parsing_method"]
                 if "merged_tables" in element.metadata:
@@ -421,19 +418,9 @@ def process_document(
                         f.write(f"ID: {table.id}\n")
                         f.write(f"Page: {table.metadata.get('page_num', 'N/A')}\n")
                         f.write(f"BBox: {table.metadata.get('bbox', [])}\n\n")
-                        f.write("## Markdown Table\n\n")
-                        f.write(table.content)
+                        f.write("## HTML Table\n\n")
+                        f.write(table.content if table.content else "(empty)")
                         f.write("\n\n")
-                        
-                        if "dataframe" in table.metadata:
-                            df = table.metadata["dataframe"]
-                            if df is not None:
-                                f.write("## DataFrame Info\n\n")
-                                f.write(f"Shape: {df.shape}\n")
-                                f.write(f"Columns: {list(df.columns)}\n\n")
-                                f.write("### DataFrame Preview\n\n")
-                                f.write(df.head(10).to_markdown())
-                                f.write("\n")
                 else:
                     table_file = tables_dir / f"table_{i}.json"
                     with open(table_file, "w", encoding="utf-8") as f:
@@ -441,66 +428,14 @@ def process_document(
                             "id": table.id,
                             "page": table.metadata.get("page_num", "N/A"),
                             "bbox": table.metadata.get("bbox", []),
+                            "html": table.content if table.content else "",
+                            "html_length": len(table.content) if table.content else 0,
                         }
-                        
-                        if "dataframe" in table.metadata:
-                            df = table.metadata["dataframe"]
-                            if df is not None:
-                                table_data["dataframe_shape"] = list(df.shape)
-                                original_columns = list(df.columns)
-                                df_renamed = df.copy()
-                                seen = {}
-                                new_columns = []
-                                for col in original_columns:
-                                    if col in seen:
-                                        seen[col] += 1
-                                        new_col = f"{col}_{seen[col]}"
-                                    else:
-                                        seen[col] = 0
-                                        new_col = col
-                                    new_columns.append(new_col)
-                                df_renamed.columns = new_columns
-                                table_data["dataframe_columns"] = new_columns
-                                table_data["dataframe_columns_original"] = original_columns
-                                table_data["dataframe"] = df_renamed.to_dict(orient="records")
                         
                         json.dump(table_data, f, indent=2, ensure_ascii=False, default=str)
         
         # Сохраняем изображения
-        images_dir = doc_output_dir / "images"
-        images_dir.mkdir(exist_ok=True)
-        
-        image_count = 0
-        for element in tqdm(parsed_doc.elements, desc="Сохранение изображений", unit="изображение", leave=False):
-            element_type_name = element.type.name if hasattr(element.type, "name") else str(element.type)
-            
-            image_data = None
-            bbox = None
-            
-            if element_type_name == "CAPTION" and "image_data" in element.metadata:
-                image_data = element.metadata["image_data"]
-                bbox = element.metadata.get("bbox", [])
-            elif element_type_name == "IMAGE" and "image_data" in element.metadata:
-                image_data = element.metadata["image_data"]
-                bbox = element.metadata.get("bbox", [])
-            elif element_type_name == "TABLE" and "image_data" in element.metadata:
-                image_data = element.metadata["image_data"]
-                bbox = element.metadata.get("bbox", [])
-            
-            if image_data:
-                image_count += 1
-                img = _base64_to_image(image_data)
-                if img:
-                    # Для DOCX рисуем bbox, для PDF сохраняем без bbox
-                    if doc_type == DocumentType.DOCX:
-                        label = f"{element_type_name} {element.id}"
-                        color = _get_element_color(element_type_name)
-                        img_with_bbox = _draw_bbox_on_image(img, bbox, label, color)
-                        image_file = images_dir / f"image_{image_count}_{element.id}.png"
-                        img_with_bbox.save(image_file, "PNG")
-                    else:
-                        image_file = images_dir / f"image_{image_count}_{element.id}.jpg"
-                        img.save(image_file, "JPEG", quality=85)
+        # Images are stored only in base64 format in metadata, no local file saving
         
         # Сохраняем полные страницы с layout
         render_scale = 2.0
@@ -527,7 +462,6 @@ def process_document(
             "tables": len(tables),
             "images": len([e for e in parsed_doc.elements if e.type.name == "IMAGE"]),
             "captions": len([e for e in parsed_doc.elements if e.type.name == "CAPTION"]),
-            "saved_images": image_count,
             "saved_pages_with_layout": saved_pages,
             "processing_method": processing_method,
         }

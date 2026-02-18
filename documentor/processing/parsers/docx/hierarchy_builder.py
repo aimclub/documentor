@@ -11,22 +11,21 @@ from io import BytesIO
 from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 
-import pandas as pd
 from PIL import Image
 
 from ....domain import Element, ElementType
 from .header_finder import extract_paragraph_properties
 
 
-def _table_data_to_dataframe(table_data: Dict[str, Any]) -> Optional[pd.DataFrame]:
+def _table_data_to_html(table_data: Dict[str, Any]) -> Optional[str]:
     """
-    Converts table data from XML format to pandas DataFrame.
+    Converts table data from XML format to HTML.
     
     Args:
         table_data: Dictionary with table data from XML parser
         
     Returns:
-        pandas.DataFrame or None if DataFrame creation failed
+        HTML string or None if HTML creation failed
     """
     try:
         data = table_data.get('data', [])
@@ -68,30 +67,42 @@ def _table_data_to_dataframe(table_data: Dict[str, Any]) -> Optional[pd.DataFram
                     non_empty_ratio > 0.5
                 )
         
-        if use_first_row_as_header:
-            # First row is headers
-            headers = []
-            for i, cell in enumerate(first_row):
+        # Build HTML table
+        html_parts = ['<table>']
+        
+        if use_first_row_as_header and len(normalized_rows) > 1:
+            # Add header row
+            html_parts.append('<thead><tr>')
+            for cell in first_row:
                 cell_text = cell.strip() if cell else ""
-                if cell_text:
-                    headers.append(cell_text)
-                else:
-                    headers.append(f"Column_{i+1}")
+                # Escape HTML special characters
+                cell_text = cell_text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+                html_parts.append(f'<th>{cell_text}</th>')
+            html_parts.append('</tr></thead>')
             data_rows = normalized_rows[1:]
         else:
-            # Use standard column names
-            headers = [f"Column_{i+1}" for i in range(max_cols)]
             data_rows = normalized_rows
         
-        # Create DataFrame
-        df = pd.DataFrame(data_rows, columns=headers)
+        # Add data rows
+        html_parts.append('<tbody>')
+        for row in data_rows:
+            html_parts.append('<tr>')
+            for cell in row:
+                cell_text = cell.strip() if cell else ""
+                # Escape HTML special characters
+                cell_text = cell_text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+                html_parts.append(f'<td>{cell_text}</td>')
+            html_parts.append('</tr>')
+        html_parts.append('</tbody>')
         
-        return df
+        html_parts.append('</table>')
+        
+        return ''.join(html_parts)
     
     except Exception as e:
         import logging
         logger = logging.getLogger(__name__)
-        logger.warning(f"Error converting table to DataFrame: {e}")
+        logger.warning(f"Error converting table to HTML: {e}")
         return None
 
 
@@ -599,8 +610,8 @@ def build_hierarchy(
             flush_text_block()
             table_data = tables_by_position.get(xml_pos)
             if table_data:
-                # Convert table to DataFrame
-                dataframe = _table_data_to_dataframe(table_data)
+                # Convert table to HTML
+                table_html = _table_data_to_html(table_data)
                 
                 # Create metadata
                 metadata = {
@@ -636,17 +647,13 @@ def build_hierarchy(
                     if 'page' in caption_info:
                         metadata['caption_page'] = caption_info['page']
                 
-                # Always add DataFrame to metadata (create empty if parsing failed)
-                if dataframe is not None:
-                    metadata['dataframe'] = dataframe
-                else:
-                    # Create empty DataFrame if parsing failed
-                    metadata['dataframe'] = pd.DataFrame()
+                # Store HTML in content (or empty string if conversion failed)
+                table_content = table_html if table_html else ""
                 
                 elements.append(Element(
                     id=id_generator.next_id(),
                     type=ElementType.TABLE,
-                    content=json.dumps(table_data, ensure_ascii=False, default=str, indent=2),
+                    content=table_content,
                     parent_id=header_stack[-1][1] if header_stack else None,
                     metadata=metadata
                 ))
