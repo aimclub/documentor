@@ -5,7 +5,7 @@ Contains classes and functions for:
 - Layout detection (page structure determination)
 - Text recognition
 - Reading order building
-- Working with various OCR tools (Dots.OCR, Qwen OCR)
+- Working with Dots.OCR service
 - Managing queues and model states
 """
 

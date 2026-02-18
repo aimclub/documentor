@@ -21,6 +21,11 @@ import tempfile
 from langchain_core.documents import Document
 from tqdm import tqdm
 
+try:
+    import fitz
+except ImportError:
+    fitz = None
+
 from ....domain import DocumentFormat, Element, ElementType, ParsedDocument
 from ....exceptions import ParsingError
 from ....utils.config_loader import ConfigLoader
@@ -32,6 +37,12 @@ from .layout_detector import DocxLayoutDetector
 from .xml_parser import DocxXmlParser
 from .toc_parser import parse_toc_from_docx
 from .hierarchy_builder import build_hierarchy
+from .caption_finder import (
+    match_table_with_caption,
+    find_table_caption_in_ocr_headers,
+    find_image_caption_in_ocr_headers,
+    match_table_by_structure
+)
 
 logger = logging.getLogger(__name__)
 
@@ -240,6 +251,101 @@ class DocxParser(BaseParser):
                     all_xml_elements = xml_parser.extract_all_elements()
                     docx_tables = xml_parser.extract_tables()
                     docx_images = xml_parser.extract_images()
+                    
+                    # Match tables by comparing their structure (top row/headers) from OCR and XML
+                    # This is the primary method: compare table structures to identify same tables
+                    if fitz is not None:
+                        # Find OCR tables
+                        ocr_tables = [e for e in ocr_elements if e.get("category") == "Table"]
+                        
+                        # Match each DOCX table with OCR table by structure comparison
+                        for docx_table in docx_tables:
+                            # Match by structure (top row/headers comparison)
+                            structure_match = match_table_by_structure(
+                                docx_table,
+                                ocr_tables,
+                                pdf_doc,
+                                render_scale=render_scale,
+                                similarity_threshold=0.7
+                            )
+                            
+                            if structure_match:
+                                # Found matching table by structure
+                                ocr_table = structure_match['ocr_table']
+                                similarity = structure_match['similarity']
+                                
+                                # Store OCR table info for reference
+                                docx_table['ocr_match'] = {
+                                    'ocr_table_bbox': ocr_table.get('bbox', []),
+                                    'ocr_table_page': ocr_table.get('page_num', 0),
+                                    'similarity': similarity,
+                                    'xml_headers': structure_match['xml_headers'],
+                                    'ocr_headers': structure_match['ocr_headers']
+                                }
+                                
+                                logger.debug(
+                                    f"Matched table {docx_table.get('index')} with OCR table "
+                                    f"(similarity: {similarity:.2f}, page: {ocr_table.get('page_num', 0) + 1})"
+                                )
+                                
+                                # Also try to find caption for this matched table
+                                ocr_table_bbox = ocr_table.get('bbox', [])
+                                ocr_table_page = ocr_table.get('page_num', 0)
+                                
+                                if ocr_table_bbox and len(ocr_table_bbox) >= 4:
+                                    caption_info = find_table_caption_in_ocr_headers(
+                                        headers_with_text,
+                                        captions_with_text,
+                                        ocr_table_bbox,
+                                        ocr_table_page,
+                                        pdf_doc
+                                    )
+                                    
+                                    if caption_info:
+                                        if 'captions' not in docx_table:
+                                            docx_table['captions'] = []
+                                        docx_table['captions'].append(caption_info)
+                                        logger.debug(f"Found caption for table {docx_table.get('index')}: {caption_info.get('text', '')[:50]}")
+                            else:
+                                # Fallback: try to match via caption if structure matching failed
+                                caption_info = match_table_with_caption(
+                                    docx_table,
+                                    headers_with_text,
+                                    captions_with_text,
+                                    pdf_doc,
+                                    all_xml_elements
+                                )
+                                
+                                if caption_info:
+                                    if 'captions' not in docx_table:
+                                        docx_table['captions'] = []
+                                    docx_table['captions'].append(caption_info)
+                                    logger.debug(f"Matched table {docx_table.get('index')} with caption: {caption_info.get('text', '')[:50]}")
+                        
+                        # Match images with captions
+                        ocr_images = [e for e in ocr_elements if e.get("category") == "Picture"]
+                        
+                        for docx_image in docx_images:
+                            # Try to find via OCR image bbox
+                            for ocr_image in ocr_images:
+                                ocr_image_bbox = ocr_image.get('bbox', [])
+                                ocr_image_page = ocr_image.get('page_num', 0)
+                                
+                                if ocr_image_bbox and len(ocr_image_bbox) >= 4:
+                                    caption_info = find_image_caption_in_ocr_headers(
+                                        headers_with_text,
+                                        captions_with_text,
+                                        ocr_image_bbox,
+                                        ocr_image_page,
+                                        pdf_doc
+                                    )
+                                    
+                                    if caption_info:
+                                        if 'captions' not in docx_image:
+                                            docx_image['captions'] = []
+                                        docx_image['captions'].append(caption_info)
+                                        logger.debug(f"Matched image {docx_image.get('index')} with caption: {caption_info.get('text', '')[:50]}")
+                                        break
                     
                     toc_entries = parse_toc_from_docx(docx_path, all_xml_elements)
                     toc_headers_map = {}

@@ -300,89 +300,7 @@ class PdfParser(BaseParser):
             List of layout elements with bbox, category, page_num fields.
             If use_text_extraction=True, elements also contain 'text' field from Dots OCR.
         """
-        if self.page_renderer is None:
-            render_scale = self._get_config("layout_detection.render_scale", 2.0)
-            optimize_for_ocr = self._get_config("layout_detection.optimize_for_ocr", True)
-            self.page_renderer = PdfPageRenderer(
-                render_scale=render_scale,
-                optimize_for_ocr=optimize_for_ocr,
-            )
-        
-        if self.layout_detector is None:
-            use_direct_api = self._get_config("layout_detection.use_direct_api", True)
-            
-            if use_direct_api:
-                # When using direct API, manager is not needed
-                ocr_manager = None
-            else:
-                # When using DotsOCRManager, manager is needed
-                ocr_manager = self._get_ocr_manager()
-                if ocr_manager is None:
-                    raise RuntimeError(
-                        "OCR processing unavailable: DotsOCRManager cannot be created. "
-                        "Check settings in .env file"
-                    )
-
-            self.layout_detector = PdfLayoutDetector(ocr_manager=ocr_manager, use_direct_api=use_direct_api)
-        
-        pdf_path = Path(source)
-        total_pages = self.page_renderer.get_page_count(pdf_path)
-        all_layout_elements: List[Dict[str, Any]] = []
-        
-        # Check if we should skip title page
-        skip_title_page = self._get_config("processing.skip_title_page", False)
-        start_page = 1 if skip_title_page else 0
-        
-        if skip_title_page and total_pages > 1:
-            logger.info(f"Skipping title page (page 1), processing pages 2-{total_pages}")
-        else:
-            logger.info(f"Starting layout detection for {total_pages} pages")
-        
-        # Load prompt based on use_text_extraction flag
-        prompt = None
-        if use_text_extraction:
-            # For scanned PDFs: use prompt_layout_all_en to get text, tables (HTML), and formulas
-            from documentor.ocr.dots_ocr import load_prompts_from_config
-            config_path = Path(__file__).parent.parent.parent.parent / "config" / "ocr_config.yaml"
-            prompts = load_prompts_from_config(config_path)
-            prompt = prompts.get("prompt_layout_all_en")
-            if not prompt:
-                logger.warning("prompt_layout_all_en not found in config, falling back to prompt_layout_only_en")
-                use_text_extraction = False
-        
-        for page_num in tqdm(range(start_page, total_pages), desc="Layout detection", unit="page"):
-            try:
-                original_image, optimized_image = self.page_renderer.render_page(
-                    pdf_path, page_num, return_original=True
-                )
-                
-                if use_text_extraction and prompt:
-                    # For scanned PDFs: use direct API call with prompt_layout_all_en to get text, tables, and formulas
-                    from .ocr.dots_ocr_client import process_layout_detection
-                    layout, _, success = process_layout_detection(
-                        image=optimized_image,
-                        origin_image=original_image,
-                        prompt=prompt,
-                    )
-                    if not success or layout is None:
-                        logger.warning(f"Layout detection failed for page {page_num + 1}, trying fallback")
-                        layout = self.layout_detector.detect_layout(optimized_image, origin_image=original_image)
-                else:
-                    # For text-extractable PDFs: use prompt_layout_only_en for layout only (text via PyMuPDF)
-                    layout = self.layout_detector.detect_layout(optimized_image, origin_image=original_image)
-                
-                # Add page number to each element
-                for element in layout:
-                    element["page_num"] = page_num
-                    all_layout_elements.append(element)
-                
-                logger.debug(f"Layout detection for page {page_num + 1}/{total_pages}: found {len(layout)} elements")
-            except Exception as e:
-                logger.error(f"Error in layout detection for page {page_num + 1}: {e}")
-                continue
-        
-        logger.info(f"Layout detection completed: total {len(all_layout_elements)} elements found")
-        return all_layout_elements
+        return self.layout_processor.detect_layout_for_all_pages(source, use_text_extraction=use_text_extraction)
 
     def _reprocess_tables_with_all_en(
         self, source: str, layout_elements: List[Dict[str, Any]]
@@ -397,85 +315,7 @@ class PdfParser(BaseParser):
         Returns:
             Updated layout elements with table_html for table elements.
         """
-        # Find pages with tables
-        pages_with_tables = set()
-        table_elements_by_page: Dict[int, List[Dict[str, Any]]] = {}
-        
-        for element in layout_elements:
-            category = element.get("category", "")
-            if category == "Table":
-                page_num = element.get("page_num", 0)
-                pages_with_tables.add(page_num)
-                if page_num not in table_elements_by_page:
-                    table_elements_by_page[page_num] = []
-                table_elements_by_page[page_num].append(element)
-        
-        if not pages_with_tables:
-            return layout_elements
-        
-        logger.info(f"Found tables on {len(pages_with_tables)} pages, re-processing with prompt_layout_all_en to get HTML")
-        
-        # Load prompt_layout_all_en
-        from documentor.ocr.dots_ocr import load_prompts_from_config
-        config_path = Path(__file__).parent.parent.parent.parent / "config" / "ocr_config.yaml"
-        prompts = load_prompts_from_config(config_path)
-        prompt = prompts.get("prompt_layout_all_en")
-        if not prompt:
-            logger.warning("prompt_layout_all_en not found in config, cannot get table HTML")
-            return layout_elements
-        
-        pdf_path = Path(source)
-        render_scale = self._get_config("layout_detection.render_scale", 2.0)
-        
-        # Re-process each page with tables
-        for page_num in tqdm(sorted(pages_with_tables), desc="Re-processing pages with tables", unit="page", leave=False):
-            try:
-                original_image, optimized_image = self.page_renderer.render_page(
-                    pdf_path, page_num, return_original=True
-                )
-                
-                # Use prompt_layout_all_en to get HTML for tables
-                from .ocr.dots_ocr_client import process_layout_detection
-                layout_all, _, success = process_layout_detection(
-                    image=optimized_image,
-                    origin_image=original_image,
-                    prompt=prompt,
-                )
-                
-                if not success or layout_all is None:
-                    logger.warning(f"Failed to re-process page {page_num + 1} with prompt_layout_all_en")
-                    continue
-                
-                # Match table elements by bbox and update with HTML
-                table_elements_on_page = table_elements_by_page.get(page_num, [])
-                for table_element in table_elements_on_page:
-                    table_bbox = table_element.get("bbox", [])
-                    if len(table_bbox) < 4:
-                        continue
-                    
-                    # Find matching table in layout_all result
-                    for all_element in layout_all:
-                        if all_element.get("category") == "Table":
-                            all_bbox = all_element.get("bbox", [])
-                            if len(all_bbox) >= 4:
-                                # Check if bboxes match (with some tolerance)
-                                tolerance = 10  # pixels
-                                if (abs(table_bbox[0] - all_bbox[0]) < tolerance and
-                                    abs(table_bbox[1] - all_bbox[1]) < tolerance and
-                                    abs(table_bbox[2] - all_bbox[2]) < tolerance and
-                                    abs(table_bbox[3] - all_bbox[3]) < tolerance):
-                                    # Found matching table, update with HTML
-                                    table_html = all_element.get("text", "")  # HTML from prompt_layout_all_en
-                                    if table_html:
-                                        table_element["table_html"] = table_html
-                                        logger.debug(f"Updated table on page {page_num + 1} with HTML (length: {len(table_html)})")
-                                    break
-                
-            except Exception as e:
-                logger.warning(f"Error re-processing page {page_num + 1} with tables: {e}")
-                continue
-        
-        return layout_elements
+        return self.layout_processor.reprocess_tables_with_all_en(source, layout_elements)
 
     def _filter_layout_elements(self, layout_elements: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
@@ -1782,7 +1622,7 @@ class PdfParser(BaseParser):
             elements: List of elements.
             source: Path to PDF file.
             use_dots_ocr_html: If True, uses HTML from Dots OCR (prompt_layout_all_en).
-                              Always True now, Qwen fallback removed.
+                              Always True now.
 
         Returns:
             List of elements with parsed tables.

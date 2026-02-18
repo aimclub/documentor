@@ -61,24 +61,24 @@ class TestImageBase64Storage:
             parser = PdfParser()
             
             # Мокаем методы, которые требуют OCR
-            with patch.object(parser, '_detect_layout_for_all_pages', return_value=[]):
-                with patch.object(parser, '_filter_layout_elements', return_value=[]):
-                    with patch.object(parser, '_analyze_header_levels_from_elements', return_value=[]):
-                        with patch.object(parser, '_build_hierarchy_from_section_headers', return_value=[]):
-                            with patch.object(parser, '_extract_text_by_bboxes', return_value=[]):
-                                with patch.object(parser, '_merge_nearby_text_blocks', return_value=[]):
-                                    with patch.object(parser, '_create_elements_from_hierarchy', return_value=[]):
-                                        # Создаем элемент с изображением в base64
-                                        from documentor.domain import Element
-                                        img_data = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
-                                        image_element = Element(
-                                            id="img_001",
-                                            type=ElementType.IMAGE,
-                                            content="",
-                                            metadata={"image_data": img_data}
-                                        )
-                                        
-                                        with patch.object(parser, '_store_images_in_metadata', return_value=[image_element]):
+            from documentor.domain import Element
+            img_data = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+            image_element = Element(
+                id="img_001",
+                type=ElementType.IMAGE,
+                content="",
+                metadata={"image_data": img_data}
+            )
+            
+            # Мокаем layout_processor и другие компоненты
+            with patch.object(parser.layout_processor, 'detect_layout_for_all_pages', return_value=[]):
+                with patch.object(parser.layout_processor, 'filter_layout_elements', return_value=[]):
+                    with patch.object(parser.hierarchy_builder, 'analyze_header_levels_from_elements', return_value=[]):
+                        with patch.object(parser.hierarchy_builder, 'build_hierarchy_from_section_headers', return_value=[]):
+                            with patch.object(parser.text_extractor, 'extract_text_by_bboxes', return_value=[]):
+                                with patch.object(parser.text_extractor, 'merge_nearby_text_blocks', return_value=[]):
+                                    with patch.object(parser.hierarchy_builder, 'create_elements_from_hierarchy', return_value=[image_element]):
+                                        with patch.object(parser.image_processor, 'store_images_in_metadata', return_value=[image_element]):
                                             result = parser.parse(doc)
                                             
                                             # Проверяем наличие изображений
@@ -149,45 +149,6 @@ Text with inline image ![Inline](https://example.com/inline.jpg) in text.
 
 class TestTableDataFrameStorage:
     """Тесты сохранения таблиц в pandas DataFrame."""
-
-    def test_pdf_tables_dataframe(self, tmp_path):
-        """Тест сохранения таблиц в DataFrame для PDF."""
-        try:
-            import fitz
-        except ImportError:
-            pytest.skip("PyMuPDF не установлен")
-
-        # Создаем простой PDF с таблицей
-        pdf_path = tmp_path / "test_table.pdf"
-        doc = fitz.open()
-        page = doc.new_page()
-        page.insert_text((50, 50), "Table 1")
-        page.insert_text((50, 100), "Column1 | Column2 | Column3")
-        page.insert_text((50, 120), "Value1  | Value2  | Value3")
-        doc.save(str(pdf_path))
-        doc.close()
-
-        doc = Document(page_content="", metadata={"source": str(pdf_path)})
-        pipeline = Pipeline()
-        
-        # Мокаем парсинг таблиц, чтобы вернуть таблицу с DataFrame
-        with patch('documentor.processing.parsers.pdf.pdf_parser.parse_table_with_qwen') as mock_parse:
-            df = pd.DataFrame({
-                "Column1": ["Value1"],
-                "Column2": ["Value2"],
-                "Column3": ["Value3"]
-            })
-            mock_parse.return_value = ("| Column1 | Column2 | Column3 |\n| Value1 | Value2 | Value3 |", df, True)
-            
-            result = pipeline.parse(doc)
-            
-            # Проверяем наличие таблиц
-            tables = [e for e in result.elements if e.type == ElementType.TABLE]
-            for table in tables:
-                assert "dataframe" in table.metadata
-                assert isinstance(table.metadata["dataframe"], pd.DataFrame)
-                assert len(table.metadata["dataframe"]) > 0
-                assert len(table.metadata["dataframe"].columns) > 0
 
     def test_docx_tables_dataframe(self, tmp_path):
         """Тест сохранения таблиц в DataFrame для DOCX."""

@@ -5,25 +5,20 @@ Language Model integration modules for advanced document processing.
 ## Modules
 
 ### `base.py`
-Base class for LLM clients.
-
-### `qwen.py`
-Qwen LLM client implementation.
+Base class for LLM clients. Provides common interface for LLM providers.
 
 ### `header_detector.py`
-Header detection using LLM for semantic analysis.
-
-### `structure_classifier.py`
-Document structure classification using LLM.
-
-### `structure_validator.py`
-Structure validation and correction using LLM.
+Header detection using LLM for semantic analysis. Currently used for header detection in text documents.
 
 ## Usage
 
 ```python
-from documentor.llm.qwen import QwenClient
+from documentor.llm.header_detector import HeaderDetector
 
-client = QwenClient()
-response = client.generate(prompt="Analyze document structure")
+detector = HeaderDetector()
+headers = detector.detect_headers(document)
 ```
+
+## Note
+
+Most document structure detection is now handled by Dots.OCR for layout detection. LLM integration is primarily used for semantic header detection when needed.

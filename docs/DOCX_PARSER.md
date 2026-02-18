@@ -212,7 +212,7 @@ docx_parser:
 
 ### Step 7: Header Finding and Matching
 
-**Method**: `find_header_in_xml(header_text: str, all_xml_elements: List[Dict], start_from: int) -> Optional[int]`
+**Method**: `DocxHeaderProcessor.process_headers()`, `find_header_in_xml()`, `find_missing_headers_by_rules()`
 
 **Process**:
 1. **Match OCR Headers with XML**:
@@ -224,22 +224,32 @@ docx_parser:
    - Check if paragraph has heading style (Heading 1-6)
    - Get style level if available
    - Check for list item, definition pattern, separator line
+   - Extract font properties (size, bold, italic, alignment, Caps Lock)
 3. **Filter False Positives**:
-   - Skip list items (unless numbered header)
+   - Skip list items (unless numbered header with capital letter)
    - Skip definition patterns (unless heading style)
    - Skip separator lines (unless heading style)
    - Skip list item patterns (unless heading style)
+   - Skip document metadata (title page, author, etc.)
+   - Skip list headers ("Список включает", etc.)
+4. **Find Missing Headers by Rules**:
+   - Build header rules from found headers (font size, bold, style, alignment, etc.)
+   - Search XML for paragraphs matching these rules
+   - Use adaptive thresholds based on found headers
+   - Check numbering sequences to avoid false positives from lists
+   - Filter out chains of 3+ consecutive headers of same level (likely lists)
 
 **Result**: List of header positions:
 ```python
 [
     {
-        "ocr_header": {...},  # Header from OCR
+        "ocr_header": {...},  # Header from OCR (optional)
         "xml_position": 42,   # Position in XML
         "text": "1. Introduction",
         "is_numbered_header": True,
         "level": 1,
-        "from_toc": False
+        "from_toc": False,
+        "found_by_rules": False  # True if found via find_missing_headers_by_rules
     },
     ...
 ]
@@ -263,7 +273,33 @@ docx_parser:
 
 **Result**: Updated header positions with TOC validation.
 
-### Step 9: Hierarchy Building
+### Step 9: Caption Finding and Table Matching
+
+**Method**: `find_table_caption_in_ocr_headers()`, `find_image_caption_in_ocr_headers()`, `match_table_by_structure()`, `match_table_with_caption()`
+
+**Process**:
+1. **Find Table Captions**:
+   - Search OCR headers and captions near table position
+   - Look for patterns like "Таблица 1", "Table 1"
+   - Extract table number from caption
+   - Match with table by bbox proximity
+2. **Find Image Captions**:
+   - Search OCR headers and captions near image position
+   - Look for patterns like "Рисунок 1", "Figure 1"
+   - Extract image number from caption
+   - Match with image by bbox proximity
+3. **Match Tables by Structure**:
+   - Extract top row/headers from XML table
+   - Extract top row/headers from OCR table (from HTML or text extraction)
+   - Compare structures using similarity matching
+   - If structures match, use XML table (original) but enrich with OCR caption
+4. **Enrich Tables and Images**:
+   - Add `caption` and `table_number`/`image_number` to metadata if found
+   - Preserve original XML structure (tables/images from XML are source of truth)
+
+**Result**: Tables and images enriched with caption information from OCR.
+
+### Step 10: Hierarchy Building
 
 **Method**: `build_hierarchy(header_positions: List[Dict], all_xml_elements: List[Dict], docx_tables: List[Dict], docx_images: List[Dict], ...) -> List[Element]`
 
@@ -272,18 +308,29 @@ docx_parser:
 2. **Group Text Blocks**:
    - For each header, collect all elements until next header
    - Group text paragraphs into blocks (max size: 3000 chars, max paragraphs: 10)
+   - **Handle Numbered Lists**: Automatically split numbered list items (1., 2., 3.) into `LIST_ITEM` elements
    - Create TEXT elements for each block
 3. **Process Tables**:
+   - Match tables with OCR captions (from Step 9)
    - Convert XML table data to pandas DataFrame
    - Detect headers in first row
    - Normalize column counts
    - Create TABLE elements with DataFrame in metadata
+   - Add `caption` and `table_number` to metadata if found
 4. **Process Images**:
+   - Match images with OCR captions (from Step 9)
    - Create IMAGE elements with image paths in metadata
+   - Add `caption` and `image_number` to metadata if found
    - Link images to nearest header
 5. **Build Hierarchy**:
    - Assign `parent_id` to each element based on nearest header
    - Handle nested headers (HEADER_2 under HEADER_1, etc.)
+   - Determine header levels using priority:
+     - Structural keywords (Глава, Chapter) → level 1
+     - Numbered patterns (1., 1.1., 1.1.1.) → levels 1, 2, 3
+     - XML style properties (Heading 1-6)
+     - TOC validation
+     - Context (header stack)
 
 **Configuration**:
 ```yaml
@@ -293,11 +340,11 @@ docx_parser:
     max_paragraphs_per_block: 10
 ```
 
-**Result**: List of `Element` objects with complete hierarchy.
+**Result**: List of `Element` objects with complete hierarchy and enriched metadata.
 
-### Step 10: Table Conversion
+### Step 11: Table Conversion
 
-**Method**: `_table_data_to_dataframe(table_data: List[List[str]]]) -> pd.DataFrame`
+**Method**: `_table_data_to_dataframe(table_data: Dict[str, Any]) -> pd.DataFrame`
 
 **Process**:
 1. **Detect Headers**: Check if first row contains headers (non-numeric, descriptive text)
@@ -322,6 +369,7 @@ sequenceDiagram
     participant XmlParser
     participant TocParser
     participant HeaderFinder
+    participant CaptionFinder
     participant HierarchyBuilder
     
     User->>Pipeline: Document(source="file.docx")
@@ -368,10 +416,25 @@ sequenceDiagram
         end
         
         DocxParser->>DocxParser: Validate headers via TOC
+        DocxParser->>HeaderFinder: find_missing_headers_by_rules()
+        HeaderFinder-->>DocxParser: missing_headers[]
+        
+        loop For each table
+            DocxParser->>CaptionFinder: find_table_caption_in_ocr_headers()
+            CaptionFinder-->>DocxParser: caption_info
+            DocxParser->>CaptionFinder: match_table_by_structure()
+            CaptionFinder-->>DocxParser: structure_match
+        end
+        
+        loop For each image
+            DocxParser->>CaptionFinder: find_image_caption_in_ocr_headers()
+            CaptionFinder-->>DocxParser: caption_info
+        end
         
         DocxParser->>HierarchyBuilder: build_hierarchy(headers, elements, tables, images)
+        HierarchyBuilder->>HierarchyBuilder: Find captions for tables/images
         HierarchyBuilder->>HierarchyBuilder: Convert tables to DataFrame
-        HierarchyBuilder->>HierarchyBuilder: Group text blocks
+        HierarchyBuilder->>HierarchyBuilder: Group text blocks (with list splitting)
         HierarchyBuilder->>HierarchyBuilder: Build hierarchy
         HierarchyBuilder-->>DocxParser: elements[]
         
@@ -441,6 +504,22 @@ Parses table of contents from DOCX (static text, TOC styles, or hyperlinks).
 
 Finds header text in XML elements and returns XML position.
 
+### `find_missing_headers_by_rules(docx_path: Path, all_xml_elements: List[Dict], header_rules: Dict, ...) -> List[Dict]`
+
+Finds missing headers in XML using rules based on found headers. Uses adaptive thresholds and property matching.
+
+### `find_table_caption_in_ocr_headers(ocr_headers: List[Dict], ocr_captions: List[Dict], table_bbox: List[float], ...) -> Optional[Dict]`
+
+Finds table caption in OCR headers/captions by position and pattern matching.
+
+### `find_image_caption_in_ocr_headers(ocr_headers: List[Dict], ocr_captions: List[Dict], image_bbox: List[float], ...) -> Optional[Dict]`
+
+Finds image caption in OCR headers/captions by position and pattern matching.
+
+### `match_table_by_structure(docx_table: Dict, ocr_tables: List[Dict], pdf_doc: Any, ...) -> Optional[Dict]`
+
+Matches DOCX table with OCR table by comparing their structures (top row/headers).
+
 ### `build_hierarchy(header_positions: List[Dict], all_xml_elements: List[Dict], docx_tables: List[Dict], docx_images: List[Dict], ...) -> List[Element]`
 
 Builds complete document hierarchy from all elements.
@@ -484,5 +563,9 @@ Each `Element` contains:
 2. **Dots.OCR is only for layout**: Text extraction uses PyMuPDF from PDF, not OCR LLM.
 3. **TOC validation**: Table of contents is used to validate and find missing headers.
 4. **Scanned document detection**: Automatically detects scanned DOCX and processes via PdfParser with OCR.
-5. **Tables from XML**: Tables are extracted from XML and converted to DataFrame, not from OCR.
-6. **Images from XML**: Images are extracted from XML relationships, not from OCR.
+5. **Tables from XML**: Tables are extracted from XML and converted to DataFrame, not from OCR. However, captions are found via OCR and table structures are compared with OCR for validation.
+6. **Images from XML**: Images are extracted from XML relationships, not from OCR. However, captions are found via OCR.
+7. **Caption enrichment**: Table and image captions are found using OCR headers/captions and matched by position and pattern. The final table/image structure comes from XML (source of truth), but is enriched with OCR caption information.
+8. **Missing header detection**: Headers missed by OCR are found using rules based on found headers (font properties, style, alignment, etc.) with adaptive thresholds.
+9. **Numbered header support**: Supports numbered headers with or without spaces after numbers (e.g., "1Анализ", "1. Анализ", "1.1Актуальность").
+10. **List item handling**: Automatically identifies and splits numbered list items (1., 2., 3.) into `LIST_ITEM` elements, preventing false header detection.

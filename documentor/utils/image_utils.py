@@ -70,6 +70,17 @@ class ImageUtils:
         Returns:
             Base64 encoded string with data URI prefix (e.g., "data:image/jpeg;base64,...").
         """
+        # Convert RGBA to RGB for JPEG format
+        if format == "JPEG" and img.mode in ("RGBA", "LA", "P"):
+            # Create white background
+            rgb_img = Image.new("RGB", img.size, (255, 255, 255))
+            if img.mode == "P":
+                img = img.convert("RGBA")
+            rgb_img.paste(img, mask=img.split()[-1] if img.mode == "RGBA" else None)
+            img = rgb_img
+        elif format == "JPEG" and img.mode != "RGB":
+            img = img.convert("RGB")
+        
         buffer = io.BytesIO()
         
         save_kwargs = {"format": format}

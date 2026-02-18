@@ -58,16 +58,6 @@ OCR (Optical Character Recognition) service configuration.
   - `layout`: Layout detection parameters
     - `confidence_threshold`: Detection confidence threshold (0.0 - 1.0, default: 0.5)
   - `reading_order`: Reading order building settings
-- `qwen_ocr`: Qwen OCR settings
-  - `model`: Model for OCR (default: "qwen2-vl-7b-instruct")
-  - `base_url`: API URL (if null - uses local model)
-  - `recognition`: Recognition parameters
-    - `languages`: Recognition languages (ISO 639-1 codes)
-    - `resolution`: Image resolution for OCR (DPI)
-    - `temperature`: Generation temperature (0.0 - 1.0, default: 0.1)
-    - `max_tokens`: Maximum number of tokens (default: 4096)
-    - `timeout`: Timeout per image in seconds (default: 30)
-  - `batch`: Batch processing settings
 - `image_processing`: Image processing settings
   - `format`: Image format for OCR
   - `quality`: Image quality for JPEG
@@ -91,7 +81,7 @@ LLM (Large Language Models) service configuration.
 
 **Structure:**
 - `providers`: LLM provider settings
-  - `qwen`: Qwen provider settings
+  - `openai`: OpenAI provider settings (optional)
     - `text`: Text analysis model settings
     - `visual`: Visual analysis (OCR) model settings
   - `openai`: OpenAI provider settings (optional)
@@ -136,10 +126,6 @@ For non-secret parameters (timeouts, temperatures, model names, etc.), the prior
 
 For secret parameters (API keys, base URLs), only environment variables are used.
 
-Example for Qwen OCR timeout:
-- If `qwen_ocr.recognition.timeout` is set in `ocr_config.yaml` → uses that value
-- If not set in config but `QWEN_TIMEOUT` env var exists → uses env var
-- Otherwise → uses default value (180 seconds)
 
 ## Configuration Format
 

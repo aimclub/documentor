@@ -23,9 +23,9 @@ graph TB
     
     MarkdownParser -->|Parsing| MarkdownLogic["Parsing Logic:<br/>Headers by #<br/>Tables to DataFrame<br/>Lists with nesting<br/>Quotes, Code blocks<br/>Images, Links"]
     
-    DocxParser -->|Parsing| DocxLogic["Parsing Logic:<br/>Layout Detection Dots.OCR<br/>XML Parsing<br/>TOC Validation<br/>Text Extraction PyMuPDF<br/>Tables to DataFrame<br/>Images"]
+    DocxParser -->|Parsing| DocxLogic["Parsing Logic:<br/>Layout Detection Dots.OCR<br/>XML Parsing<br/>TOC Validation<br/>Missing Header Detection<br/>Caption Finding<br/>Table Structure Matching<br/>Text Extraction PyMuPDF<br/>Tables to DataFrame<br/>Images"]
     
-    PdfParser -->|Parsing| PdfLogic["Parsing Logic:<br/>Layout Detection Dots.OCR<br/>Text Extraction PyMuPDF or OCR<br/>Table Parsing Qwen2.5<br/>Image Storage"]
+    PdfParser -->|Parsing| PdfLogic["Parsing Logic:<br/>Layout Detection Dots.OCR<br/>Different Prompts by PDF Type<br/>Text Extraction PyMuPDF or Dots OCR<br/>Table Parsing from HTML<br/>Image Storage<br/>Specialized Processors"]
     
     MarkdownLogic --> Elements[List of Elements]
     DocxLogic --> Elements
@@ -126,9 +126,36 @@ classDiagram
     class PdfParser {
         +parse(Document) ParsedDocument
         -_is_text_extractable(str) bool
-        -_detect_layout_for_all_pages(str) List~Dict~
-        -_extract_text_by_bboxes(str, List~Dict~, bool) List~Dict~
-        -_parse_tables_with_qwen(List~Element~, str) List~Element~
+        +layout_processor PdfLayoutProcessor
+        +text_extractor PdfTextExtractor
+        +table_parser PdfTableParser
+        +image_processor PdfImageProcessor
+        +hierarchy_builder PdfHierarchyBuilder
+    }
+    
+    class PdfLayoutProcessor {
+        +detect_layout_for_all_pages(str, bool) List~Dict~
+        +reprocess_tables_with_all_en(str, List~Dict~) List~Dict~
+        +filter_layout_elements(List~Dict~) List~Dict~
+    }
+    
+    class PdfTextExtractor {
+        +extract_text_by_bboxes(str, List~Dict~, bool) List~Dict~
+        +merge_nearby_text_blocks(List~Dict~, int) List~Dict~
+    }
+    
+    class PdfTableParser {
+        +parse_tables(List~Element~, str, bool) List~Element~
+    }
+    
+    class PdfImageProcessor {
+        +store_images_in_metadata(List~Element~, str) List~Element~
+    }
+    
+    class PdfHierarchyBuilder {
+        +analyze_header_levels_from_elements(List~Dict~, str, bool) List~Dict~
+        +build_hierarchy_from_section_headers(List~Dict~) Dict
+        +create_elements_from_hierarchy(Dict, List~Dict~, List~Dict~, str) List~Element~
     }
     
     class ElementIdGenerator {
@@ -147,6 +174,11 @@ classDiagram
     BaseParser <|-- DocxParser
     BaseParser <|-- PdfParser
     BaseParser --> ElementIdGenerator : uses
+    PdfParser --> PdfLayoutProcessor : uses
+    PdfParser --> PdfTextExtractor : uses
+    PdfParser --> PdfTableParser : uses
+    PdfParser --> PdfImageProcessor : uses
+    PdfParser --> PdfHierarchyBuilder : uses
 ```
 
 ## Document Processing Flow
@@ -197,15 +229,18 @@ sequenceDiagram
         end
     else PDF Parser
         Parser->>Parser: _is_text_extractable()
-        Parser->>Parser: _detect_layout_for_all_pages()
-        Parser->>Parser: _filter_layout_elements()
-        Parser->>Parser: _analyze_header_levels_from_elements()
-        Parser->>Parser: _build_hierarchy_from_section_headers()
-        Parser->>Parser: _extract_text_by_bboxes()
-        Parser->>Parser: _merge_nearby_text_blocks()
-        Parser->>Parser: _create_elements_from_hierarchy()
-        Parser->>Parser: _store_images_in_metadata()
-        Parser->>Parser: _parse_tables_with_qwen()
+        Parser->>LayoutProcessor: detect_layout_for_all_pages()
+        alt Text-extractable PDF
+            LayoutProcessor->>LayoutProcessor: reprocess_tables_with_all_en()
+        end
+        Parser->>LayoutProcessor: filter_layout_elements()
+        Parser->>HierarchyBuilder: analyze_header_levels_from_elements()
+        Parser->>HierarchyBuilder: build_hierarchy_from_section_headers()
+        Parser->>TextExtractor: extract_text_by_bboxes()
+        Parser->>TextExtractor: merge_nearby_text_blocks()
+        Parser->>HierarchyBuilder: create_elements_from_hierarchy()
+        Parser->>ImageProcessor: store_images_in_metadata()
+        Parser->>TableParser: parse_tables(use_dots_ocr_html=True)
         Parser->>Parser: Create ParsedDocument
     end
     
@@ -238,29 +273,35 @@ graph TB
         Layout --> Extract[Extract Text from PDF<br/>PyMuPDF by bbox]
         Convert2 --> XML[XML Parsing<br/>Extract all elements]
         XML --> TOC[TOC Parsing<br/>Parse table of contents]
-        Extract --> Match[Find Headers in XML<br/>Match OCR with XML]
+        Extract --> Match[Find Headers in XML<br/>Match OCR with XML + Rules]
         TOC --> Match
-        Match --> Validate[Validate Headers via TOC]
-        Validate --> Hierarchy1[Build Hierarchy<br/>Group text blocks]
-        Hierarchy1 --> Tables[Convert Tables<br/>XML to DataFrame]
+        Match --> Validate[Validate Headers via TOC<br/>Find Missing Headers]
+        Validate --> Captions[Find Captions<br/>for Tables & Images]
+        Captions --> Structure[Match Tables<br/>by Structure]
+        Structure --> Hierarchy1[Build Hierarchy<br/>Group text blocks<br/>Split lists]
+        Hierarchy1 --> Tables[Convert Tables<br/>XML to DataFrame<br/>Enrich with captions]
         Tables --> Elements2
     end
     
     subgraph "PDF Parser"
         PDF[PDF File] --> TextCheck{Text Extractable?}
-        TextCheck --> Layout2[Layout Detection<br/>Dots.OCR for all pages]
-        Layout2 --> Filter[Filter Elements<br/>Remove headers/footers]
+        TextCheck -->|Scanned| Layout2a[Layout Detection<br/>prompt_layout_all_en<br/>Dots.OCR]
+        TextCheck -->|Text| Layout2b[Layout Detection<br/>prompt_layout_only_en<br/>Dots.OCR]
+        Layout2b --> Reprocess[Reprocess Tables<br/>prompt_layout_all_en<br/>for HTML]
+        Layout2a --> Filter[Filter Elements<br/>Remove headers/footers]
+        Reprocess --> Filter
         Filter --> Analyze[Analyze Header Levels<br/>Numbering, position, font]
         Analyze --> Hierarchy2[Build Hierarchy<br/>Around Section-header]
-        Layout2 --> Extract2{Text Extractable?}
-        Extract2 -->|Yes| PyMuPDF[PyMuPDF<br/>by bbox coordinates]
-        Extract2 -->|No| OCR[Qwen2.5 OCR<br/>for text elements only]
-        PyMuPDF --> Merge[Merge Text Blocks<br/>up to 3000 chars]
-        OCR --> Merge
+        Layout2a --> Extract2a[Text from Dots OCR<br/>already extracted]
+        Layout2b --> Extract2b[PyMuPDF<br/>by bbox coordinates]
+        Extract2a --> Merge[Merge Text Blocks<br/>up to 3000 chars]
+        Extract2b --> Merge
         Merge --> Create[Create Elements<br/>from hierarchy]
         Create --> Images[Store Images<br/>in metadata]
-        Layout2 --> Tables2[Parse Tables<br/>Qwen2.5]
-        Tables2 --> Elements3[Elements]
+        Layout2a --> Tables2a[Parse Tables<br/>from HTML<br/>Dots OCR]
+        Reprocess --> Tables2b[Parse Tables<br/>from HTML<br/>Dots OCR]
+        Tables2a --> Elements3[Elements]
+        Tables2b --> Elements3
         Images --> Elements3
         Hierarchy2 --> Elements3
     end

@@ -90,39 +90,6 @@ dots_ocr:
     # Consider element grouping when building reading order
     use_grouping: true
 
-# Qwen OCR settings for text recognition
-qwen_ocr:
-  # Model for OCR (if null - uses from env variable QWEN_MODEL_NAME)
-  model: null
-  
-  # API URL (if null - uses from env variable QWEN_BASE_URL)
-  base_url: null
-  
-  # Recognition parameters
-  recognition:
-    # Recognition languages (ISO 639-1 codes)
-    languages: ["en", "ru"]
-    
-    # Image resolution for OCR (DPI)
-    # Higher = better quality, but slower
-    resolution: 300
-    
-    # Generation temperature (0.0 - 1.0)
-    temperature: 0.1
-    
-    # Maximum number of tokens
-    max_tokens: 4096
-    
-    # Timeout per image in seconds
-    timeout: 30
-  
-  # Batch processing
-  batch:
-    # Batch size for processing
-    size: 10
-    
-    # Maximum batch wait time in seconds
-    max_wait_time: 5
 
 # Image processing settings
 image_processing:

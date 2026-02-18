@@ -2,33 +2,6 @@
 
 # LLM provider settings
 providers:
-  qwen:
-    # Qwen for text analysis
-    text:
-      # Model name
-      model: "qwen2.5-7b-instruct"  # or other model
-      # API URL (if null - uses local model)
-      base_url: null
-      # Generation temperature (0.0 - 1.0)
-      temperature: 0.1
-      # Maximum number of tokens
-      max_tokens: 4096
-      # Request timeout in seconds
-      timeout: 120
-    
-    # Qwen VL for visual analysis (OCR)
-    visual:
-      # Model name
-      model: "qwen2-vl-7b-instruct"  # or other VL model
-      # API URL (if null - uses local model)
-      base_url: null
-      # Generation temperature (0.0 - 1.0)
-      temperature: 0.1
-      # Maximum number of tokens
-      max_tokens: 4096
-      # Request timeout in seconds
-      timeout: 120
-  
   openai:
     # Optional OpenAI support
     model: "gpt-4o"

@@ -173,16 +173,20 @@ The PDF parser uses layout-based approach for all documents:
 4. **Header Level Analysis**: Determine header levels based on numbering, position, and styles
 5. **Hierarchy Building**: Build hierarchy around Section-header elements
 6. **Text Extraction**: 
-   - For text PDFs: Extract text via PyMuPDF by coordinates from Dots.OCR
-   - For scanned PDFs: Use OCR via Qwen2.5 for each text element only
+   - For text-extractable PDFs: Extract text via PyMuPDF by coordinates from Dots.OCR
+   - For scanned PDFs: Text already extracted by Dots OCR (`prompt_layout_all_en`)
 7. **Text Block Merging**: Merge close text blocks (up to 3000 characters)
-8. **Table Parsing**: Parse tables via Qwen2.5 with conversion to Pandas DataFrame
-9. **Image Storage**: Store images in Caption element metadata
+8. **Table Parsing**: Parse tables from Dots OCR HTML with conversion to Pandas DataFrame
+9. **Image Storage**: Store images in metadata (base64)
 
 **Important**: 
-- Dots.OCR is used ONLY for layout detection and block coordinates
-- For text PDFs, text is extracted via PyMuPDF by coordinates from Dots.OCR
-- For scanned PDFs, OCR via Qwen2.5 is used only for text elements (not for Picture)
+- Dots.OCR is used for layout detection and block coordinates
+- Different prompts for different PDF types:
+  - Scanned PDFs: `prompt_layout_all_en` (layout + text + tables + formulas)
+  - Text-extractable PDFs: `prompt_layout_only_en` (layout) + table reprocessing with `prompt_layout_all_en`
+- For text-extractable PDFs, text is extracted via PyMuPDF by coordinates from Dots.OCR
+- For scanned PDFs, text is already extracted by Dots OCR (`prompt_layout_all_en`)
+- Tables are parsed from HTML provided by Dots OCR, not via separate OCR service
 - Layout-based approach is always used, regardless of whether text can be extracted from PDF
 
 ### DOCX Parser
@@ -202,9 +206,8 @@ DOCX parser uses **combined approach** (OCR layout + XML parsing + TOC validatio
 8. **Table Conversion**: Convert tables from XML to Pandas DataFrame
 
 **Important**: 
-- Dots.OCR is used ONLY for layout detection and block coordinates (Section-header, Caption)
+- Dots.OCR is used for layout detection and block coordinates (Section-header, Caption)
 - Text is extracted via PyMuPDF by coordinates from Dots.OCR
-- OCR LLM (Qwen OCR) is NOT used for text extraction from DOCX
 - For scanned DOCX, document is automatically converted to PDF and processed via PdfParser with OCR
 
 **Automatic Scanned DOCX Detection**:
@@ -277,7 +280,7 @@ All configuration is in `documentor/config/config.yaml`:
 
 - `pdf_parser`: PDF parser settings (layout detection, filtering, table parsing, header analysis)
 - `docx_parser`: DOCX parser settings (layout detection, scanned detection, hierarchy building)
-- `ocr_config.yaml`: OCR service configuration (Dots.OCR, Qwen OCR)
+- `ocr_config.yaml`: OCR service configuration (Dots.OCR)
 - `llm_config.yaml`: LLM service configuration
 
 See [Configuration README](../documentor/config/README.md) for detailed configuration options.

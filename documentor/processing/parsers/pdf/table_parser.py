@@ -55,7 +55,7 @@ class PdfTableParser:
             elements: List of elements.
             source: Path to PDF file.
             use_dots_ocr_html: If True, uses HTML from Dots OCR (prompt_layout_all_en).
-                              Always True now, Qwen fallback removed.
+                              Always True now.
 
         Returns:
             List of elements with parsed tables.

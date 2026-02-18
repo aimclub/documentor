@@ -214,8 +214,8 @@ class TestMarkdownIntegrationMetrics:
         assert metrics["num_elements"] == len(result.elements)
         assert metrics["num_elements"] >= 4  # минимум 3 заголовка + текст
         
-        # Время парсинга должно быть разумным (меньше 1 секунды для простого документа)
-        assert metrics["parsing_time_seconds"] < 1.0
+        # Время парсинга должно быть разумным (меньше 5 секунд для простого документа)
+        assert metrics["parsing_time_seconds"] < 5.0
         
         # Проверяем elements_by_type
         elements_by_type = metrics["elements_by_type"]

@@ -4,7 +4,11 @@ Complete documentation for the PDF parser implementation.
 
 ## Overview
 
-The PDF parser uses a **layout-based approach** that always uses Dots.OCR for layout detection, regardless of whether text can be extracted from the PDF. This ensures consistent structure detection for all PDF types.
+The PDF parser uses a **layout-based approach** with specialized processors that always uses Dots.OCR for layout detection, regardless of whether text can be extracted from the PDF. This ensures consistent structure detection for all PDF types.
+
+The parser uses different prompts based on PDF type:
+- **Scanned PDFs**: Uses `prompt_layout_all_en` to extract layout, text, tables (HTML), and formulas (LaTeX) directly from Dots OCR
+- **Text-extractable PDFs**: Uses `prompt_layout_only_en` for layout detection, then re-processes pages with tables using `prompt_layout_all_en` to get HTML, while extracting text via PyMuPDF
 
 ## Architecture
 
@@ -30,16 +34,16 @@ graph TB
     BuildHierarchy --> ExtractText{Text Extractable?}
     
     ExtractText -->|Yes| PyMuPDF[Extract Text via PyMuPDF<br/>by bbox coordinates]
-    ExtractText -->|No| QwenOCR[OCR via Qwen2.5<br/>for text elements only]
+    ExtractText -->|No| DotsOCRText[Text from Dots OCR<br/>prompt_layout_all_en]
     
     PyMuPDF --> MergeText[Merge Close Text Blocks<br/>up to 3000 chars]
-    QwenOCR --> MergeText
+    DotsOCRText --> MergeText
     
     MergeText --> CreateElements[Create Elements:<br/>Headers, Text, Tables, Images]
     
     CreateElements --> StoreImages[Store Images in<br/>Caption metadata]
     
-    StoreImages --> ParseTables[Parse Tables via Qwen2.5<br/>Convert to DataFrame]
+    StoreImages --> ParseTables[Parse Tables from HTML<br/>Dots OCR → DataFrame]
     
     ParseTables --> ParsedDoc[ParsedDocument<br/>with Elements]
     
@@ -50,7 +54,7 @@ graph TB
     style LayoutDetect fill:#e8f5e9
     style BuildHierarchy fill:#f3e5f5
     style PyMuPDF fill:#c8e6c9
-    style QwenOCR fill:#ffccbc
+    style DotsOCRText fill:#ffccbc
     style ParsedDoc fill:#fff9c4
     style Output fill:#c8e6c9
 ```
@@ -70,21 +74,29 @@ Checks if text can be extracted from the PDF by:
 
 ### Step 2: Layout Detection
 
-**Method**: `_detect_layout_for_all_pages(source: str) -> List[Dict]`
+**Method**: `PdfLayoutProcessor.detect_layout_for_all_pages(source: str, use_text_extraction: bool) -> List[Dict]`
 
 **Process**:
 1. **Page Rendering**: Render all PDF pages as images with 2x scale
    - Uses `PdfPageRenderer` with `render_scale=2.0`
    - Optimizes images for OCR if configured
 2. **Layout Detection**: For each page, call Dots.OCR layout detection
-   - Uses `PdfLayoutDetector` with direct API call (default)
-   - Gets layout elements with categories and bbox coordinates
+   - **For scanned PDFs** (`use_text_extraction=True`):
+     - Uses `prompt_layout_all_en` to get layout, text, tables (HTML), and formulas (LaTeX)
+     - Elements contain `text` field with extracted text
+     - Tables contain `table_html` or `html` field with HTML structure
+   - **For text-extractable PDFs** (`use_text_extraction=False`):
+     - Uses `prompt_layout_only_en` for layout detection only
+     - Text will be extracted later via PyMuPDF
 3. **Result**: List of layout elements with:
    ```python
    {
        "bbox": [x1, y1, x2, y2],
        "category": "Section-header",  # or "Text", "Table", "Picture", "Caption"
-       "page_num": 0
+       "page_num": 0,
+       "text": "...",  # Only for scanned PDFs (from prompt_layout_all_en)
+       "table_html": "...",  # Only if table found (from prompt_layout_all_en)
+       "html": "..."  # Alternative field name for table HTML
    }
    ```
 
@@ -101,9 +113,23 @@ Checks if text can be extracted from the PDF by:
 - `List-item` - List item
 - `Footnote` - Footnote
 
+### Step 2.5: Table Reprocessing (Text-extractable PDFs only)
+
+**Method**: `PdfLayoutProcessor.reprocess_tables_with_all_en(source: str, layout_elements: List[Dict]) -> List[Dict]`
+
+**Process**:
+1. **Identify Pages with Tables**: Find pages containing Table elements from initial layout detection
+2. **Re-process with Full Prompt**: For each page with tables:
+   - Re-render page image
+   - Call Dots.OCR with `prompt_layout_all_en` to get HTML table structure
+   - Update table elements with `table_html` or `html` field
+3. **Result**: Updated layout elements with HTML table structure for tables
+
+**Note**: This step is skipped for scanned PDFs (they already have HTML from `prompt_layout_all_en`).
+
 ### Step 3: Element Filtering
 
-**Method**: `_filter_layout_elements(layout_elements: List[Dict]) -> List[Dict]`
+**Method**: `PdfLayoutProcessor.filter_layout_elements(layout_elements: List[Dict]) -> List[Dict]`
 
 **Filters**:
 1. **Page Headers/Footers**: Removed if `remove_page_headers`/`remove_page_footers` is enabled
@@ -120,7 +146,7 @@ pdf_parser:
 
 ### Step 4: Header Level Analysis
 
-**Method**: `_analyze_header_levels_from_elements(elements: List[Dict], source: str) -> List[Dict]`
+**Method**: `PdfHierarchyBuilder.analyze_header_levels_from_elements(elements: List[Dict], source: str, is_text_extractable: bool) -> List[Dict]`
 
 **Process**:
 1. Extract text from Section-header elements using PyMuPDF
@@ -145,7 +171,7 @@ pdf_parser:
 
 ### Step 5: Hierarchy Building
 
-**Method**: `_build_hierarchy_from_section_headers(elements: List[Dict]) -> Dict`
+**Method**: `PdfHierarchyBuilder.build_hierarchy_from_section_headers(elements: List[Dict]) -> Dict`
 
 **Process**:
 1. Group elements by sections:
@@ -183,9 +209,9 @@ pdf_parser:
 
 ### Step 6: Text Extraction
 
-**Method**: `_extract_text_by_bboxes(source: str, elements: List[Dict], use_ocr: bool) -> List[Dict]`
+**Method**: `PdfTextExtractor.extract_text_by_bboxes(source: str, layout_elements: List[Dict], use_ocr: bool) -> List[Dict]`
 
-**For Text PDFs** (use_ocr=False):
+**For Text-extractable PDFs** (use_ocr=False):
 1. For each Text element:
    - Get bbox coordinates from layout detection
    - Convert coordinates from image scale to PDF scale (divide by render_scale)
@@ -194,12 +220,11 @@ pdf_parser:
 2. Result: Text elements with extracted content
 
 **For Scanned PDFs** (use_ocr=True):
-1. For each Text element:
-   - Render element region as image (crop from page image)
-   - Send to Qwen2.5 OCR API
-   - Extract text from OCR response
-2. **Note**: Picture elements are skipped (no OCR for images)
-3. Result: Text elements with OCR-extracted content
+1. **Text already extracted**: Text is already in `text` field from Dots OCR (`prompt_layout_all_en`)
+2. For each Text element:
+   - Use `text` field from layout element (extracted by Dots OCR)
+   - No additional OCR needed
+3. Result: Text elements with Dots OCR-extracted content
 
 **Result**: List of text elements:
 ```python
@@ -217,7 +242,7 @@ pdf_parser:
 
 ### Step 7: Text Block Merging
 
-**Method**: `_merge_nearby_text_blocks(text_elements: List[Dict], max_chunk_size: int = 3000) -> List[Dict]`
+**Method**: `PdfTextExtractor.merge_nearby_text_blocks(text_elements: List[Dict], max_chunk_size: int = 3000) -> List[Dict]`
 
 **Process**:
 1. **Find Close Blocks**: 
@@ -234,7 +259,7 @@ pdf_parser:
 
 ### Step 8: Element Creation
 
-**Method**: `_create_elements_from_hierarchy(hierarchy: Dict, text_elements: List[Dict], layout_elements: List[Dict]) -> List[Element]`
+**Method**: `PdfHierarchyBuilder.create_elements_from_hierarchy(hierarchy: Dict, merged_text_elements: List[Dict], layout_elements: List[Dict], source: str) -> List[Element]`
 
 **Process**:
 1. **Create Header Elements**:
@@ -262,7 +287,7 @@ pdf_parser:
 
 ### Step 9: Image Storage
 
-**Method**: `_store_images_in_metadata(elements: List[Element], source: str) -> List[Element]`
+**Method**: `PdfImageProcessor.store_images_in_metadata(elements: List[Element], source: str) -> List[Element]`
 
 **Process**:
 1. For each IMAGE element:
@@ -278,32 +303,32 @@ pdf_parser:
 
 ### Step 10: Table Parsing
 
-**Method**: `_parse_tables_with_qwen(elements: List[Element], source: str) -> List[Element]`
+**Method**: `PdfTableParser.parse_tables(elements: List[Element], source: str, use_dots_ocr_html: bool = True) -> List[Element]`
 
 **Process**:
 1. For each TABLE element:
-   - Render table region from PDF as image
-   - Send to Qwen2.5 with table parsing prompt
-   - Get Markdown table from response
-2. **Convert to DataFrame**:
-   - Parse Markdown table to pandas DataFrame
-   - Store DataFrame in `metadata["dataframe"]`
-   - Store Markdown in `content`
-3. **Detect Merged Tables**:
-   - Analyze table structure (column count, headers)
-   - Find "breaks" in structure
-   - Split into multiple tables if needed
+   - **HTML from Dots OCR**: Use `table_html` or `html` field from layout element (extracted by `prompt_layout_all_en`)
+   - **Parse HTML**: Convert HTML table structure to pandas DataFrame
+   - **Store Results**:
+     - Store DataFrame in `metadata["dataframe"]`
+     - Store Markdown representation in `content`
+     - Store table image in `metadata["table_image"]` (base64)
+2. **HTML Table Parsing**:
+   - Uses `html_table_parser.parse_table_from_html()` to parse HTML
+   - Handles merged cells, headers, and complex structures
+   - Converts to normalized DataFrame format
+3. **Fallback**: If HTML is not available, table is marked as failed
 
 **Configuration**:
 ```yaml
 pdf_parser:
   table_parsing:
-    method: "markdown"
-    qwen_model: "qwen2.5-7b-vl-instruct"
-    detect_merged_tables: true
+    use_dots_ocr_html: true  # Use HTML from Dots OCR (prompt_layout_all_en)
 ```
 
-**Result**: Table elements with DataFrame in metadata.
+**Result**: Table elements with DataFrame in metadata and Markdown in content.
+
+**Note**: Tables are parsed from HTML provided by Dots OCR (`prompt_layout_all_en`). The HTML structure is already extracted during layout detection or table reprocessing.
 
 ## Sequence Diagram
 
@@ -312,11 +337,14 @@ sequenceDiagram
     participant User
     participant Pipeline
     participant PdfParser
+    participant LayoutProcessor
+    participant TextExtractor
+    participant TableParser
+    participant ImageProcessor
+    participant HierarchyBuilder
     participant Renderer
     participant DotsOCR
     participant PyMuPDF
-    participant QwenOCR
-    participant QwenTable
     
     User->>Pipeline: Document(source="file.pdf")
     Pipeline->>PdfParser: parse(document)
@@ -324,39 +352,62 @@ sequenceDiagram
     PdfParser->>PdfParser: _is_text_extractable()
     PdfParser-->>PdfParser: is_text_extractable = true/false
     
-    PdfParser->>Renderer: render_pages(pdf_path)
-    Renderer-->>PdfParser: page_images[]
+    PdfParser->>LayoutProcessor: detect_layout_for_all_pages()
+    LayoutProcessor->>Renderer: render_pages(pdf_path)
+    Renderer-->>LayoutProcessor: page_images[]
     
     loop For each page
-        PdfParser->>DotsOCR: detect_layout(page_image)
-        DotsOCR-->>PdfParser: layout_elements[]
+        LayoutProcessor->>DotsOCR: detect_layout(page_image, prompt)
+        DotsOCR-->>LayoutProcessor: layout_elements[]
     end
     
-    PdfParser->>PdfParser: _filter_layout_elements()
-    PdfParser->>PdfParser: _analyze_header_levels()
-    PdfParser->>PdfParser: _build_hierarchy_from_section_headers()
+    alt Text-extractable PDF
+        LayoutProcessor->>LayoutProcessor: reprocess_tables_with_all_en()
+        loop For each page with table
+            LayoutProcessor->>DotsOCR: detect_layout(page_image, prompt_layout_all_en)
+            DotsOCR-->>LayoutProcessor: table_html
+        end
+    end
     
-    alt Text PDF
+    LayoutProcessor-->>PdfParser: layout_elements[]
+    
+    PdfParser->>LayoutProcessor: filter_layout_elements()
+    LayoutProcessor-->>PdfParser: filtered_elements[]
+    
+    PdfParser->>HierarchyBuilder: analyze_header_levels()
+    HierarchyBuilder-->>PdfParser: analyzed_elements[]
+    
+    PdfParser->>HierarchyBuilder: build_hierarchy_from_section_headers()
+    HierarchyBuilder-->>PdfParser: hierarchy
+    
+    alt Text-extractable PDF
+        PdfParser->>TextExtractor: extract_text_by_bboxes(use_ocr=False)
         loop For each text element
-            PdfParser->>PyMuPDF: get_textbox(bbox)
-            PyMuPDF-->>PdfParser: text
+            TextExtractor->>PyMuPDF: get_textbox(bbox)
+            PyMuPDF-->>TextExtractor: text
         end
     else Scanned PDF
-        loop For each text element
-            PdfParser->>QwenOCR: ocr_text(element_image)
-            QwenOCR-->>PdfParser: text
-        end
+        PdfParser->>TextExtractor: extract_text_by_bboxes(use_ocr=True)
+        Note over TextExtractor: Text already in layout_elements<br/>from prompt_layout_all_en
     end
     
-    PdfParser->>PdfParser: _merge_nearby_text_blocks()
-    PdfParser->>PdfParser: _create_elements_from_hierarchy()
-    PdfParser->>PdfParser: _store_images_in_metadata()
+    TextExtractor-->>PdfParser: text_elements[]
     
+    PdfParser->>TextExtractor: merge_nearby_text_blocks()
+    TextExtractor-->>PdfParser: merged_text_elements[]
+    
+    PdfParser->>HierarchyBuilder: create_elements_from_hierarchy()
+    HierarchyBuilder-->>PdfParser: elements[]
+    
+    PdfParser->>ImageProcessor: store_images_in_metadata()
+    ImageProcessor-->>PdfParser: elements[]
+    
+    PdfParser->>TableParser: parse_tables(use_dots_ocr_html=True)
     loop For each table
-        PdfParser->>QwenTable: parse_table(table_image)
-        QwenTable-->>PdfParser: markdown_table
-        PdfParser->>PdfParser: markdown_to_dataframe()
+        TableParser->>TableParser: parse_table_from_html(table_html)
+        TableParser->>TableParser: html_to_dataframe()
     end
+    TableParser-->>PdfParser: elements[]
     
     PdfParser-->>Pipeline: ParsedDocument
     Pipeline-->>User: ParsedDocument
@@ -382,7 +433,7 @@ pdf_parser:
   # Table Parsing
   table_parsing:
     method: "markdown"
-    qwen_model: "qwen2.5-7b-vl-instruct"
+    # Table parsing uses HTML from Dots OCR, no separate model needed
     detect_merged_tables: true
   
   # Header Analysis
@@ -396,51 +447,87 @@ pdf_parser:
     skip_title_page: false  # Skip first page if title page exists
 ```
 
+## Architecture Components
+
+The PDF parser uses specialized processors for different tasks:
+
+### `PdfParser`
+Main parser class that orchestrates the complete parsing pipeline.
+
+### `PdfLayoutProcessor`
+Handles layout detection and filtering:
+- `detect_layout_for_all_pages()`: Performs layout detection using appropriate prompt
+- `reprocess_tables_with_all_en()`: Re-processes pages with tables to get HTML
+- `filter_layout_elements()`: Filters out unnecessary elements
+
+### `PdfTextExtractor`
+Handles text extraction:
+- `extract_text_by_bboxes()`: Extracts text via PyMuPDF or uses Dots OCR text
+- `merge_nearby_text_blocks()`: Merges close text blocks
+
+### `PdfTableParser`
+Handles table parsing:
+- `parse_tables()`: Parses tables from Dots OCR HTML and converts to DataFrame
+
+### `PdfImageProcessor`
+Handles image processing:
+- `store_images_in_metadata()`: Extracts and stores images in metadata
+
+### `PdfHierarchyBuilder`
+Handles hierarchy building:
+- `analyze_header_levels_from_elements()`: Determines header levels
+- `build_hierarchy_from_section_headers()`: Builds document hierarchy
+- `create_elements_from_hierarchy()`: Creates Element objects
+
 ## Key Methods
 
-### `parse(document: Document) -> ParsedDocument`
+### `PdfParser.parse(document: Document) -> ParsedDocument`
 
 Main entry point. Orchestrates the complete parsing pipeline.
 
-### `_is_text_extractable(source: str) -> bool`
+### `PdfParser._is_text_extractable(source: str) -> bool`
 
 Checks if text can be extracted from PDF.
 
-### `_detect_layout_for_all_pages(source: str) -> List[Dict]`
+### `PdfLayoutProcessor.detect_layout_for_all_pages(source: str, use_text_extraction: bool) -> List[Dict]`
 
-Performs layout detection for all pages using Dots.OCR.
+Performs layout detection for all pages using Dots.OCR with appropriate prompt.
 
-### `_filter_layout_elements(elements: List[Dict]) -> List[Dict]`
+### `PdfLayoutProcessor.reprocess_tables_with_all_en(source: str, layout_elements: List[Dict]) -> List[Dict]`
+
+Re-processes pages with tables using `prompt_layout_all_en` to get HTML structure.
+
+### `PdfLayoutProcessor.filter_layout_elements(elements: List[Dict]) -> List[Dict]`
 
 Filters out unnecessary elements (headers, footers, side text).
 
-### `_analyze_header_levels_from_elements(elements: List[Dict], source: str) -> List[Dict]`
+### `PdfHierarchyBuilder.analyze_header_levels_from_elements(elements: List[Dict], source: str, is_text_extractable: bool) -> List[Dict]`
 
 Determines header levels based on numbering, font size, position.
 
-### `_build_hierarchy_from_section_headers(elements: List[Dict]) -> Dict`
+### `PdfHierarchyBuilder.build_hierarchy_from_section_headers(elements: List[Dict]) -> Dict`
 
 Builds document hierarchy around Section-header elements.
 
-### `_extract_text_by_bboxes(source: str, elements: List[Dict], use_ocr: bool) -> List[Dict]`
+### `PdfTextExtractor.extract_text_by_bboxes(source: str, layout_elements: List[Dict], use_ocr: bool) -> List[Dict]`
 
-Extracts text using PyMuPDF (for text PDFs) or Qwen OCR (for scanned PDFs).
+Extracts text using PyMuPDF (for text PDFs) or uses text from Dots OCR (for scanned PDFs).
 
-### `_merge_nearby_text_blocks(elements: List[Dict], max_chunk_size: int) -> List[Dict]`
+### `PdfTextExtractor.merge_nearby_text_blocks(text_elements: List[Dict], max_chunk_size: int) -> List[Dict]`
 
 Merges close text blocks up to max_chunk_size.
 
-### `_create_elements_from_hierarchy(hierarchy: Dict, text_elements: List[Dict], layout_elements: List[Dict]) -> List[Element]`
+### `PdfHierarchyBuilder.create_elements_from_hierarchy(hierarchy: Dict, merged_text_elements: List[Dict], layout_elements: List[Dict], source: str) -> List[Element]`
 
 Creates Element objects from hierarchy and text elements.
 
-### `_store_images_in_metadata(elements: List[Element], source: str) -> List[Element]`
+### `PdfImageProcessor.store_images_in_metadata(elements: List[Element], source: str) -> List[Element]`
 
-Stores images in Caption element metadata.
+Stores images in metadata (base64).
 
-### `_parse_tables_with_qwen(elements: List[Element], source: str) -> List[Element]`
+### `PdfTableParser.parse_tables(elements: List[Element], source: str, use_dots_ocr_html: bool) -> List[Element]`
 
-Parses tables using Qwen2.5 and converts to DataFrame.
+Parses tables from Dots OCR HTML and converts to DataFrame.
 
 ## Output Format
 
@@ -474,7 +561,12 @@ Each `Element` contains:
 ## Important Notes
 
 1. **Layout-based approach is always used**: Even if text can be extracted, layout detection is performed for structure.
-2. **Dots.OCR is only for layout**: Text extraction uses PyMuPDF (for text PDFs) or Qwen OCR (for scanned PDFs).
-3. **OCR is selective**: Only text elements are OCR'd for scanned PDFs, not Picture elements.
-4. **Tables are parsed separately**: Tables are parsed via Qwen2.5 after initial structure is built.
-5. **Images are stored in metadata**: Images are extracted and stored in Caption element metadata.
+2. **Different prompts for different PDF types**:
+   - **Scanned PDFs**: Uses `prompt_layout_all_en` to extract layout, text, tables (HTML), and formulas (LaTeX) in one pass
+   - **Text-extractable PDFs**: Uses `prompt_layout_only_en` for layout, then re-processes pages with tables using `prompt_layout_all_en` to get HTML
+3. **Text extraction**:
+   - **Text-extractable PDFs**: Text extracted via PyMuPDF by bbox coordinates
+   - **Scanned PDFs**: Text already extracted by Dots OCR (`prompt_layout_all_en`) and stored in `text` field
+4. **Tables are parsed from HTML**: Tables are parsed from HTML structure provided by Dots OCR (`prompt_layout_all_en`). HTML is obtained during layout detection (scanned PDFs) or table reprocessing (text-extractable PDFs).
+5. **Images are stored in metadata**: Images are extracted and stored in metadata as base64.
+6. **Specialized processors**: The parser uses separate processors for layout, text extraction, table parsing, image processing, and hierarchy building for better modularity and maintainability.

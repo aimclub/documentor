@@ -58,22 +58,28 @@ documentor/
     │   ├── pdf/             # PDF parser
     │   │   ├── __init__.py
     │   │   ├── pdf_parser.py        # Main PDF parser
-    │   │   ├── text_extractor.py    # Text extraction (PdfPlumber)
+    │   │   ├── layout_processor.py   # Layout detection and filtering
+    │   │   ├── text_extractor.py    # Text extraction processor
+    │   │   ├── table_parser.py       # Table parsing processor
+    │   │   ├── image_processor.py    # Image processing processor
+    │   │   ├── hierarchy_builder.py  # Hierarchy building processor
     │   │   └── ocr/                 # OCR components for PDF
     │   │       ├── __init__.py
     │   │       ├── layout_detector.py  # Layout detection via Dots.OCR
     │   │       ├── page_renderer.py    # Page rendering to images
-    │   │       ├── qwen_ocr.py         # Qwen OCR for text extraction
-    │   │       ├── qwen_table_parser.py # Qwen OCR for table parsing
-    │   │       └── dots_ocr_client.py  # Direct Dots.OCR API client
+    │   │       ├── dots_ocr_client.py  # Direct Dots.OCR API client
+    │   │       └── html_table_parser.py # HTML table parsing from Dots OCR
     │   │
     │   └── docx/            # DOCX parser
     │       ├── __init__.py
     │       ├── docx_parser.py         # Main DOCX parser
-    │       ├── converter.py           # DOCX to PDF conversion
+    │       ├── converter_wrapper.py   # DOCX to PDF conversion
     │       ├── xml_parser.py          # DOCX XML parsing
     │       ├── toc_parser.py          # Table of Contents parsing
     │       ├── header_finder.py       # Header finding and validation
+    │       ├── header_processor.py    # Header processing and level determination
+    │       ├── layout_detector.py     # Layout detection via Dots OCR
+    │       ├── caption_finder.py      # Finding captions for tables and images
     │       ├── hierarchy_builder.py   # Hierarchy building
     │       └── ocr/                   # OCR components (for PDF conversion)
     │           ├── __init__.py
@@ -99,7 +105,7 @@ Large Language Models integration:
 - Document element classification
 - Document structure building
 - Structure validation via LLM with XML markup (for DOCX)
-- Support for various providers (Qwen, OpenAI, etc.)
+- Support for various LLM providers (OpenAI, etc.)
 
 ### ocr/
 Optical Character Recognition integration:
@@ -113,12 +119,16 @@ Optical Character Recognition integration:
 ### processing/parsers/
 Parsers for various formats:
 - **Markdown**: tokenization, hierarchy building (local parsing, no LLM)
-- **PDF**: layout-based approach
+- **PDF**: layout-based approach with specialized processors
   - Layout detection via Dots.OCR for all pages
+    - Scanned PDFs: `prompt_layout_all_en` (layout + text + tables + formulas)
+    - Text-extractable PDFs: `prompt_layout_only_en` (layout) + table reprocessing with `prompt_layout_all_en`
   - Hierarchy building around Section-header
-  - Text extraction via PyMuPDF by coordinates (for text PDFs)
-  - OCR via Qwen2.5 for scanned PDFs (only for text elements)
-  - Table parsing via Qwen2.5 with DataFrame conversion
+  - Text extraction:
+    - Text-extractable PDFs: via PyMuPDF by coordinates
+    - Scanned PDFs: from Dots OCR (`prompt_layout_all_en`)
+  - Table parsing from Dots OCR HTML
+  - Specialized processors: layout, text, tables, images, hierarchy
 - **DOCX**: combined approach
   - Content check (scanned or not)
   - Conversion to PDF for layout detection
@@ -126,6 +136,9 @@ Parsers for various formats:
   - Text extraction via PyMuPDF by coordinates
   - XML parsing for full content (text, tables, images)
   - Table of Contents (TOC) parsing for header validation
+  - Header finding and matching (OCR + XML + rules-based search)
+  - Caption finding for tables and images (from OCR)
+  - Table structure matching (OCR vs XML)
   - Hierarchy building from all elements
   - Table conversion from XML to DataFrame
 
@@ -146,15 +159,18 @@ Element hierarchy building (NOT USED):
 ### PDF
 1. Check text extractability from PDF
 2. **Layout Detection**: page rendering → Dots.OCR layout detection for all pages
-3. **Filtering**: remove Page-header, Page-footer, side text
-4. **Header Level Analysis**: determine levels based on numbering, position, styles
-5. **Hierarchy Building**: build hierarchy around Section-header elements
-6. **Text Extraction**:
-   - For text PDFs: PyMuPDF by coordinates from Dots.OCR
-   - For scanned PDFs: OCR via Qwen2.5 for each text element
-7. **Text Block Merging**: merge close blocks (up to 3000 characters)
-8. **Table Parsing**: via Qwen2.5 with DataFrame conversion
-9. **Image Storage**: in Caption element metadata
+   - Scanned PDFs: `prompt_layout_all_en` (layout + text + tables + formulas)
+   - Text-extractable PDFs: `prompt_layout_only_en` (layout only)
+3. **Table Reprocessing** (text-extractable PDFs only): re-process pages with tables using `prompt_layout_all_en` to get HTML
+4. **Filtering**: remove Page-header, Page-footer, side text
+5. **Header Level Analysis**: determine levels based on numbering, position, styles
+6. **Hierarchy Building**: build hierarchy around Section-header elements
+7. **Text Extraction**:
+   - For text-extractable PDFs: PyMuPDF by coordinates from Dots.OCR
+   - For scanned PDFs: text already in layout elements from Dots OCR (`prompt_layout_all_en`)
+8. **Text Block Merging**: merge close blocks (up to 3000 characters)
+9. **Table Parsing**: from Dots OCR HTML with DataFrame conversion
+10. **Image Storage**: in metadata (base64)
 
 ### DOCX
 1. **Content Check**: determine scanned document (images vs text)
@@ -165,9 +181,13 @@ Element hierarchy building (NOT USED):
    - Extract text from PDF by bbox via PyMuPDF
    - XML parsing for full content (text, tables, images)
    - Table of Contents (TOC) parsing for header validation
-   - Find headers in XML (rules + TOC validation)
+   - Find headers in XML (OCR matching + rules-based search + TOC validation)
+   - Find missing headers using rules (font properties, style, alignment, etc.)
+   - Find table and image captions from OCR headers/captions
+   - Match tables by structure comparison (OCR vs XML)
    - Build document hierarchy from all elements
    - Convert tables from XML to DataFrame
+   - Enrich tables and images with caption information
 
 ## Organization Principles
 

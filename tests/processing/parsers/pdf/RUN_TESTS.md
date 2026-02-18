@@ -85,9 +85,9 @@ python -m pytest tests/processing/parsers/pdf/test_pdf_parser.py::TestDetectLayo
 python -m pytest tests/processing/parsers/pdf/test_pdf_parser.py::TestStoreImagesInMetadata -v
 ```
 
-### PDF Parser - parse_tables_with_qwen
+### PDF Parser - parse_tables
 ```bash
-python -m pytest tests/processing/parsers/pdf/test_pdf_parser.py::TestParseTablesWithQwen -v
+python -m pytest tests/processing/parsers/pdf/test_pdf_parser.py::TestParseTables -v
 ```
 
 ### PDF Parser - parse_full_cycle

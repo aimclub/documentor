@@ -24,8 +24,8 @@ tqdm>=4.66.0
 # HTTP requests
 requests>=2.31.0
 
-# OpenAI API (for Qwen OCR)
-openai>=1.0.0
+# OpenAI API (for LLM integration, if needed)
+# openai>=1.0.0  # Uncomment if using LLM features
 
 # Testing
 pytest>=8.0.0

@@ -20,14 +20,18 @@ Documentor is an open-source library for preprocessing documents before RAG (Ret
 
 ### PDF Parser
 
-**Approach**: Layout-based parsing with OCR capabilities
+**Approach**: Layout-based parsing with specialized processors
 
 **Key Features**:
 - Layout detection via Dots.OCR for all pages
-- Text extraction via PyMuPDF (for text PDFs) or Qwen2.5 OCR (for scanned PDFs)
+- Different prompts for different PDF types:
+  - Scanned PDFs: `prompt_layout_all_en` (layout + text + tables + formulas)
+  - Text-extractable PDFs: `prompt_layout_only_en` (layout) + table reprocessing with `prompt_layout_all_en`
+- Text extraction via PyMuPDF (for text PDFs) or from Dots OCR (for scanned PDFs)
 - Automatic scanned document detection
-- Table parsing via Qwen2.5 with DataFrame conversion
+- Table parsing from Dots OCR HTML
 - Image extraction and storage
+- Specialized processors for modularity (layout, text, tables, images, hierarchy)
 
 **Documentation**: [PDF_PARSER.md](PDF_PARSER.md)
 
@@ -39,8 +43,13 @@ Documentor is an open-source library for preprocessing documents before RAG (Ret
 - Layout detection via Dots.OCR for Section-header and Caption
 - XML parsing for full content extraction
 - Table of Contents parsing for header validation
+- Rules-based missing header detection (adaptive thresholds, property matching)
+- Caption finding for tables and images from OCR
+- Table structure matching (OCR vs XML) for validation
 - Automatic scanned document detection with fallback to PdfParser
 - Table conversion from XML to DataFrame
+- Support for numbered headers with/without spaces
+- Automatic list item detection and splitting
 
 **Documentation**: [DOCX_PARSER.md](DOCX_PARSER.md)
 
