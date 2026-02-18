@@ -25,7 +25,7 @@ class PdfTextExtractor:
     
     Handles:
     - Text extraction via PyMuPDF (for extractable text)
-    - Text extraction from Dots OCR (for scanned PDFs)
+    - Text extraction from OCR (for scanned PDFs)
     - Text merging and normalization
     """
 
@@ -64,9 +64,9 @@ class PdfTextExtractor:
             render_scale = self._get_config("layout_detection.render_scale", 2.0)
             
             if use_ocr:
-                # For scanned PDFs, text is already extracted by Dots OCR (prompt_layout_all_en)
+                # For scanned PDFs, text is already extracted by OCR
                 # Just use the text from layout_elements
-                logger.info("Using text from Dots OCR (prompt_layout_all_en)")
+                logger.info("Using text from OCR")
                 
                 for element in tqdm(layout_elements, desc="Processing text from Dots OCR", unit="element", leave=False):
                     category = element.get("category", "")

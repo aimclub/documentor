@@ -1,29 +1,23 @@
 """
 Layout element types returned by Dots.OCR.
 
+DEPRECATED: This module is kept for backward compatibility.
+New code should use documentor.ocr.dots_ocr.types.LayoutTypeDotsOCR instead.
+
 Used for determining page structure during OCR processing.
 Types are mapped to ElementType when structuring the document.
-
-See also: ocr/dots_ocr.py for layout detection implementation
 """
-from enum import Enum
 
+import warnings
 
-class LayoutTypeDotsOCR(str, Enum):
-    """Layout element types returned by dots.ocr."""
-    
-    TEXT = "Text"
-    PICTURE = "Picture"
-    CAPTION = "Caption"
-    SECTION_HEADER = "Section-header"
-    FOOTNOTE = "Footnote"
-    FORMULA = "Formula"
-    TABLE = "Table"
-    TITLE = "Title"
-    LIST_ITEM = "List-item"
-    PAGE_HEADER = "Page-header"
-    PAGE_FOOTER = "Page-footer"
-    OTHER = "Other"
-    UNKNOWN = "Unknown"
+# Re-export from new module for backward compatibility
+from documentor.ocr.dots_ocr.types import LayoutTypeDotsOCR
+
+warnings.warn(
+    "documentor.processing.parsers.docx.ocr.layout_dots is deprecated. "
+    "Use documentor.ocr.dots_ocr.types.LayoutTypeDotsOCR instead.",
+    DeprecationWarning,
+    stacklevel=2
+)
 
 

@@ -51,3 +51,4 @@ documentor/**/__pycache__/
 /docs/План_работы_16_01.txt
 CODE_QUALITY_REPORT.md
 /documentor/test_regular_pdf_parser.py
+ПЛАН_РЕФАКТОРИНГА_DOTS_OCR.md

@@ -133,15 +133,15 @@ class PdfHierarchyBuilder:
                 category = element.get("category", "")
                 
                 if category == "Section-header":
-                    # For scanned PDFs, text is already in element from Dots OCR
+                    # For scanned PDFs, text is already in element from OCR
                     # For PDFs with extractable text, extract via PyMuPDF
                     bbox = element.get("bbox", [])
                     page_num = element.get("page_num", 0)
-                    text = element.get("text", "")  # Try to get text from Dots OCR first
+                    text = element.get("text", "")  # Try to get text from OCR first
                     font_size = None
                     
                     if not is_text_extractable and text:
-                        # For scanned PDFs: use text from Dots OCR
+                        # For scanned PDFs: use text from OCR
                         # Still need font_size for level determination, try to get it
                         if len(bbox) >= 4 and page_num < len(pdf_document):
                             try:
@@ -260,7 +260,7 @@ class PdfHierarchyBuilder:
 
     def _clean_header_text(self, text: str) -> str:
         """Cleans header text by removing markdown formatting."""
-        # Remove all # symbols from the beginning (Dots OCR adds ## to headers)
+        # Remove all # symbols from the beginning (OCR may add ## to headers)
         cleaned_text = text.strip()
         while cleaned_text.startswith('#'):
             cleaned_text = cleaned_text.lstrip('#').strip()
@@ -623,8 +623,8 @@ class PdfHierarchyBuilder:
                         )
                         elements.append(element)
                 elif category == "Table":
-                    # HTML is in table_html field (from prompt_layout_all_en re-processing for text-extractable PDFs)
-                    # or in text field (from prompt_layout_all_en for scanned PDFs)
+                    # HTML is in table_html field (from OCR re-processing for text-extractable PDFs)
+                    # or in text field (from OCR for scanned PDFs)
                     table_html = child.get("table_html", "") or child.get("text", "")
                     
                     element = self._create_element(
@@ -641,8 +641,8 @@ class PdfHierarchyBuilder:
                     )
                     elements.append(element)
                 elif category == "Formula":
-                    # Formulas are in LaTeX format from Dots OCR
-                    formula_latex = child.get("text", "")  # LaTeX from Dots OCR
+                    # Formulas are in LaTeX format from OCR
+                    formula_latex = child.get("text", "")  # LaTeX from OCR
                     # DO NOT remove markdown formatting from formulas!
                     # LaTeX syntax may contain *, **, _, __ as valid operators/symbols
                     # (e.g., x^2 * y^2, x_1, etc.)
@@ -664,7 +664,7 @@ class PdfHierarchyBuilder:
                     )
                     elements.append(element)
                 elif category == "List-item":
-                    # List items from Dots OCR
+                    # List items from OCR
                     list_text = child.get("text", "")
                     
                     # Remove markdown bold formatting (**text** or __text__) but preserve list markers (*)

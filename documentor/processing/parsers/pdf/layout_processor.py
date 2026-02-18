@@ -25,9 +25,9 @@ class PdfLayoutProcessor:
     
     Handles:
     - Page rendering
-    - Layout detection via Dots OCR
+    - Layout detection via OCR
     - Filtering unnecessary elements
-    - Table reprocessing with full prompt
+    - Table reprocessing with full extraction
     """
 
     def __init__(
@@ -112,35 +112,18 @@ class PdfLayoutProcessor:
         else:
             logger.info(f"Starting layout detection for {total_pages} pages")
         
-        # Load prompt based on use_text_extraction flag
-        prompt = None
-        if use_text_extraction:
-            # For scanned PDFs: use prompt_layout_all_en to get text, tables (HTML), and formulas
-            from documentor.ocr.dots_ocr import load_prompts_from_config
-            config_path = Path(__file__).parent.parent.parent.parent / "config" / "ocr_config.yaml"
-            prompts = load_prompts_from_config(config_path)
-            prompt = prompts.get("prompt_layout_all_en")
-            if not prompt:
-                logger.warning("prompt_layout_all_en not found in config, falling back to prompt_layout_only_en")
-                use_text_extraction = False
-        
         for page_num in tqdm(range(start_page, total_pages), desc="Layout detection", unit="page"):
             try:
                 original_image, optimized_image = self.page_renderer.render_page(
                     pdf_path, page_num, return_original=True
                 )
                 
-                if use_text_extraction and prompt:
-                    # For scanned PDFs: use direct API call with prompt_layout_all_en to get text, tables, and formulas
-                    from .ocr.dots_ocr_client import process_layout_detection
-                    layout, _, success = process_layout_detection(
-                        image=optimized_image,
-                        origin_image=original_image,
-                        prompt=prompt,
+                if use_text_extraction:
+                    # For scanned PDFs: use detect_layout_with_text to get text, tables (HTML), and formulas
+                    layout = self.layout_detector.dots_detector.detect_layout_with_text(
+                        optimized_image, 
+                        origin_image=original_image
                     )
-                    if not success or layout is None:
-                        logger.warning(f"Layout detection failed for page {page_num + 1}, trying fallback")
-                        layout = self.layout_detector.detect_layout(optimized_image, origin_image=original_image)
                 else:
                     # For text-extractable PDFs: use prompt_layout_only_en for layout only (text via PyMuPDF)
                     layout = self.layout_detector.detect_layout(optimized_image, origin_image=original_image)
@@ -190,16 +173,6 @@ class PdfLayoutProcessor:
         
         logger.info(f"Re-processing {len(pages_with_tables)} pages with tables using prompt_layout_all_en")
         
-        # Load prompt_layout_all_en
-        from documentor.ocr.dots_ocr import load_prompts_from_config
-        config_path = Path(__file__).parent.parent.parent.parent / "config" / "ocr_config.yaml"
-        prompts = load_prompts_from_config(config_path)
-        prompt = prompts.get("prompt_layout_all_en")
-        
-        if not prompt:
-            logger.warning("prompt_layout_all_en not found in config, skipping table reprocessing")
-            return layout_elements
-        
         pdf_path = Path(source)
         updated_elements = []
         table_elements_by_page: Dict[int, List[Dict[str, Any]]] = {}
@@ -214,24 +187,21 @@ class PdfLayoutProcessor:
             else:
                 updated_elements.append(element)
         
-        # Re-process pages with tables
-        from .ocr.dots_ocr_client import process_layout_detection
-        
+        # Re-process pages with tables using detect_layout_with_text
         for page_num in tqdm(pages_with_tables, desc="Re-processing tables", unit="page", leave=False):
             try:
                 original_image, optimized_image = self.page_renderer.render_page(
                     pdf_path, page_num, return_original=True
                 )
                 
-                # Process with prompt_layout_all_en
-                layout, _, success = process_layout_detection(
-                    image=optimized_image,
-                    origin_image=original_image,
-                    prompt=prompt,
-                )
-                
-                if not success or layout is None:
-                    logger.warning(f"Table reprocessing failed for page {page_num + 1}")
+                # Process with detect_layout_with_text to get HTML tables
+                try:
+                    layout = self.layout_detector.dots_detector.detect_layout_with_text(
+                        optimized_image,
+                        origin_image=original_image
+                    )
+                except Exception as e:
+                    logger.warning(f"Table reprocessing failed for page {page_num + 1}: {e}")
                     # Keep original elements
                     updated_elements.extend(table_elements_by_page.get(page_num, []))
                     continue

@@ -9,7 +9,8 @@ Contains:
 
 from .layout_detector import PdfLayoutDetector
 from .page_renderer import PdfPageRenderer
-from .dots_ocr_client import run_inference, process_layout_detection
+# Re-export from dots_ocr for backward compatibility
+from documentor.ocr.dots_ocr import run_inference, process_layout_detection
 
 __all__ = [
     "PdfLayoutDetector",

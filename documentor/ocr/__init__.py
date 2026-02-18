@@ -9,20 +9,40 @@ Contains classes and functions for:
 - Managing queues and model states
 """
 
-from .base import BaseLayoutDetector, BaseOCR, BaseReadingOrderBuilder
+from .base import (
+    BaseLayoutDetector,
+    BaseOCR,
+    BaseReadingOrderBuilder,
+    BaseTableParser,
+    BaseTextExtractor,
+    BaseFormulaExtractor,
+)
 from .manager import DotsOCRManager, OCRTask, TaskStatus, ModelConfig, ModelState
-from .dots_ocr import DotsOCRLayoutDetector, get_system_prompt, load_prompts_from_config
+from .dots_ocr import (
+    DotsOCRLayoutDetector,
+    DotsOCRTableParser,
+    DotsOCRTextExtractor,
+    DotsOCRFormulaExtractor,
+    get_system_prompt,
+    load_prompts_from_config,
+)
 
 __all__ = [
     "BaseLayoutDetector",
     "BaseOCR",
     "BaseReadingOrderBuilder",
+    "BaseTableParser",
+    "BaseTextExtractor",
+    "BaseFormulaExtractor",
     "DotsOCRManager",
     "OCRTask",
     "TaskStatus",
     "ModelConfig",
     "ModelState",
     "DotsOCRLayoutDetector",
+    "DotsOCRTableParser",
+    "DotsOCRTextExtractor",
+    "DotsOCRFormulaExtractor",
     "get_system_prompt",
     "load_prompts_from_config",
 ]

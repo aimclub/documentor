@@ -1,21 +1,9 @@
 """
 Client for direct Dots.OCR API calls.
 
-DEPRECATED: This module is kept for backward compatibility.
-New code should use documentor.ocr.dots_ocr.client instead.
-
 Contains functions for working with Dots.OCR API directly,
 using the same approach as in pdf_pipeline_dots_ocr.py.
 """
-
-import warnings
-
-warnings.warn(
-    "documentor.processing.parsers.pdf.ocr.dots_ocr_client is deprecated. "
-    "Use documentor.ocr.dots_ocr.client instead.",
-    DeprecationWarning,
-    stacklevel=2
-)
 
 from __future__ import annotations
 
@@ -49,7 +37,7 @@ def _load_ocr_config() -> dict:
     if _ocr_config_cache is not None:
         return _ocr_config_cache
     
-    config_path = Path(__file__).parent.parent.parent.parent.parent / "config" / "ocr_config.yaml"
+    config_path = Path(__file__).parent.parent.parent.parent / "config" / "ocr_config.yaml"
     if config_path.exists():
         try:
             with open(config_path, "r", encoding="utf-8") as f:

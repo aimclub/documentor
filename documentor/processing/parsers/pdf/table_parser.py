@@ -17,7 +17,7 @@ from tqdm import tqdm
 from ....domain import Element, ElementType
 from ....utils.config_loader import ConfigLoader
 from ....utils.image_utils import ImageUtils
-from .ocr.html_table_parser import parse_table_from_html
+from documentor.ocr.dots_ocr.html_table_parser import parse_table_from_html
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,7 @@ class PdfTableParser:
     Processor for PDF table parsing.
     
     Handles:
-    - Parsing HTML tables from Dots OCR
+    - Parsing HTML tables from OCR
     - Converting to DataFrame
     - Storing table images
     """
@@ -49,12 +49,12 @@ class PdfTableParser:
         self, elements: List[Element], source: str, use_dots_ocr_html: bool = True
     ) -> List[Element]:
         """
-        Parses tables from Dots OCR HTML.
+        Parses tables from OCR HTML.
 
         Args:
             elements: List of elements.
             source: Path to PDF file.
-            use_dots_ocr_html: If True, uses HTML from Dots OCR (prompt_layout_all_en).
+            use_dots_ocr_html: If True, uses HTML from OCR.
                               Always True now.
 
         Returns:
@@ -97,23 +97,23 @@ class PdfTableParser:
                     img_base64 = ImageUtils.process_and_encode_image(img, max_dimension=1280, format="PNG", quality=75)
                     element.metadata["image_data"] = img_base64
                     
-                    # Parse table: use HTML from Dots OCR
+                    # Parse table: use HTML from OCR
                     dataframe = None
                     success = False
                     
                     # Try to get HTML from element metadata (stored during element creation)
                     table_html = element.metadata.get("table_html")
                     if table_html:
-                        # Parse HTML table from Dots OCR
+                        # Parse HTML table from OCR
                         _, dataframe, success = parse_table_from_html(
                             table_html,
                             method="dataframe",  # Use only DataFrame
                         )
                         if success:
-                            logger.debug(f"Table {element.id} parsed from Dots OCR HTML")
+                            logger.debug(f"Table {element.id} parsed from OCR HTML")
                     
                     if not success:
-                        logger.warning(f"Failed to parse table {element.id} - no HTML from Dots OCR")
+                        logger.warning(f"Failed to parse table {element.id} - no HTML from OCR")
                         element.content = ""
                         element.metadata["parsing_error"] = "Failed to parse table: no HTML from Dots OCR"
                         # Create empty DataFrame

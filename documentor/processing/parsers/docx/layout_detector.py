@@ -1,22 +1,21 @@
 """
 DOCX layout detection processor.
 
-Handles layout detection for DOCX documents using Dots OCR.
+Handles layout detection for DOCX documents using OCR.
 """
 
 from __future__ import annotations
 
 import logging
-import yaml
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Tuple
 
 import fitz
 from tqdm import tqdm
 
 from ....utils.config_loader import ConfigLoader
 from ....utils.pdf_text_extractor import PdfTextExtractorUtil
-from ..pdf.ocr.dots_ocr_client import process_layout_detection
+from documentor.ocr.dots_ocr import DotsOCRLayoutDetector
 from ..pdf.ocr.page_renderer import PdfPageRenderer
 
 logger = logging.getLogger(__name__)
@@ -28,7 +27,7 @@ class DocxLayoutDetector:
     
     Handles:
     - PDF page rendering
-    - Layout detection via Dots OCR
+    - Layout detection via OCR
     - Text extraction from PDF by bbox
     """
 
@@ -41,49 +40,13 @@ class DocxLayoutDetector:
         """
         self.config = config
         self.renderer: PdfPageRenderer = None
-        self._prompt: Optional[str] = None
+        # Create Dots OCR layout detector
+        self.dots_detector = DotsOCRLayoutDetector(use_direct_api=True)
 
     def _get_config(self, key: str, default: Any = None) -> Any:
         """Gets value from configuration."""
         return ConfigLoader.get_config_value(self.config, key, default)
 
-    def _load_prompt(self) -> str:
-        """
-        Load prompt_layout_only_en from ocr_config.yaml.
-        
-        Returns:
-            Prompt string for layout detection.
-        """
-        if self._prompt is None:
-            # Default prompt (fallback)
-            default_prompt = "Please output the layout information from this PDF image, including each layout's bbox and its category. The bbox should be in the format [x1, y1, x2, y2]. The layout categories for the PDF document include ['Caption', 'Footnote', 'Formula', 'List-item', 'Page-footer', 'Page-header', 'Picture', 'Section-header', 'Table', 'Text', 'Title']. Do not output the corresponding text. The layout result should be in JSON format."
-            
-            try:
-                # Load prompt directly from ocr_config.yaml to avoid circular import
-                config_path = Path(__file__).parent.parent.parent.parent / "config" / "ocr_config.yaml"
-                
-                if config_path.exists():
-                    with open(config_path, "r", encoding="utf-8") as f:
-                        config = yaml.safe_load(f)
-                    
-                    # Extract prompt from configuration
-                    dots_ocr_config = config.get("dots_ocr", {})
-                    prompts_config = dots_ocr_config.get("prompts", {})
-                    self._prompt = prompts_config.get("prompt_layout_only_en")
-                    
-                    if self._prompt:
-                        logger.debug("Loaded prompt_layout_only_en from ocr_config.yaml")
-                    else:
-                        logger.warning("prompt_layout_only_en not found in config, using default prompt")
-                        self._prompt = default_prompt
-                else:
-                    logger.warning(f"OCR config file not found at {config_path}, using default prompt")
-                    self._prompt = default_prompt
-            except Exception as e:
-                logger.warning(f"Failed to load prompt from config: {e}, using default prompt")
-                self._prompt = default_prompt
-        
-        return self._prompt
 
     def _initialize_renderer(self) -> None:
         """Initialize page renderer if not already initialized."""
@@ -122,9 +85,6 @@ class DocxLayoutDetector:
             failed_pages = []
             empty_pages = []
             
-            # Load prompt from config
-            prompt = self._load_prompt()
-            
             for page_num in tqdm(range(start_page, total_pages), desc="Processing PDF pages", unit="page", leave=False):
                 page_image = self.renderer.render_page(pdf_path, page_num)
                 if page_image is None:
@@ -135,16 +95,13 @@ class DocxLayoutDetector:
                 page_images[page_num] = page_image
                 
                 try:
-                    layout_cells, _, success = process_layout_detection(
+                    # Use Dots OCR layout detector
+                    layout_cells = self.dots_detector.detect_layout(
                         image=page_image,
-                        origin_image=page_image,
-                        prompt=prompt
+                        origin_image=page_image
                     )
                     
-                    if not success:
-                        failed_pages.append(page_num + 1)
-                        logger.warning(f"Page {page_num + 1}: Layout detection failed (success=False)")
-                    elif not layout_cells:
+                    if not layout_cells:
                         empty_pages.append(page_num + 1)
                         logger.warning(f"Page {page_num + 1}: No layout elements found (empty result)")
                     else:

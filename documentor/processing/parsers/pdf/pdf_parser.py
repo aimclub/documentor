@@ -2,15 +2,14 @@
 Parser for PDF documents.
 
 Supports layout-based approach:
-- Layout detection via Dots.OCR for all pages
-- Always uses prompt_layout_all_en to extract text, tables (HTML), and formulas (LaTeX) directly from Dots OCR
+- Layout detection via OCR for all pages
 - Building hierarchy from Section-header
 - Filtering unnecessary elements (Page-header, side text)
-- Text extraction from Dots OCR (prompt_layout_all_en)
+- Text extraction from OCR (for scanned PDFs) or PyMuPDF (for text-extractable PDFs)
 - Merging close text blocks
-- Table parsing from Dots OCR HTML
+- Table parsing from OCR HTML
 - Storing images in metadata (base64)
-- Formula extraction in LaTeX format from Dots OCR
+- Formula extraction in LaTeX format from OCR
 """
 
 from __future__ import annotations
@@ -118,20 +117,20 @@ class PdfParser(BaseParser):
 
         Process:
         1. Check if text is extractable
-        2. Layout detection via Dots.OCR for all pages
-           - For scanned PDFs: uses prompt_layout_all_en (layout + text + tables + formulas)
-           - For text-extractable PDFs: uses prompt_layout_only_en (layout only)
-        3. For text-extractable PDFs: if tables found, re-process pages with tables using prompt_layout_all_en to get HTML
+        2. Layout detection via OCR for all pages
+           - For scanned PDFs: uses OCR with full extraction (layout + text + tables + formulas)
+           - For text-extractable PDFs: uses OCR for layout only
+        3. For text-extractable PDFs: if tables found, re-process pages with tables using OCR to get HTML
         4. Building hierarchy from Section-header
         5. Filtering unnecessary elements
         6. Text extraction:
-           - For scanned PDFs: text already extracted by Dots OCR (prompt_layout_all_en)
+           - For scanned PDFs: text already extracted by OCR
            - For text-extractable PDFs: via PyMuPDF by coordinates
         7. Merging close text blocks
         8. Creating elements and building hierarchy
         9. Storing images in metadata (base64)
-        10. Table parsing from Dots OCR HTML
-        11. Formula extraction: LaTeX from Dots OCR (for scanned PDFs)
+        10. Table parsing from OCR HTML
+        11. Formula extraction: LaTeX from OCR (for scanned PDFs)
 
         Args:
             document: LangChain Document with PDF content.
@@ -158,11 +157,11 @@ class PdfParser(BaseParser):
             
             if not is_text_extractable:
                 logger.info(
-                    f"Scanned PDF detected, using prompt_layout_all_en for text extraction via Dots OCR (source: {source})"
+                    f"Scanned PDF detected, using OCR for text extraction (source: {source})"
                 )
             else:
                 logger.info(
-                    f"Text-extractable PDF detected, using prompt_layout_only_en for layout, then prompt_layout_all_en for tables, PyMuPDF for text (source: {source})"
+                    f"Text-extractable PDF detected, using OCR for layout and tables, PyMuPDF for text (source: {source})"
                 )
             
             # Layout-based approach
@@ -1682,7 +1681,7 @@ class PdfParser(BaseParser):
                     table_html = element.metadata.get("table_html")
                     if table_html:
                         # Parse HTML table from Dots OCR
-                        from .ocr.html_table_parser import parse_table_from_html
+                        from documentor.ocr.dots_ocr.html_table_parser import parse_table_from_html
                         _, dataframe, success = parse_table_from_html(
                             table_html,
                             method="dataframe",  # Use only DataFrame

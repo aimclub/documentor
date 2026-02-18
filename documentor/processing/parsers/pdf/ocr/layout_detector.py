@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Optional
 from PIL import Image
 
 from documentor.ocr.base import BaseLayoutDetector
-from .dots_ocr_client import process_layout_detection
+from documentor.ocr.dots_ocr import DotsOCRLayoutDetector
 
 # Lazy import to avoid circular dependencies
 from typing import TYPE_CHECKING
@@ -44,9 +44,15 @@ class PdfLayoutDetector(BaseLayoutDetector):
                           If False, uses DotsOCRManager.
         """
         self.use_direct_api = use_direct_api
+        self.ocr_manager = ocr_manager
+        
+        # Create Dots OCR layout detector
+        self.dots_detector = DotsOCRLayoutDetector(
+            use_direct_api=use_direct_api,
+            ocr_manager=ocr_manager
+        )
         
         if use_direct_api:
-            self.ocr_manager = None
             self._own_manager = False
         else:
             if ocr_manager is None:
@@ -55,7 +61,6 @@ class PdfLayoutDetector(BaseLayoutDetector):
                 self.ocr_manager = DotsOCRManager(auto_load_models=True)
                 self._own_manager = True
             else:
-                self.ocr_manager = ocr_manager
                 self._own_manager = False
     
     def detect_layout(
@@ -77,19 +82,8 @@ class PdfLayoutDetector(BaseLayoutDetector):
                 - text: element text (if available)
         """
         if self.use_direct_api:
-            # Direct API call (as in pdf_pipeline_dots_ocr.py)
-            layout_cells, raw_response, success = process_layout_detection(
-                image=image,
-                origin_image=origin_image,
-            )
-            
-            if not success or layout_cells is None:
-                raise RuntimeError(
-                    f"Layout detection error: failed to get result. "
-                    f"Raw response: {raw_response[:200] if raw_response else 'None'}"
-                )
-            
-            return layout_cells
+            # Use Dots OCR layout detector
+            return self.dots_detector.detect_layout(image, origin_image)
         else:
             # Using DotsOCRManager (async queue)
             task_id = self.ocr_manager.submit_task(
