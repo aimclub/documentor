@@ -17,7 +17,7 @@ except ImportError:
     HAS_PANDAS = False
     pd = None  # type: ignore
 
-from ...base import BaseTableParser
+from ..base import BaseTableParser
 from .client import process_layout_detection
 from .prompts import DOTS_OCR_PROMPTS
 from .html_table_parser import parse_table_from_html

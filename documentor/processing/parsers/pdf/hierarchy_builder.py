@@ -568,8 +568,14 @@ class PdfHierarchyBuilder:
                         text = child.get("text", "")
                     
                     if text:
-                        # Remove markdown formatting (**text** or __text__)
-                        cleaned_text = self._remove_markdown_formatting(text)
+                        # Remove markdown formatting (**text** or __text__) from Dots OCR output
+                        # Note: This is Dots OCR specific - custom layout detectors may not return markdown
+                        try:
+                            from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                            cleaned_text = remove_markdown_formatting(text)
+                        except ImportError:
+                            # Fallback if utils not available
+                            cleaned_text = self._remove_markdown_formatting(text)
                         
                         # Extract links from text
                         links_in_text = self._extract_links_from_text(cleaned_text)
@@ -668,7 +674,13 @@ class PdfHierarchyBuilder:
                     list_text = child.get("text", "")
                     
                     # Remove markdown bold formatting (**text** or __text__) but preserve list markers (*)
-                    cleaned_list_text = self._remove_markdown_formatting(list_text)
+                    # Note: This is Dots OCR specific - custom layout detectors may not return markdown
+                    try:
+                        from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                        cleaned_list_text = remove_markdown_formatting(list_text)
+                    except ImportError:
+                        # Fallback if utils not available
+                        cleaned_list_text = self._remove_markdown_formatting(list_text)
                     
                     element = self._create_element(
                         type=ElementType.LIST_ITEM,
@@ -698,8 +710,14 @@ class PdfHierarchyBuilder:
                     elements.append(element)
                 elif category == "Caption":
                     text = child.get("text", "")
-                    # Remove markdown formatting (**text** or __text__)
-                    cleaned_text = self._remove_markdown_formatting(text)
+                    # Remove markdown formatting (**text** or __text__) from Dots OCR output
+                    # Note: This is Dots OCR specific - custom layout detectors may not return markdown
+                    try:
+                        from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                        cleaned_text = remove_markdown_formatting(text)
+                    except ImportError:
+                        # Fallback if utils not available
+                        cleaned_text = self._remove_markdown_formatting(text)
                     # Extract links from caption text
                     links_in_text = self._extract_links_from_text(cleaned_text)
                     
@@ -723,8 +741,14 @@ class PdfHierarchyBuilder:
                     elements.append(element)
                 elif category == "Title":
                     text = child.get("text", "")
-                    # Remove markdown formatting (**text** or __text__)
-                    cleaned_text = self._remove_markdown_formatting(text)
+                    # Remove markdown formatting (**text** or __text__) from Dots OCR output
+                    # Note: This is Dots OCR specific - custom layout detectors may not return markdown
+                    try:
+                        from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                        cleaned_text = remove_markdown_formatting(text)
+                    except ImportError:
+                        # Fallback if utils not available
+                        cleaned_text = self._remove_markdown_formatting(text)
                     element = self._create_element(
                         type=ElementType.TITLE,
                         content=cleaned_text,

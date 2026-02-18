@@ -43,10 +43,10 @@ Main configuration file containing general settings and parser configurations.
     - `max_paragraphs_per_block`: Maximum number of paragraphs in one block
 
 ### **ocr_config.yaml**
-OCR (Optical Character Recognition) service configuration.
+OCR (Optical Character Recognition) service configuration. This file contains settings for the default Dots.OCR implementation. If you use custom OCR components, you may not need all of these settings.
 
 **Structure:**
-- `dots_ocr`: Dots.OCR settings
+- `dots_ocr`: Dots.OCR settings (default OCR implementation)
   - `endpoint`: URL or path to Dots.OCR service (if null - uses local service)
   - `model`: Model name (default: "/model")
   - `recognition`: Recognition parameters
@@ -58,6 +58,8 @@ OCR (Optical Character Recognition) service configuration.
   - `layout`: Layout detection parameters
     - `confidence_threshold`: Detection confidence threshold (0.0 - 1.0, default: 0.5)
   - `reading_order`: Reading order building settings
+
+**Note**: If you use custom OCR components (see [CUSTOM_COMPONENTS_GUIDE.md](../CUSTOM_COMPONENTS_GUIDE.md)), you can configure them separately and pass them to the parser constructor.
 - `image_processing`: Image processing settings
   - `format`: Image format for OCR
   - `quality`: Image quality for JPEG
@@ -116,6 +118,15 @@ pipeline = Pipeline()
 doc = Document(page_content="", metadata={"source": "document.pdf"})
 parsed = pipeline.parse(doc)
 ```
+
+## Docker Deployment
+
+If you're using Dots OCR, you can deploy it using Docker Compose. See the [main README](../../README.md#docker-deployment-dots-ocr) for a complete example configuration.
+
+**Key Configuration Points:**
+- Set `ocr_config.yaml` → `dots_ocr` → `endpoint` to your Docker service URL (e.g., `http://localhost:8000`)
+- Use environment variables for API keys and sensitive configuration
+- Adjust GPU and memory settings based on your hardware
 
 ## Configuration Priority
 

@@ -34,6 +34,7 @@ class PdfLayoutProcessor:
         self,
         ocr_manager: Optional[Any] = None,
         config: Optional[Dict[str, Any]] = None,
+        layout_detector: Optional[Any] = None,
     ) -> None:
         """
         Initialize layout processor.
@@ -41,11 +42,14 @@ class PdfLayoutProcessor:
         Args:
             ocr_manager: DotsOCRManager instance for OCR processing.
             config: Configuration dictionary.
+            layout_detector: Custom layout detector implementing BaseLayoutDetector.
+                           If None, uses default Dots OCR layout detector.
         """
         self.ocr_manager = ocr_manager
         self.config = config or {}
         self.page_renderer: Optional[PdfPageRenderer] = None
-        self.layout_detector: Optional[PdfLayoutDetector] = None
+        self.layout_detector: Optional[Any] = layout_detector
+        self._custom_detector = layout_detector is not None
 
     def _get_config(self, key: str, default: Any = None) -> Any:
         """Gets value from configuration."""
@@ -64,6 +68,11 @@ class PdfLayoutProcessor:
     def _initialize_detector(self) -> None:
         """Initialize layout detector if not already initialized."""
         if self.layout_detector is None:
+            # Use custom detector if provided, otherwise create default
+            if self._custom_detector:
+                # Custom detector already set in __init__
+                return
+            
             use_direct_api = self._get_config("layout_detection.use_direct_api", True)
             
             if use_direct_api:
@@ -120,10 +129,19 @@ class PdfLayoutProcessor:
                 
                 if use_text_extraction:
                     # For scanned PDFs: use detect_layout_with_text to get text, tables (HTML), and formulas
-                    layout = self.layout_detector.dots_detector.detect_layout_with_text(
-                        optimized_image, 
-                        origin_image=original_image
-                    )
+                    # Check if custom detector or default PdfLayoutDetector
+                    if hasattr(self.layout_detector, 'dots_detector'):
+                        # Default PdfLayoutDetector - use dots_detector
+                        layout = self.layout_detector.dots_detector.detect_layout_with_text(
+                            optimized_image, 
+                            origin_image=original_image
+                        )
+                    else:
+                        # Custom layout detector - use detect_layout_with_text if available
+                        layout = self.layout_detector.detect_layout_with_text(
+                            optimized_image,
+                            origin_image=original_image
+                        )
                 else:
                     # For text-extractable PDFs: use prompt_layout_only_en for layout only (text via PyMuPDF)
                     layout = self.layout_detector.detect_layout(optimized_image, origin_image=original_image)
@@ -196,10 +214,19 @@ class PdfLayoutProcessor:
                 
                 # Process with detect_layout_with_text to get HTML tables
                 try:
-                    layout = self.layout_detector.dots_detector.detect_layout_with_text(
-                        optimized_image,
-                        origin_image=original_image
-                    )
+                    # Check if custom detector or default PdfLayoutDetector
+                    if hasattr(self.layout_detector, 'dots_detector'):
+                        # Default PdfLayoutDetector - use dots_detector
+                        layout = self.layout_detector.dots_detector.detect_layout_with_text(
+                            optimized_image,
+                            origin_image=original_image
+                        )
+                    else:
+                        # Custom layout detector - use detect_layout_with_text if available
+                        layout = self.layout_detector.detect_layout_with_text(
+                            optimized_image,
+                            origin_image=original_image
+                        )
                 except Exception as e:
                     logger.warning(f"Table reprocessing failed for page {page_num + 1}: {e}")
                     # Keep original elements

@@ -51,40 +51,86 @@ class PdfParser(BaseParser):
     Parser for PDF documents.
 
     Uses layout-based approach:
-    - Layout detection via Dots.OCR for all pages
-    - For scanned PDFs: uses prompt_layout_all_en to extract text, tables (HTML), and formulas
+    - Layout detection via OCR for all pages (default: Dots OCR)
+    - For scanned PDFs: uses OCR with full extraction (layout + text + tables + formulas)
     - For text-extractable PDFs:
-      * Uses prompt_layout_only_en for layout detection
-      * If tables found, re-processes pages with tables using prompt_layout_all_en to get HTML
+      * Uses OCR for layout detection only
+      * If tables found, re-processes pages with tables using OCR to get table HTML
       * Extracts text via PyMuPDF by coordinates
     - Building hierarchy from Section-header
     - Filtering unnecessary elements
-    - Text extraction via PyMuPDF (for extractable text) or from Dots OCR (for scanned PDFs)
+    - Text extraction via PyMuPDF (for extractable text) or from OCR (for scanned PDFs)
     - Merging close text blocks
-    - Table parsing from Dots OCR HTML
+    - Table parsing from OCR HTML (default: Dots OCR)
+    
+    Supports custom OCR components via constructor parameters:
+    - layout_detector: Custom layout detector implementing BaseLayoutDetector
+    - text_extractor: Custom text extractor implementing BaseTextExtractor
+    - table_parser: Custom table parser implementing BaseTableParser
+    - formula_extractor: Custom formula extractor implementing BaseFormulaExtractor
     """
 
     format = DocumentFormat.PDF
 
-    def __init__(self, ocr_manager: Optional[Any] = None) -> None:
+    def __init__(
+        self, 
+        ocr_manager: Optional[Any] = None,
+        layout_detector: Optional[Any] = None,
+        text_extractor: Optional[Any] = None,
+        table_parser: Optional[Any] = None,
+        formula_extractor: Optional[Any] = None,
+    ) -> None:
         """
         Initialize parser.
         
         Args:
             ocr_manager: DotsOCRManager instance for OCR processing. 
                         If None, automatically created from .env when needed.
+            layout_detector: Custom layout detector implementing BaseLayoutDetector.
+                            If None, uses default Dots OCR layout detector.
+            text_extractor: Custom text extractor implementing BaseTextExtractor.
+                          If None, uses default text extractor (PyMuPDF or Dots OCR).
+            table_parser: Custom table parser implementing BaseTableParser.
+                         If None, uses default Dots OCR table parser.
+            formula_extractor: Custom formula extractor implementing BaseFormulaExtractor.
+                             If None, uses default Dots OCR formula extractor.
+        
+        Examples:
+            # Use default Dots OCR components
+            parser = PdfParser()
+            
+            # Use custom layout detector with default other components
+            from documentor.ocr.base import BaseLayoutDetector
+            
+            class MyLayoutDetector(BaseLayoutDetector):
+                def detect_layout(self, image, origin_image=None):
+                    # Your custom implementation
+                    return [...]
+            
+            parser = PdfParser(layout_detector=MyLayoutDetector())
         """
         super().__init__()
         self.ocr_manager = ocr_manager
         self._config: Optional[Dict[str, Any]] = None
         self._load_config()
         
-        # Initialize specialized processors
-        self.layout_processor = PdfLayoutProcessor(ocr_manager=ocr_manager, config=self._config)
-        self.text_extractor = PdfTextExtractor(config=self._config)
-        self.table_parser = PdfTableParser(config=self._config)
+        # Initialize specialized processors with optional custom components
+        self.layout_processor = PdfLayoutProcessor(
+            ocr_manager=ocr_manager, 
+            config=self._config,
+            layout_detector=layout_detector
+        )
+        self.text_extractor = PdfTextExtractor(
+            config=self._config,
+            text_extractor=text_extractor
+        )
+        self.table_parser = PdfTableParser(
+            config=self._config,
+            table_parser=table_parser
+        )
         self.image_processor = PdfImageProcessor(config=self._config)
         self.hierarchy_builder = PdfHierarchyBuilder(config=self._config, id_generator=self.id_generator)
+        self.formula_extractor = formula_extractor
     
     def _load_config(self) -> None:
         """Loads configuration from config.yaml."""
@@ -902,10 +948,17 @@ class PdfParser(BaseParser):
                         # Clean and normalize if needed
                         text = element.get("text", "")
                         if text:
-                            # Remove markdown formatting (**text** or __text__)
+                            # Remove markdown formatting (**text** or __text__) from Dots OCR output
                             # BUT: Do NOT apply to Formula - LaTeX may contain *, **, _, __ as part of syntax
+                            # Note: This is Dots OCR specific - custom layout detectors may not return markdown
                             if category != "Formula":
-                                text = self._remove_markdown_formatting(text)
+                                # Use Dots OCR utility for markdown removal
+                                try:
+                                    from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                                    text = remove_markdown_formatting(text)
+                                except ImportError:
+                                    # Fallback if utils not available
+                                    text = self._remove_markdown_formatting(text)
                             # Remove extra whitespace but preserve structure
                             element["text"] = text.strip()
                         else:
@@ -1232,8 +1285,14 @@ class PdfParser(BaseParser):
                         text = child.get("text", "")
                     
                     if text:
-                        # Remove markdown formatting (**text** or __text__)
-                        cleaned_text = self._remove_markdown_formatting(text)
+                        # Remove markdown formatting (**text** or __text__) from Dots OCR output
+                        # Note: This is Dots OCR specific - custom layout detectors may not return markdown
+                        try:
+                            from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                            cleaned_text = remove_markdown_formatting(text)
+                        except ImportError:
+                            # Fallback if utils not available
+                            cleaned_text = self._remove_markdown_formatting(text)
                         
                         # Extract links from text
                         links_in_text = self._extract_links_from_text(cleaned_text)
@@ -1291,6 +1350,16 @@ class PdfParser(BaseParser):
                     # or in text field (from prompt_layout_all_en for scanned PDFs)
                     table_html = child.get("table_html", "") or child.get("text", "")
                     
+                    # Skip table if HTML is empty (layout detector didn't extract it)
+                    if not table_html and not self.table_parser.custom_table_parser:
+                        logger.warning(
+                            f"Table element on page {page_num + 1} has empty HTML. "
+                            f"Layout detector may not support table extraction. "
+                            f"Consider providing a custom table_parser."
+                        )
+                        # Skip this table element - don't create element without table data
+                        continue
+                    
                     element = self._create_element(
                         type=ElementType.TABLE,
                         content="",  # will be filled during parsing
@@ -1300,25 +1369,68 @@ class PdfParser(BaseParser):
                             "bbox": bbox,
                             "page_num": page_num,
                             "category": category,
-                            "table_html": table_html,  # Store HTML for parsing
+                            "table_html": table_html,  # Store HTML for parsing (may be empty if custom parser will be used)
                         },
                     )
                     elements.append(element)
                 elif category == "Formula":
-                    # Formulas are in LaTeX format from Dots OCR
-                    formula_latex = child.get("text", "")  # LaTeX from Dots OCR
+                    # Extract formula using custom extractor or from layout elements
+                    if self.formula_extractor and len(bbox) >= 4:
+                        # Use custom formula extractor
+                        try:
+                            pdf_document = fitz.open(source)
+                            try:
+                                page = pdf_document.load_page(page_num)
+                                render_scale = self._get_config("layout_detection.render_scale", 2.0)
+                                
+                                # Convert bbox to original PDF scale and render formula region
+                                x1, y1, x2, y2 = (
+                                    bbox[0] / render_scale,
+                                    bbox[1] / render_scale,
+                                    bbox[2] / render_scale,
+                                    bbox[3] / render_scale,
+                                )
+                                rect = fitz.Rect(x1, y1, x2, y2)
+                                
+                                # Render formula region
+                                mat = fitz.Matrix(render_scale, render_scale)
+                                pix = page.get_pixmap(matrix=mat, clip=rect)
+                                formula_image = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+                                
+                                # Extract formula using custom extractor
+                                formula_latex = self.formula_extractor.extract_formula(formula_image, bbox)
+                            finally:
+                                pdf_document.close()
+                        except Exception as e:
+                            logger.warning(f"Error using custom formula extractor: {e}, falling back to layout text")
+                            # Fallback to text from layout
+                            formula_latex = child.get("text", "")
+                    else:
+                        # Use formula text from layout elements (from Dots OCR or custom layout detector)
+                        formula_latex = child.get("text", "")
+                    
                     # DO NOT remove markdown formatting from formulas!
                     # LaTeX syntax may contain *, **, _, __ as valid operators/symbols
                     # (e.g., x^2 * y^2, x_1, etc.)
                     # Only strip whitespace
                     formula_latex = formula_latex.strip()
                     
+                    # Skip formula if text is empty (layout detector didn't extract it)
+                    if not formula_latex:
+                        logger.warning(
+                            f"Formula element on page {page_num + 1} has empty text. "
+                            f"Layout detector may not support formula extraction. "
+                            f"Consider providing a custom formula_extractor."
+                        )
+                        # Skip this formula element - don't create empty element
+                        continue
+                    
                     element = self._create_element(
                         type=ElementType.TEXT,  # Formula is stored as TEXT with LaTeX in metadata
                         content=formula_latex,  # LaTeX content
                         parent_id=current_parent_id,
                         metadata={
-                            "source": "ocr",
+                            "source": "ocr" if not self.formula_extractor else "custom_extractor",
                             "bbox": bbox,
                             "page_num": page_num,
                             "category": category,
@@ -1332,7 +1444,13 @@ class PdfParser(BaseParser):
                     list_text = child.get("text", "")
                     
                     # Remove markdown bold formatting (**text** or __text__) but preserve list markers (*)
-                    cleaned_list_text = self._remove_markdown_formatting(list_text)
+                    # Note: This is Dots OCR specific - custom layout detectors may not return markdown
+                    try:
+                        from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                        cleaned_list_text = remove_markdown_formatting(list_text)
+                    except ImportError:
+                        # Fallback if utils not available
+                        cleaned_list_text = self._remove_markdown_formatting(list_text)
                     
                     element = self._create_element(
                         type=ElementType.LIST_ITEM,
@@ -1362,8 +1480,14 @@ class PdfParser(BaseParser):
                     elements.append(element)
                 elif category == "Caption":
                     text = child.get("text", "")
-                    # Remove markdown formatting (**text** or __text__)
-                    cleaned_text = self._remove_markdown_formatting(text)
+                    # Remove markdown formatting (**text** or __text__) from Dots OCR output
+                    # Note: This is Dots OCR specific - custom layout detectors may not return markdown
+                    try:
+                        from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                        cleaned_text = remove_markdown_formatting(text)
+                    except ImportError:
+                        # Fallback if utils not available
+                        cleaned_text = self._remove_markdown_formatting(text)
                     # Extract links from caption text
                     links_in_text = self._extract_links_from_text(cleaned_text)
                     
@@ -1387,8 +1511,14 @@ class PdfParser(BaseParser):
                     elements.append(element)
                 elif category == "Title":
                     text = child.get("text", "")
-                    # Remove markdown formatting (**text** or __text__)
-                    cleaned_text = self._remove_markdown_formatting(text)
+                    # Remove markdown formatting (**text** or __text__) from Dots OCR output
+                    # Note: This is Dots OCR specific - custom layout detectors may not return markdown
+                    try:
+                        from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                        cleaned_text = remove_markdown_formatting(text)
+                    except ImportError:
+                        # Fallback if utils not available
+                        cleaned_text = self._remove_markdown_formatting(text)
                     element = self._create_element(
                         type=ElementType.TITLE,
                         content=cleaned_text,

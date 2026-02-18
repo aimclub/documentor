@@ -14,32 +14,43 @@ Abstract base class for all parsers. Defines the common interface:
 ## Parser Implementations
 
 ### PDF Parser (`pdf/`)
-Layout-based PDF parser with specialized processors.
+Layout-based PDF parser with specialized processors and support for custom OCR components.
 
 **Key Features:**
-- Layout detection via Dots.OCR with different prompts:
-  - Scanned PDFs: `prompt_layout_all_en` (layout + text + tables + formulas)
-  - Text-extractable PDFs: `prompt_layout_only_en` (layout) + table reprocessing
+- Layout detection via OCR (default: Dots.OCR) with different prompts:
+  - Scanned PDFs: Full extraction (layout + text + tables + formulas)
+  - Text-extractable PDFs: Layout only + table reprocessing
 - Text extraction:
   - Text-extractable PDFs: PyMuPDF by bbox coordinates
-  - Scanned PDFs: Text from Dots OCR (`prompt_layout_all_en`)
-- Table parsing from Dots OCR HTML
+  - Scanned PDFs: Text from OCR (default: Dots OCR)
+- Table parsing from OCR HTML (default: Dots OCR)
+- Formula extraction in LaTeX format (default: Dots OCR)
 - Automatic scanned document detection
 - Header hierarchy building
 - Specialized processors for modularity
+- **Custom Components Support**: Replace any OCR component with your own implementation
+
+**Custom Components:**
+The PDF parser supports replacing OCR components via constructor parameters:
+- `layout_detector`: Custom layout detector implementing `BaseLayoutDetector`
+- `text_extractor`: Custom text extractor implementing `BaseTextExtractor`
+- `table_parser`: Custom table parser implementing `BaseTableParser`
+- `formula_extractor`: Custom formula extractor implementing `BaseFormulaExtractor`
+
+See [CUSTOM_COMPONENTS_GUIDE.md](../../CUSTOM_COMPONENTS_GUIDE.md) for detailed instructions.
 
 **Modules:**
-- `pdf_parser.py`: Main PDF parser (orchestrates processors)
+- `pdf_parser.py`: Main PDF parser (orchestrates processors, supports custom OCR components)
 - `layout_processor.py`: Layout detection and filtering processor
 - `text_extractor.py`: Text extraction processor
 - `table_parser.py`: Table parsing processor (from HTML)
 - `image_processor.py`: Image processing processor
 - `hierarchy_builder.py`: Hierarchy building processor
-- `ocr/`: OCR-related modules
-  - `layout_detector.py`: Layout detection
+- `ocr/`: OCR-related modules (wrappers for backward compatibility)
+  - `layout_detector.py`: Layout detection wrapper
   - `page_renderer.py`: PDF page rendering
-  - `dots_ocr_client.py`: Dots.OCR API client
-  - `html_table_parser.py`: HTML table parsing from Dots OCR
+
+**Note**: Dots OCR specific code has been moved to `documentor/ocr/dots_ocr/`. The `ocr/` directory in PDF parser contains wrappers for backward compatibility.
 
 ### DOCX Parser (`docx/`)
 Combined approach parser for DOCX documents.
@@ -60,7 +71,7 @@ Combined approach parser for DOCX documents.
 
 **Modules:**
 - `docx_parser.py`: Main DOCX parser (orchestrates pipeline)
-- `layout_detector.py`: Layout detection via Dots OCR
+- `layout_detector.py`: Layout detection via OCR (default: Dots OCR, supports custom detectors)
 - `header_processor.py`: Header processing and level determination
 - `header_finder.py`: Header finding and rules building
 - `caption_finder.py`: Finding captions for tables and images
@@ -68,7 +79,9 @@ Combined approach parser for DOCX documents.
 - `xml_parser.py`: XML structure parsing
 - `toc_parser.py`: Table of Contents parsing
 - `converter_wrapper.py`: DOCX to PDF conversion
-- `ocr/`: OCR-related modules for DOCX
+- `ocr/`: OCR-related modules for DOCX (wrappers for backward compatibility)
+
+**Note**: Dots OCR specific code has been moved to `documentor/ocr/dots_ocr/`. The `ocr/` directory in DOCX parser contains wrappers for backward compatibility.
 
 ### Markdown Parser (`md/`)
 Regex-based Markdown parser.

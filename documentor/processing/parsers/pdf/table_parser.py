@@ -7,7 +7,7 @@ Handles table parsing from Dots OCR HTML output.
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import fitz
 import pandas as pd
@@ -32,14 +32,17 @@ class PdfTableParser:
     - Storing table images
     """
 
-    def __init__(self, config: Dict[str, Any]) -> None:
+    def __init__(self, config: Dict[str, Any], table_parser: Optional[Any] = None) -> None:
         """
         Initialize table parser.
         
         Args:
             config: Configuration dictionary.
+            table_parser: Custom table parser implementing BaseTableParser.
+                        If None, uses default Dots OCR table parser.
         """
         self.config = config
+        self.custom_table_parser = table_parser
 
     def _get_config(self, key: str, default: Any = None) -> Any:
         """Gets value from configuration."""
@@ -101,25 +104,47 @@ class PdfTableParser:
                     dataframe = None
                     success = False
                     
-                    # Try to get HTML from element metadata (stored during element creation)
-                    table_html = element.metadata.get("table_html")
-                    if table_html:
-                        # Parse HTML table from OCR
-                        _, dataframe, success = parse_table_from_html(
-                            table_html,
-                            method="dataframe",  # Use only DataFrame
-                        )
-                        if success:
-                            logger.debug(f"Table {element.id} parsed from OCR HTML")
+                    # Use custom table parser if provided
+                    if self.custom_table_parser:
+                        try:
+                            # BaseTableParser.parse_table returns (dataframe, html_or_markdown, success)
+                            dataframe, html_or_markdown, success = self.custom_table_parser.parse_table(
+                                img, bbox
+                            )
+                            if success:
+                                logger.debug(f"Table {element.id} parsed using custom table parser")
+                            else:
+                                logger.warning(f"Custom table parser failed for {element.id}")
+                        except Exception as e:
+                            logger.warning(f"Custom table parser failed for {element.id}: {e}")
+                            success = False
+                            dataframe = None
+                    else:
+                        # Try to get HTML from element metadata (stored during element creation)
+                        table_html = element.metadata.get("table_html")
+                        if table_html:
+                            # Parse HTML table from OCR
+                            _, dataframe, success = parse_table_from_html(
+                                table_html,
+                                method="dataframe",  # Use only DataFrame
+                            )
+                            if success:
+                                logger.debug(f"Table {element.id} parsed from OCR HTML")
+                            else:
+                                logger.warning(f"Failed to parse table {element.id} from HTML")
+                        else:
+                            logger.warning(f"Table {element.id} has no HTML and no custom parser provided")
+                            success = False
                     
                     if not success:
-                        logger.warning(f"Failed to parse table {element.id} - no HTML from OCR")
+                        logger.warning(f"Failed to parse table {element.id}")
                         element.content = ""
-                        element.metadata["parsing_error"] = "Failed to parse table: no HTML from Dots OCR"
+                        element.metadata["parsing_error"] = "Failed to parse table: no HTML from layout detector and no custom parser"
                         # Create empty DataFrame
                         element.metadata["dataframe"] = pd.DataFrame()
                         element.metadata["rows_count"] = 0
                         element.metadata["cols_count"] = 0
+                        # Don't skip - keep element with empty DataFrame for user to know table was detected but not parsed
                         continue
                     
                     # Use only DataFrame

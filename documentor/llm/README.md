@@ -21,4 +21,4 @@ headers = detector.detect_headers(document)
 
 ## Note
 
-Most document structure detection is now handled by Dots.OCR for layout detection. LLM integration is primarily used for semantic header detection when needed.
+Most document structure detection is now handled by OCR (default: Dots.OCR) for layout detection. LLM integration is primarily used for semantic header detection when needed.

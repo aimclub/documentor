@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import fitz
 from tqdm import tqdm
@@ -29,14 +29,17 @@ class PdfTextExtractor:
     - Text merging and normalization
     """
 
-    def __init__(self, config: Dict[str, Any]) -> None:
+    def __init__(self, config: Dict[str, Any], text_extractor: Optional[Any] = None) -> None:
         """
         Initialize text extractor.
         
         Args:
             config: Configuration dictionary.
+            text_extractor: Custom text extractor implementing BaseTextExtractor.
+                          If None, uses default (PyMuPDF for extractable text, OCR text for scanned PDFs).
         """
         self.config = config
+        self.custom_text_extractor = text_extractor
 
     def _get_config(self, key: str, default: Any = None) -> Any:
         """Gets value from configuration."""
@@ -82,10 +85,18 @@ class PdfTextExtractor:
                         # Clean and normalize if needed
                         text = element.get("text", "")
                         if text:
-                            # Remove markdown formatting (**text** or __text__)
+                            # Remove markdown formatting (**text** or __text__) from Dots OCR output
                             # BUT: Do NOT apply to Formula - LaTeX may contain *, **, _, __ as part of syntax
+                            # Note: This is Dots OCR specific - custom layout detectors may not return markdown
                             if category != "Formula":
-                                text = self._remove_markdown_formatting(text)
+                                # Use Dots OCR utility for markdown removal
+                                # This assumes text comes from Dots OCR (default behavior)
+                                try:
+                                    from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                                    text = remove_markdown_formatting(text)
+                                except ImportError:
+                                    # Fallback if utils not available
+                                    text = self._remove_markdown_formatting(text)
                             # Remove extra whitespace but preserve structure
                             element["text"] = text.strip()
                         else:
@@ -111,10 +122,27 @@ class PdfTextExtractor:
                     
                     if len(bbox) >= 4 and page_num < len(pdf_document):
                         try:
-                            # Use PyMuPDF for extractable text
-                            page = pdf_document.load_page(page_num)
-                            text = PdfTextExtractorUtil.extract_text_by_bbox(page, bbox, render_scale)
-                            element["text"] = text
+                            # Use custom text extractor if provided
+                            if self.custom_text_extractor and use_ocr:
+                                # For scanned PDFs, render image and use custom extractor
+                                page = pdf_document.load_page(page_num)
+                                mat = fitz.Matrix(render_scale, render_scale)
+                                pix = page.get_pixmap(matrix=mat)
+                                from PIL import Image
+                                from io import BytesIO
+                                img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+                                # Crop to bbox
+                                x1, y1, x2, y2 = bbox
+                                cropped_img = img.crop((int(x1), int(y1), int(x2), int(y2)))
+                                text = self.custom_text_extractor.extract_text(
+                                    cropped_img, bbox, category
+                                )
+                                element["text"] = text
+                            else:
+                                # Use PyMuPDF for extractable text
+                                page = pdf_document.load_page(page_num)
+                                text = PdfTextExtractorUtil.extract_text_by_bbox(page, bbox, render_scale)
+                                element["text"] = text
                         except Exception as e:
                             logger.warning(f"Error extracting text for element: {e}")
                             element["text"] = ""

@@ -9,7 +9,7 @@ The DOCX parser uses a multi-stage approach:
 1. **Content Check**: Determine if document is scanned (image-based)
    - If scanned: Convert to PDF and process via PdfParser with OCR
 2. **PDF Conversion**: Convert DOCX to PDF for layout detection
-3. **Layout Detection**: Use Dots.OCR to detect Section-header and Caption elements
+3. **Layout Detection**: Use OCR (default: Dots.OCR) to detect Section-header and Caption elements
 4. **Text Extraction**: Extract text from PDF using PyMuPDF by bbox coordinates
 5. **XML Parsing**: Parse DOCX XML for full content extraction (text, tables, images)
 6. **TOC Parsing**: Parse table of contents for header validation
@@ -33,7 +33,7 @@ Main DOCX parser class. Orchestrates the complete parsing pipeline.
 ### `layout_detector.py`
 Layout detection processor:
 - PDF page rendering
-- Layout detection via Dots OCR
+- Layout detection via OCR (default: Dots OCR, supports custom detectors)
 - Text extraction from PDF by bbox
 
 ### `header_processor.py`
@@ -83,7 +83,9 @@ DOCX to PDF conversion using:
 - LibreOffice
 
 ### OCR Modules (`ocr/`)
-- **`layout_dots.py`**: Dots.OCR integration enum
+- **`layout_dots.py`**: Dots.OCR integration enum (deprecated, use `documentor.ocr.dots_ocr.types`)
+
+**Note**: Dots OCR specific code has been moved to `documentor/ocr/dots_ocr/`. The `ocr/` directory in DOCX parser contains wrappers for backward compatibility.
 
 ## Features
 

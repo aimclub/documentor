@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Optional
 
 from PIL import Image
 
-from ...base import BaseFormulaExtractor
+from ..base import BaseFormulaExtractor
 from .client import process_layout_detection
 from .prompts import DOTS_OCR_PROMPTS
 
