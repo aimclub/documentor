@@ -1,8 +1,28 @@
-# Documentor
+<div style="float: right; width: 200px; height: 200px;">
+  <img src="images/logo.png" width="200" alt="DocuMentor logo">
+</div>
 
-A powerful document parsing library that extracts structured content from PDF, DOCX, and Markdown files. Documentor uses a layout-based approach with OCR capabilities to parse documents into a unified hierarchical structure.
+# DocuMentor
 
-## Features
+[![Acknowledgement ITMO](https://raw.githubusercontent.com/aimclub/open-source-ops/master/badges/ITMO_badge.svg)](https://itmo.ru/)
+[![Acknowledgement SAI](https://raw.githubusercontent.com/aimclub/open-source-ops/master/badges/SAI_badge.svg)](https://sai.itmo.ru/)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![Visitors](https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fgithub.com%2FIndustrial-AI-Research-Lab%2Fdocumentor&countColor=%23263759&style=plastic&labelStyle=lower)](https://visitorbadge.io/status?path=https%3A%2F%2Fgithub.com%2FIndustrial-AI-Research-Lab%2Fdocumentor)
+[![PythonVersion](https://img.shields.io/badge/python_3.10-passing-success)](https://img.shields.io/badge/python_3.10-passing-success)
+
+A powerful document parsing library that extracts structured content from PDF, DOCX, and Markdown files. DocuMentor uses a layout-based approach with OCR capabilities to parse documents into a unified hierarchical structure.
+
+## The purpose of the project
+
+The DocuMentor library is designed to simplify and automate the parsing and semantic analysis of various types of documents, including PDF, DOCX, and Markdown files.
+
+The library performs the following tasks:
+1. **Data extraction** - Extract structured content from documents
+2. **Document structure analysis** - Hierarchical analysis of document structure
+3. **Entity recognition** - Identify and classify document elements (headers, tables, images, formulas)
+4. **Format conversion** - Unified output format across all supported document types
+
+## Core features
 
 - **Multi-format Support**: Parse PDF, DOCX, and Markdown documents
 - **Layout-based Parsing**: Uses OCR for intelligent layout detection (default: Dots.OCR)
@@ -29,6 +49,12 @@ A powerful document parsing library that extracts structured content from PDF, D
 
 ## Installation
 
+For installation from the source code, you need to have the poetry package manager installed ([poetry](https://github.com/python-poetry/install.python-poetry.org)).
+```shell
+poetry install
+```
+
+Alternatively, you can use pip:
 ```bash
 pip install -r requirements.txt
 ```
@@ -158,6 +184,12 @@ See [CUSTOM_COMPONENTS_GUIDE.md](documentor/CUSTOM_COMPONENTS_GUIDE.md) for deta
    - Table extraction to DataFrames
    - Nested list support with proper hierarchy
 
+### Supported formats
+- **Input**: `pdf`, `docx`, `md` (Markdown)
+- **Output**: Structured `ParsedDocument` with hierarchical elements
+
+**Note**: For DOC files, please convert them to DOCX format first using Microsoft Word, LibreOffice, or online converters before processing.
+
 ## Configuration
 
 ### Configuration Files
@@ -171,63 +203,64 @@ Configuration files are provided as examples in `examples/config/`:
 
 ### Environment Variables
 
-For sensitive configuration (API keys, secrets), use environment variables:
+`.env` is auto-loaded by `documentor/core/load_env.py`. Use `docs/env.example` or `examples/env.example` as a template.
 
-1. Copy the example: `cp examples/env.example .env`
-2. Edit `.env` and fill in your actual values (especially `DOTS_OCR_BASE_URL` and `DOTS_OCR_API_KEY`)
-3. Never commit `.env` to version control
+**Required OCR variables:**
+- `DOTS_OCR_BASE_URL`, `DOTS_OCR_API_KEY`, `DOTS_OCR_MODEL_NAME`
+- `QWEN_BASE_URL`, `QWEN_API_KEY`, `QWEN_MODEL_NAME` (optional)
 
-See `examples/env.example` for all available environment variables.
+**Optional:**
+- `DOTS_OCR_TEMPERATURE`, `DOTS_OCR_MAX_TOKENS`, `DOTS_OCR_TIMEOUT`
+- `QWEN_TEMPERATURE`, `QWEN_MAX_TOKENS`, `QWEN_TIMEOUT`
+- `OCR_MAX_IMAGE_SIZE`, `OCR_MIN_CONFIDENCE`
 
-## Project Structure
+**Important**: Never commit `.env` to version control. Store API keys securely.
+
+## Project structure
 
 ```
 documentor/
-├── config/          # Internal default config files (do not modify)
-├── core/            # Core utilities (environment loading)
-├── domain/          # Domain models (Element, ParsedDocument)
-├── exceptions.py    # Custom exceptions
-├── ocr/             # OCR services integration
-├── ocr/             # OCR services (base classes + Dots.OCR implementation)
-│   ├── base.py      # Base classes for OCR components
-│   ├── dots_ocr/    # Dots.OCR implementation (default)
-│   └── manager.py   # DotsOCRManager
-├── pipeline.py      # Main pipeline class
-├── processing/      # Document processing modules
-│   ├── loader/      # Document loading utilities
-│   └── parsers/    # Format-specific parsers
-│       ├── docx/   # DOCX parser modules
-│       │   ├── docx_parser.py
-│       │   ├── layout_detector.py
-│       │   ├── header_processor.py
-│       │   ├── header_finder.py
-│       │   ├── caption_finder.py
-│       │   ├── hierarchy_builder.py
-│       │   ├── xml_parser.py
-│       │   ├── toc_parser.py
-│       │   └── converter_wrapper.py
-│       ├── md/     # Markdown parser modules
-│       │   ├── md_parser.py
-│       │   ├── tokenizer.py
-│       │   └── hierarchy.py
-│       └── pdf/    # PDF parser modules
-│           ├── pdf_parser.py
-│           ├── layout_processor.py
-│           ├── text_extractor.py
-│           ├── table_parser.py
-│           ├── image_processor.py
-│           ├── hierarchy_builder.py
-│           └── ocr/  # OCR components
-└── utils/          # Utility functions
+├── documentor/                   # Main library package
+│   ├── config/                   # Internal default config files (do not modify)
+│   ├── core/                     # Core utilities (environment loading)
+│   ├── domain/                   # Domain models (Element, ParsedDocument)
+│   ├── exceptions.py            # Custom exceptions
+│   ├── ocr/                      # OCR services integration
+│   │   ├── base.py               # Base classes for OCR components
+│   │   ├── dots_ocr/             # Dots.OCR implementation (default)
+│   │   └── manager.py            # DotsOCRManager
+│   ├── pipeline.py              # Main pipeline class
+│   └── processing/               # Document processing modules
+│       ├── loader/               # Document loading utilities
+│       └── parsers/             # Format-specific parsers
+│           ├── docx/            # DOCX parser modules
+│           │   ├── docx_parser.py
+│           │   ├── layout_detector.py
+│           │   ├── header_processor.py
+│           │   ├── header_finder.py
+│           │   ├── caption_finder.py
+│           │   ├── hierarchy_builder.py
+│           │   ├── xml_parser.py
+│           │   ├── toc_parser.py
+│           │   └── converter_wrapper.py
+│           ├── md/              # Markdown parser modules
+│           │   ├── md_parser.py
+│           │   ├── tokenizer.py
+│           │   └── hierarchy.py
+│           └── pdf/              # PDF parser modules
+│               ├── pdf_parser.py
+│               ├── layout_processor.py
+│               ├── text_extractor.py
+│               ├── table_parser.py
+│               ├── image_processor.py
+│               ├── hierarchy_builder.py
+│               └── ocr/          # OCR components
+├── docs/                         # Documentation
+├── examples/                     # Example configurations and code
+├── images/                       # Diagrams and images
+└── experiments/                  # Experimental code and metrics
 ```
 
-## Configuration
-
-Configuration files are located in `documentor/config/`:
-
-- `config.yaml`: Main configuration file (contains `pdf_parser` and `docx_parser` sections)
-- `llm_config.yaml`: LLM service configuration
-- `ocr_config.yaml`: OCR service configuration
 
 ### Docker Deployment (Dots OCR)
 
@@ -315,12 +348,20 @@ Each `Element` contains:
 
 ## Documentation
 
-See the [documentation](docs/) folder for detailed information about each module.
+- [vLLM integration](docs/README_vllm.md) (if available)
+- [Environment template](docs/env.example) or `examples/env.example`
+- [Custom Components Guide](documentor/CUSTOM_COMPONENTS_GUIDE.md)
+- [Configuration Guide](examples/config/README.md)
 
 ## License
 
-[Add your license here]
+[BSD 3-Clause License](LICENSE.md)
 
-## Contributing
+## Acknowledgements
 
-[Add contributing guidelines here]
+By ITMO University, Saint Petersburg, Russia
+
+## Contacts
+
+Questions and suggestions can be asked to the maintainers:
+- [GitHub Issues](https://github.com/Industrial-AI-Research-Lab/documentor/issues)

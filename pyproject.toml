@@ -8,13 +8,15 @@ version = "0.1.0"
 description = "Структурирование документов для RAG с поддержкой LangChain"
 readme = "README.md"
 authors = ["angrymuskrat <mlhakov2011@gmail.com>"]
-license = "MIT"
+license = "BSD-3-Clause"
 keywords = ["document", "parsing", "rag", "langchain", "nlp"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: BSD License",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Text Processing :: Markup",
@@ -23,7 +25,7 @@ packages = [{include = "documentor"}]
 include = ["documentor/config/*.yaml"]
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.10"
 # LangChain for Document support
 langchain-core = ">=0.3.0"
 # YAML for configuration
@@ -57,12 +59,12 @@ Issues = "https://github.com/yourusername/documentor/issues"
 
 [tool.black]
 line-length = 100
-target-version = ['py312']
+target-version = ['py310', 'py311', 'py312']
 include = '\.pyi?$'
 
 [tool.ruff]
 line-length = 100
-target-version = "py312"
+target-version = "py310"
 select = [
     "E",  # pycodestyle errors
     "W",  # pycodestyle warnings
@@ -76,7 +78,7 @@ ignore = [
 ]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
