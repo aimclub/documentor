@@ -18,14 +18,11 @@ from .base import (
     BaseFormulaExtractor,
 )
 from .manager import DotsOCRManager, OCRTask, TaskStatus, ModelConfig, ModelState
-from .dots_ocr import (
-    DotsOCRLayoutDetector,
-    DotsOCRTableParser,
-    DotsOCRTextExtractor,
-    DotsOCRFormulaExtractor,
-    get_system_prompt,
-    load_prompts_from_config,
-)
+from .dots_ocr.layout_detector import DotsOCRLayoutDetector
+from .dots_ocr.table_parser import DotsOCRTableParser
+from .dots_ocr.text_extractor import DotsOCRTextExtractor
+from .dots_ocr.formula_extractor import DotsOCRFormulaExtractor
+from .dots_ocr.prompts import get_system_prompt, load_prompts_from_config
 
 __all__ = [
     "BaseLayoutDetector",

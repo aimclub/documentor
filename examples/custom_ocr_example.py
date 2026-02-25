@@ -4,8 +4,6 @@ Example: Using Custom OCR Components with PdfParser
 This example demonstrates how to replace Dots OCR components with your own implementations.
 """
 
-from __future__ import annotations
-
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -158,7 +156,7 @@ class MyCustomTableParser(BaseTableParser):
         self, 
         image: Image.Image, 
         bbox: List[float]
-    ) -> Tuple[Optional[Any], Optional[str], bool]:
+    ) -> Tuple[Optional[str], bool]:
         """
         Parse table from image.
         

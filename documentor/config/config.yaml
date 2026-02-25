@@ -33,6 +33,12 @@ pdf_parser:
     # Tables are stored as HTML in element.content
     # Detect merged tables across pages
     detect_merged_tables: true
+    # Re-process pages with tables using full OCR extraction to get HTML structure
+    # This improves table quality but significantly slows down parsing (each table page is processed twice)
+    # Set to false to skip table reprocessing and use faster layout-only detection
+    reprocess_tables: true
+    # Note: Tables are processed by creating full-page images with only the table visible
+    # (rest is white). This is because the model is trained on full A4 page scans.
   
   # Header analysis
   header_analysis:

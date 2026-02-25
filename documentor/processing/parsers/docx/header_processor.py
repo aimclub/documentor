@@ -4,8 +4,6 @@ DOCX header processing.
 Handles header detection, level determination, and matching with XML.
 """
 
-from __future__ import annotations
-
 import logging
 import re
 from pathlib import Path

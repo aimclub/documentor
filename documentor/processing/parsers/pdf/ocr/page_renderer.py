@@ -7,8 +7,6 @@ Contains classes for:
 - Optimizing images for OCR
 """
 
-from __future__ import annotations
-
 from typing import List, Optional, Tuple, Union
 from pathlib import Path
 from io import BytesIO
@@ -16,9 +14,9 @@ from io import BytesIO
 from PIL import Image
 import fitz
 
-# Import utilities from documentor.utils
-from documentor.utils.ocr_consts import MIN_PIXELS, MAX_PIXELS
-from documentor.utils.ocr_image_utils import fetch_image
+# Import utilities from documentor.ocr
+from documentor.ocr.constants import MIN_PIXELS, MAX_PIXELS
+from documentor.ocr.image.image_utils import fetch_image
 
 
 class PdfPageRenderer:

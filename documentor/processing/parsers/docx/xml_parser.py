@@ -2,8 +2,6 @@
 Parsing DOCX XML markup for extracting document structure.
 """
 
-from __future__ import annotations
-
 import re
 import zipfile
 import xml.etree.ElementTree as ET

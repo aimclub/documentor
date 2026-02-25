@@ -10,12 +10,10 @@ Uses combined approach:
 6. Automatic detection of scanned documents and processing via PdfParser with OCR
 """
 
-from __future__ import annotations
-
 import logging
 import re
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Union
 
 import tempfile
 from langchain_core.documents import Document
@@ -28,7 +26,7 @@ except ImportError:
 
 from ....domain import DocumentFormat, Element, ElementType, ParsedDocument
 from ....exceptions import ParsingError
-from ....utils.config_loader import ConfigLoader
+from documentor.config.loader import ConfigLoader
 from ..base import BaseParser
 from ..pdf.pdf_parser import PdfParser
 from .converter_wrapper import DocxConverter
@@ -124,20 +122,62 @@ class DocxParser(BaseParser):
 
     format = DocumentFormat.DOCX
 
-    def __init__(self) -> None:
-        """Initialize parser."""
+    def __init__(
+        self,
+        config_path: Optional[Union[str, Path]] = None,
+        config_dict: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """
+        Initialize parser.
+        
+        Args:
+            config_path: Optional path to external config YAML file. 
+                        If None, uses default internal config.
+            config_dict: Optional dictionary with full config. 
+                       If provided, extracts "docx_parser" section.
+                       Takes priority over config_path.
+        
+        Examples:
+            # Use default config
+            parser = DocxParser()
+            
+            # Use custom config file
+            parser = DocxParser(config_path="/path/to/my_config.yaml")
+            
+            # Use custom config dictionary
+            parser = DocxParser(config_dict={
+                "docx_parser": {
+                    "hierarchy": {"max_text_block_size": 5000},
+                    "processing": {"skip_title_page": True}
+                }
+            })
+        """
         super().__init__()
         self._config: Optional[Dict[str, Any]] = None
-        self._load_config()
+        self._load_config(config_path=config_path, config_dict=config_dict)
         
         # Initialize specialized processors
         self.converter = DocxConverter()
         self.layout_detector = DocxLayoutDetector(config=self._config)
         self.header_processor = DocxHeaderProcessor(config=self._config)
 
-    def _load_config(self) -> None:
-        """Loads configuration from config.yaml."""
-        self._config = ConfigLoader.load_config("docx_parser")
+    def _load_config(
+        self, 
+        config_path: Optional[Union[str, Path]] = None,
+        config_dict: Optional[Dict[str, Any]] = None
+    ) -> None:
+        """
+        Loads configuration from config file or dictionary.
+        
+        Args:
+            config_path: Optional path to external config YAML file.
+            config_dict: Optional dictionary with full config.
+        """
+        self._config = ConfigLoader.load_config(
+            "docx_parser",
+            config_path=config_path,
+            config_dict=config_dict
+        )
 
     def _get_config(self, key: str, default: Any = None) -> Any:
         """Gets value from configuration."""
@@ -251,6 +291,12 @@ class DocxParser(BaseParser):
                     all_xml_elements = xml_parser.extract_all_elements()
                     docx_tables = xml_parser.extract_tables()
                     docx_images = xml_parser.extract_images()
+                    
+                    # Merge split tables across pages
+                    detect_merged_tables = self._get_config("table_parsing.detect_merged_tables", True)
+                    if detect_merged_tables:
+                        from ...table_merger import merge_docx_tables
+                        docx_tables = merge_docx_tables(docx_tables, all_xml_elements)
                     
                     # Match tables by comparing their structure (top row/headers) from OCR and XML
                     # This is the primary method: compare table structures to identify same tables
@@ -369,6 +415,10 @@ class DocxParser(BaseParser):
                         docx_path,
                     )
                     
+                    # Build header rules from found headers to filter false positives
+                    from .header_finder import build_header_rules
+                    header_rules = build_header_rules(docx_path, header_positions) if header_positions else {}
+                    
                     max_text_block_size = self._get_config("hierarchy.max_text_block_size", 3000)
                     max_paragraphs_per_block = self._get_config("hierarchy.max_paragraphs_per_block", 10)
                     
@@ -380,7 +430,8 @@ class DocxParser(BaseParser):
                         docx_path,
                         self._id_generator,
                         max_text_block_size=max_text_block_size,
-                        max_paragraphs_per_block=max_paragraphs_per_block
+                        max_paragraphs_per_block=max_paragraphs_per_block,
+                        header_rules=header_rules
                     )
                     
                     parsed_document = ParsedDocument(

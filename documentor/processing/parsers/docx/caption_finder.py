@@ -5,8 +5,6 @@ Uses Dots OCR headers and captions to match with tables and images from XML.
 Also matches tables by comparing their structure (top row/headers) from OCR and XML.
 """
 
-from __future__ import annotations
-
 import logging
 import re
 from typing import Dict, List, Any, Optional

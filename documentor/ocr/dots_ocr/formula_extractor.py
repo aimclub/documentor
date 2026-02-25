@@ -4,8 +4,6 @@ Formula extractor for Dots.OCR.
 Wrapper class for extracting formulas from images using Dots.OCR API.
 """
 
-from __future__ import annotations
-
 from typing import Any, Dict, List, Optional
 
 from PIL import Image

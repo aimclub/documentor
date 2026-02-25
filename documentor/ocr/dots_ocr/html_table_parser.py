@@ -9,17 +9,19 @@ This module is specific to Dots.OCR HTML format.
 For other OCR models, create similar parsers in their respective modules.
 """
 
-from __future__ import annotations
-
 import logging
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Tuple, TYPE_CHECKING
 from io import StringIO
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 try:
     import pandas as pd
     HAS_PANDAS = True
 except ImportError:
     HAS_PANDAS = False
+    pd = None  # type: ignore
     logging.warning("pandas not available, DataFrame conversion will be disabled")
 
 try:
@@ -70,11 +72,11 @@ def parse_table_from_html(
         
     except Exception as e:
         logger.error(f"Error parsing HTML table: {e}")
-        return None, None, False
+        return None, False
 
 
 # NOTE: Function no longer used as markdown parsing is disabled
-def _dataframe_to_markdown(rows: list, df: Optional[pd.DataFrame] = None) -> str:
+def _dataframe_to_markdown(rows: list, df: Optional["pd.DataFrame"] = None) -> str:
     """
     Convert table to markdown format.
     
@@ -171,7 +173,7 @@ def detect_merged_tables(markdown_content: str) -> list[str]:
     return tables
 
 
-def markdown_to_dataframe(markdown_content: str) -> Optional[pd.DataFrame]:
+def markdown_to_dataframe(markdown_content: str) -> Optional["pd.DataFrame"]:
     """
     Convert markdown table to pandas DataFrame.
     

@@ -24,8 +24,11 @@ tqdm>=4.66.0
 # HTTP requests
 requests>=2.31.0
 
-# OpenAI API (for LLM integration, if needed)
-# openai>=1.0.0  # Uncomment if using LLM features
+# HTML parsing (for table parsing from OCR)
+beautifulsoup4>=4.12.0
+
+# OpenAI API (for Dots.OCR integration)
+openai>=1.0.0
 
 # Testing
 pytest>=8.0.0

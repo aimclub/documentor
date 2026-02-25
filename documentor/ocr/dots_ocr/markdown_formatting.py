@@ -5,8 +5,6 @@ Contains helper functions specific to Dots OCR output processing,
 such as markdown formatting removal.
 """
 
-from __future__ import annotations
-
 import re
 
 

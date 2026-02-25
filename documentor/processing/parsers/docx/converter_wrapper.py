@@ -4,8 +4,6 @@ DOCX to PDF converter wrapper.
 Provides a clean interface for converting DOCX files to PDF.
 """
 
-from __future__ import annotations
-
 import logging
 from pathlib import Path
 

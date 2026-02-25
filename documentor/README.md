@@ -7,7 +7,6 @@ Main package for document parsing and processing.
 - **config/**: Configuration files (YAML format)
 - **core/**: Core utilities and environment management
 - **domain/**: Domain models and data structures
-- **llm/**: LLM integration modules
 - **ocr/**: OCR service integrations
 - **processing/**: Document processing pipeline
 - **utils/**: Utility functions and helpers

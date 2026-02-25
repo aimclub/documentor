@@ -117,4 +117,4 @@ See [CUSTOM_COMPONENTS_GUIDE.md](CUSTOM_COMPONENTS_GUIDE.md) for:
 
 ## Examples
 
-See [examples/custom_ocr_example.py](examples/custom_ocr_example.py) for working code examples.
+See [examples/custom_ocr_example.py](../examples/custom_ocr_example.py) for working code examples.

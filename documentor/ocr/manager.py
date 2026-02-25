@@ -10,8 +10,6 @@ Manages:
 - Loading configuration from .env file
 """
 
-from __future__ import annotations
-
 import os
 import time
 import json
@@ -28,7 +26,7 @@ from PIL import Image
 import openai
 import yaml
 
-from .dots_ocr import get_system_prompt, load_prompts_from_config
+from .dots_ocr.prompts import get_system_prompt, load_prompts_from_config
 from ..core.load_env import load_env_file
 
 # Cache for OCR config
@@ -133,7 +131,7 @@ class OCRTask:
     created_at: float = field(default_factory=time.time)
     started_at: Optional[float] = None
     completed_at: Optional[float] = None
-    callback: Optional[Callable[[OCRTask], None]] = None
+    callback: Optional[Callable[["OCRTask"], None]] = None
     
     def __post_init__(self) -> None:
         """Initialize task."""
@@ -206,10 +204,10 @@ class DotsOCRManager:
         self.model_states: Dict[str, ModelState] = {}
         
         # Task queues for each model (model_id -> Queue)
-        self.task_queues: Dict[str, Queue[OCRTask]] = {}
+        self.task_queues: Dict[str, Queue["OCRTask"]] = {}
         
         # All tasks (task_id -> OCRTask)
-        self.tasks: Dict[str, OCRTask] = {}
+        self.tasks: Dict[str, "OCRTask"] = {}
         
         # Worker threads (model_id -> List[Thread])
         self.worker_threads: Dict[str, List[threading.Thread]] = {}
@@ -418,7 +416,7 @@ class DotsOCRManager:
                 import traceback
                 traceback.print_exc()
     
-    def _process_task(self, task: OCRTask, model_id: str) -> None:
+    def _process_task(self, task: "OCRTask", model_id: str) -> None:
         """
         Processes recognition task.
         
@@ -713,7 +711,7 @@ class DotsOCRManager:
         task_format: Optional[str] = None,
         prompt_mode: str = "prompt_layout_only_en",
         metadata: Optional[Dict[str, Any]] = None,
-        callback: Optional[Callable[[OCRTask], None]] = None,
+        callback: Optional[Callable[["OCRTask"], None]] = None,
         task_id: Optional[str] = None
     ) -> str:
         """
@@ -804,7 +802,7 @@ class DotsOCRManager:
             return None
         return task.result
     
-    def wait_for_task(self, task_id: str, timeout: Optional[float] = None) -> OCRTask:
+    def wait_for_task(self, task_id: str, timeout: Optional[float] = None) -> "OCRTask":
         """
         Waits for task completion.
         
@@ -884,7 +882,7 @@ class DotsOCRManager:
         
         return len(completed_task_ids)
     
-    def __enter__(self) -> DotsOCRManager:
+    def __enter__(self) -> "DotsOCRManager":
         """Context manager support."""
         if not self.model_configs and self.auto_load_models:
             self.load_models_from_env()

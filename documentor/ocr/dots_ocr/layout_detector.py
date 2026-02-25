@@ -4,8 +4,6 @@ Layout detector for Dots.OCR.
 Wrapper class for layout detection using Dots.OCR API.
 """
 
-from __future__ import annotations
-
 from typing import Any, Dict, List, Optional
 
 from PIL import Image
@@ -78,7 +76,8 @@ class DotsOCRLayoutDetector(BaseLayoutDetector):
     def detect_layout_with_text(
         self, 
         image: Image.Image, 
-        origin_image: Optional[Image.Image] = None
+        origin_image: Optional[Image.Image] = None,
+        timeout: Optional[int] = None
     ) -> List[Dict[str, Any]]:
         """
         Detects page layout with text using prompt_layout_all_en.
@@ -86,6 +85,7 @@ class DotsOCRLayoutDetector(BaseLayoutDetector):
         Args:
             image: Page image (already prepared via smart_resize)
             origin_image: Original image (for post_process_output)
+            timeout: Request timeout in seconds (None = use default from config/env)
         
         Returns:
             List[Dict[str, Any]]: List of layout elements with fields:
@@ -104,6 +104,7 @@ class DotsOCRLayoutDetector(BaseLayoutDetector):
             image=image,
             origin_image=origin_image,
             prompt=prompt,
+            timeout=timeout,
         )
         
         if not success or layout_cells is None:

@@ -4,8 +4,6 @@ PDF table parsing processor.
 Handles table parsing from Dots OCR HTML output.
 """
 
-from __future__ import annotations
-
 import logging
 from typing import Any, Dict, List, Optional
 
@@ -14,8 +12,8 @@ from PIL import Image
 from tqdm import tqdm
 
 from ....domain import Element, ElementType
-from ....utils.config_loader import ConfigLoader
-from ....utils.image_utils import ImageUtils
+from documentor.config.loader import ConfigLoader
+from ...image.image_utils import ImageUtils
 from documentor.ocr.dots_ocr.html_table_parser import parse_table_from_html
 
 logger = logging.getLogger(__name__)

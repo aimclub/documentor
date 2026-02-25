@@ -4,8 +4,6 @@ Text extractor for Dots.OCR.
 Wrapper class for extracting text from images using Dots.OCR API.
 """
 
-from __future__ import annotations
-
 import re
 from typing import Any, Dict, List, Optional
 
@@ -65,7 +63,7 @@ class DotsOCRTextExtractor(BaseTextExtractor):
         
         # Clean markdown formatting (except for Formula)
         if category != "Formula":
-            from .utils import remove_markdown_formatting
+            from .markdown_formatting import remove_markdown_formatting
             text = remove_markdown_formatting(text)
         
         return text.strip()

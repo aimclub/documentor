@@ -7,8 +7,6 @@ This file is kept for backward compatibility only.
 Tables are now stored as HTML strings in element.content, not as DataFrames.
 """
 
-from __future__ import annotations
-
 import logging
 from typing import Any, Optional, Tuple
 from io import StringIO

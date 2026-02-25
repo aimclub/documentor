@@ -11,8 +11,6 @@ Main logic:
 4. Return ParsedDocument with elements and hierarchy
 """
 
-from __future__ import annotations
-
 import logging
 import time
 from typing import Dict, Iterable, List, Optional

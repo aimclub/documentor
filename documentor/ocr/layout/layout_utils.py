@@ -7,8 +7,8 @@ from typing import Dict, List
 
 from PIL import Image
 
-from documentor.utils.ocr_image_utils import smart_resize
-from documentor.utils.ocr_consts import MIN_PIXELS, MAX_PIXELS
+from documentor.ocr.image.image_utils import smart_resize
+from documentor.ocr.constants import MIN_PIXELS, MAX_PIXELS
 
 
 def post_process_cells(
@@ -97,7 +97,7 @@ def post_process_output(response, prompt_mode, origin_image, input_image, min_pi
         json_load_failed = True
 
     if json_load_failed:
-        from documentor.utils.ocr_output_cleaner import OutputCleaner
+        from documentor.ocr.cleaning.output_cleaner import OutputCleaner
         cleaner = OutputCleaner()
         response_clean = cleaner.clean_model_output(cells)
         if isinstance(response_clean, list):

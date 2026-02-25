@@ -11,6 +11,9 @@ SPECIAL_HEADER_1 = {
     # English headers
     "REFERENCES",
     "BIBLIOGRAPHY",
+    "LITERATURE",
+    "LITERATURE LIST",
+    "A LIST OF LITERATURE",
     "ABSTRACT",
     "INTRODUCTION",
     "CONCLUSION",

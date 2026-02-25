@@ -4,8 +4,6 @@ PDF text extraction processor.
 Handles text extraction from PDF documents using PyMuPDF or Dots OCR.
 """
 
-from __future__ import annotations
-
 import logging
 import re
 from typing import Any, Dict, List, Optional
@@ -13,8 +11,8 @@ from typing import Any, Dict, List, Optional
 import fitz
 from tqdm import tqdm
 
-from ....utils.config_loader import ConfigLoader
-from ....utils.pdf_text_extractor import PdfTextExtractorUtil
+from documentor.config.loader import ConfigLoader
+from ...pdf.text_extractor_util import PdfTextExtractorUtil
 
 logger = logging.getLogger(__name__)
 
@@ -92,7 +90,7 @@ class PdfTextExtractor:
                                 # Use Dots OCR utility for markdown removal
                                 # This assumes text comes from Dots OCR (default behavior)
                                 try:
-                                    from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                                    from documentor.ocr.dots_ocr.markdown_formatting import remove_markdown_formatting
                                     text = remove_markdown_formatting(text)
                                 except ImportError:
                                     # Fallback if utils not available

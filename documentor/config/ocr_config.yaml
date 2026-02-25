@@ -18,7 +18,11 @@ dots_ocr:
     max_tokens: 32768
     
     # Request timeout in seconds
-    timeout: 30
+    timeout: 120
+    
+    # Timeout for table reprocessing (can be longer for complex tables with HTML generation)
+    # If not specified, uses timeout * 2
+    table_reprocessing_timeout: 240
   
   # Prompts for Dots.OCR (strict prompts from official documentation)
   prompts:

@@ -17,8 +17,6 @@ warnings.warn(
     stacklevel=2
 )
 
-from __future__ import annotations
-
 import os
 import time
 from pathlib import Path
@@ -34,10 +32,10 @@ import base64
 from documentor.core.load_env import load_env_file
 load_env_file()
 
-# Import utilities from documentor.utils
-from documentor.utils.ocr_consts import MIN_PIXELS, MAX_PIXELS
-from documentor.utils.ocr_image_utils import fetch_image
-from documentor.utils.ocr_layout_utils import post_process_output
+# Import utilities from documentor.ocr
+from documentor.ocr.constants import MIN_PIXELS, MAX_PIXELS
+from documentor.ocr.image.image_utils import fetch_image
+from documentor.ocr.layout.layout_utils import post_process_output
 
 # Cache for OCR config
 _ocr_config_cache: Optional[dict] = None

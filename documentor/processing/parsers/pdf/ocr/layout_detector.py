@@ -5,14 +5,12 @@ Contains classes for detecting PDF page structure
 using Dots.OCR via DotsOCRManager or direct API call.
 """
 
-from __future__ import annotations
-
 from typing import Any, Dict, List, Optional
 
 from PIL import Image
 
 from documentor.ocr.base import BaseLayoutDetector
-from documentor.ocr.dots_ocr import DotsOCRLayoutDetector
+from documentor.ocr.dots_ocr.layout_detector import DotsOCRLayoutDetector
 
 # Lazy import to avoid circular dependencies
 from typing import TYPE_CHECKING
@@ -113,7 +111,7 @@ class PdfLayoutDetector(BaseLayoutDetector):
             else:
                 raise ValueError(f"Unexpected result format: {type(result)}")
     
-    def __enter__(self) -> PdfLayoutDetector:
+    def __enter__(self) -> "PdfLayoutDetector":
         """Context manager support."""
         return self
     

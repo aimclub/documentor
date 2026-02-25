@@ -4,15 +4,14 @@ PDF layout detection processor.
 Handles layout detection for PDF documents using Dots OCR.
 """
 
-from __future__ import annotations
-
 import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from tqdm import tqdm
+from PIL import Image
 
-from ....utils.config_loader import ConfigLoader
+from documentor.config.loader import ConfigLoader
 from .ocr.layout_detector import PdfLayoutDetector
 from .ocr.page_renderer import PdfPageRenderer
 
@@ -129,6 +128,9 @@ class PdfLayoutProcessor:
                 
                 if use_text_extraction:
                     # For scanned PDFs: use detect_layout_with_text to get text, tables (HTML), and formulas
+                    if self.layout_detector is None:
+                        raise RuntimeError("Layout detector not initialized")
+                    
                     # Check if custom detector or default PdfLayoutDetector
                     if hasattr(self.layout_detector, 'dots_detector'):
                         # Default PdfLayoutDetector - use dots_detector
@@ -144,6 +146,8 @@ class PdfLayoutProcessor:
                         )
                 else:
                     # For text-extractable PDFs: use prompt_layout_only_en for layout only (text via PyMuPDF)
+                    if self.layout_detector is None:
+                        raise RuntimeError("Layout detector not initialized")
                     layout = self.layout_detector.detect_layout(optimized_image, origin_image=original_image)
                 
                 # Add page number to each element
@@ -177,6 +181,7 @@ class PdfLayoutProcessor:
             Updated layout elements with HTML table content for table elements.
         """
         self._initialize_renderer()
+        self._initialize_detector()  # Ensure detector is initialized
         
         # Find pages with tables
         pages_with_tables = set()
@@ -205,69 +210,138 @@ class PdfLayoutProcessor:
             else:
                 updated_elements.append(element)
         
-        # Re-process pages with tables using detect_layout_with_text
-        for page_num in tqdm(pages_with_tables, desc="Re-processing tables", unit="page", leave=False):
+        # Get timeout for table reprocessing (use increased timeout for complex table processing)
+        # Load OCR config separately since self.config is for pdf_parser, not ocr_config
+        from documentor.ocr.dots_ocr.client import _get_config_value
+        default_timeout = _get_config_value(
+            "dots_ocr.recognition.timeout",
+            "DOTS_OCR_TIMEOUT",
+            120
+        )
+        table_timeout = _get_config_value(
+            "dots_ocr.recognition.table_reprocessing_timeout",
+            None,  # No env var for this, use config or default
+            default_timeout * 2  # Default: 2x the base timeout
+        )
+        logger.debug(f"Using timeout {table_timeout}s for table reprocessing (default: {default_timeout}s)")
+        
+        # Note: We create full-page images with only the table visible (rest is white)
+        # This is because the model is trained on full A4 page scans
+        
+        # Count total tables for progress bar
+        total_tables = sum(len(table_elements_by_page.get(page_num, [])) for page_num in pages_with_tables)
+        
+        # Create progress bar for all tables
+        pbar = tqdm(total=total_tables, desc="Re-processing tables", unit="table", leave=False)
+        
+        # Process each table individually by cropping it from the page
+        # This is much faster as we only send the table image, not the entire page
+        for page_num in pages_with_tables:
+            original_table_elements = table_elements_by_page.get(page_num, [])
+            if not original_table_elements:
+                continue
+            
             try:
+                # Render page once
                 original_image, optimized_image = self.page_renderer.render_page(
                     pdf_path, page_num, return_original=True
                 )
                 
-                # Process with detect_layout_with_text to get HTML tables
-                try:
-                    # Check if custom detector or default PdfLayoutDetector
-                    if hasattr(self.layout_detector, 'dots_detector'):
-                        # Default PdfLayoutDetector - use dots_detector
-                        layout = self.layout_detector.dots_detector.detect_layout_with_text(
-                            optimized_image,
-                            origin_image=original_image
-                        )
-                    else:
-                        # Custom layout detector - use detect_layout_with_text if available
-                        layout = self.layout_detector.detect_layout_with_text(
-                            optimized_image,
-                            origin_image=original_image
-                        )
-                except Exception as e:
-                    logger.warning(f"Table reprocessing failed for page {page_num + 1}: {e}")
-                    # Keep original elements
-                    updated_elements.extend(table_elements_by_page.get(page_num, []))
-                    continue
-                
-                # Find table elements in new layout and update original ones
-                new_table_elements = [e for e in layout if e.get("category") == "Table"]
-                original_table_elements = table_elements_by_page.get(page_num, [])
-                
-                # Match tables by bbox proximity
+                # Process each table on this page individually
                 for orig_table in original_table_elements:
                     orig_bbox = orig_table.get("bbox", [])
-                    best_match = None
-                    best_overlap = 0.0
                     
-                    for new_table in new_table_elements:
-                        new_bbox = new_table.get("bbox", [])
+                    if len(orig_bbox) < 4:
+                        logger.warning(f"Table on page {page_num + 1} has invalid bbox, skipping")
+                        updated_elements.append(orig_table)
+                        pbar.update(1)
+                        continue
+                    
+                    # Extract table bbox coordinates
+                    x1, y1, x2, y2 = orig_bbox
+                    x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+                    
+                    # Get full page dimensions
+                    img_width, img_height = optimized_image.size
+                    
+                    # Crop table image from optimized page image
+                    table_cropped = optimized_image.crop((x1, y1, x2, y2))
+                    table_original_cropped = original_image.crop((x1, y1, x2, y2))
+                    
+                    # Create a new full-page-sized image with white background
+                    # This is important because the model is trained on full A4 page scans
+                    table_image = Image.new('RGB', (img_width, img_height), color='white')
+                    table_original_image = Image.new('RGB', (img_width, img_height), color='white')
+                    
+                    # Paste the cropped table into the full-page image at its original position
+                    table_image.paste(table_cropped, (x1, y1))
+                    table_original_image.paste(table_original_cropped, (x1, y1))
+                    
+                    # Process only the cropped table image
+                    try:
+                        if self.layout_detector is None:
+                            raise RuntimeError("Layout detector not initialized")
                         
-                        # Calculate overlap
-                        if len(orig_bbox) >= 4 and len(new_bbox) >= 4:
-                            overlap = self._calculate_bbox_overlap(orig_bbox, new_bbox)
-                            if overlap > best_overlap and overlap > 0.5:  # 50% overlap threshold
-                                best_overlap = overlap
-                                best_match = new_table
+                        # Check if custom detector or default PdfLayoutDetector
+                        if hasattr(self.layout_detector, 'dots_detector'):
+                            # Default PdfLayoutDetector - use dots_detector with increased timeout
+                            layout = self.layout_detector.dots_detector.detect_layout_with_text(
+                                table_image,
+                                origin_image=table_original_image,
+                                timeout=table_timeout
+                            )
+                        else:
+                            # Custom layout detector - use detect_layout_with_text if available
+                            layout = self.layout_detector.detect_layout_with_text(
+                                table_image,
+                                origin_image=table_original_image,
+                                timeout=table_timeout
+                            )
+                    except Exception as e:
+                        logger.warning(f"Table reprocessing failed for table on page {page_num + 1}: {e}")
+                        # Keep original element without HTML
+                        updated_elements.append(orig_table)
+                        pbar.update(1)
+                        continue
                     
-                    if best_match:
-                        # Update original table with HTML from new layout
+                    # Find table element in result (should be the only one or the largest one)
+                    table_elements = [e for e in layout if e.get("category") == "Table"]
+                    
+                    if table_elements:
+                        # Take the first/largest table (should be the only one since we cropped just the table)
+                        best_match = table_elements[0]
+                        if len(table_elements) > 1:
+                            # If multiple tables found, take the largest one
+                            best_match = max(table_elements, key=lambda t: (
+                                (t.get("bbox", [2])[2] - t.get("bbox", [0, 0, 0, 0])[0]) *
+                                (t.get("bbox", [3])[3] - t.get("bbox", [0, 0, 0, 0])[1])
+                                if len(t.get("bbox", [])) >= 4 else 0
+                            ))
+                        
+                        # Update original table with HTML from cropped image result
+                        # Note: bbox in result is relative to cropped image, but we don't need it
                         orig_table["table_html"] = best_match.get("text", "")
                         orig_table["text"] = best_match.get("text", "")
-                        logger.debug(f"Updated table on page {page_num + 1} with HTML content")
+                        logger.debug(f"Updated table on page {page_num + 1} with HTML content (cropped image)")
                     else:
-                        logger.warning(f"Could not match table on page {page_num + 1}")
+                        logger.warning(f"No table found in cropped image for page {page_num + 1}")
+                        # Keep original element without HTML
                     
+                    # Add table to updated elements
                     updated_elements.append(orig_table)
+                    # Update progress bar
+                    pbar.update(1)
             
             except Exception as e:
                 logger.error(f"Error reprocessing tables for page {page_num + 1}: {e}")
-                # Keep original elements
-                updated_elements.extend(table_elements_by_page.get(page_num, []))
+                # Keep original elements and update progress for all failed tables
+                for failed_table in original_table_elements:
+                    updated_elements.append(failed_table)
+                    pbar.update(1)
                 continue
+        
+        # Close progress bar
+        pbar.close()
         
         return updated_elements
 

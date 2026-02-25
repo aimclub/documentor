@@ -8,8 +8,6 @@ Contains functions for:
 - Normalizing metadata
 """
 
-from __future__ import annotations
-
 import logging
 from pathlib import Path
 from typing import Optional

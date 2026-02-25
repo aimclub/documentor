@@ -4,10 +4,8 @@ PDF text extraction utility.
 Provides common functions for extracting text from PDF by bounding box coordinates.
 """
 
-from __future__ import annotations
-
 import logging
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import fitz
 

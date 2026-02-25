@@ -4,8 +4,6 @@ DOCX layout detection processor.
 Handles layout detection for DOCX documents using OCR.
 """
 
-from __future__ import annotations
-
 import logging
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
@@ -13,9 +11,9 @@ from typing import Any, Dict, List, Tuple
 import fitz
 from tqdm import tqdm
 
-from ....utils.config_loader import ConfigLoader
-from ....utils.pdf_text_extractor import PdfTextExtractorUtil
-from documentor.ocr.dots_ocr import DotsOCRLayoutDetector
+from documentor.config.loader import ConfigLoader
+from ...pdf.text_extractor_util import PdfTextExtractorUtil
+from documentor.ocr.dots_ocr.layout_detector import DotsOCRLayoutDetector
 from ..pdf.ocr.page_renderer import PdfPageRenderer
 
 logger = logging.getLogger(__name__)

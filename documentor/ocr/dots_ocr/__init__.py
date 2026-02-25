@@ -17,7 +17,7 @@ from .table_parser import DotsOCRTableParser
 from .text_extractor import DotsOCRTextExtractor
 from .formula_extractor import DotsOCRFormulaExtractor
 from .prompts import get_system_prompt
-from .utils import remove_markdown_formatting
+from .markdown_formatting import remove_markdown_formatting
 
 __all__ = [
     "run_inference",

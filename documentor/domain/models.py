@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import json
 from dataclasses import dataclass, field
 from enum import Enum
@@ -133,7 +131,7 @@ class Element:
         return result
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> Element:
+    def from_dict(cls, data: Dict[str, Any]) -> "Element":
         """
         Deserialize element from dictionary.
         
@@ -190,7 +188,7 @@ class Element:
             raise TypeError(f"Failed to serialize Element to JSON: {e}") from e
 
     @classmethod
-    def from_json(cls, json_str: str) -> Element:
+    def from_json(cls, json_str: str) -> "Element":
         """
         Deserialize element from JSON string.
         
@@ -220,7 +218,7 @@ class Element:
 class ParsedDocument:
     source: str
     format: DocumentFormat
-    elements: List[Element]
+    elements: List["Element"]
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
@@ -374,7 +372,7 @@ class ParsedDocument:
         return result
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> ParsedDocument:
+    def from_dict(cls, data: Dict[str, Any]) -> "ParsedDocument":
         """
         Deserialize document from dictionary.
         
@@ -433,7 +431,7 @@ class ParsedDocument:
             raise TypeError(f"Failed to serialize ParsedDocument to JSON: {e}") from e
 
     @classmethod
-    def from_json(cls, json_str: str) -> ParsedDocument:
+    def from_json(cls, json_str: str) -> "ParsedDocument":
         """
         Deserialize document from JSON string.
         
@@ -457,7 +455,7 @@ class ParsedDocument:
         
         return cls.from_dict(data)
 
-    def get_elements_by_type(self, element_type: ElementType) -> List[Element]:
+    def get_elements_by_type(self, element_type: ElementType) -> List["Element"]:
         """
         Returns all elements of the specified type.
 
@@ -469,7 +467,7 @@ class ParsedDocument:
         """
         return [elem for elem in self.elements if elem.type == element_type]
 
-    def get_tables(self) -> List[Element]:
+    def get_tables(self) -> List["Element"]:
         """
         Returns all table elements.
 
@@ -478,7 +476,7 @@ class ParsedDocument:
         """
         return self.get_elements_by_type(ElementType.TABLE)
 
-    def get_headers(self, level: Optional[int] = None) -> List[Element]:
+    def get_headers(self, level: Optional[int] = None) -> List["Element"]:
         """
         Returns all headers, optionally filtered by level.
 

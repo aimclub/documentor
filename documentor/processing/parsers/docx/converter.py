@@ -2,8 +2,6 @@
 Converting DOCX to PDF for subsequent OCR processing.
 """
 
-from __future__ import annotations
-
 import subprocess
 from pathlib import Path
 from typing import Optional

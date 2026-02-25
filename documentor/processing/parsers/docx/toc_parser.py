@@ -2,8 +2,6 @@
 Parsing table of contents from DOCX documents.
 """
 
-from __future__ import annotations
-
 import re
 import zipfile
 import xml.etree.ElementTree as ET

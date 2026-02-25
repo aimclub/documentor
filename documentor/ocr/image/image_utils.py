@@ -11,7 +11,7 @@ from io import BytesIO
 from PIL import Image
 import requests
 
-from documentor.utils.ocr_consts import IMAGE_FACTOR, MIN_PIXELS, MAX_PIXELS
+from documentor.ocr.constants import IMAGE_FACTOR, MIN_PIXELS, MAX_PIXELS
 
 
 def round_by_factor(number: int, factor: int) -> int:

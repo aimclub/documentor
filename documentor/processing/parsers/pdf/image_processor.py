@@ -4,8 +4,6 @@ PDF image processing processor.
 Handles image extraction and storage from PDF documents.
 """
 
-from __future__ import annotations
-
 import logging
 from typing import Any, Dict, List
 
@@ -14,8 +12,8 @@ from PIL import Image
 from tqdm import tqdm
 
 from ....domain import Element, ElementType
-from ....utils.config_loader import ConfigLoader
-from ....utils.image_utils import ImageUtils
+from documentor.config.loader import ConfigLoader
+from ...image.image_utils import ImageUtils
 
 logger = logging.getLogger(__name__)
 

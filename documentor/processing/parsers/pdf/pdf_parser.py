@@ -12,13 +12,11 @@ Supports layout-based approach:
 - Formula extraction in LaTeX format from OCR
 """
 
-from __future__ import annotations
-
 import logging
 import re
 from io import BytesIO
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import fitz
 import pandas as pd
@@ -34,7 +32,8 @@ URL_PATTERN = re.compile(
 
 from ....domain import DocumentFormat, Element, ElementType, ParsedDocument
 from ....exceptions import ParsingError
-from ....utils.config_loader import ConfigLoader
+from documentor.config.loader import ConfigLoader
+from ...headers.constants import SPECIAL_HEADER_1, APPENDIX_HEADER_PATTERN
 from ..base import BaseParser
 from .hierarchy_builder import PdfHierarchyBuilder
 from .image_processor import PdfImageProcessor
@@ -79,6 +78,8 @@ class PdfParser(BaseParser):
         text_extractor: Optional[Any] = None,
         table_parser: Optional[Any] = None,
         formula_extractor: Optional[Any] = None,
+        config_path: Optional[Union[str, Path]] = None,
+        config_dict: Optional[Dict[str, Any]] = None,
     ) -> None:
         """
         Initialize parser.
@@ -94,12 +95,28 @@ class PdfParser(BaseParser):
                          If None, uses default Dots OCR table parser.
             formula_extractor: Custom formula extractor implementing BaseFormulaExtractor.
                              If None, uses default Dots OCR formula extractor.
+            config_path: Optional path to external config YAML file. 
+                        If None, uses default internal config.
+            config_dict: Optional dictionary with full config. 
+                       If provided, extracts "pdf_parser" section.
+                       Takes priority over config_path.
         
         Examples:
-            # Use default Dots OCR components
+            # Use default Dots OCR components and default config
             parser = PdfParser()
             
-            # Use custom layout detector with default other components
+            # Use custom config file
+            parser = PdfParser(config_path="/path/to/my_config.yaml")
+            
+            # Use custom config dictionary
+            parser = PdfParser(config_dict={
+                "pdf_parser": {
+                    "layout_detection": {"render_scale": 3.0},
+                    "processing": {"skip_title_page": True}
+                }
+            })
+            
+            # Use custom layout detector with custom config
             from documentor.ocr.base import BaseLayoutDetector
             
             class MyLayoutDetector(BaseLayoutDetector):
@@ -107,12 +124,15 @@ class PdfParser(BaseParser):
                     # Your custom implementation
                     return [...]
             
-            parser = PdfParser(layout_detector=MyLayoutDetector())
+            parser = PdfParser(
+                layout_detector=MyLayoutDetector(),
+                config_path="/path/to/my_config.yaml"
+            )
         """
         super().__init__()
         self.ocr_manager = ocr_manager
         self._config: Optional[Dict[str, Any]] = None
-        self._load_config()
+        self._load_config(config_path=config_path, config_dict=config_dict)
         
         # Initialize specialized processors with optional custom components
         self.layout_processor = PdfLayoutProcessor(
@@ -132,9 +152,23 @@ class PdfParser(BaseParser):
         self.hierarchy_builder = PdfHierarchyBuilder(config=self._config, id_generator=self.id_generator)
         self.formula_extractor = formula_extractor
     
-    def _load_config(self) -> None:
-        """Loads configuration from config.yaml."""
-        self._config = ConfigLoader.load_config("pdf_parser")
+    def _load_config(
+        self, 
+        config_path: Optional[Union[str, Path]] = None,
+        config_dict: Optional[Dict[str, Any]] = None
+    ) -> None:
+        """
+        Loads configuration from config file or dictionary.
+        
+        Args:
+            config_path: Optional path to external config YAML file.
+            config_dict: Optional dictionary with full config.
+        """
+        self._config = ConfigLoader.load_config(
+            "pdf_parser",
+            config_path=config_path,
+            config_dict=config_dict
+        )
 
     def _get_config(self, key: str, default: Any = None) -> Any:
         """Gets value from configuration."""
@@ -219,8 +253,13 @@ class PdfParser(BaseParser):
             )
             
             # Step 1.5: For text-extractable PDFs, if tables found, re-process pages with tables using prompt_layout_all_en
+            # This can be disabled via config to speed up parsing (at the cost of table quality)
             if is_text_extractable:
-                layout_elements = self.layout_processor.reprocess_tables_with_all_en(source, layout_elements)
+                reprocess_tables = self._get_config("table_parsing.reprocess_tables", True)
+                if reprocess_tables:
+                    layout_elements = self.layout_processor.reprocess_tables_with_all_en(source, layout_elements)
+                else:
+                    logger.info("Table reprocessing disabled - using layout-only detection for faster parsing")
             
             # Step 2: Filtering unnecessary elements
             logger.info("Step 2: Filtering elements...")
@@ -264,6 +303,26 @@ class PdfParser(BaseParser):
             logger.info("Step 8: Storing images in metadata...")
             elements = self.image_processor.store_images_in_metadata(elements, source)
             logger.info("Images stored")
+            
+            # Step 8.5: Merge split tables across pages
+            detect_merged_tables = self._get_config("table_parsing.detect_merged_tables", True)
+            if detect_merged_tables:
+                logger.info("Step 8.5: Merging split tables...")
+                from ...table_merger import merge_pdf_tables
+                # Get page height for determining table position
+                page_height = None
+                try:
+                    pdf_doc = fitz.open(source)
+                    if len(pdf_doc) > 0:
+                        page = pdf_doc.load_page(0)
+                        render_scale = self._get_config("layout_detection.render_scale", 2.0)
+                        page_height = page.rect.height * render_scale
+                    pdf_doc.close()
+                except Exception as e:
+                    logger.debug(f"Could not get page height for table merging: {e}")
+                
+                elements = merge_pdf_tables(elements, page_height)
+                logger.info("Tables merged")
             
             # Step 9: Table parsing from Dots OCR HTML
             logger.info("Step 9: Parsing tables...")
@@ -471,6 +530,8 @@ class PdfParser(BaseParser):
             last_numbered_level: Optional[int] = None
             # History of previous headers for font size comparison
             previous_headers: List[Dict[str, Any]] = []  # {level, font_size, page_num}
+            # Track if we've seen any headers yet (for TITLE detection)
+            first_header_seen = False
             
             for element in layout_elements:
                 category = element.get("category", "")
@@ -483,9 +544,11 @@ class PdfParser(BaseParser):
                     text = element.get("text", "")  # Try to get text from Dots OCR first
                     font_size = None
                     
+                    font_properties = None
+                    font_size = None
                     if not is_text_extractable and text:
                         # For scanned PDFs: use text from Dots OCR
-                        # Still need font_size for level determination, try to get it
+                        # Still need font_properties for level determination, try to get it
                         if len(bbox) >= 4 and page_num < len(pdf_document):
                             try:
                                 page = pdf_document.load_page(page_num)
@@ -496,9 +559,11 @@ class PdfParser(BaseParser):
                                     bbox[3] / render_scale,
                                 )
                                 rect = fitz.Rect(x1, y1, x2, y2)
-                                font_size = self._get_font_size(page, rect)
+                                font_properties = self._get_font_properties(page, rect)
+                                font_size = font_properties.get("font_size")
                             except Exception:
-                                pass
+                                font_properties = None
+                                font_size = None
                     elif len(bbox) >= 4 and page_num < len(pdf_document):
                         # For PDFs with extractable text: extract via PyMuPDF
                         try:
@@ -519,11 +584,13 @@ class PdfParser(BaseParser):
                             if not text or len(text) < 2:
                                 text = page.get_text("text", clip=rect).strip()
                             
-                            # Get font size for comparison
-                            font_size = self._get_font_size(page, rect)
+                            # Get font properties for comparison (size, bold, italic)
+                            font_properties = self._get_font_properties(page, rect)
+                            font_size = font_properties.get("font_size")
                         except Exception as e:
                             logger.warning(f"Error analyzing header: {e}")
                             text = ""
+                            font_properties = None
                     
                     if text:
                         # Remove markdown formatting from header text
@@ -548,29 +615,54 @@ class PdfParser(BaseParser):
                             analyzed_elements.append(element)
                             continue
                         
-                        # Determine header level (use cleaned text for level detection)
-                        level = self._determine_header_level(
-                            cleaned_text, element, None, None, last_numbered_level, previous_headers, font_size
-                        )
+                        # Check if this should be TITLE instead of HEADER
+                        # TITLE: first header on first page, no explicit numbering, long text
+                        is_title = False
+                        if not first_header_seen and page_num == 0:
+                            has_numbering = self._has_explicit_numbering(cleaned_text)
+                            # If it's a long text (likely title) and has no numbering, it's probably TITLE
+                            if not has_numbering and len(cleaned_text) > 30:
+                                is_title = True
+                                element["category"] = "Title"
                         
-                        # If header has explicit numbering, update last_numbered_level
-                        if self._has_explicit_numbering(cleaned_text):
-                            last_numbered_level = level
-                        
-                        # Save header info for comparison with subsequent headers
-                        previous_headers.append({
-                            "level": level,
-                            "font_size": font_size,
-                            "page_num": page_num,
-                            "text": cleaned_text,  # Save text to check for letter-based numbering context
-                        })
-                        
-                        element_type = getattr(ElementType, f"HEADER_{level}", ElementType.HEADER_1)
-                        
-                        # Save cleaned text (without markdown symbols)
-                        element["text"] = cleaned_text
-                        element["level"] = level
-                        element["element_type"] = element_type
+                        if is_title:
+                            # Convert to TITLE
+                            element["text"] = cleaned_text
+                            element["element_type"] = ElementType.TITLE
+                            element["level"] = None  # Title has no level
+                            first_header_seen = True
+                        else:
+                            # Determine header level (use cleaned text for level detection)
+                            # Передаем font_properties для сравнения стилей
+                            level = self._determine_header_level(
+                                cleaned_text, element, page, rect, last_numbered_level, previous_headers, font_size, font_properties
+                            )
+                            
+                            # If header has explicit numbering, update last_numbered_level
+                            if self._has_explicit_numbering(cleaned_text):
+                                last_numbered_level = level
+                            
+                            # Save header info for comparison with subsequent headers
+                            # Сохраняем также is_bold для сравнения стилей
+                            header_info = {
+                                "level": level,
+                                "font_size": font_size,
+                                "page_num": page_num,
+                                "text": cleaned_text,  # Save text to check for letter-based numbering context
+                            }
+                            if font_properties:
+                                header_info["is_bold"] = font_properties.get("is_bold", False)
+                                header_info["is_italic"] = font_properties.get("is_italic", False)
+                                header_info["font_name"] = font_properties.get("font_name")
+                            previous_headers.append(header_info)
+                            
+                            element_type = getattr(ElementType, f"HEADER_{level}", ElementType.HEADER_1)
+                            
+                            # Save cleaned text (without markdown symbols)
+                            element["text"] = cleaned_text
+                            element["level"] = level
+                            element["element_type"] = element_type
+                            first_header_seen = True
                     else:
                         # If no text found, default to HEADER_1
                         logger.warning(f"Header text not found for element on page {page_num + 1}")
@@ -636,7 +728,10 @@ class PdfParser(BaseParser):
                             if not text or len(text) < 2:
                                 text = page.get_text("text", clip=rect).strip()
                             
-                            level = self._determine_header_level(text, header, page, rect, None, None, None)
+                            # Извлекаем свойства шрифта для определения уровня
+                            font_properties = self._get_font_properties(page, rect) if page and rect else None
+                            font_size = font_properties.get("font_size") if font_properties else None
+                            level = self._determine_header_level(text, header, page, rect, None, None, font_size, font_properties)
                             element_type = getattr(ElementType, f"HEADER_{level}", ElementType.HEADER_1)
                             
                             header["text"] = text
@@ -666,6 +761,7 @@ class PdfParser(BaseParser):
         """
         # Check various numbering patterns
         patterns = [
+            r'^\d+\.(?!\d)',  # "1. ", "2. ", "3. " (numbered sections, not "1.1")
             r'^\d+\s+',  # "1 ", "2 "
             r'^\d+\.\d+\s+',  # "1.1 ", "1.2 "
             r'^\d+\.\d+\.\d+\s+',  # "1.1.1 ", "1.1.2 "
@@ -683,9 +779,115 @@ class PdfParser(BaseParser):
         
         return False
 
+    def _get_font_properties(
+        self, page: fitz.Page, rect: fitz.Rect
+    ) -> Dict[str, Any]:
+        """
+        Извлекает свойства шрифта из области текста (размер, жирный, курсив).
+        
+        Аналогично функции в DOCX пайплайне, которая проверяет стили для определения иерархии заголовков.
+        
+        Args:
+            page: PDF страница.
+            rect: Прямоугольник области текста.
+        
+        Returns:
+            Словарь с ключами:
+            - font_size: максимальный размер шрифта (float или None)
+            - is_bold: True если ≥95% текста жирный (bool)
+            - is_italic: True если ≥95% текста курсив (bool)
+            - font_name: основное имя шрифта (str или None)
+        """
+        try:
+            text_dict = page.get_text("dict", clip=rect)
+            blocks = text_dict.get("blocks", [])
+            
+            font_sizes = []
+            font_names = []
+            bold_spans = 0
+            italic_spans = 0
+            total_spans = 0
+            total_text_length = 0
+            bold_text_length = 0
+            
+            for block in blocks:
+                if block.get("type") == 0:  # Text block
+                    for line in block.get("lines", []):
+                        for span in line.get("spans", []):
+                            font_size = span.get("size", 0)
+                            if font_size > 0:
+                                font_sizes.append(font_size)
+                            
+                            font_name = span.get("font", "")
+                            if font_name:
+                                font_names.append(font_name)
+                            
+                            # Проверяем флаги форматирования
+                            flags = span.get("flags", 0)
+                            span_text = span.get("text", "")
+                            span_length = len(span_text)
+                            
+                            if span_length > 0:
+                                total_spans += 1
+                                total_text_length += span_length
+                                
+                                # Проверяем жирный через флаги (бит 19 = ForceBold)
+                                # Или через имя шрифта (содержит "Bold")
+                                is_bold_span = False
+                                if flags & (1 << 18):  # Bit 19 (0-indexed = 18) = ForceBold
+                                    is_bold_span = True
+                                elif font_name and "bold" in font_name.lower():
+                                    is_bold_span = True
+                                
+                                if is_bold_span:
+                                    bold_spans += 1
+                                    bold_text_length += span_length
+                                
+                                # Проверяем курсив через флаги (бит 7 = Italic)
+                                # Или через имя шрифта (содержит "Italic" или "Oblique")
+                                if flags & (1 << 6):  # Bit 7 (0-indexed = 6) = Italic
+                                    italic_spans += 1
+                                elif font_name and ("italic" in font_name.lower() or "oblique" in font_name.lower()):
+                                    italic_spans += 1
+            
+            result = {
+                "font_size": max(font_sizes) if font_sizes else None,
+                "is_bold": False,
+                "is_italic": False,
+                "font_name": None
+            }
+            
+            # Определяем основное имя шрифта (самое частое)
+            if font_names:
+                from collections import Counter
+                font_counter = Counter(font_names)
+                result["font_name"] = font_counter.most_common(1)[0][0]
+            
+            # Проверяем жирный: ≥95% текста должен быть жирным (как в DOCX)
+            if total_text_length > 0:
+                bold_ratio = bold_text_length / total_text_length
+                result["is_bold"] = bold_ratio >= 0.95
+            
+            # Проверяем курсив: ≥95% spans должны быть курсивом
+            if total_spans > 0:
+                italic_ratio = italic_spans / total_spans
+                result["is_italic"] = italic_ratio >= 0.95
+            
+            return result
+        except Exception:
+            return {
+                "font_size": None,
+                "is_bold": False,
+                "is_italic": False,
+                "font_name": None
+            }
+    
     def _get_font_size(self, page: fitz.Page, rect: fitz.Rect) -> Optional[float]:
         """
         Extracts maximum font size from header area.
+        
+        DEPRECATED: Используйте _get_font_properties для получения всех свойств шрифта.
+        Оставлено для обратной совместимости.
 
         Args:
             page: PDF page.
@@ -694,59 +896,57 @@ class PdfParser(BaseParser):
         Returns:
             Maximum font size or None if cannot be determined.
         """
-        try:
-            text_dict = page.get_text("dict", clip=rect)
-            blocks = text_dict.get("blocks", [])
-            
-            font_sizes = []
-            for block in blocks:
-                if block.get("type") == 0:  # Text block
-                    for line in block.get("lines", []):
-                        for span in line.get("spans", []):
-                            font_size = span.get("size", 0)
-                            if font_size > 0:
-                                font_sizes.append(font_size)
-            
-            if font_sizes:
-                return max(font_sizes)
-            return None
-        except Exception:
-            return None
+        font_props = self._get_font_properties(page, rect)
+        return font_props.get("font_size")
 
     def _determine_header_level(
         self,
         text: str,
         header: Dict[str, Any],
-        page: fitz.Page,
-        rect: fitz.Rect,
+        page: Optional[fitz.Page],
+        rect: Optional[fitz.Rect],
         last_numbered_level: Optional[int] = None,
         previous_headers: Optional[List[Dict[str, Any]]] = None,
         font_size: Optional[float] = None,
+        font_properties: Optional[Dict[str, Any]] = None,
     ) -> int:
         """
-        Determines header level based on text and font size.
+        Определяет уровень заголовка на основе текста, нумерации и стилей шрифта.
         
-        If header has no explicit numbering and last_numbered_level exists,
-        returns last_numbered_level + 1.
+        Аналогично функции в DOCX пайплайне, использует:
+        - Нумерацию (приоритет 1)
+        - Сравнение размера шрифта с предыдущими заголовками
+        - Проверку жирного текста (≥95% текста должен быть жирным)
+        - Сравнение стилей с предыдущими заголовками
         
-        If no numbering, compares font size with previous headers.
+        Если заголовок не имеет явной нумерации и last_numbered_level существует,
+        возвращает last_numbered_level + 1.
+        
+        Если нумерации нет, сравнивает размер шрифта и стили с предыдущими заголовками.
 
         Args:
-            text: Header text.
-            header: Dictionary with header information.
-            page: PDF page.
-            rect: Header rectangle.
-            last_numbered_level: Level of last header with explicit numbering.
-            previous_headers: List of previous headers for font size comparison.
-            font_size: Current header font size.
+            text: Текст заголовка.
+            header: Словарь с информацией о заголовке.
+            page: PDF страница (может быть None для scanned PDF).
+            rect: Прямоугольник заголовка (может быть None для scanned PDF).
+            last_numbered_level: Уровень последнего заголовка с явной нумерацией.
+            previous_headers: Список предыдущих заголовков для сравнения стилей.
+            font_size: Размер шрифта текущего заголовка (устаревший параметр).
+            font_properties: Словарь со свойствами шрифта (font_size, is_bold, is_italic, font_name).
 
         Returns:
-            Header level (1-6).
+            Уровень заголовка (1-6).
         """
         # Numbering analysis
         # Headers with Roman numerals (I, II, III, IV, V, VI, etc.) -> HEADER_1
         # Pattern matches: "I. ", "II. ", "III. ", "IV. ", "V. ", "VI. ", etc.
         if re.match(r'^[IVX]+\.\s+', text, re.IGNORECASE):
+            return 1
+        # Headers like "1. ", "2. ", "3. " -> HEADER_1 (numbered sections)
+        # Pattern: digit(s) + dot + (space or non-digit character)
+        # This should match "1. Общая характеристика...", "2. Экспериментальная часть..." etc.
+        # Does NOT match "1.1", "1.2" (those are handled below)
+        if re.match(r'^\d+\.(?!\d)', text):
             return 1
         # Headers like "1", "2", "3" -> HEADER_1
         # Supports both Latin and Cyrillic letters
@@ -774,14 +974,15 @@ class PdfParser(BaseParser):
         if re.match(r'^\d+\.\d+\.\d+\.\d+\s+', text):
             return 4
         # Special headers like "References", "Bibliography", "Abstract" -> HEADER_1
-        text_upper = text.strip().upper()
-        if text_upper in SPECIAL_HEADER_1:
+        # Remove trailing colon before comparison
+        text_normalized = text.strip().rstrip(':').strip().upper()
+        if text_normalized in SPECIAL_HEADER_1:
             return 1
         
         # Headers like "Приложение А.", "Приложение Б.", "Appendix A.", "Приложение 1." -> HEADER_2
         # Pattern: "Приложение" or "Appendix" + space + letter or digit + optional dot
         # These are subsections under "ПРИЛОЖЕНИЯ" (HEADER_1)
-        if re.match(APPENDIX_HEADER_PATTERN, text_upper):
+        if re.match(APPENDIX_HEADER_PATTERN, text_normalized):
             return 2
         
         # Check if we're inside letter-based numbering context (e.g., "H", "H.2")
@@ -827,44 +1028,96 @@ class PdfParser(BaseParser):
             # Return level + 1 from last numbered header
             return min(last_numbered_level + 1, 6)  # Limit maximum to 6
         
-        # If no numbering, compare font size with previous headers
+        # Если font_properties не переданы, но есть page и rect, извлекаем их
+        if font_properties is None and page is not None and rect is not None:
+            font_properties = self._get_font_properties(page, rect)
+        
+        # Используем font_size из font_properties, если он не передан отдельно
+        if font_size is None and font_properties:
+            font_size = font_properties.get("font_size")
+        
+        # Если нет нумерации, сравниваем размер шрифта и стили с предыдущими заголовками
+        # Аналогично DOCX пайплайну: используем размер шрифта и жирный текст для определения иерархии
         if font_size is not None:
             if previous_headers:
-                # Find previous headers with known font size
+                # Находим предыдущие заголовки с известным размером шрифта
                 previous_with_font = [
                     h for h in previous_headers
                     if h.get("font_size") is not None
                 ]
                 
                 if previous_with_font:
-                    # Take last header with known font size
+                    # Берем последний заголовок с известным размером шрифта
                     last_header = previous_with_font[-1]
                     last_font_size = last_header.get("font_size")
                     last_level = last_header.get("level", 1)
+                    last_is_bold = last_header.get("is_bold", False)
                     
-                    # Compare font sizes
-                    # If font is significantly larger (>= 2pt difference) - higher level
+                    # Получаем информацию о текущем заголовке
+                    current_is_bold = False
+                    if font_properties:
+                        current_is_bold = font_properties.get("is_bold", False)
+                    
+                    # Сравниваем размеры шрифта и стили
+                    # Если шрифт значительно больше (>= 2pt разница) - более высокий уровень
                     if font_size >= last_font_size + 2:
                         return max(1, last_level - 1)
-                    # If font is significantly smaller (>= 2pt difference) - lower level
+                    # Если шрифт значительно меньше (>= 2pt разница) - более низкий уровень
                     elif font_size <= last_font_size - 2:
                         return min(6, last_level + 1)
-                    # If size is approximately the same - same level
+                    # Если размер примерно одинаковый - сравниваем стили
                     else:
-                        return last_level
+                        # Если текущий заголовок жирный, а предыдущий нет - более высокий уровень
+                        if current_is_bold and not last_is_bold:
+                            return max(1, last_level - 1)
+                        # Если текущий заголовок не жирный, а предыдущий жирный - более низкий уровень
+                        elif not current_is_bold and last_is_bold:
+                            return min(6, last_level + 1)
+                        # Если стили одинаковые - тот же уровень
+                        else:
+                            return last_level
             
-            # If no previous headers for comparison, use absolute values
-            # Font >= 16pt -> usually HEADER_1 or HEADER_2
-            if font_size >= 16:
+            # Если нет предыдущих заголовков для сравнения, используем абсолютные значения
+            # Аналогично DOCX: большие жирные заголовки обычно HEADER_1
+            current_is_bold = False
+            if font_properties:
+                current_is_bold = font_properties.get("is_bold", False)
+            
+            # Font >= 16pt и жирный -> обычно HEADER_1
+            if font_size >= 16 and current_is_bold:
                 return 1
-            # Font 12-16pt -> usually HEADER_2 or HEADER_3
+            # Font >= 16pt -> обычно HEADER_1 или HEADER_2
+            elif font_size >= 16:
+                return 1
+            # Font 12-16pt и жирный -> обычно HEADER_2
+            elif font_size >= 12 and current_is_bold:
+                return 2
+            # Font 12-16pt -> обычно HEADER_2 или HEADER_3
             elif font_size >= 12:
                 return 2
-            # Font < 12pt -> usually HEADER_3
+            # Font < 12pt и жирный -> обычно HEADER_3
+            elif current_is_bold:
+                return 3
+            # Font < 12pt -> обычно HEADER_3
             else:
                 return 3
         
-        # Default HEADER_1
+        # Если нет информации о размере шрифта, но есть информация о стиле
+        # Используем жирный текст как индикатор заголовка (как в DOCX)
+        if font_properties:
+            current_is_bold = font_properties.get("is_bold", False)
+            if current_is_bold and previous_headers:
+                # Если текущий заголовок жирный, а предыдущий нет - более высокий уровень
+                last_header = previous_headers[-1] if previous_headers else None
+                if last_header:
+                    last_is_bold = last_header.get("is_bold", False)
+                    last_level = last_header.get("level", 1)
+                    if not last_is_bold:
+                        return max(1, last_level - 1)
+                    else:
+                        return last_level
+        
+        # По умолчанию HEADER_1
         return 1
 
     def _remove_markdown_formatting(self, text: str) -> str:
@@ -954,7 +1207,7 @@ class PdfParser(BaseParser):
                             if category != "Formula":
                                 # Use Dots OCR utility for markdown removal
                                 try:
-                                    from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                                    from documentor.ocr.dots_ocr.markdown_formatting import remove_markdown_formatting
                                     text = remove_markdown_formatting(text)
                                 except ImportError:
                                     # Fallback if utils not available
@@ -1288,7 +1541,7 @@ class PdfParser(BaseParser):
                         # Remove markdown formatting (**text** or __text__) from Dots OCR output
                         # Note: This is Dots OCR specific - custom layout detectors may not return markdown
                         try:
-                            from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                            from documentor.ocr.dots_ocr.markdown_formatting import remove_markdown_formatting
                             cleaned_text = remove_markdown_formatting(text)
                         except ImportError:
                             # Fallback if utils not available
@@ -1446,7 +1699,7 @@ class PdfParser(BaseParser):
                     # Remove markdown bold formatting (**text** or __text__) but preserve list markers (*)
                     # Note: This is Dots OCR specific - custom layout detectors may not return markdown
                     try:
-                        from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                        from documentor.ocr.dots_ocr.markdown_formatting import remove_markdown_formatting
                         cleaned_list_text = remove_markdown_formatting(list_text)
                     except ImportError:
                         # Fallback if utils not available
@@ -1483,7 +1736,7 @@ class PdfParser(BaseParser):
                     # Remove markdown formatting (**text** or __text__) from Dots OCR output
                     # Note: This is Dots OCR specific - custom layout detectors may not return markdown
                     try:
-                        from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                        from documentor.ocr.dots_ocr.markdown_formatting import remove_markdown_formatting
                         cleaned_text = remove_markdown_formatting(text)
                     except ImportError:
                         # Fallback if utils not available
@@ -1514,7 +1767,7 @@ class PdfParser(BaseParser):
                     # Remove markdown formatting (**text** or __text__) from Dots OCR output
                     # Note: This is Dots OCR specific - custom layout detectors may not return markdown
                     try:
-                        from documentor.ocr.dots_ocr.utils import remove_markdown_formatting
+                        from documentor.ocr.dots_ocr.markdown_formatting import remove_markdown_formatting
                         cleaned_text = remove_markdown_formatting(text)
                     except ImportError:
                         # Fallback if utils not available
@@ -1531,6 +1784,322 @@ class PdfParser(BaseParser):
                         },
                     )
                     elements.append(element)
+        
+        # Пересвязываем caption, table и image по новой логике
+        elements = self._link_caption_table_image(elements)
+        
+        # Подвязываем элементы без родителя к TITLE, если есть TITLE и еще нет header
+        elements = self._link_elements_to_title(elements)
+        
+        return elements
+
+    def _link_caption_table_image(self, elements: List[Element]) -> List[Element]:
+        """
+        Связывает caption, table и image элементы по новой логике:
+        - Если встретили caption, ищем ближайший table или image и связываем их
+        - Если встретили table или image, ищем ближайший caption и связываем их
+        - У table и image родитель всегда caption (если найден)
+        - У caption родитель всегда header
+        - К связанным элементам больше нельзя подвязывать другие элементы
+        
+        Args:
+            elements: Список элементов
+            
+        Returns:
+            Список элементов с обновленными parent_id
+        """
+        from typing import Optional
+        
+        # Находим все caption, table и image элементы
+        caption_elements = [e for e in elements if e.type == ElementType.CAPTION]
+        table_elements = [e for e in elements if e.type == ElementType.TABLE]
+        image_elements = [e for e in elements if e.type == ElementType.IMAGE]
+        
+        # Множества для отслеживания уже связанных элементов
+        linked_captions = set()
+        linked_tables = set()
+        linked_images = set()
+        
+        # Создаем индекс элементов по позиции для быстрого поиска ближайших
+        element_positions = {}
+        for i, elem in enumerate(elements):
+            element_positions[elem.id] = i
+        
+        def find_nearest_table_or_image(caption_elem: Element, start_idx: int) -> Optional[Element]:
+            """Находит ближайший table или image для caption только среди соседних элементов."""
+            # Проверяем только соседние элементы (предыдущий и следующий)
+            # Предыдущий элемент
+            if start_idx > 0:
+                prev_elem = elements[start_idx - 1]
+                if prev_elem.type == ElementType.TABLE and prev_elem.id not in linked_tables:
+                    # Проверяем, что на той же странице
+                    caption_page = caption_elem.metadata.get('page_num', 0)
+                    prev_page = prev_elem.metadata.get('page_num', 0)
+                    if caption_page == prev_page:
+                        return prev_elem
+                elif prev_elem.type == ElementType.IMAGE and prev_elem.id not in linked_images:
+                    # Проверяем, что на той же странице
+                    caption_page = caption_elem.metadata.get('page_num', 0)
+                    prev_page = prev_elem.metadata.get('page_num', 0)
+                    if caption_page == prev_page:
+                        return prev_elem
+            
+            # Следующий элемент
+            if start_idx < len(elements) - 1:
+                next_elem = elements[start_idx + 1]
+                if next_elem.type == ElementType.TABLE and next_elem.id not in linked_tables:
+                    # Проверяем, что на той же странице
+                    caption_page = caption_elem.metadata.get('page_num', 0)
+                    next_page = next_elem.metadata.get('page_num', 0)
+                    if caption_page == next_page:
+                        return next_elem
+                elif next_elem.type == ElementType.IMAGE and next_elem.id not in linked_images:
+                    # Проверяем, что на той же странице
+                    caption_page = caption_elem.metadata.get('page_num', 0)
+                    next_page = next_elem.metadata.get('page_num', 0)
+                    if caption_page == next_page:
+                        return next_elem
+            
+            return None
+        
+        def find_nearest_caption(elem: Element, start_idx: int) -> Optional[Element]:
+            """Находит ближайший caption для table или image только среди соседних элементов."""
+            # Проверяем только соседние элементы (предыдущий и следующий)
+            # Предыдущий элемент
+            if start_idx > 0:
+                prev_elem = elements[start_idx - 1]
+                if prev_elem.type == ElementType.CAPTION:
+                    # Проверяем, что на той же странице
+                    elem_page = elem.metadata.get('page_num', 0)
+                    prev_page = prev_elem.metadata.get('page_num', 0)
+                    if elem_page == prev_page:
+                        return prev_elem
+            
+            # Следующий элемент
+            if start_idx < len(elements) - 1:
+                next_elem = elements[start_idx + 1]
+                if next_elem.type == ElementType.CAPTION:
+                    # Проверяем, что на той же странице
+                    elem_page = elem.metadata.get('page_num', 0)
+                    next_page = next_elem.metadata.get('page_num', 0)
+                    if elem_page == next_page:
+                        return next_elem
+            
+            return None
+        
+        # Обрабатываем caption: ищем все соседние table или image элементы
+        for caption_elem in caption_elements:
+            if caption_elem.id in linked_captions:
+                continue
+            
+            caption_idx = element_positions.get(caption_elem.id, -1)
+            if caption_idx < 0:
+                continue
+            
+            # Находим все соседние table или image элементы (может быть несколько подряд)
+            linked_to_this_caption = []
+            
+            # Проверяем предыдущий элемент
+            if caption_idx > 0:
+                prev_elem = elements[caption_idx - 1]
+                if prev_elem.type == ElementType.TABLE and prev_elem.id not in linked_tables:
+                    caption_page = caption_elem.metadata.get('page_num', 0)
+                    prev_page = prev_elem.metadata.get('page_num', 0)
+                    if caption_page == prev_page:
+                        linked_to_this_caption.append(prev_elem)
+                elif prev_elem.type == ElementType.IMAGE and prev_elem.id not in linked_images:
+                    caption_page = caption_elem.metadata.get('page_num', 0)
+                    prev_page = prev_elem.metadata.get('page_num', 0)
+                    if caption_page == prev_page:
+                        linked_to_this_caption.append(prev_elem)
+            
+            # Проверяем следующие элементы подряд (может быть несколько таблиц/изображений)
+            current_idx = caption_idx + 1
+            while current_idx < len(elements):
+                next_elem = elements[current_idx]
+                # Если это не table/image, прекращаем поиск
+                if next_elem.type not in [ElementType.TABLE, ElementType.IMAGE]:
+                    break
+                # Если элемент уже связан, прекращаем поиск
+                if (next_elem.type == ElementType.TABLE and next_elem.id in linked_tables) or \
+                   (next_elem.type == ElementType.IMAGE and next_elem.id in linked_images):
+                    break
+                # Проверяем страницу
+                caption_page = caption_elem.metadata.get('page_num', 0)
+                next_page = next_elem.metadata.get('page_num', 0)
+                if caption_page != next_page:
+                    break
+                # Добавляем к связанным
+                linked_to_this_caption.append(next_elem)
+                current_idx += 1
+            
+            # Связываем все найденные элементы с caption
+            if linked_to_this_caption:
+                for elem in linked_to_this_caption:
+                    elem.parent_id = caption_elem.id
+                    if elem.type == ElementType.TABLE:
+                        linked_tables.add(elem.id)
+                    else:
+                        linked_images.add(elem.id)
+                
+                # Находим header для caption (родитель должен быть header)
+                # Если у caption уже есть parent_id, проверяем, что это header
+                current_parent_id = caption_elem.parent_id
+                if current_parent_id:
+                    parent_elem = next((e for e in elements if e.id == current_parent_id), None)
+                    if parent_elem and parent_elem.type not in [ElementType.HEADER_1, ElementType.HEADER_2, 
+                                                                 ElementType.HEADER_3, ElementType.HEADER_4,
+                                                                 ElementType.HEADER_5, ElementType.HEADER_6]:
+                        # Если родитель не header, ищем ближайший header
+                        # Ищем header перед caption
+                        best_header = None
+                        for i in range(caption_idx - 1, -1, -1):
+                            if i < len(elements):
+                                prev_elem = elements[i]
+                                if prev_elem.type in [ElementType.HEADER_1, ElementType.HEADER_2,
+                                                      ElementType.HEADER_3, ElementType.HEADER_4,
+                                                      ElementType.HEADER_5, ElementType.HEADER_6]:
+                                    best_header = prev_elem
+                                    break
+                        if best_header:
+                            caption_elem.parent_id = best_header.id
+                
+                # Помечаем caption как связанный только после того, как связали все элементы
+                linked_captions.add(caption_elem.id)
+        
+        # Обрабатываем table: ищем ближайший caption
+        for table_elem in table_elements:
+            if table_elem.id in linked_tables:
+                continue
+            
+            table_idx = element_positions.get(table_elem.id, -1)
+            if table_idx < 0:
+                continue
+            
+            # Находим ближайший caption
+            nearest_caption = find_nearest_caption(table_elem, table_idx)
+            
+            if nearest_caption:
+                # Связываем: table -> caption
+                table_elem.parent_id = nearest_caption.id
+                
+                # Убеждаемся, что у caption родитель - header
+                if nearest_caption.parent_id:
+                    parent_elem = next((e for e in elements if e.id == nearest_caption.parent_id), None)
+                    if parent_elem and parent_elem.type not in [ElementType.HEADER_1, ElementType.HEADER_2,
+                                                                 ElementType.HEADER_3, ElementType.HEADER_4,
+                                                                 ElementType.HEADER_5, ElementType.HEADER_6]:
+                        # Ищем ближайший header
+                        caption_idx = element_positions.get(nearest_caption.id, -1)
+                        best_header = None
+                        for i in range(caption_idx - 1, -1, -1):
+                            if i < len(elements):
+                                prev_elem = elements[i]
+                                if prev_elem.type in [ElementType.HEADER_1, ElementType.HEADER_2,
+                                                      ElementType.HEADER_3, ElementType.HEADER_4,
+                                                      ElementType.HEADER_5, ElementType.HEADER_6]:
+                                    best_header = prev_elem
+                                    break
+                        if best_header:
+                            nearest_caption.parent_id = best_header.id
+                
+                # Помечаем как связанные
+                linked_tables.add(table_elem.id)
+                linked_captions.add(nearest_caption.id)
+        
+        # Обрабатываем image: ищем ближайший caption
+        for image_elem in image_elements:
+            if image_elem.id in linked_images:
+                continue
+            
+            image_idx = element_positions.get(image_elem.id, -1)
+            if image_idx < 0:
+                continue
+            
+            # Находим ближайший caption
+            nearest_caption = find_nearest_caption(image_elem, image_idx)
+            
+            if nearest_caption:
+                # Связываем: image -> caption
+                image_elem.parent_id = nearest_caption.id
+                
+                # Убеждаемся, что у caption родитель - header
+                if nearest_caption.parent_id:
+                    parent_elem = next((e for e in elements if e.id == nearest_caption.parent_id), None)
+                    if parent_elem and parent_elem.type not in [ElementType.HEADER_1, ElementType.HEADER_2,
+                                                                 ElementType.HEADER_3, ElementType.HEADER_4,
+                                                                 ElementType.HEADER_5, ElementType.HEADER_6]:
+                        # Ищем ближайший header
+                        caption_idx = element_positions.get(nearest_caption.id, -1)
+                        best_header = None
+                        for i in range(caption_idx - 1, -1, -1):
+                            if i < len(elements):
+                                prev_elem = elements[i]
+                                if prev_elem.type in [ElementType.HEADER_1, ElementType.HEADER_2,
+                                                      ElementType.HEADER_3, ElementType.HEADER_4,
+                                                      ElementType.HEADER_5, ElementType.HEADER_6]:
+                                    best_header = prev_elem
+                                    break
+                        if best_header:
+                            nearest_caption.parent_id = best_header.id
+                
+                # Помечаем как связанные
+                linked_images.add(image_elem.id)
+                linked_captions.add(nearest_caption.id)
+        
+        return elements
+
+    def _link_elements_to_title(self, elements: List[Element]) -> List[Element]:
+        """
+        Подвязывает элементы без родителя к TITLE, если есть TITLE и еще нет header.
+        
+        Логика:
+        - Если есть TITLE элемент
+        - И есть элементы без родителя (parent_id is None)
+        - И эти элементы идут до первого header в документе
+        - То подвязываем их к TITLE
+        
+        Args:
+            elements: Список элементов
+            
+        Returns:
+            Список элементов с обновленными parent_id
+        """
+        # Находим первый TITLE элемент
+        title_elem = None
+        title_idx = -1
+        for i, elem in enumerate(elements):
+            if elem.type == ElementType.TITLE:
+                title_elem = elem
+                title_idx = i
+                break
+        
+        # Если нет TITLE, ничего не делаем
+        if not title_elem:
+            return elements
+        
+        # Находим первый header элемент после TITLE
+        first_header_idx = -1
+        for i in range(title_idx + 1, len(elements)):
+            elem = elements[i]
+            if elem.type in [ElementType.HEADER_1, ElementType.HEADER_2,
+                             ElementType.HEADER_3, ElementType.HEADER_4,
+                             ElementType.HEADER_5, ElementType.HEADER_6]:
+                first_header_idx = i
+                break
+        
+        # Подвязываем элементы без родителя к TITLE
+        # Только те, которые идут после TITLE и до первого header (или до конца, если header нет)
+        end_idx = first_header_idx if first_header_idx >= 0 else len(elements)
+        
+        for i in range(title_idx + 1, end_idx):
+            elem = elements[i]
+            # Пропускаем сам TITLE и элементы, которые уже имеют родителя
+            if elem.type == ElementType.TITLE or elem.parent_id is not None:
+                continue
+            
+            # Подвязываем к TITLE
+            elem.parent_id = title_elem.id
         
         return elements
 

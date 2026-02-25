@@ -5,9 +5,6 @@ Contains custom exceptions for handling document parsing errors,
 unsupported formats and other processing errors.
 """
 
-from __future__ import annotations
-
-
 class DocumentorError(Exception):
     """Base exception for all documentor library errors."""
 

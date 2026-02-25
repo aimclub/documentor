@@ -1,6 +1,17 @@
 # Configuration Files
 
-Configuration files for Documentor parsers and services.
+**Note**: These are internal default configuration files. They are kept for backward compatibility and should not be modified.
+
+**For production use**: Copy example config files from `examples/config/` to your project and pass the path when initializing parsers:
+
+```python
+from documentor.processing.parsers.pdf import PdfParser
+
+# Use external config file
+parser = PdfParser(config_path="/path/to/your/config.yaml")
+```
+
+See `examples/config/README.md` for detailed instructions on using external configuration files.
 
 All configuration files use YAML format. Settings can be overridden via environment variables.
 

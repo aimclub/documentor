@@ -5,8 +5,6 @@ Contains standard prompts and functions for loading prompts from configuration.
 Uses strict prompts from official Dots.OCR documentation.
 """
 
-from __future__ import annotations
-
 from typing import Dict, Optional
 from pathlib import Path
 import yaml

@@ -9,8 +9,6 @@
 Обрабатывает документы и сохраняет результаты, включая визуализацию bbox.
 """
 
-from __future__ import annotations
-
 import json
 import sys
 import time
@@ -526,6 +524,8 @@ def main():
     args = parser.parse_args()
     
     # Определяем тип документа
+    project_root = Path(__file__).resolve().parents[1]
+    
     if args.type == "docx":
         doc_type = DocumentType.DOCX
         parser_class = DocxParser
@@ -535,14 +535,14 @@ def main():
     elif args.type == "pdf_scanned":
         doc_type = DocumentType.PDF_SCANNED
         parser_class = PdfParser
-        default_folder = None
-        default_file = Path("E:/easy/documentor/documentor_langchain/experiments/pdf_text_extraction/test_files/2507.06920v1.pdf")
+        default_folder = project_root / "experiments" / "metrics" / "test_files_for_metrics"
+        default_file = None
         file_ext = ".pdf"
     else:  # pdf
         doc_type = DocumentType.PDF_REGULAR
         parser_class = PdfParser
-        default_folder = None
-        default_file = Path("E:/easy/documentor/documentor_langchain/experiments/pdf_text_extraction/test_files/2507.06920v1.pdf")
+        default_folder = project_root / "experiments" / "metrics" / "test_files_for_metrics"
+        default_file = None
         file_ext = ".pdf"
     
     # Определяем файлы для обработки
@@ -550,6 +550,9 @@ def main():
     
     if args.file:
         file_path = Path(args.file)
+        if not file_path.is_absolute():
+            # Если относительный путь, пробуем относительно project_root
+            file_path = project_root / file_path
         if file_path.exists():
             files_to_process = [file_path]
         else:
@@ -557,6 +560,9 @@ def main():
             return
     elif args.folder:
         folder_path = Path(args.folder)
+        if not folder_path.is_absolute():
+            # Если относительный путь, пробуем относительно project_root
+            folder_path = project_root / folder_path
         if folder_path.exists():
             files_to_process = list(folder_path.glob(f"*{file_ext}"))
         else:
@@ -567,7 +573,27 @@ def main():
         if default_file and default_file.exists():
             files_to_process = [default_file]
         elif default_folder and default_folder.exists():
-            files_to_process = list(default_folder.glob(f"*{file_ext}"))
+            # Для метрик используем конкретные файлы, если они указаны
+            if "test_files_for_metrics" in str(default_folder):
+                specific_files = [
+                    "2508.19267v1.pdf",
+                    "2412.19495v2.pdf",
+                    "journal-10-67-5-676-697.pdf",
+                    "journal-10-67-5-721-729.pdf"
+                ]
+                files_to_process = []
+                for filename in specific_files:
+                    file_path = default_folder / filename
+                    if file_path.exists():
+                        files_to_process.append(file_path)
+                    else:
+                        print(f"Предупреждение: файл не найден: {file_path}")
+                
+                if not files_to_process:
+                    # Если конкретные файлы не найдены, используем все PDF в папке
+                    files_to_process = list(default_folder.glob(f"*{file_ext}"))
+            else:
+                files_to_process = list(default_folder.glob(f"*{file_ext}"))
         else:
             print(f"Не найдены файлы для обработки. Используйте --file или --folder")
             return
@@ -581,7 +607,6 @@ def main():
         print(f"  - {file.name}")
     
     # Пути относительно корня проекта
-    project_root = Path(__file__).resolve().parents[1]
     output_dir = project_root / "experiments" / "pdf_text_extraction" / "results" / args.type
     output_dir.mkdir(parents=True, exist_ok=True)
     

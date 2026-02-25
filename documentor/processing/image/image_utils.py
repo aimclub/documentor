@@ -4,8 +4,6 @@ Image processing utility.
 Provides common functions for image optimization and base64 encoding.
 """
 
-from __future__ import annotations
-
 import base64
 import io
 import logging

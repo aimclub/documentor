@@ -57,6 +57,54 @@ for element in parsed_doc.elements:
     print(f"{element.type}: {element.content[:100]}")
 ```
 
+### Configuration
+
+Documentor supports flexible configuration options. You can use:
+1. **Default internal config** (used automatically if not specified)
+2. **External config file** (recommended for production)
+3. **Config dictionary** (useful for programmatic configuration)
+
+#### Using External Config File
+
+Copy example config files from `examples/config/` to your project:
+
+```python
+from documentor.processing.parsers.pdf import PdfParser
+from langchain_core.documents import Document
+
+# Use custom config file
+parser = PdfParser(config_path="/path/to/your/config.yaml")
+doc = Document(page_content="", metadata={"source": "document.pdf"})
+parsed = parser.parse(doc)
+```
+
+#### Using Config Dictionary
+
+```python
+from documentor.processing.parsers.pdf import PdfParser
+from langchain_core.documents import Document
+
+# Use custom config dictionary
+parser = PdfParser(config_dict={
+    "pdf_parser": {
+        "layout_detection": {
+            "render_scale": 3.0  # Higher quality OCR
+        },
+        "processing": {
+            "skip_title_page": True
+        }
+    }
+})
+doc = Document(page_content="", metadata={"source": "document.pdf"})
+parsed = parser.parse(doc)
+```
+
+#### Configuration Priority
+
+When both `config_path` and `config_dict` are provided, `config_dict` takes priority.
+
+See [examples/config/README.md](examples/config/README.md) for detailed configuration options.
+
 ### Custom OCR Components
 ```python
 from documentor.processing.parsers.pdf import PdfParser
@@ -69,8 +117,11 @@ class MyLayoutDetector(BaseLayoutDetector):
         # Your custom OCR implementation
         return [...]
 
-# Use custom component
-parser = PdfParser(layout_detector=MyLayoutDetector())
+# Use custom component with custom config
+parser = PdfParser(
+    layout_detector=MyLayoutDetector(),
+    config_path="/path/to/your/config.yaml"
+)
 doc = Document(page_content="", metadata={"source": "document.pdf"})
 parsed = parser.parse(doc)
 ```
@@ -107,15 +158,36 @@ See [CUSTOM_COMPONENTS_GUIDE.md](documentor/CUSTOM_COMPONENTS_GUIDE.md) for deta
    - Table extraction to DataFrames
    - Nested list support with proper hierarchy
 
+## Configuration
+
+### Configuration Files
+
+Configuration files are provided as examples in `examples/config/`:
+- `config.yaml`: Main configuration file (contains `pdf_parser` and `docx_parser` sections)
+- `llm_config.yaml`: LLM service configuration
+- `ocr_config.yaml`: OCR service configuration
+
+**Note**: Internal config files in `documentor/config/` are kept for backward compatibility but should not be modified. Copy example configs from `examples/config/` to your project and pass the path when initializing parsers.
+
+### Environment Variables
+
+For sensitive configuration (API keys, secrets), use environment variables:
+
+1. Copy the example: `cp examples/env.example .env`
+2. Edit `.env` and fill in your actual values (especially `DOTS_OCR_BASE_URL` and `DOTS_OCR_API_KEY`)
+3. Never commit `.env` to version control
+
+See `examples/env.example` for all available environment variables.
+
 ## Project Structure
 
 ```
 documentor/
-├── config/          # Configuration files (YAML)
+├── config/          # Internal default config files (do not modify)
 ├── core/            # Core utilities (environment loading)
 ├── domain/          # Domain models (Element, ParsedDocument)
 ├── exceptions.py    # Custom exceptions
-├── llm/             # LLM integration (header detection, structure validation)
+├── ocr/             # OCR services integration
 ├── ocr/             # OCR services (base classes + Dots.OCR implementation)
 │   ├── base.py      # Base classes for OCR components
 │   ├── dots_ocr/    # Dots.OCR implementation (default)
