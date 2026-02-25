@@ -2,8 +2,6 @@
 Building document hierarchy from XML elements.
 """
 
-from __future__ import annotations
-
 import base64
 import json
 import re
@@ -141,12 +139,17 @@ def _is_image_caption(text: str) -> bool:
 
 def _is_structural_keyword(text: str) -> bool:
     """Checks if text is a structural keyword (HEADER_1 level)."""
-    from ....utils.header_consts import SPECIAL_HEADER_1
-    text_upper = text.strip().upper()
-    return text_upper in SPECIAL_HEADER_1
+    from ...headers.constants import SPECIAL_HEADER_1
+    # Remove trailing colon before comparison
+    text_normalized = text.strip().rstrip(':').strip().upper()
+    return text_normalized in SPECIAL_HEADER_1
 
 
-def _is_header_by_properties(text: str, properties: Dict[str, Any]) -> bool:
+def _is_header_by_properties(
+    text: str, 
+    properties: Dict[str, Any], 
+    header_rules: Optional[Dict[str, Any]] = None
+) -> bool:
     """
     Checks if paragraph is a header based on XML properties.
     
@@ -156,6 +159,7 @@ def _is_header_by_properties(text: str, properties: Dict[str, Any]) -> bool:
     - Font size
     - Caps Lock (70%+ uppercase letters)
     - Numbered patterns with confirmation
+    - Header rules from OCR headers (if provided)
     """
     text = text.strip()
     if not text or text.endswith(':'):
@@ -175,51 +179,355 @@ def _is_header_by_properties(text: str, properties: Dict[str, Any]) -> bool:
             if 1 <= term_words <= 5 and len(definition) > 0:
                 return False
     
-    # Style "1", "2", "3" - definitely header
+    # IMPORTANT: Style check has HIGHEST priority - if element has heading style, it's ALWAYS a header
+    # This must be checked BEFORE header rules to ensure style takes precedence
     style = properties.get('style')
+    has_heading_style = (style and style.isdigit()) or properties.get('is_heading_style')
+    
+    # Style "1", "2", "3" - definitely header
     if style and style.isdigit():
         return True
     
-    # is_heading_style (Heading1, Heading2, Title...)
+    # is_heading_style (Heading1, Heading2, Title...) - definitely header
     if properties.get('is_heading_style'):
         return True
-    
-    # Numbered pattern - require additional confirmation: bold OR heading style
-    # Support variants with and without space: "1. Заголовок", "1Заголовок", "1.1Заголовок"
-    if not properties.get('is_list_item'):
-        if any(re.match(p, text) for p in [
-            r'^\d+(?:\.\s*)?[А-ЯЁA-Z]',  # "1Заголовок" or "1. Заголовок"
-            r'^\d+\.\d+(?:\.\s*)?[А-ЯЁA-Z]',  # "1.1Заголовок" or "1.1. Заголовок"
-            r'^\d+\.\d+\.\d+(?:\.\s*)?[А-ЯЁA-Z]',  # "1.1.1Заголовок" or "1.1.1. Заголовок"
-        ]):
-            if properties.get('is_bold') or properties.get('is_heading_style'):
-                return True
     
     # Structural keyword
     if _is_structural_keyword(text):
         return True
     
-    # Bold, short, not list item → potential header
-    if (properties.get('is_bold') and
-        not properties.get('is_list_item') and
-        len(text) <= 100):
+    # IMPORTANT: Numbered pattern check is moved AFTER header rules check
+    # This ensures that if header_rules exist, they take precedence
+    # Numbered pattern is only checked if no header_rules OR as exception when rules don't match
+    
+    # IMPORTANT: Check against header rules from OCR headers
+    # If header_rules are provided, element must match the pattern of found headers
+    # BUT: if element has explicit heading style, it's ALWAYS a header (already checked above)
+    # This check is for elements WITHOUT explicit heading style - they must match rules
+    if header_rules:
+        rules_by_level = header_rules.get('by_level', {})
+        common_header = header_rules.get('common_header', {})
+        
+        # Check if element matches any level rules
+        matches_any_rule = False
+        matched_level = None  # Сохраняем уровень, для которого элемент соответствует правилам
+        
+        for level, level_rules in rules_by_level.items():
+            matches = 0
+            total_checks = 0
+            
+            # Check font_name
+            if level_rules.get('font_name'):
+                total_checks += 1
+                if properties.get('font_name') == level_rules['font_name']:
+                    matches += 1
+            
+            # Check font_size
+            if level_rules.get('font_size'):
+                total_checks += 1
+                font_size = properties.get('font_size')
+                if font_size:
+                    target_size = level_rules['font_size']
+                    if abs(font_size - target_size) <= 1.0:
+                        matches += 1
+            
+            # Check is_bold
+            if level_rules.get('is_bold') is not None:
+                total_checks += 1
+                if properties.get('is_bold') == level_rules['is_bold']:
+                    matches += 1
+            
+            # Check style_pattern (higher weight)
+            if level_rules.get('style_pattern'):
+                total_checks += 3
+                if properties.get('style') == level_rules['style_pattern']:
+                    matches += 3
+            
+            # Check is_heading_style
+            if level_rules.get('is_heading_style') is not None:
+                total_checks += 1
+                if properties.get('is_heading_style') == level_rules['is_heading_style']:
+                    matches += 1
+            
+            # Check alignment
+            if level_rules.get('alignment'):
+                total_checks += 1
+                if properties.get('alignment') == level_rules['alignment']:
+                    matches += 1
+            
+            # Check Caps Lock
+            if level_rules.get('is_caps_lock') is not None:
+                total_checks += 1
+                text_letters = [c for c in text if c.isalpha()]
+                is_caps_lock = False
+                if len(text_letters) >= 3:
+                    uppercase_count = sum(1 for c in text_letters if c.isupper())
+                    is_caps_lock = (uppercase_count / len(text_letters)) >= 0.7
+                if is_caps_lock == level_rules['is_caps_lock']:
+                    matches += 1
+            
+            # Check is_italic (important for level 2 headers)
+            if level_rules.get('is_italic') is not None:
+                total_checks += 1
+                if properties.get('is_italic') == level_rules['is_italic']:
+                    matches += 1
+            
+            if total_checks > 0:
+                # IMPORTANT: Style is CRITICAL - if rules specify a style pattern, element MUST have it
+                # If style doesn't match, reject immediately, regardless of other properties
+                style_pattern = level_rules.get('style_pattern')
+                if style_pattern is not None:
+                    element_style = properties.get('style')
+                    if element_style != style_pattern:
+                        # Style doesn't match - reject immediately
+                        continue
+                
+                # IMPORTANT: Check critical properties (font_size, is_bold, is_italic)
+                # These must match if specified in rules
+                critical_properties_match = True
+                if level_rules.get('font_size') is not None:
+                    font_size = properties.get('font_size')
+                    if font_size:
+                        target_size = level_rules['font_size']
+                        if abs(font_size - target_size) > 1.0:
+                            critical_properties_match = False
+                
+                if level_rules.get('is_bold') is not None:
+                    if properties.get('is_bold') != level_rules['is_bold']:
+                        critical_properties_match = False
+                
+                if level_rules.get('is_italic') is not None:
+                    if properties.get('is_italic') != level_rules['is_italic']:
+                        critical_properties_match = False
+                
+                if not critical_properties_match:
+                    # Critical properties don't match - reject
+                    continue
+                
+                score = matches / total_checks
+                # IMPORTANT: Require at least 80% match for other properties (increased from 70%)
+                if score >= 0.8:  # At least 80% match
+                    matches_any_rule = True
+                    matched_level = level  # Сохраняем уровень, для которого элемент соответствует правилам
+                    break
+        
+        # Check common_header if no level match
+        if not matches_any_rule and common_header:
+            matches = 0
+            total_checks = 0
+            
+            if common_header.get('font_name'):
+                total_checks += 1
+                if properties.get('font_name') == common_header['font_name']:
+                    matches += 1
+            
+            if common_header.get('font_size'):
+                total_checks += 1
+                font_size = properties.get('font_size')
+                if font_size:
+                    target_size = common_header['font_size']
+                    if abs(font_size - target_size) <= 1.0:
+                        matches += 1
+            
+            if common_header.get('is_bold') is not None:
+                total_checks += 1
+                if properties.get('is_bold') == common_header['is_bold']:
+                    matches += 1
+            
+            if common_header.get('is_italic') is not None:
+                total_checks += 1
+                if properties.get('is_italic') == common_header['is_italic']:
+                    matches += 1
+            
+            if common_header.get('style_pattern'):
+                total_checks += 1
+                if properties.get('style') == common_header['style_pattern']:
+                    matches += 1
+            
+            if common_header.get('is_heading_style') is not None:
+                total_checks += 1
+                if properties.get('is_heading_style') == common_header['is_heading_style']:
+                    matches += 1
+            
+            if common_header.get('alignment'):
+                total_checks += 1
+                if properties.get('alignment') == common_header['alignment']:
+                    matches += 1
+            
+            if common_header.get('is_caps_lock') is not None:
+                total_checks += 1
+                text_letters = [c for c in text if c.isalpha()]
+                is_caps_lock = False
+                if len(text_letters) >= 3:
+                    uppercase_count = sum(1 for c in text_letters if c.isupper())
+                    is_caps_lock = (uppercase_count / len(text_letters)) >= 0.7
+                if is_caps_lock == common_header['is_caps_lock']:
+                    matches += 1
+            
+            if total_checks > 0:
+                # IMPORTANT: Style is CRITICAL - if rules specify a style pattern, element MUST have it
+                style_pattern = common_header.get('style_pattern')
+                if style_pattern is not None:
+                    element_style = properties.get('style')
+                    if element_style != style_pattern:
+                        # Style doesn't match - reject immediately
+                        matches_any_rule = False
+                    else:
+                        # Check critical properties (font_size, is_bold, is_italic)
+                        critical_properties_match = True
+                        if common_header.get('font_size') is not None:
+                            font_size = properties.get('font_size')
+                            if font_size:
+                                target_size = common_header['font_size']
+                                if abs(font_size - target_size) > 1.0:
+                                    critical_properties_match = False
+                        
+                        if common_header.get('is_bold') is not None:
+                            if properties.get('is_bold') != common_header['is_bold']:
+                                critical_properties_match = False
+                        
+                        if common_header.get('is_italic') is not None:
+                            if properties.get('is_italic') != common_header['is_italic']:
+                                critical_properties_match = False
+                        
+                        if critical_properties_match:
+                            score = matches / total_checks
+                            # IMPORTANT: Require at least 80% match for other properties
+                            if score >= 0.8:  # At least 80% match
+                                matches_any_rule = True
+                        else:
+                            matches_any_rule = False
+                else:
+                    # Check critical properties even if no style pattern
+                    critical_properties_match = True
+                    if common_header.get('font_size') is not None:
+                        font_size = properties.get('font_size')
+                        if font_size:
+                            target_size = common_header['font_size']
+                            if abs(font_size - target_size) > 1.0:
+                                critical_properties_match = False
+                    
+                    if common_header.get('is_bold') is not None:
+                        if properties.get('is_bold') != common_header['is_bold']:
+                            critical_properties_match = False
+                    
+                    if common_header.get('is_italic') is not None:
+                        if properties.get('is_italic') != common_header['is_italic']:
+                            critical_properties_match = False
+                    
+                    if critical_properties_match:
+                        score = matches / total_checks
+                        if score >= 0.8:  # At least 80% match
+                            matches_any_rule = True
+                    else:
+                        matches_any_rule = False
+        
+        # IMPORTANT: If header_rules exist but element doesn't match any rule, it's NOT a header
+        # (unless it has explicit heading style or numbered pattern with confirmation)
+        if not matches_any_rule:
+            # Allow ONLY if it's a numbered header with confirmation (bold OR heading style)
+            # AND it matches the pattern properly (e.g., "1. Заголовок", not "1Adhera")
+            # IMPORTANT: Must have separator (space or dot+space) between number and letter
+            # AND must NOT be a list item
+            if not properties.get('is_list_item'):
+                is_numbered_header = any(re.match(p, text) for p in [
+                    r'^\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1. Заголовок" or "1 Заголовок" (with separator)
+                    r'^\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1. Заголовок" or "1.1 Заголовок"
+                    r'^\d+\.\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1.1. Заголовок" or "1.1.1 Заголовок"
+                ])
+                # IMPORTANT: Must be numbered header pattern AND have confirmation (bold OR heading style)
+                if is_numbered_header and (properties.get('is_bold') or has_heading_style):
+                    # This is a valid numbered header with confirmation - allow it
+                    return True
+            # Element doesn't match rules and is not a valid numbered header - NOT a header
+            return False
+    
+    # IMPORTANT: If header_rules are provided, ONLY check rules-based criteria
+    # Don't use fallback criteria (bold, caps lock) if rules exist
+    if header_rules:
+        # If we got here and rules exist, element matched rules (matches_any_rule = True)
+        # BUT: For HEADER_1 level, we require numbered pattern (unless it's a structural keyword or has explicit heading style)
+        # This prevents marking regular text as HEADER_1 based on style matching alone
+        if matches_any_rule:
+            # Check if this element matches rules for level 1 (HEADER_1)
+            # If matched_level is 1 or '1', or if we need to check level 1 rules
+            rules_by_level = header_rules.get('by_level', {})
+            level_1_rules = rules_by_level.get('1') or rules_by_level.get(1)
+            
+            # Check if element matches level 1 rules
+            matches_level_1 = False
+            if matched_level in (1, '1'):
+                matches_level_1 = True
+            elif level_1_rules:
+                # Check if element matches level 1 rules by comparing critical properties
+                critical_match = True
+                if level_1_rules.get('font_size'):
+                    font_size = properties.get('font_size')
+                    if font_size:
+                        target_size = level_1_rules['font_size']
+                        if abs(font_size - target_size) > 1.0:
+                            critical_match = False
+                    else:
+                        critical_match = False
+                
+                if level_1_rules.get('is_bold') is not None:
+                    if properties.get('is_bold') != level_1_rules['is_bold']:
+                        critical_match = False
+                
+                if level_1_rules.get('is_italic') is not None:
+                    if properties.get('is_italic') != level_1_rules['is_italic']:
+                        critical_match = False
+                
+                if level_1_rules.get('style_pattern'):
+                    if properties.get('style') != level_1_rules['style_pattern']:
+                        critical_match = False
+                
+                matches_level_1 = critical_match
+            
+            # If matches level 1 rules, require numbering (unless structural keyword or explicit heading style)
+            if matches_level_1 and not _is_structural_keyword(text) and not has_heading_style:
+                # Check if element is numbered
+                is_numbered_header = any(re.match(p, text) for p in [
+                    r'^\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1. Заголовок" or "1 Заголовок"
+                    r'^\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1. Заголовок" or "1.1 Заголовок"
+                    r'^\d+\.\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1.1. Заголовок" or "1.1.1 Заголовок"
+                ])
+                if not is_numbered_header:
+                    # Element matches level 1 rules but is not numbered - NOT a header
+                    return False
+        
+        # Element matched rules and passed all checks (or doesn't match level 1 rules)
         return True
     
-    # Check Caps Lock (70%+ uppercase letters)
-    def _is_mostly_uppercase(text: str) -> bool:
-        """Checks if majority of letters are uppercase (Caps Lock)."""
-        if not text or not text.strip():
-            return False
-        letters = [c for c in text if c.isalpha()]
-        if len(letters) < 3:
-            return False
-        uppercase_count = sum(1 for c in letters if c.isupper())
-        return uppercase_count / len(letters) >= 0.7
+    # Fallback criteria: only use if NO header_rules are provided
+    # IMPORTANT: For HEADER_1, we require numbered pattern (e.g., "1. Заголовок")
+    # when there's no explicit heading style or structural keyword
+    # This prevents marking regular text as headers based on bold or caps lock alone
     
-    if (_is_mostly_uppercase(text) and
-        not properties.get('is_list_item') and
-        len(text) >= 3 and len(text) <= 200):
-        return True
+    # Numbered pattern - require additional confirmation: bold OR heading style OR caps
+    # Support variants: "1. Заголовок", "1 Заголовок" (with separator), NOT "1Заголовок" (no separator)
+    # IMPORTANT: Must have separator (space or dot+space) between number and letter to avoid matching "1Adhera"
+    if not properties.get('is_list_item'):
+        is_numbered_header = any(re.match(p, text) for p in [
+            r'^\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1. Заголовок" or "1 Заголовок" (with separator)
+            r'^\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1. Заголовок" or "1.1 Заголовок"
+            r'^\d+\.\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1.1. Заголовок" or "1.1.1 Заголовок"
+        ])
+        if is_numbered_header:
+            # Check for confirmation: bold OR heading style OR caps lock
+            is_bold = properties.get('is_bold', False)
+            is_caps = False
+            text_letters = [c for c in text if c.isalpha()]
+            if len(text_letters) >= 3:
+                uppercase_count = sum(1 for c in text_letters if c.isupper())
+                is_caps = (uppercase_count / len(text_letters)) >= 0.7
+            
+            if is_bold or has_heading_style or is_caps:
+                return True
+    
+    # IMPORTANT: For HEADER_1, bold or caps lock alone is NOT enough
+    # They must be combined with numbered pattern to avoid false positives
+    # Exception: structural keywords and explicit heading styles are already handled above
     
     return False
 
@@ -360,7 +668,8 @@ def build_hierarchy(
     docx_path: Path,
     id_generator,
     max_text_block_size: int = 3000,
-    max_paragraphs_per_block: int = 10
+    max_paragraphs_per_block: int = 10,
+    header_rules: Optional[Dict[str, Any]] = None
 ) -> List[Element]:
     """
     Builds complete document hierarchy from XML elements.
@@ -748,19 +1057,45 @@ def build_hierarchy(
         
         if xml_pos in header_by_pos:
             header_data = header_by_pos[xml_pos]
-            header_text = text if text else header_data.get('text', '').strip()
+            # IMPORTANT: Use text from XML (DOCX) if available, otherwise use OCR text
+            # OCR is needed for scanned documents (images only, no text in XML)
+            # Similar to scanned PDF handling
+            if text and text.strip():
+                header_text = text.strip()
+            else:
+                # No text in XML - use OCR text (for scanned documents)
+                header_text = header_data.get('text', '').strip()
             
             if not (header_text.endswith(':') or _is_table_caption(header_text) or _is_image_caption(header_text)):
+                # IMPORTANT: Check style first - if element has heading style, it's ALWAYS a header
+                # This has highest priority, even if it doesn't match header rules
+                style = props.get('style')
+                has_heading_style = (style and style.isdigit()) or props.get('is_heading_style')
+                
+                # IMPORTANT: If element found by OCR but has NO heading style and doesn't match header rules,
+                # it should NOT be a header (e.g., author names, affiliations)
+                if not has_heading_style and header_rules:
+                    # Check if element matches header rules - must match CRITICAL properties
+                    if not _is_header_by_properties(header_text, props, header_rules):
+                        # This element doesn't match header rules and has no heading style - treat as text
+                        if current_text_size + text_size > max_text_block_size or len(current_text_block) >= max_paragraphs_per_block:
+                            flush_text_block()
+                        current_text_block.append(text_raw)
+                        current_text_positions.append(xml_pos)
+                        current_text_size += text_size
+                        continue
+                
                 # IMPORTANT: Check if this is a list item
                 # even if OCR identified it as a header
                 if props.get('is_list_item'):
                     # Check if this is a numbered header
-                    # Numbered header: "1. Заголовок" or "1Заголовок" (capital letter after number)
-                    # List item: "1. текст" or "1текст" (lowercase letter after number)
-                    is_numbered_header_with_capital = bool(re.match(r'^\d+(?:\.\s*)?[А-ЯЁA-Z]', header_text))
+                    # Numbered header: "1. Заголовок" or "1 Заголовок" (with separator, capital letter after number)
+                    # List item: "1. текст" or "1 текст" (lowercase letter after number)
+                    # IMPORTANT: Must have separator to avoid matching "1Adhera"
+                    is_numbered_header_with_capital = bool(re.match(r'^\d+(?:\.\s+|\s+)[А-ЯЁA-Z]', header_text))
                     
                     # If it's NOT a numbered header with capital letter and NOT a heading style - this is a list item
-                    if not is_numbered_header_with_capital and not props.get('is_heading_style'):
+                    if not is_numbered_header_with_capital and not has_heading_style:
                         # This is a list item, add to text block
                         if current_text_size + text_size > max_text_block_size or len(current_text_block) >= max_paragraphs_per_block:
                             flush_text_block()
@@ -904,7 +1239,7 @@ def build_hierarchy(
                 continue
             
             # Use is_header_by_properties to check if this is a header
-            if _is_header_by_properties(text_stripped, props):
+            if _is_header_by_properties(text_stripped, props, header_rules):
                 # Check numbering sequence violation relative to last header
                 text_match_seq = re.match(r'^(\d+)(?:\.(\d+))?(?:\.(\d+))?', text_stripped)
                 if text_match_seq and header_stack:
