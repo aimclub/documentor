@@ -151,11 +151,11 @@ For PDF files (Regular and Scanned), metrics for element coordinate accuracy are
 - **PDF Regular:** ~2.3 sec/page, ~27 sec/document
 - **Scanned PDF:** ~4.2 sec/page, ~49 sec/document (longer due to OCR)
 
-## Comparison: DocuMentor vs Marker
+## Comparison: DocuMentor vs Marker vs Dedoc
 
 ### Overview
 
-This section compares the performance of **DocuMentor** (our method) and **Marker** on the same set of 8 PDF files (4 regular PDFs and 4 scanned PDFs).
+This section compares the performance of **DocuMentor** (our method), **Marker**, and **Dedoc** on the same set of 8 PDF files (4 regular PDFs and 4 scanned PDFs).
 
 ### Text Accuracy Metrics
 
@@ -163,12 +163,14 @@ This section compares the performance of **DocuMentor** (our method) and **Marke
 |--------|-----|-----|
 | **DocuMentor** | **0.002 (PDF Regular)**<br>**0.009 (Scanned PDF)** | **0.002 (PDF Regular)**<br>**0.023 (Scanned PDF)** |
 | Marker | 0.0385 (3.85%) | 0.0660 (6.60%) |
+| Dedoc | 0.0760 (7.60%) | 0.0923 (9.23%) |
 
 **Analysis:**
 - **DocuMentor** achieves near-zero CER/WER for regular PDFs (0.002) as text is extracted directly from source
-- For scanned PDFs, DocuMentor's CER (0.9%) is **4.3x lower** than Marker's (3.85%)
+- For scanned PDFs, DocuMentor's CER (0.9%) is **4.3x lower** than Marker's (3.85%) and **8.4x lower** than Dedoc's (7.60%)
 - Marker's higher error rates indicate more OCR-related text recognition issues
-- DocuMentor's WER for scanned PDFs (2.3%) is **2.9x lower** than Marker's (6.6%)
+- Dedoc shows the highest error rates (7.60% CER, 9.23% WER), indicating significant OCR-related issues
+- DocuMentor's WER for scanned PDFs (2.3%) is **2.9x lower** than Marker's (6.6%) and **4.0x lower** than Dedoc's (9.23%)
 
 ### Document Structure Metrics
 
@@ -176,12 +178,13 @@ This section compares the performance of **DocuMentor** (our method) and **Marke
 |--------|---------------|----------------|-------------------|-------------------|
 | **DocuMentor** | **0.894 (PDF Regular)**<br>**0.834 (Scanned PDF)** | 0.816 (PDF Regular)<br>0.701 (Scanned PDF) | **~1.0 (all types)** | **0.816 (PDF Regular)**<br>**0.701 (Scanned PDF)** |
 | Marker | 0.4957 | **0.9817** | 0.9904 (99.04%) | None |
+| Dedoc | 0.4737 | 0.9474 | 1.0000 (100.00%) | 0.0526 (5.26%) |
 
 **Analysis:**
-- **Document TEDS:** DocuMentor significantly outperforms Marker (0.894 vs 0.496 for regular PDFs, 0.834 vs 0.496 for scanned PDFs), indicating **80% and 68% better** overall document structure preservation respectively
-- **Hierarchy TEDS:** Marker shows higher value (0.98 vs 0.82), but this appears inconsistent with its very low Hierarchy Accuracy (1.83%)
-- **Hierarchy Accuracy:** DocuMentor achieves 81.6% for regular PDFs and 70.1% for scanned PDFs, while Marker only 1.83%, suggesting Marker has significant issues with parent-child relationships
-- **Ordering Accuracy:** Both methods perform excellently (~99-100%)
+- **Document TEDS:** DocuMentor significantly outperforms both Marker and Dedoc (0.894 vs 0.496 vs 0.474 for regular PDFs, 0.834 vs 0.496 vs 0.474 for scanned PDFs), indicating **80% and 68% better** overall document structure preservation than Marker, and **89% and 76% better** than Dedoc respectively
+- **Hierarchy TEDS:** Marker and Dedoc show higher values (0.98 and 0.95 vs 0.82), but this appears inconsistent with their very low Hierarchy Accuracy (1.83% and 5.26% respectively)
+- **Hierarchy Accuracy:** DocuMentor achieves 81.6% for regular PDFs and 70.1% for scanned PDFs, while Marker only 1.83% and Dedoc only 5.26%, suggesting both Marker and Dedoc have significant issues with parent-child relationships
+- **Ordering Accuracy:** All three methods perform excellently (~99-100%)
 
 
 ### Processing Time
@@ -190,12 +193,35 @@ This section compares the performance of **DocuMentor** (our method) and **Marke
 |--------|---------------------------|----------------------|
 | **DocuMentor** | **27.39 sec (PDF Regular)**<br>**49.38 sec (Scanned PDF)** | **2.33 sec/page (Regular)**<br>**4.17 sec/page (Scanned)** |
 | Marker | 1019 sec (16.98 min) | ~127 sec/page |
+| **Dedoc** | **2.32 sec** | **~0.20 sec/page** |
+
+### Hardware Requirements (GPU)
+
+| Method | GPU VRAM | GPU Utilization | Notes |
+|--------|----------|----------------|-------|
+| **DocuMentor (Dots OCR)** | **~24 GB** | High | Most hardware-demanding method, requires high-end GPU with significant VRAM |
+| Marker | **~0.9 GB avg, 1.6 GB max** | **17.8% avg, 100% max** | Uses GPU for processing, moderate VRAM requirements |
+| Dedoc | **~1.1 GB** (avg: 1.07 GB, max: 1.10 GB) | **22.7% avg, 70% max** | Uses GPU for processing, moderate VRAM requirements |
 
 **Analysis:**
-- **DocuMentor is ~37x faster** than Marker for regular PDFs (27.4 sec vs 1019 sec)
-- **DocuMentor is ~21x faster** than Marker for scanned PDFs (49.4 sec vs 1019 sec)
-- Marker's processing time is significantly longer, making it less suitable for real-time or batch processing scenarios
-- DocuMentor processes documents in **seconds**, while Marker takes **minutes**
+- **DocuMentor (Dots OCR)** is the most GPU-demanding method, requiring approximately **24 GB of GPU video memory** for optimal performance. This makes it suitable only for systems with high-end GPUs (e.g., NVIDIA A100, H100, or multiple consumer GPUs with sufficient VRAM). The high VRAM requirement is due to the use of large vision-language models for OCR, which provides superior text recognition accuracy but at the cost of hardware resources.
+
+- **Dedoc** uses GPU acceleration:
+  - **GPU VRAM**: Average ~1.07 GB, maximum ~1.10 GB
+  - **GPU Utilization**: Average 22.7%, maximum 70%
+
+- **Marker** uses GPU acceleration:
+  - **GPU VRAM**: Average ~0.91 GB, maximum ~1.60 GB
+  - **GPU Utilization**: Average 17.8%, maximum 100%
+
+- **Comparison**: 
+  - **GPU VRAM**: DocuMentor requires **22x more** than Dedoc (24 GB vs 1.1 GB) and **26x more** than Marker (24 GB vs 0.9 GB avg)
+  - Marker and Dedoc have lower GPU VRAM requirements (~0.9-1.1 GB) but significantly lower accuracy metrics
+
+**Analysis:**
+- **DocuMentor** processes documents in **seconds** (27.4 sec for regular PDFs, 49.4 sec for scanned PDFs), making it **~37x faster** than Marker (1019 sec) for regular PDFs and **~21x faster** for scanned PDFs
+- Marker's processing time is significantly longer (16.98 min per document), making it unsuitable for real-time or batch processing scenarios
+- Dedoc processes documents faster (2.3 sec), but at the cost of significantly lower accuracy (7.60% CER, 9.23% WER)
 
 ### Detailed Time Comparison
 
@@ -217,18 +243,38 @@ This section compares the performance of **DocuMentor** (our method) and **Marke
 - **Total estimated:** ~5.1 min for 8 documents (4 regular + 4 scanned)
 - **DocuMentor is ~27x faster overall** (5.1 min vs 135.87 min)
 
+**Dedoc processing times (same 8 PDF files):**
+- 2412.19495v2.pdf: 4.64 sec
+- 2412.19495v2_scanned.pdf: 4.61 sec
+- 2508.19267v1.pdf: 1.81 sec
+- 2508.19267v1_scanned.pdf: 1.83 sec
+- journal-10-67-5-676-697.pdf: 2.30 sec
+- journal-10-67-5-676-697_scanned.pdf: 2.32 sec
+- journal-10-67-5-721-729.pdf: 0.80 sec
+- journal-10-67-5-721-729_scanned.pdf: 0.76 sec
+
+**Total:** 18.67 sec for 8 documents  
+**Average:** 2.33 sec per document
+
 ### Summary
 
 | Aspect | Winner | Notes |
 |--------|--------|-------|
-| **Text Accuracy (CER/WER)** | DocuMentor | 4.3x lower CER, 2.9-33x lower WER |
-| **Document Structure (TEDS)** | DocuMentor | 68-80% better overall document structure preservation |
-| **Hierarchy Accuracy** | DocuMentor | 38-45x better parent-child relationship accuracy |
-| **Ordering Accuracy** | Tie | Both achieve ~99-100% |
-| **Processing Speed** | DocuMentor | 21-37x faster (seconds vs minutes) |
+| **Text Accuracy (CER/WER)** | DocuMentor | 4.3x lower CER than Marker, 8.4x lower than Dedoc; 2.9-33x lower WER |
+| **Document Structure (TEDS)** | DocuMentor | 68-80% better than Marker, 76-89% better than Dedoc |
+| **Hierarchy Accuracy** | DocuMentor | 38-45x better than Marker, 13-15x better than Dedoc |
+| **Ordering Accuracy** | Tie | All three achieve ~99-100% |
+| **Processing Speed** | DocuMentor | 27-49 sec/doc (37x faster than Marker); Dedoc is faster but with much lower accuracy |
+| **Hardware Requirements** | DocuMentor | Requires ~24 GB GPU VRAM for optimal accuracy; other methods have lower requirements but significantly lower accuracy |
 
 **Conclusion:**
-DocuMentor demonstrates superior performance across all key metrics, with significantly better text accuracy, document structure preservation, and processing speed. Marker's main advantage appears to be in simplified hierarchy representation (higher Hierarchy TEDS), but this comes at the cost of very poor actual hierarchy accuracy (1.83%) and much longer processing times.
+- **DocuMentor** demonstrates superior performance in text accuracy and document structure preservation, with significantly better CER/WER and TEDS metrics than both Marker and Dedoc. It achieves much higher hierarchy accuracy (70-82% vs 1.83% for Marker and 5.26% for Dedoc) and processes documents in seconds (27-49 sec), making it 37x faster than Marker. DocuMentor requires high-end GPU hardware (~24 GB VRAM) for optimal performance.
+
+- **Marker** shows very low hierarchy accuracy (1.83%) and high text error rates (3.85% CER, 6.60% WER), while also being the slowest method (16.98 min per document).
+
+- **Dedoc** has the highest text error rates (7.60% CER, 9.23% WER) and very low hierarchy accuracy (5.26%), indicating significant issues with OCR quality and structure understanding. While it processes documents faster (2.3 sec), this comes at the cost of significantly lower accuracy.
+
+**Overall:** DocuMentor provides the best balance of accuracy and speed, with excellent text extraction, structure preservation, and reasonable processing times. The high GPU VRAM requirement (24 GB) is justified by the superior accuracy and quality of results compared to other methods.
 
 ## Conclusions
 
@@ -240,8 +286,8 @@ DocuMentor demonstrates superior performance across all key metrics, with signif
 
 4. **OCR Quality:** For scanned PDFs, OCR quality is sufficiently high (average CER ~0.9%, range 0.5-1.3%), which allows successful extraction of document structure
 
-5. **Comparison with Marker:** DocuMentor outperforms Marker across all key metrics:
-   - **Text Accuracy:** 4.3x lower CER (0.9% vs 3.85% for scanned PDFs), 2.9-33x lower WER
-   - **Document Structure:** 68-80% better Document TEDS (0.83-0.89 vs 0.50)
-   - **Hierarchy Accuracy:** 38-45x better (70-82% vs 1.83%)
-   - **Processing Speed:** 21-37x faster (27-49 sec vs 1019 sec per document)
+5. **Comparison with Marker and Dedoc:** DocuMentor significantly outperforms both methods in accuracy metrics:
+   - **Text Accuracy:** 4.3x lower CER than Marker (0.9% vs 3.85% for scanned PDFs), 8.4x lower than Dedoc (0.9% vs 7.60%); 2.9-33x lower WER
+   - **Document Structure:** 68-80% better Document TEDS than Marker (0.83-0.89 vs 0.50), 76-89% better than Dedoc (0.83-0.89 vs 0.47)
+   - **Hierarchy Accuracy:** 38-45x better than Marker (70-82% vs 1.83%), 13-15x better than Dedoc (70-82% vs 5.26%)
+   - **Processing Speed:** DocuMentor is 21-37x faster than Marker (27-49 sec vs 1019 sec)
