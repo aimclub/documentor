@@ -59,6 +59,57 @@ Alternatively, you can use pip:
 pip install -r requirements.txt
 ```
 
+## Prerequisites
+
+Before running DocuMentor, you need to:
+
+### 1. Configure Environment Variables
+
+Create a `.env` file in the project root (use `docs/env.example` or `examples/env.example` as a template) with the following required variables:
+
+**Required OCR variables:**
+- `DOTS_OCR_BASE_URL` - Base URL for Dots OCR service
+- `DOTS_OCR_API_KEY` - API key for authentication
+- `DOTS_OCR_MODEL_NAME` - Model name to use
+
+**Optional variables:**
+- `DOTS_OCR_TEMPERATURE`, `DOTS_OCR_MAX_TOKENS`, `DOTS_OCR_TIMEOUT`
+- `OCR_MAX_IMAGE_SIZE`, `OCR_MIN_CONFIDENCE`
+
+**Important**: Never commit `.env` to version control. Store API keys securely.
+
+### 2. Deploy Dots OCR via vLLM Server
+
+DocuMentor requires Dots OCR to be deployed as a vLLM server before use. You can deploy it using Docker Compose (see [Docker Deployment](#docker-deployment-dots-ocr) section below) or manually using vLLM.
+
+**Using Docker Compose (Recommended):**
+```bash
+# Use the provided compose.yml from examples/
+cd examples
+docker-compose -f compose.yml up -d
+
+# Check logs
+docker-compose -f compose.yml logs -f dots-ocr
+```
+
+See [examples/compose.yml](examples/compose.yml) for the complete Docker Compose configuration.
+
+**Manual vLLM deployment:**
+```bash
+# Example vLLM command
+python -m vllm.entrypoints.openai.api_server \
+    --model /path/to/your/model \
+    --tensor-parallel-size 2 \
+    --gpu-memory-utilization 0.184 \
+    --max-model-len 65536 \
+    --api-key ${DOTS_OCR_API_KEY} \
+    --trust-remote-code
+```
+
+For detailed vLLM integration instructions, see [examples/README_vllm.md](examples/README_vllm.md).
+
+Make sure the `DOTS_OCR_BASE_URL` in your `.env` file points to the running vLLM server.
+
 ## Quick Start
 
 ### Basic Usage
@@ -154,6 +205,8 @@ parsed = parser.parse(doc)
 
 See [CUSTOM_COMPONENTS_GUIDE.md](documentor/CUSTOM_COMPONENTS_GUIDE.md) for detailed instructions.
 
+For a complete example of custom OCR implementation, see [examples/custom_ocr_example.py](examples/custom_ocr_example.py).
+
 ## Architecture
 
 ### Core Components
@@ -207,11 +260,9 @@ Configuration files are provided as examples in `examples/config/`:
 
 **Required OCR variables:**
 - `DOTS_OCR_BASE_URL`, `DOTS_OCR_API_KEY`, `DOTS_OCR_MODEL_NAME`
-- `QWEN_BASE_URL`, `QWEN_API_KEY`, `QWEN_MODEL_NAME` (optional)
 
 **Optional:**
 - `DOTS_OCR_TEMPERATURE`, `DOTS_OCR_MAX_TOKENS`, `DOTS_OCR_TIMEOUT`
-- `QWEN_TEMPERATURE`, `QWEN_MAX_TOKENS`, `QWEN_TIMEOUT`
 - `OCR_MAX_IMAGE_SIZE`, `OCR_MIN_CONFIDENCE`
 
 **Important**: Never commit `.env` to version control. Store API keys securely.
@@ -264,67 +315,43 @@ documentor/
 
 ### Docker Deployment (Dots OCR)
 
-If you're using Dots OCR as the default OCR service, you can deploy it using Docker Compose. Here's an example configuration:
+If you're using Dots OCR as the default OCR service, you can deploy it using Docker Compose. We provide ready-to-use configuration files in the `examples/` directory.
 
-```yaml
-version: '3.8'
+**Quick Start:**
+```bash
+# Navigate to examples directory
+cd examples
 
-services:
-  dots-ocr:
-    image: vllm/vllm-openai:v0.11.0
-    container_name: dots-ocr-service
-    ports:
-      - '8000:8000'  # Adjust port as needed
-    ipc: "host"
-    environment:
-      - NVIDIA_VISIBLE_DEVICES=0,1  # Adjust GPU devices as needed
-      - CUDA_DEVICE_ORDER=PCI_BUS_ID
-      - CUDA_VISIBLE_DEVICES=0,1
-      - PYTORCH_ALLOC_CONF=expandable_segments:False
-      - VLLM_LOGGING_LEVEL=INFO  # Use INFO for production
-      - VLLM_WORKER_MULTIPROC_METHOD=spawn
-    volumes:
-      - /path/to/your/model:/model  # Mount your model directory
-    restart: unless-stopped
-    mem_limit: 36G  # Adjust based on your GPU memory
-    runtime: nvidia
-    command:
-      - --model
-      - /model
-      - --tensor-parallel-size
-      - "2"  # Adjust based on number of GPUs
-      - --gpu-memory-utilization
-      - "0.184"  # Adjust based on your needs
-      - --max-model-len
-      - "65536"
-      - --api-key
-      - ${DOTS_OCR_API_KEY}  # Use environment variable for security
-      - --trust-remote-code
+# Start the service
+docker-compose -f compose.yml up -d
+
+# Check logs
+docker-compose -f compose.yml logs -f dots-ocr
+
+# Stop the service
+docker-compose -f compose.yml down
 ```
+
+**Configuration Files:**
+- **Docker Compose**: [examples/compose.yml](examples/compose.yml) - Complete Docker Compose configuration for Dots OCR
+- **Dockerfile**: [examples/Dockerfile.dotsocr](examples/Dockerfile.dotsocr) - Custom Dockerfile for building Dots OCR image
+- **Entrypoint Script**: [examples/entrypoint.sh](examples/entrypoint.sh) - Entrypoint script for Docker container
 
 **Important Security Notes:**
 - Store API keys in environment variables (`.env` file) or use Docker secrets
 - Never commit API keys or sensitive paths to version control
-- Adjust GPU settings (`NVIDIA_VISIBLE_DEVICES`, `CUDA_VISIBLE_DEVICES`) based on your hardware
+- Adjust GPU settings (`CUDA_VISIBLE_DEVICES`) based on your hardware
 - Modify memory limits and GPU utilization based on your system resources
 
 **Environment Variables:**
-Create a `.env` file in the same directory as `docker-compose.yml`:
+Create a `.env` file in the project root using [examples/env.example](examples/env.example) as a template:
 ```bash
+DOTS_OCR_BASE_URL=http://localhost:8069/v1
 DOTS_OCR_API_KEY=your-secure-api-key-here
+DOTS_OCR_MODEL_NAME=/model
 ```
 
-**Usage:**
-```bash
-# Start the service
-docker-compose up -d
-
-# Check logs
-docker-compose logs -f dots-ocr
-
-# Stop the service
-docker-compose down
-```
+For detailed vLLM integration and deployment instructions, see [examples/README_vllm.md](examples/README_vllm.md).
 
 ## Output Format
 
@@ -348,10 +375,13 @@ Each `Element` contains:
 
 ## Documentation
 
-- [vLLM integration](docs/README_vllm.md) (if available)
-- [Environment template](docs/env.example) or `examples/env.example`
-- [Custom Components Guide](documentor/CUSTOM_COMPONENTS_GUIDE.md)
-- [Configuration Guide](examples/config/README.md)
+- [vLLM integration](examples/README_vllm.md) - Detailed guide for vLLM server setup and integration
+- [Environment template](examples/env.example) - Example `.env` file with all required variables
+- [Custom Components Guide](documentor/CUSTOM_COMPONENTS_GUIDE.md) - How to create custom OCR components
+- [Configuration Guide](examples/config/README.md) - Detailed configuration options
+- [Custom OCR Example](examples/custom_ocr_example.py) - Complete example of custom OCR implementation
+- [Docker Compose](examples/compose.yml) - Docker Compose configuration for Dots OCR
+- [Dockerfile](examples/Dockerfile.dotsocr) - Dockerfile for building Dots OCR container
 
 ## License
 
