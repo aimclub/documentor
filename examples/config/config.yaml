@@ -1,0 +1,82 @@
+# Main configuration file for Documentor
+#
+# This is an example configuration file. Copy it to your project and customize as needed.
+# You can pass the path to this file when initializing parsers:
+#
+#   from documentor.processing.parsers.pdf import PdfParser
+#   parser = PdfParser(config_path="/path/to/your/config.yaml")
+#
+# Or pass configuration as a dictionary:
+#
+#   parser = PdfParser(config_dict={"pdf_parser": {...}})
+
+# General settings
+general:
+  # Default output length for text chunks
+  output_len: 3000  # characters
+
+# PDF parser configuration
+pdf_parser:
+  # Layout Detection
+  layout_detection:
+    # Scale increase for rendering
+    render_scale: 2.0
+    # Optimize images for OCR
+    optimize_for_ocr: true
+    # Use direct API call instead of queue
+    use_direct_api: true
+  
+  # Document processing
+  processing:
+    # Skip first page if title page exists
+    skip_title_page: false
+  
+  # Element filtering
+  filtering:
+    # Remove page headers from content
+    remove_page_headers: true
+    # Remove page footers from content
+    remove_page_footers: true
+  
+  # Table parsing
+  table_parsing:
+    # Tables are stored as HTML in element.content
+    # Detect merged tables across pages
+    detect_merged_tables: true
+  
+  # Header analysis
+  header_analysis:
+    # Use font size to determine header level
+    use_font_size: true
+    # Use position to determine header level
+    use_position: true
+    # Minimum font size difference for different levels
+    min_font_size_diff: 2
+
+# DOCX parser configuration
+docx_parser:
+  # Layout Detection
+  layout_detection:
+    # Scale increase for OCR rendering
+    render_scale: 2.0
+  
+  # Document processing
+  processing:
+    # Skip first page if title page exists
+    skip_title_page: false
+  
+  # Scanned document detection
+  scanned_detection:
+    # Minimum text length to determine text presence
+    min_text_length: 100
+    # Minimum text length for non-scanned document
+    min_text_for_non_scanned: 500
+    # If images count > text_paragraphs * ratio, document is considered scanned
+    images_to_text_ratio: 2.0
+  
+  # Hierarchy building
+  hierarchy:
+    # Maximum text block size in characters
+    max_text_block_size: 3000
+    # Maximum number of paragraphs in one block
+    max_paragraphs_per_block: 10

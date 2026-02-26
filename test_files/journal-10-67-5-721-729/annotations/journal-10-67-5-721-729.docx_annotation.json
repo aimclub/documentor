@@ -1,0 +1,1428 @@
+{
+  "document_id": "journal-10-67-5-721-729",
+  "source_file": "E:\\easy\\documentor\\documentor_langchain\\experiments\\metrics\\test_files_for_metrics\\journal-10-67-5-721-729.docx",
+  "document_format": "docx",
+  "annotation_version": "2.0",
+  "annotator": "qt_visual",
+  "annotation_date": "2026-02-25T04:00:24.535022",
+  "elements": [
+    {
+      "id": "elem_0000",
+      "type": "text",
+      "content": "БИОЛОГИЯ (BIOLOGY)",
+      "parent_id": null,
+      "order": 0,
+      "page_number": 1,
+      "bbox": [
+        434.0,
+        112.0,
+        753.0,
+        143.0
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0001",
+      "type": "text",
+      "content": "УДК 579.6",
+      "parent_id": null,
+      "order": 1,
+      "page_number": 1,
+      "bbox": [
+        110,
+        170,
+        244,
+        201
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0002",
+      "type": "text",
+      "content": "Мастиленко А.В.",
+      "parent_id": null,
+      "order": 2,
+      "page_number": 1,
+      "bbox": [
+        482,
+        222,
+        703,
+        250
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0003",
+      "type": "text",
+      "content": "кандидат биологических наук, доцент кафедры \n\"Микробиология, вирусология, эпизоотология \nи ветеринарно-санитарная экспертиза\"",
+      "parent_id": null,
+      "order": 3,
+      "page_number": 1,
+      "bbox": [
+        309,
+        270,
+        878,
+        410
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0004",
+      "type": "text",
+      "content": "Ульяновский государственный аграрный университет имени П.А. Столыпина",
+      "parent_id": null,
+      "order": 4,
+      "page_number": 1,
+      "bbox": [
+        125,
+        437,
+        1063,
+        470
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0005",
+      "type": "text",
+      "content": "(г. Ульяновск, Россия)",
+      "parent_id": null,
+      "order": 5,
+      "page_number": 1,
+      "bbox": [
+        458,
+        488,
+        731,
+        519
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0006",
+      "type": "text",
+      "content": "Матюнина М.И.",
+      "parent_id": null,
+      "order": 6,
+      "page_number": 1,
+      "bbox": [
+        488,
+        585,
+        699,
+        614
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0007",
+      "type": "text",
+      "content": "биолог бактериологического отдела клинико-диагностической лаборатории",
+      "parent_id": null,
+      "order": 7,
+      "page_number": 1,
+      "bbox": [
+        138,
+        644,
+        1051,
+        678
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0008",
+      "type": "text",
+      "content": "ГУЗ «Городская поликлиника № 5»",
+      "parent_id": null,
+      "order": 8,
+      "page_number": 1,
+      "bbox": [
+        378,
+        693,
+        809,
+        724
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0009",
+      "type": "text",
+      "content": "(г. Ульяновск, Россия)",
+      "parent_id": null,
+      "order": 9,
+      "page_number": 1,
+      "bbox": [
+        458,
+        740,
+        731,
+        771
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0010",
+      "type": "text",
+      "content": "Батяйкина Д.В.",
+      "parent_id": null,
+      "order": 10,
+      "page_number": 1,
+      "bbox": [
+        492,
+        838,
+        695,
+        868
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0011",
+      "type": "text",
+      "content": "биолог бактериологического отдела клинико-диагностической лаборатории",
+      "parent_id": null,
+      "order": 11,
+      "page_number": 1,
+      "bbox": [
+        138,
+        895,
+        1051,
+        928
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0012",
+      "type": "text",
+      "content": "ГУЗ «Городская поликлиника № 5»",
+      "parent_id": null,
+      "order": 12,
+      "page_number": 1,
+      "bbox": [
+        378,
+        943,
+        809,
+        975
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0013",
+      "type": "text",
+      "content": "(г. Ульяновск, Россия)",
+      "parent_id": null,
+      "order": 13,
+      "page_number": 1,
+      "bbox": [
+        458,
+        992,
+        731,
+        1024
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0014",
+      "type": "title",
+      "content": "РАЗРАБОТКА СИСТЕМЫ ДЕТЕКЦИИ\n\nБАКТЕРИЙ РОДА BORDETELLA",
+      "parent_id": null,
+      "order": 14,
+      "page_number": 1,
+      "bbox": [
+        334.0,
+        1090.0,
+        854.0,
+        1174.0
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0015",
+      "type": "text",
+      "content": "EE Аннотация: в работе рассматривается метод разделения белковых \nкомпонентов бактериальных клеток в полиакриламидном геле по Леммли для специфической \nдетекции бактерий рода Bordetella. На основании проведенных авторами экспериментов \nбыли выявлены 6 специфических белков, характерных для исследуемых видов. EE#",
+      "parent_id": "elem_0014",
+      "order": 15,
+      "page_number": 1,
+      "bbox": [
+        107,
+        1245,
+        1081,
+        1416
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0016",
+      "type": "text",
+      "content": "R Ключевые слова: детекция, разделение в ПААГ, белки, Bordetella.",
+      "parent_id": "elem_0014",
+      "order": 16,
+      "page_number": 2,
+      "bbox": [
+        230,
+        111,
+        909,
+        141
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0017",
+      "type": "text",
+      "content": "В настоящее время род Bordetella включает в себя виды: B. parapertussis, \nB. pertussis, B. bronchiseptica, B. avium, B. hinzii, B. holmesii, B. petrii, B. \ntrematum, \nB. bronchialis, B. flabilis, B. muralis, B. pseudohinzii, B. sputigena, B. tumbae, B. \ntumulicola. Большинство из них способны вызывать инфекционные заболевания \nчеловека и животных. Так, B. parapertussis, B. pertussis являются возбудителями \nкоклюша человека, B. bronchiseptica – инфекционной патологии верхних \nдыхательных путей у многих видов млекопитающих, B. avium – инфекций у птиц, \nB. holmesii – вызывает инфекции, сходные с проявлением коклюша, B. trematum \n– изолировали у пациентов с острым отитом и миокардитом. B. bronchialis, B. \nflabilis и B. sputigena изолировали от пациентов с муковисцидозом [1].",
+      "parent_id": "elem_0014",
+      "order": 17,
+      "page_number": 2,
+      "bbox": [
+        105,
+        210,
+        1080,
+        790
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0018",
+      "type": "text",
+      "content": "Биологическая характеристика бактерий является основой для разработки \nметодов их идентификации. В настоящее время бактериальная классификация \nпретерпевает постоянные изменения в связи с появлением новых методов, \nинструментов и принципов типологизации. Наиболее современными и \nобщепринятыми являются молекулярно- генетические методы видовой \nидентификации - все они базируются на характеристиках уникальности \nконкретного генома. Однако они не позволяют учесть фенотипические \nособенности рода, вида, группы или штамма. Этими особенностями обладают \nметоды белкового (протеомного) профилирования. существуют методы \nразделения биологических высокомолекулярных соединений (в том числе и \nпротеомов) в электрическом поле.",
+      "parent_id": "elem_0014",
+      "order": 18,
+      "page_number": 2,
+      "bbox": [
+        105,
+        813,
+        1080,
+        1358
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0019",
+      "type": "text",
+      "content": "Наиболее современными являются методы профилирования с помощью \nмасс- спектрометрии, однако достаточно дорогостоящее оборудование, \nквалификационные требования и потребность в специфическом программном",
+      "parent_id": "elem_0014",
+      "order": 19,
+      "page_number": 2,
+      "bbox": [
+        105,
+        1375,
+        1080,
+        1524
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0020",
+      "type": "text",
+      "content": "обеспечении не позволяют использовать его при рутинных исследованиях. Так \nнесмотря на то, что в настоящее время методы молекулярной генетики и \nмассспектрометрии широко внедряются в микробиологическую практику, также \nостаются востребованы и классические методы белкового профилирования \nбактериальных таксономических групп. Одной из методик разделения белковых \nкомпонентов бактериальных клеток в полиакриламидном геле (ПААГ) является \nметод Леммли [2]. Одним из главных преимуществ данного подхода остается \nширокая доступность для практических лабораторий и низкая себестоимость. \nОднако стоит отметить, что качество результатов исследований зависит от \nквалификации персонала.",
+      "parent_id": "elem_0014",
+      "order": 20,
+      "page_number": 3,
+      "bbox": [
+        104,
+        110,
+        1080,
+        656
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0021",
+      "type": "text",
+      "content": "Целью данного исследования является разработка системы детекции B. \nparapertussis, B. pertussis, B. bronchiseptica, B. avium, B. holmesii, B. trematum и \nB. petrii на основе протеомного состава бактерий данных видов.",
+      "parent_id": "elem_0014",
+      "order": 21,
+      "page_number": 3,
+      "bbox": [
+        104,
+        679,
+        1080,
+        853
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0022",
+      "type": "header_1",
+      "content": "Материалы и методы",
+      "parent_id": "elem_0014",
+      "order": 22,
+      "page_number": 3,
+      "bbox": [
+        192,
+        916,
+        481,
+        951
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0023",
+      "type": "text",
+      "content": "Для накопления бактериальной массы штаммов была использована среда \nБорде-Жангу (Becton and Dickinson, США); для удаления внеклеточных протеаз \nи белков питательной среды клетки центрифугировали при 5000g в течение 3 \nминут и ресуспендировали в калиево-фосфатном буфере при температуре 37°С. \nВторым этапом добавляли к осадку SDS буфера (t=95°C) и тщательно \nперемешивали на центрифуге-вортексе (ELMI CM-50, Чехия). Разрушение \nбактериальных клеток проводили на ультразвуковом гомогенизаторе Soniprep \n150 (MSE, Великобритания). Пробы инкубировали при 95°С в течение 5 минут. \nЗатем образцы охлаждали до 20°C и вносили 250 мкл 2x кратного буфера для \nобразцов SDS-PAGE, и инкубировали 20 мин при комнатной температуре. Для",
+      "parent_id": "elem_0022",
+      "order": 23,
+      "page_number": 3,
+      "bbox": [
+        104,
+        963,
+        1080,
+        1523
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0024",
+      "type": "text",
+      "content": "получения бактериальных протеинов в супернатанте пробы центрифугировали \nпри 12500g в течение 30 минут.",
+      "parent_id": "elem_0022",
+      "order": 24,
+      "page_number": 4,
+      "bbox": [
+        109,
+        112,
+        1078,
+        204
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0025",
+      "type": "text",
+      "content": "Электрофорез был проведен в вертикальной камере (Mini-protean\ntetra,Bio-rad) в полиакриламидном геле 8-16 % (Criterion TGX,Bio-Rad) в\nТрисглицироновом буфере. В работе также был использован маркер \nмолекулярного веса 3,5-245 кДа (Abcam, Великобритания).",
+      "parent_id": "elem_0022",
+      "order": 25,
+      "page_number": 4,
+      "bbox": [
+        107,
+        227,
+        1078,
+        436
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0026",
+      "type": "text",
+      "content": "После электрофореза гель прокрашивали в растворе для окраски.\nНесвязавшийся  \nкраситель  \nотмывали  \nв  \nпроявляющем  \nрастворе.\nДенситометрический анализ in-silico был проведен при использовании ПО \nGelAnalizer2010a.",
+      "parent_id": "elem_0022",
+      "order": 26,
+      "page_number": 4,
+      "bbox": [
+        98,
+        458,
+        1078,
+        648
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0027",
+      "type": "text",
+      "content": "1) Буферный раствор Трис-глициновый для электрофореза- 10x\nSDSPAGE (1 L) – (250 mM Tris, 1.92 M glycine, 1% SDS, pH 8.3) - Tris base 30.3\ng, Glycine 144.1 g, SDS 10 g, diH2O to 1 L;",
+      "parent_id": "elem_0022",
+      "order": 27,
+      "page_number": 4,
+      "bbox": [
+        109,
+        672,
+        1078,
+        808
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0028",
+      "type": "text",
+      "content": "2) Буфер для образцов - 2x SDS-PAGE (Laemmli, 30 ml) – (62.5 mM\nTrisHCl, pH 6.8, 2% SDS, 25% glycerol, 0.01% bromophenol blue, 5% \nβmercaptoethanol) - 0.5 M Tris-HCl, pH 6.8 3.75 ml, 50% Glycerol 15.0 ml, 1.0%\nBromophenol blue 0.3 ml, 10% SDS 6.0 ml, diH2O to 30 ml, add β-mercaptoethanol\n(50 µl to 950 µl sample buffer) before use.",
+      "parent_id": "elem_0022",
+      "order": 28,
+      "page_number": 4,
+      "bbox": [
+        109,
+        823,
+        1078,
+        1063
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0029",
+      "type": "text",
+      "content": "3) Раствор для окраски – на 100 мл – Coomassie Blue R250 – 0.25 g,\nmethanol 45 ml, diH2O 45 ml, acetic acid 10ml.",
+      "parent_id": "elem_0022",
+      "order": 29,
+      "page_number": 4,
+      "bbox": [
+        109,
+        1081,
+        1078,
+        1162
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0030",
+      "type": "text",
+      "content": "4) Проявляющий раствор – 10% acetic acid.",
+      "parent_id": "elem_0022",
+      "order": 30,
+      "page_number": 4,
+      "bbox": [
+        195,
+        1183,
+        733,
+        1218
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0031",
+      "type": "header_1",
+      "content": "Результаты",
+      "parent_id": "elem_0014",
+      "order": 31,
+      "page_number": 4,
+      "bbox": [
+        193,
+        1287,
+        356,
+        1320
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0032",
+      "type": "text",
+      "content": "В \nрезультате проведенного исследования нами была \nполучена \nэлектрофореграмма проведенная в ПААГ B. parapertussis, B. pertussis, B.",
+      "parent_id": "elem_0031",
+      "order": 32,
+      "page_number": 4,
+      "bbox": [
+        109,
+        1343,
+        1078,
+        1437
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0033",
+      "type": "text",
+      "content": "bronchiseptica, B. avium, B. holmesii, B. trematum и B. petrii (рис.1). На основании \nмаркера молекулярного веса белков был построен калибровочный график (рис.\n\n2-5).",
+      "parent_id": "elem_0031",
+      "order": 33,
+      "page_number": 5,
+      "bbox": [
+        107,
+        112,
+        1079,
+        259.0
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0034",
+      "type": "image",
+      "content": "",
+      "parent_id": "elem_0035",
+      "order": 34,
+      "page_number": 5,
+      "bbox": [
+        201,
+        227,
+        958,
+        553
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0035",
+      "type": "caption",
+      "content": "Рис. 1. Электрофореграмма протеомов: 1, 2 - B.parapertussis, 3, 4 - B.pertussis, \n5 - B.bronchiseptica, 6 - B.holmesii, 7, 8 - B.avium, 9 - B.trematum, 10 - B.petrii, \n11 – маркер молекулярного веса 3,5-245 кДа.",
+      "parent_id": "elem_0031",
+      "order": 35,
+      "page_number": 5,
+      "bbox": [
+        127,
+        588,
+        1061,
+        730
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0036",
+      "type": "image",
+      "content": "",
+      "parent_id": "elem_0037",
+      "order": 36,
+      "page_number": 5,
+      "bbox": [
+        208.0,
+        745.0,
+        1025.0,
+        1080.0
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0037",
+      "type": "caption",
+      "content": "Рис. 2. Профилограмма маркера молекулярного веса 3,5-245 кДа.",
+      "parent_id": "elem_0031",
+      "order": 37,
+      "page_number": 5,
+      "bbox": [
+        200,
+        1104,
+        986,
+        1139
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0038",
+      "type": "image",
+      "content": "",
+      "parent_id": "elem_0039",
+      "order": 38,
+      "page_number": 5,
+      "bbox": [
+        122.0,
+        1164.0,
+        1066.0,
+        1544.0
+      ],
+      "metadata": {
+        "image_data": "data:image/jpeg;base64,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",
+        "image_format": "png",
+        "image_width": null,
+        "image_height": null
+      }
+    },
+    {
+      "id": "elem_0039",
+      "type": "caption",
+      "content": "Рис. 3. Калибровочная кривая маркера молекулярного веса 3,5-245 кДа.",
+      "parent_id": "elem_0031",
+      "order": 39,
+      "page_number": 6,
+      "bbox": [
+        164,
+        111,
+        1029,
+        146
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0040",
+      "type": "image",
+      "content": "",
+      "parent_id": "elem_0041",
+      "order": 40,
+      "page_number": 6,
+      "bbox": [
+        127.0,
+        143.0,
+        1060.0,
+        564.0
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0041",
+      "type": "caption",
+      "content": "Рис. 4. Профилограмма протеомов B. bronchiseptica",
+      "parent_id": "elem_0031",
+      "order": 41,
+      "page_number": 6,
+      "bbox": [
+        280,
+        584,
+        908,
+        620
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0042",
+      "type": "image",
+      "content": "",
+      "parent_id": "elem_0043",
+      "order": 42,
+      "page_number": 6,
+      "bbox": [
+        163.0,
+        629.0,
+        1024.0,
+        915.0
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0043",
+      "type": "caption",
+      "content": "Рис. 5. Молекулярный вес протеомов B. bronchiseptica",
+      "parent_id": "elem_0031",
+      "order": 43,
+      "page_number": 6,
+      "bbox": [
+        266,
+        935,
+        921,
+        971
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0044",
+      "type": "text",
+      "content": "Нами были установлены молекулярные массы белков, входящих в состав \nбактериальных клеток данных видов и являющиеся общими для исследуемых \nвидов. Среди изолированных белков представителей рода Bordetella только 6 из \nних с молекулярной массой 20-59 кДа являлись уникальными, т.е. были \nвыявлены у всех исследуемых видов, и не встречались у других \nблизкородственных видов.",
+      "parent_id": "elem_0031",
+      "order": 44,
+      "page_number": 6,
+      "bbox": [
+        105,
+        1034,
+        1080,
+        1358
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0045",
+      "type": "text",
+      "content": "В системе NCBI нами был проведён in-silico анализ аналогии \nполученных результатов аннотированным протеомам в соответствии с \nмолекулярными массами – в результате идентифицировано 4423 белка.",
+      "parent_id": "elem_0031",
+      "order": 45,
+      "page_number": 6,
+      "bbox": [
+        105,
+        1379,
+        969,
+        1537
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0046",
+      "type": "text",
+      "content": "Из аннотированных белков нами были проанализированы те, которые \nвходят в состав клеточной стенки. Для протеомного анализа нами были \nиспользованы ресурсы систем NCBI (https://www.ncbi.nlm.nih.gov/protein) и \nUniProt (https://www.uniprot.org). Результаты проведённого анализа in-silico \nпредставлены в таблице 1.",
+      "parent_id": "elem_0031",
+      "order": 46,
+      "page_number": 7,
+      "bbox": [
+        105,
+        112,
+        1080,
+        379
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0047",
+      "type": "caption",
+      "content": "Таблица 1. Анализ in-silico протеомного состава",
+      "parent_id": "elem_0031",
+      "order": 47,
+      "page_number": 7,
+      "bbox": [
+        105,
+        447,
+        694,
+        482
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0048",
+      "type": "table",
+      "content": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>flagellar basal body M-ring protein FliF</td><td>59556</td></tr><tr><td>efflux transporter outer membrane subunit</td><td>51320</td></tr><tr><td>hypothetical protein</td><td>50238</td></tr><tr><td>efflux transporter outer membrane subunit</td><td>50930</td></tr><tr><td>flagellar hook-length control protein FliK</td><td>42248</td></tr><tr><td>hypothetical protein</td><td>42783</td></tr><tr><td>autotransporter outer membrane beta-barrel domain-containing protein</td><td>36283</td></tr><tr><td>flagellar motor switch protein FliG</td><td>36438</td></tr><tr><td>hypothetical protein</td><td>35184</td></tr><tr><td>hypothetical protein</td><td>31694</td></tr><tr><td>hypothetical protein</td><td>31538</td></tr><tr><td>membrane transport family protein 1</td><td>31186</td></tr></tbody></table>",
+      "parent_id": "elem_0047",
+      "order": 48,
+      "page_number": 7,
+      "bbox": [
+        121,
+        479,
+        1067,
+        1517
+      ],
+      "metadata": {
+        "table_structure": {
+          "html": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>flagellar basal body M-ring protein FliF</td><td>59556</td></tr><tr><td>efflux transporter outer membrane subunit</td><td>51320</td></tr><tr><td>hypothetical protein</td><td>50238</td></tr><tr><td>efflux transporter outer membrane subunit</td><td>50930</td></tr><tr><td>flagellar hook-length control protein FliK</td><td>42248</td></tr><tr><td>hypothetical protein</td><td>42783</td></tr><tr><td>autotransporter outer membrane beta-barrel domain-containing protein</td><td>36283</td></tr><tr><td>flagellar motor switch protein FliG</td><td>36438</td></tr><tr><td>hypothetical protein</td><td>35184</td></tr><tr><td>hypothetical protein</td><td>31694</td></tr><tr><td>hypothetical protein</td><td>31538</td></tr><tr><td>membrane transport family protein 1</td><td>31186</td></tr></tbody></table>",
+          "cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "Наименование белка",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": "Молекулярная масса, Да",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "content": "flagellar basal body M-ring protein FliF",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "content": "59556",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "content": "efflux transporter outer membrane subunit",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "content": "51320",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 1,
+              "content": "50238",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 0,
+              "content": "efflux transporter outer membrane subunit",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 1,
+              "content": "50930",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 0,
+              "content": "flagellar hook-length control protein FliK",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 1,
+              "content": "42248",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 1,
+              "content": "42783",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 0,
+              "content": "autotransporter outer membrane beta-barrel domain-containing protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 1,
+              "content": "36283",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 0,
+              "content": "flagellar motor switch protein FliG",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 1,
+              "content": "36438",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 1,
+              "content": "35184",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 1,
+              "content": "31694",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 11,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 11,
+              "col": 1,
+              "content": "31538",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 12,
+              "col": 0,
+              "content": "membrane transport family protein 1",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 12,
+              "col": 1,
+              "content": "31186",
+              "rowspan": 1,
+              "colspan": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "elem_0049",
+      "type": "table",
+      "content": "<table><tr><td>outer membrane protein assembly factor BamD</td><td>30958</td></tr><tr><td>hypothetical protein</td><td>30807</td></tr><tr><td>hypothetical protein</td><td>30389</td></tr><tr><td>flagellar biosynthetic protein FliR</td><td>27623</td></tr><tr><td>flagellar type III secretion system pore protein FliP</td><td>27397</td></tr><tr><td>CPBP family intramembrane metalloprotease</td><td>27324</td></tr><tr><td>flagellar brake protein</td><td>27145</td></tr><tr><td>30S ribosomal protein S2</td><td>27426</td></tr><tr><td>flagellar biosynthetic protein FliR</td><td>27623</td></tr><tr><td>hypothetical protein</td><td>27859</td></tr><tr><td>hypothetical proteinwt</td><td>28913</td></tr><tr><td>50S ribosomal protein L3</td><td>24311</td></tr><tr><td>protein TolQ</td><td>24612</td></tr><tr><td>hypothetical protein</td><td>25400</td></tr><tr><td><b>Наименование белка</b></td><td><b>Молекулярная масса, Да</b></td></tr><tr><td>membrane protein</td><td>24306</td></tr><tr><td>50S ribosomal protein L25/general stress protein Ctc</td><td>21134</td></tr><tr><td>outer membrane lipoprotein LolB</td><td>20756</td></tr><tr><td>OmpA family protein</td><td>20847</td></tr><tr><td>energy-coupling factor transporter transmembrane protein EcfT</td><td>21088</td></tr><tr><td>hypothetical protein</td><td>21256</td></tr><tr><td>flagellar protein FliL</td><td>20700</td></tr><tr><td>OmpH family outer membrane protein</td><td>20330</td></tr><tr><td>hypothetical protein</td><td>19187</td></tr><tr><td>membrane protein</td><td>19995</td></tr></table>",
+      "parent_id": "elem_0047",
+      "order": 49,
+      "page_number": 8,
+      "bbox": [
+        122.0,
+        107.0,
+        1067.0,
+        1407.0
+      ],
+      "metadata": {
+        "table_structure": {
+          "html": "<table><tr><td>outer membrane protein assembly factor BamD</td><td>30958</td></tr><tr><td>hypothetical protein</td><td>30807</td></tr><tr><td>hypothetical protein</td><td>30389</td></tr><tr><td>flagellar biosynthetic protein FliR</td><td>27623</td></tr><tr><td>flagellar type III secretion system pore protein FliP</td><td>27397</td></tr><tr><td>CPBP family intramembrane metalloprotease</td><td>27324</td></tr><tr><td>flagellar brake protein</td><td>27145</td></tr><tr><td>30S ribosomal protein S2</td><td>27426</td></tr><tr><td>flagellar biosynthetic protein FliR</td><td>27623</td></tr><tr><td>hypothetical protein</td><td>27859</td></tr><tr><td>hypothetical proteinwt</td><td>28913</td></tr><tr><td>50S ribosomal protein L3</td><td>24311</td></tr><tr><td>protein TolQ</td><td>24612</td></tr><tr><td>hypothetical protein</td><td>25400</td></tr><tr><td><b>Наименование белка</b></td><td><b>Молекулярная масса, Да</b></td></tr><tr><td>membrane protein</td><td>24306</td></tr><tr><td>50S ribosomal protein L25/general stress protein Ctc</td><td>21134</td></tr><tr><td>outer membrane lipoprotein LolB</td><td>20756</td></tr><tr><td>OmpA family protein</td><td>20847</td></tr><tr><td>energy-coupling factor transporter transmembrane protein EcfT</td><td>21088</td></tr><tr><td>hypothetical protein</td><td>21256</td></tr><tr><td>flagellar protein FliL</td><td>20700</td></tr><tr><td>OmpH family outer membrane protein</td><td>20330</td></tr><tr><td>hypothetical protein</td><td>19187</td></tr><tr><td>membrane protein</td><td>19995</td></tr></table>",
+          "cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "outer membrane protein assembly factor BamD",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": "30958",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "content": "30807",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "content": "30389",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "content": "flagellar biosynthetic protein FliR",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 1,
+              "content": "27623",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 0,
+              "content": "flagellar type III secretion system pore protein FliP",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 1,
+              "content": "27397",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 0,
+              "content": "CPBP family intramembrane metalloprotease",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 1,
+              "content": "27324",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 0,
+              "content": "flagellar brake protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 1,
+              "content": "27145",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 0,
+              "content": "30S ribosomal protein S2",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 1,
+              "content": "27426",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 0,
+              "content": "flagellar biosynthetic protein FliR",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 1,
+              "content": "27623",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 1,
+              "content": "27859",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 0,
+              "content": "hypothetical proteinwt",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 1,
+              "content": "28913",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 11,
+              "col": 0,
+              "content": "50S ribosomal protein L3",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 11,
+              "col": 1,
+              "content": "24311",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 12,
+              "col": 0,
+              "content": "protein TolQ",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 12,
+              "col": 1,
+              "content": "24612",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 13,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 13,
+              "col": 1,
+              "content": "25400",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 14,
+              "col": 0,
+              "content": "Наименование белка",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 14,
+              "col": 1,
+              "content": "Молекулярная масса, Да",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 15,
+              "col": 0,
+              "content": "membrane protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 15,
+              "col": 1,
+              "content": "24306",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 16,
+              "col": 0,
+              "content": "50S ribosomal protein L25/general stress protein Ctc",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 16,
+              "col": 1,
+              "content": "21134",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 17,
+              "col": 0,
+              "content": "outer membrane lipoprotein LolB",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 17,
+              "col": 1,
+              "content": "20756",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 18,
+              "col": 0,
+              "content": "OmpA family protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 18,
+              "col": 1,
+              "content": "20847",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 19,
+              "col": 0,
+              "content": "energy-coupling factor transporter transmembrane protein EcfT",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 19,
+              "col": 1,
+              "content": "21088",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 20,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 20,
+              "col": 1,
+              "content": "21256",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 21,
+              "col": 0,
+              "content": "flagellar protein FliL",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 21,
+              "col": 1,
+              "content": "20700",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 22,
+              "col": 0,
+              "content": "OmpH family outer membrane protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 22,
+              "col": 1,
+              "content": "20330",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 23,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 23,
+              "col": 1,
+              "content": "19187",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 24,
+              "col": 0,
+              "content": "membrane protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 24,
+              "col": 1,
+              "content": "19995",
+              "rowspan": 1,
+              "colspan": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "elem_0050",
+      "type": "header_1",
+      "content": "Выводы",
+      "parent_id": "elem_0014",
+      "order": 50,
+      "page_number": 9,
+      "bbox": [
+        195,
+        113,
+        298,
+        140
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0051",
+      "type": "text",
+      "content": "В \nрезультате проведенного исследования нами была \nполучена \nэлектрофореграмма белков проведенная в ПААГ B. parapertussis, B. pertussis, B. \nbronchiseptica, B. avium, B. holmesii, B. trematum и B. petrii. Были установлены \nмолекулярные массы белков, входящих в состав бактериальных клеток данных \nвидов. Нами были выявлены белковые структуры со следующей молекулярной \nмассой: 20,21, 23, 25, 29, 31, 36, 46, 51, 59, 72, 88, 100, 113, 129, 138, 150, 174, 210 \nкДа. Были аннотированы белки, входящие в состав их клеточных стенок. По \nрезультатам проведенного анализа становится очевидным, что каждому из \nвыявленных белков может соответствовать антиген.",
+      "parent_id": "elem_0050",
+      "order": 51,
+      "page_number": 9,
+      "bbox": [
+        107,
+        160,
+        1080,
+        652
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0052",
+      "type": "text",
+      "content": "Среди выявленных белков, только 6 из них были выявлены у исследуемых \nвидов Bordetella (т.е. являлись общими), и не были выявлены у других видов и \nблизкородственных родов.",
+      "parent_id": "elem_0050",
+      "order": 52,
+      "page_number": 9,
+      "bbox": [
+        107,
+        679,
+        1080,
+        831
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0053",
+      "type": "text",
+      "content": "Предложенная система электрофореза в ПААГ может быть использована \nдля детекции бактерий рода Bordetella при выявлении 6 специфических \nфрагментов 20, 29, 30, 36, 46, 59 кДа.",
+      "parent_id": "elem_0050",
+      "order": 53,
+      "page_number": 9,
+      "bbox": [
+        107,
+        853,
+        1080,
+        1003
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0054",
+      "type": "text",
+      "content": "Также данное исследование может быть использовано в дальнейшей \nработе изучения антигенной структуры и разработке соответствующих \nсерологических диагностикумов.",
+      "parent_id": "elem_0050",
+      "order": 54,
+      "page_number": 9,
+      "bbox": [
+        107,
+        1005,
+        1025,
+        1139
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0055",
+      "type": "header_1",
+      "content": "СПИСОК ЛИТЕРАТУРЫ:",
+      "parent_id": "elem_0014",
+      "order": 55,
+      "page_number": 10,
+      "bbox": [
+        416.0,
+        111.0,
+        768.0,
+        142.0
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0056",
+      "type": "text",
+      "content": "1. \nVandamme P. A. et al. Bordetella bronchialis sp. nov., Bordetella flabilis sp. nov. \nand Bordetella sputigena sp. nov., isolated from human respiratory specimens, and \nreclassification of Achromobacter sediminum Zhang et al. 2014 as Verticia sediminum \ngen. nov., comb. nov //International Journal of Systematic and Evolutionary \nMicrobiology. – 2015. – Т. 65. – №. Pt_10. – С. 3674-3682. \n2. \nU. K. Laemmli. Cleavage of Structural Proteins during the Assembly of the He \nad of Bacteriophage T4. Nature,1970; V.227, P.680 — 685. \n3. \nGross R., Keidel K., Schmitt K. Resemblance and divergence: the “new” \nmembers of the genus Bordetella //Medical microbiology and immunology. – 2010. – \nТ. 199. – №. 3. – С. 155-163. \n4. \nSaito M. et al. Development of vaccines against pertussis caused by Bordetella \nholmesii using a mouse intranasal challenge model //Microbiology and immunology. \n– 2016. – Т. 60. – №. 9. – С. 599-608.",
+      "parent_id": "elem_0050",
+      "order": 56,
+      "page_number": 10,
+      "bbox": [
+        96,
+        207,
+        1081,
+        848
+      ],
+      "metadata": {}
+    }
+  ],
+  "statistics": {
+    "total_elements": 57,
+    "total_pages": 10,
+    "elements_by_type": {
+      "text": 39,
+      "title": 1,
+      "header_1": 4,
+      "image": 5,
+      "caption": 6,
+      "table": 2
+    },
+    "table_count": 2,
+    "image_count": 5
+  }
+}

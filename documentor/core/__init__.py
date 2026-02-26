@@ -1,12 +1,9 @@
-"""Core base classes for document system."""
+"""
+Core of the documentor library.
 
-from .document import Document
-from .interfaces import BaseLoader, BaseParser
-from .logging import get_logger
+Contains core components and system utilities.
+"""
 
-__all__ = [
-    "Document",
-    "BaseLoader", 
-    "BaseParser",
-    "get_logger",
-]
+from .load_env import load_env_file
+
+__all__ = ["load_env_file"]

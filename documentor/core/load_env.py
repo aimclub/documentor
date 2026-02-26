@@ -1,4 +1,4 @@
-"""Load environment variables from .env file."""
+"""Loading environment variables from .env file."""
 
 import os
 from pathlib import Path
@@ -7,20 +7,20 @@ from typing import Optional
 
 def load_env_file(env_file: Optional[Path] = None) -> None:
     """
-    Load environment variables from .env file.
+    Loads environment variables from .env file.
     
     Args:
-        env_file: Path to .env file. If None, searches for .env in current directory and parent directories.
+        env_file: Path to .env file. If None, searches for .env in current directory and parents.
     """
     if env_file is None:
-        # Search for .env file in current directory and parent directories
+        # Search for .env file in current directory and parents
         current_dir = Path.cwd()
         for parent in [current_dir] + list(current_dir.parents):
             env_file = parent / ".env"
             if env_file.exists():
                 break
         else:
-            # No .env file found
+            # .env file not found
             return
     
     if not env_file.exists():
@@ -37,6 +37,12 @@ def load_env_file(env_file: Optional[Path] = None) -> None:
             
             # Parse key=value pairs
             if '=' in line:
+                # Remove comments (everything after #)
+                if '#' in line:
+                    line = line.split('#')[0].strip()
+                    if not line:
+                        continue
+                
                 key, value = line.split('=', 1)
                 key = key.strip()
                 value = value.strip()
@@ -47,12 +53,11 @@ def load_env_file(env_file: Optional[Path] = None) -> None:
                 elif value.startswith("'") and value.endswith("'"):
                     value = value[1:-1]
                 
+                # Remove spaces at start and end of value
+                value = value.strip()
+                
                 # Set environment variable if not already set
-                if key not in os.environ:
+                if key and value and key not in os.environ:
                     os.environ[key] = value
             else:
                 print(f"Warning: Invalid line {line_num} in {env_file}: {line}")
-
-
-# Auto-load .env file when module is imported
-load_env_file()

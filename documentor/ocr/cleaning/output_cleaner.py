@@ -1,0 +1,494 @@
+"""
+OCR model output cleaning.
+"""
+
+import json
+import re
+from typing import Dict, List, Tuple, Optional, Any
+from dataclasses import dataclass
+
+
+@dataclass
+class CleanedData:
+    """Data structure for cleaned data"""
+    case_id: int
+    original_type: str  # 'list' or 'str'
+    original_length: int
+    cleaned_data: List[Dict]
+    cleaning_operations: Dict[str, Any]  # Records the cleaning operations performed
+    success: bool
+
+
+class OutputCleaner:
+    """Data Cleaner - Based on a simplified regex method"""
+    
+    def __init__(self):
+        # Simplified regular expression patterns
+        self.dict_pattern = re.compile(r'\{[^{}]*?"bbox"\s*:\s*\[[^\]]*?\][^{}]*?\}', re.DOTALL)
+        self.bbox_pattern = re.compile(r'"bbox"\s*:\s*\[([^\]]+)\]')
+        self.missing_delimiter_pattern = re.compile(r'\}\s*\{(?!")')
+        
+        self.cleaned_results: List[CleanedData] = []
+    
+    def clean_list_data(self, data: List[Dict], case_id: int) -> CleanedData:
+        """Cleans list-type data"""
+        
+        print(f"Cleaning List data - Case {case_id}")
+        print(f"  Original items: {len(data)}")
+        
+        cleaned_data = []
+        operations = {
+            'type': 'list',
+            'bbox_fixes': 0,
+            'removed_items': 0,
+            'original_count': len(data)
+        }
+        
+        for i, item in enumerate(data):
+            if not isinstance(item, dict):
+                operations['removed_items'] += 1
+                continue
+                
+            # Check the bbox field
+            if 'bbox' in item:
+                bbox = item['bbox']
+                
+                # Check bbox length - core logic
+                if isinstance(bbox, list) and len(bbox) == 3:
+                    print(f"  WARNING: Item {i}: bbox has only 3 coordinates. Removing bbox, keeping category and text.")
+                    # Keep only category and text, ensuring order is preserved
+                    new_item = {}
+                    if 'category' in item:
+                        new_item['category'] = item['category']
+                    if 'text' in item:
+                        new_item['text'] = item['text']
+                    if new_item:  # Add only if there is valid content
+                        cleaned_data.append(new_item)
+                        operations['bbox_fixes'] += 1
+                    else:
+                        operations['removed_items'] += 1
+                    continue
+                elif isinstance(bbox, list) and len(bbox) == 4:
+                    # bbox is normal, add directly, preserving original order
+                    cleaned_data.append(item.copy())
+                    continue
+                else:
+                    print(f"  ERROR: Item {i}: Abnormal bbox format, skipping.")
+                    operations['removed_items'] += 1
+                    continue
+            else:
+                # No bbox field, keep if category exists
+                if 'category' in item:
+                    cleaned_data.append(item.copy())
+                    continue
+                else:
+                    operations['removed_items'] += 1
+        
+        operations['final_count'] = len(cleaned_data)
+        print(f"  Cleaning complete: {len(cleaned_data)} items, {operations['bbox_fixes']} bbox fixes, {operations['removed_items']} items removed")
+        
+        result = CleanedData(
+            case_id=case_id,
+            original_type='list',
+            original_length=len(data),
+            cleaned_data=cleaned_data,
+            cleaning_operations=operations,
+            success=True
+        )
+        
+        # Track result
+        self.cleaned_results.append(result)
+        
+        return result
+    
+    def clean_string_data(self, data_str: str, case_id: int) -> CleanedData:
+        """Cleans string-type data"""
+        
+        print(f"Cleaning String data - Case {case_id}")
+        print(f"  Original length: {len(data_str):,}")
+        
+        operations = {
+            'type': 'str',
+            'original_length': len(data_str),
+            'delimiter_fixes': 0,
+            'tail_truncated': False,
+            'truncated_length': 0,
+            'duplicate_dicts_removed': 0,
+            'final_objects': 0
+        }
+        
+        try:
+            # Step 1: Detect and fix missing delimiters
+            data_str, delimiter_fixes = self._fix_missing_delimiters(data_str)
+            operations['delimiter_fixes'] = delimiter_fixes
+            
+            # Step 2: Truncate the last incomplete element
+            data_str, tail_truncated = self._truncate_last_incomplete_element(data_str)
+            operations['tail_truncated'] = tail_truncated
+            operations['truncated_length'] = len(data_str)
+            
+            # Step 3: Remove duplicate complete dict objects, preserving order
+            data_str, duplicate_removes = self._remove_duplicate_complete_dicts_preserve_order(data_str)
+            operations['duplicate_dicts_removed'] = duplicate_removes
+            
+            # Step 4: Ensure correct JSON format
+            data_str = self._ensure_json_format(data_str)
+            
+            # Step 5: Try to parse the final result
+            final_data = self._parse_final_json(data_str)
+            
+            if final_data is not None:
+                operations['final_objects'] = len(final_data)
+                print(f"  Cleaning complete: {len(final_data)} objects")
+                
+                result = CleanedData(
+                    case_id=case_id,
+                    original_type='str',
+                    original_length=operations['original_length'],
+                    cleaned_data=final_data,
+                    cleaning_operations=operations,
+                    success=True
+                )
+                
+                # Track result
+                self.cleaned_results.append(result)
+                
+                return result
+            else:
+                raise Exception("Could not parse the cleaned data")
+                
+        except Exception as e:
+            print(f"  ERROR: Cleaning failed: {e}")
+            result = CleanedData(
+                case_id=case_id,
+                original_type='str',
+                original_length=operations['original_length'],
+                cleaned_data=[],
+                cleaning_operations=operations,
+                success=False
+            )
+            
+            # Track result even if failed
+            self.cleaned_results.append(result)
+            
+            return result
+    
+    def _fix_missing_delimiters(self, text: str) -> Tuple[str, int]:
+        """Fixes missing delimiters between JSON objects"""
+        
+        fixes = 0
+        
+        # Pattern 1: Fix } { (missing comma between objects)
+        def replace_delimiter(match):
+            nonlocal fixes
+            fixes += 1
+            return '},{'
+        
+        text = self.missing_delimiter_pattern.sub(replace_delimiter, text)
+        
+        # Pattern 2: Fix } " (missing comma before string key in next object)
+        # This handles cases like: } "category": {...}
+        pattern2 = re.compile(r'\}\s*"([^"]+)"\s*:', re.DOTALL)
+        def replace_delimiter2(match):
+            nonlocal fixes
+            fixes += 1
+            return '}, "' + match.group(1) + '":'
+        
+        text = pattern2.sub(replace_delimiter2, text)
+        
+        # Pattern 3: Fix } \n { (missing comma with newline)
+        pattern3 = re.compile(r'\}\s*\n\s*\{', re.MULTILINE)
+        def replace_delimiter3(match):
+            nonlocal fixes
+            fixes += 1
+            return '},\n{'
+        
+        text = pattern3.sub(replace_delimiter3, text)
+        
+        # Pattern 4: More aggressive - find } followed by whitespace and then {
+        # This catches cases that might have been missed
+        pattern4 = re.compile(r'\}\s+(?=\{)', re.DOTALL)
+        def replace_delimiter4(match):
+            nonlocal fixes
+            fixes += 1
+            return '},'
+        
+        text = pattern4.sub(replace_delimiter4, text)
+        
+        if fixes > 0:
+            print(f"    Fixed {fixes} missing delimiters")
+        
+        return text, fixes
+    
+    def _truncate_last_incomplete_element(self, text: str) -> Tuple[str, bool]:
+        """Truncates the last incomplete element"""
+        
+        # For very long text (>50k) or text not ending with ']', directly truncate the last '{"bbox":'
+        needs_truncation = (
+            len(text) > 50000 or 
+            not text.strip().endswith(']')
+        )
+        
+        if needs_truncation:
+            # Check how many dict objects there are
+            bbox_count = text.count('{"bbox":')
+            
+            # If there is only one dict object, do not truncate to avoid deleting the only object
+            if bbox_count <= 1:
+                print(f"    WARNING: Only {bbox_count} dict objects found, skipping truncation to avoid deleting all content")
+                return text, False
+            
+            # Find the position of the last '{"bbox":'
+            last_bbox_pos = text.rfind('{"bbox":')
+            
+            if last_bbox_pos > 0:
+                # Truncate before this position
+                truncated_text = text[:last_bbox_pos].rstrip()
+                
+                # Remove trailing comma
+                if truncated_text.endswith(','):
+                    truncated_text = truncated_text[:-1]
+                
+                print(f"    Truncated the last incomplete element, length reduced from {len(text):,} to {len(truncated_text):,}")
+                return truncated_text, True
+        
+        return text, False
+    
+    def _remove_duplicate_complete_dicts_preserve_order(self, text: str) -> Tuple[str, int]:
+        """Removes duplicate complete dict objects, preserving original order"""
+        
+        # Extract all dict objects, preserving order
+        dict_matches = list(self.dict_pattern.finditer(text))
+        
+        if not dict_matches:
+            return text, 0
+        
+        print(f"    Found {len(dict_matches)} dict objects")
+        
+        # Deduplication while preserving order: only keep the first occurrence of a dict
+        unique_dicts = []
+        seen_dict_strings = set()
+        total_duplicates = 0
+        
+        for match in dict_matches:
+            dict_str = match.group()
+            
+            if dict_str not in seen_dict_strings:
+                unique_dicts.append(dict_str)
+                seen_dict_strings.add(dict_str)
+            else:
+                total_duplicates += 1
+        
+        if total_duplicates > 0:
+            # Reconstruct the JSON array, preserving the original order
+            new_text = '[' + ', '.join(unique_dicts) + ']'
+            print(f"    Removed {total_duplicates} duplicate dicts, keeping {len(unique_dicts)} unique dicts (order preserved)")
+            return new_text, total_duplicates
+        else:
+            print(f"    No duplicate dict objects found")
+            return text, 0
+    
+    def _ensure_json_format(self, text: str) -> str:
+        """Ensures correct JSON format"""
+        
+        text = text.strip()
+        
+        if not text.startswith('['):
+            text = '[' + text
+        
+        if not text.endswith(']'):
+            # Remove trailing comma
+            text = text.rstrip(',').rstrip()
+            text += ']'
+        
+        return text
+    
+    def _parse_final_json(self, text: str) -> Optional[List[Dict]]:
+        """Tries to parse the final JSON"""
+        
+        try:
+            data = json.loads(text)
+            if isinstance(data, list):
+                return data
+        except json.JSONDecodeError as e:
+            print(f"    ERROR: JSON parsing failed: {e}")
+            
+            # fallback1: Try to fix common JSON issues and retry
+            try:
+                # Try to fix missing commas between objects more aggressively
+                fixed_text = re.sub(r'\}\s*(?=\{)', '},', text)
+                # Try to fix missing commas before string keys
+                fixed_text = re.sub(r'\}\s*"([^"]+)"\s*:', r'}, "\1":', fixed_text)
+                # Try to fix trailing commas before closing bracket
+                fixed_text = re.sub(r',\s*\]', ']', fixed_text)
+                
+                data = json.loads(fixed_text)
+                if isinstance(data, list):
+                    print(f"    Successfully parsed after aggressive fixes")
+                    return data
+            except:
+                pass
+            
+            # fallback2: Extract valid dict objects using regex
+            valid_dicts = []
+            
+            for match in self.dict_pattern.finditer(text):
+                dict_str = match.group()
+                try:
+                    dict_obj = json.loads(dict_str)
+                    valid_dicts.append(dict_obj)
+                except:
+                    # Try to fix the dict string and retry
+                    try:
+                        # Try to add missing closing brace
+                        if dict_str.count('{') > dict_str.count('}'):
+                            dict_str += '}'
+                        dict_obj = json.loads(dict_str)
+                        valid_dicts.append(dict_obj)
+                    except:
+                        continue
+            
+            if valid_dicts:
+                print(f"    Extracted {len(valid_dicts)} valid dicts")
+                return valid_dicts
+            
+            # fallback3: Special handling for a single incomplete dict
+            return self._handle_single_incomplete_dict(text)
+        
+        return None
+    
+    def _handle_single_incomplete_dict(self, text: str) -> Optional[List[Dict]]:
+        """Handles the special case of a single incomplete dict"""
+        
+        # Check if it's a single incomplete dict case
+        if not text.strip().startswith('[{"bbox":'):
+            return None
+        
+        try:
+            # Try to extract bbox coordinates
+            bbox_match = re.search(r'"bbox"\s*:\s*\[([^\]]+)\]', text)
+            if not bbox_match:
+                return None
+            
+            bbox_str = bbox_match.group(1)
+            bbox_coords = [int(x.strip()) for x in bbox_str.split(',')]
+            
+            if len(bbox_coords) != 4:
+                return None
+            
+            # Try to extract category
+            category_match = re.search(r'"category"\s*:\s*"([^"]+)"', text)
+            category = category_match.group(1) if category_match else "Text"
+            
+            # Try to extract the beginning of the text (first 10000 characters)
+            text_match = re.search(r'"text"\s*:\s*"([^"]{0,10000})', text)
+            if text_match:
+                text_content = text_match.group(1)
+            else:
+                text_content = ""
+            
+            # Construct the fixed dict
+            fixed_dict = {
+                "bbox": bbox_coords,
+                "category": category
+            }
+            
+            if text_content:
+                fixed_dict["text"] = text_content
+            
+            print(f"    Special fix: single incomplete dict -> {fixed_dict}")
+            return [fixed_dict]
+            
+        except Exception as e:
+            print(f"    ERROR: Special fix failed: {e}")
+            return None
+    
+    def remove_duplicate_category_text_pairs_and_bbox(self, data_list: List[dict], case_id: int) -> List[dict]:
+        """Removes duplicate category-text pairs and duplicate bboxes"""
+        
+        if not data_list or len(data_list) <= 1:
+            print(f"    Data length {len(data_list)} <= 1, skipping deduplication check")
+            return data_list
+        
+        print(f"    Original data length: {len(data_list)}")
+        
+        # 1. Count occurrences and positions of each category-text pair
+        category_text_pairs = {}
+        for i, item in enumerate(data_list):
+            if isinstance(item, dict) and 'category' in item and 'text' in item:
+                pair_key = (item.get('category', ''), item.get('text', ''))
+                if pair_key not in category_text_pairs:
+                    category_text_pairs[pair_key] = []
+                category_text_pairs[pair_key].append(i)
+        
+        # 2. Count occurrences and positions of each bbox
+        bbox_pairs = {}
+        for i, item in enumerate(data_list):
+            if isinstance(item, dict) and 'bbox' in item:
+                bbox = item.get('bbox')
+                if isinstance(bbox, list) and len(bbox) > 0:
+                    bbox_key = tuple(bbox)  # Convert to tuple to use as a dictionary key
+                    if bbox_key not in bbox_pairs:
+                        bbox_pairs[bbox_key] = []
+                    bbox_pairs[bbox_key].append(i)
+        
+        # 3. Identify items to be removed
+        duplicates_to_remove = set()
+        
+        # 3a. Process category-text pairs that appear 5 or more times
+        for pair_key, positions in category_text_pairs.items():
+            if len(positions) >= 5:
+                category, text = pair_key
+                # Keep the first occurrence, remove subsequent duplicates
+                positions_to_remove = positions[1:]
+                duplicates_to_remove.update(positions_to_remove)
+                
+                print(f"    Found duplicate category-text pair: category='{category}', first 50 chars of text='{text[:50]}...'")
+                print(f"        Count: {len(positions)}, removing at positions: {positions_to_remove}")
+        
+        # 3b. Process bboxes that appear 2 or more times
+        for bbox_key, positions in bbox_pairs.items():
+            if len(positions) >= 2:
+                # Keep the first occurrence, remove subsequent duplicates
+                positions_to_remove = positions[1:]
+                duplicates_to_remove.update(positions_to_remove)
+                
+                print(f"    Found duplicate bbox: {list(bbox_key)}")
+                print(f"        Count: {len(positions)}, removing at positions: {positions_to_remove}")
+        
+        if not duplicates_to_remove:
+            print(f"    No category-text pairs or bboxes found exceeding the duplication threshold")
+            return data_list
+        
+        # 4. Remove duplicate items from the original data (preserving order)
+        cleaned_data = []
+        removed_count = 0
+        for i, item in enumerate(data_list):
+            if i not in duplicates_to_remove:
+                cleaned_data.append(item)
+            else:
+                removed_count += 1
+        
+        print(f"    Deduplication complete: Removed {removed_count} duplicate items")
+        print(f"    Cleaned data length: {len(cleaned_data)}")
+        
+        return cleaned_data
+
+    def clean_model_output(self, model_output: str):
+        try:
+            # Select cleaning method based on data type
+            if isinstance(model_output, list):
+                result = self.clean_list_data(model_output, case_id=0)
+            else:
+                result = self.clean_string_data(str(model_output), case_id=0)
+            
+            # Add deduplication step: remove duplicate category-text pairs and bboxes
+            if result and hasattr(result, 'success') and result.success and result.cleaned_data:
+                original_data = result.cleaned_data
+                deduplicated_data = self.remove_duplicate_category_text_pairs_and_bbox(original_data, case_id=0)
+                # Update the cleaned_data in the CleanedData object
+                result.cleaned_data = deduplicated_data
+            return result.cleaned_data
+        except Exception as e:
+            print(f"ERROR: Case cleaning failed: {e}")
+            return model_output
