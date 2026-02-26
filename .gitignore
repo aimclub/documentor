@@ -53,3 +53,4 @@ CODE_QUALITY_REPORT.md
 /documentor/test_regular_pdf_parser.py
 ПЛАН_РЕФАКТОРИНГА_DOTS_OCR.md
 feature_list.txt
+visualize_tables.py
