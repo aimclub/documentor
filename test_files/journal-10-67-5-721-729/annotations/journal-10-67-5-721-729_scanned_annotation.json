@@ -1,0 +1,1456 @@
+{
+  "document_id": "journal-10-67-5-721-729_scanned",
+  "source_file": "E:\\easy\\documentor\\documentor_langchain\\experiments\\metrics\\test_files_for_metrics\\journal-10-67-5-721-729_scanned.pdf",
+  "document_format": "pdf",
+  "annotation_version": "2.0",
+  "annotator": "qt_visual",
+  "annotation_date": "2026-02-19T04:42:52.147288",
+  "elements": [
+    {
+      "id": "elem_0000",
+      "type": "text",
+      "content": "БИОЛОГИЯ (BIOLOGY)",
+      "parent_id": null,
+      "order": 0,
+      "page_number": 1,
+      "bbox": [
+        459.06,
+        180.95999999999998,
+        818.94,
+        219.04000000000002
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0001",
+      "type": "text",
+      "content": "УДК 579.6",
+      "parent_id": null,
+      "order": 1,
+      "page_number": 1,
+      "bbox": [
+        135.06,
+        230.95999999999998,
+        309.94,
+        267.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0002",
+      "type": "text",
+      "content": "Мастиленко А.В.",
+      "parent_id": null,
+      "order": 2,
+      "page_number": 1,
+      "bbox": [
+        506.06,
+        278.96,
+        770.94,
+        313.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0003",
+      "type": "text",
+      "content": "кандидат биологических наук, доцент кафедры\n\"Микробиология, вирусология, эпизоотология\nи ветеринарно-санитарная экспертиза\"",
+      "parent_id": null,
+      "order": 3,
+      "page_number": 1,
+      "bbox": [
+        333.06,
+        326.96,
+        945.94,
+        462.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0004",
+      "type": "text",
+      "content": "Ульяновский государственный аграрный университет имени П.А. Столыпина",
+      "parent_id": null,
+      "order": 4,
+      "page_number": 1,
+      "bbox": [
+        150.06,
+        471.96,
+        1129.94,
+        510.03999999999996
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0005",
+      "type": "text",
+      "content": "(г. Ульяновск, Россия)",
+      "parent_id": null,
+      "order": 5,
+      "page_number": 1,
+      "bbox": [
+        482.06,
+        519.96,
+        797.94,
+        557.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0006",
+      "type": "text",
+      "content": "Матюнина М.И.",
+      "parent_id": null,
+      "order": 6,
+      "page_number": 1,
+      "bbox": [
+        513.06,
+        617.96,
+        765.94,
+        652.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0007",
+      "type": "text",
+      "content": "биолог бактериологического отдела клинико-диагностической лаборатории",
+      "parent_id": null,
+      "order": 7,
+      "page_number": 1,
+      "bbox": [
+        164.06,
+        665.96,
+        1114.94,
+        704.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0008",
+      "type": "text",
+      "content": "ГУЗ «Городская поликлиника № 5»",
+      "parent_id": null,
+      "order": 8,
+      "page_number": 1,
+      "bbox": [
+        405.06,
+        712.96,
+        874.94,
+        752.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0009",
+      "type": "text",
+      "content": "(г. Ульяновск, Россия)",
+      "parent_id": null,
+      "order": 9,
+      "page_number": 1,
+      "bbox": [
+        485.06,
+        762.96,
+        794.94,
+        800.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0010",
+      "type": "text",
+      "content": "Батяйкина Д.В.",
+      "parent_id": null,
+      "order": 10,
+      "page_number": 1,
+      "bbox": [
+        517.06,
+        858.96,
+        760.94,
+        895.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0011",
+      "type": "text",
+      "content": "биолог бактериологического отдела клинико-диагностической лаборатории",
+      "parent_id": null,
+      "order": 11,
+      "page_number": 1,
+      "bbox": [
+        164.06,
+        906.96,
+        1114.94,
+        945.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0012",
+      "type": "text",
+      "content": "ГУЗ «Городская поликлиника № 5»",
+      "parent_id": null,
+      "order": 12,
+      "page_number": 1,
+      "bbox": [
+        405.06,
+        954.96,
+        874.94,
+        992.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0013",
+      "type": "text",
+      "content": "(г. Ульяновск, Россия)",
+      "parent_id": null,
+      "order": 13,
+      "page_number": 1,
+      "bbox": [
+        485.06,
+        1003.96,
+        794.94,
+        1040.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0014",
+      "type": "title",
+      "content": "РАЗРАБОТКА СИСТЕМЫ ДЕТЕКЦИИ\nБАКТЕРИЙ РОДА BORDETELLA",
+      "parent_id": null,
+      "order": 14,
+      "page_number": 1,
+      "bbox": [
+        362.06,
+        1099.96,
+        917.94,
+        1185.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0015",
+      "type": "text",
+      "content": "EE Аннотация: в работе рассматривается метод разделения белковых компонентов\nбактериальных клеток в полиакриламидном геле по Леммли для специфической детекции\nбактерий рода Bordetella. На основании проведенных авторами экспериментов были\nвыявлены 6 специфических белков, характерных для исследуемых видов. EE#",
+      "parent_id": "elem_0014",
+      "order": 15,
+      "page_number": 1,
+      "bbox": [
+        133.06,
+        1243.96,
+        1146.94,
+        1404.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0016",
+      "type": "text",
+      "content": "Ключевые слова: детекция, разделение в ПААГ, белки, Bordetella.",
+      "parent_id": "elem_0014",
+      "order": 16,
+      "page_number": 1,
+      "bbox": [
+        258.06,
+        1450.96,
+        978.94,
+        1485.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0017",
+      "type": "text",
+      "content": "В настоящее время род Bordetella включает в себя виды: B. parapertussis,\nB. pertussis, B. bronchiseptica, B. avium, B. hinzii, B. holmesii, B. petrii, B. trematum,",
+      "parent_id": "elem_0014",
+      "order": 17,
+      "page_number": 1,
+      "bbox": [
+        133.06,
+        1534.96,
+        1142.94,
+        1621.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0018",
+      "type": "text",
+      "content": "B. bronchialis, B. flabilis, B. muralis, B. pseudohinzii, B. sputigena, B. tumbae, B.\ntumulicola. Большинство из них способны вызывать инфекционные заболевания\nчеловека и животных. Так, B. parapertussis, B. pertussis являются возбудителями\nкоклюша человека, B. bronchiseptica – инфекционной патологии верхних\nдыхательных путей у многих видов млекопитающих, B. avium – инфекций у птиц,\nB. holmesii – вызывает инфекции, сходные с проявлением коклюша, B. trematum\n– изолировали у пациентов с острым отитом и миокардитом. B. bronchialis, B.\nflabilis и B. sputigena изолировали от пациентов с муковисцидозом [1].",
+      "parent_id": "elem_0014",
+      "order": 18,
+      "page_number": 2,
+      "bbox": [
+        128.06,
+        180.95999999999998,
+        1146.94,
+        559.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0019",
+      "type": "text",
+      "content": "Биологическая характеристика бактерий является основой для разработки\nметодов их идентификации. В настоящее время бактериальная классификация\nпретерпевает постоянные изменения в связи с появлением новых методов,\nинструментов и принципов типологизации. Наиболее современными и\nобщепринятыми \nявляются \nмолекулярно- \nгенетические \nметоды \nвидовой\nидентификации - все они базируются на характеристиках уникальности\nконкретного генома. Однако они не позволяют учесть фенотипические\nособенности рода, вида, группы или штамма. Этими особенностями обладают\nметоды \nбелкового \n(протеомного) \nпрофилирования. \nсуществуют \nметоды\nразделения биологических высокомолекулярных соединений (в том числе и\nпротеомов) в электрическом поле.",
+      "parent_id": "elem_0014",
+      "order": 19,
+      "page_number": 2,
+      "bbox": [
+        130.06,
+        565.96,
+        1146.94,
+        1092.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0020",
+      "type": "text",
+      "content": "Наиболее современными являются методы профилирования с помощью\nмасс- \nспектрометрии, \nоднако \nдостаточно \nдорогостоящее \nоборудование,\nквалификационные требования и потребность в специфическом программном\nобеспечении не позволяют использовать его при рутинных исследованиях. Так\nнесмотря на то, что в настоящее время методы молекулярной генетики и масс-\nспектрометрии широко внедряются в микробиологическую практику, также\nостаются востребованы и классические методы белкового профилирования\nбактериальных таксономических групп. Одной из методик разделения белковых\nкомпонентов бактериальных клеток в полиакриламидном геле (ПААГ) является\nметод Леммли [2]. Одним из главных преимуществ данного подхода остается\nширокая доступность для практических лабораторий и низкая себестоимость.",
+      "parent_id": "elem_0014",
+      "order": 20,
+      "page_number": 2,
+      "bbox": [
+        130.06,
+        1097.96,
+        1146.94,
+        1623.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0021",
+      "type": "text",
+      "content": "Однако стоит отметить, что качество результатов исследований зависит от\nквалификации персонала.",
+      "parent_id": "elem_0014",
+      "order": 21,
+      "page_number": 3,
+      "bbox": [
+        132.06,
+        181.95999999999998,
+        1145.94,
+        272.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0022",
+      "type": "text",
+      "content": "Целью данного исследования является разработка системы детекции B.\nparapertussis, B. pertussis, B. bronchiseptica, B. avium, B. holmesii, B. trematum и B.\npetrii на основе протеомного состава бактерий данных видов.",
+      "parent_id": "elem_0014",
+      "order": 22,
+      "page_number": 3,
+      "bbox": [
+        130.06,
+        277.96,
+        1145.94,
+        416.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0023",
+      "type": "header_1",
+      "content": "Материалы и методы",
+      "parent_id": "elem_0014",
+      "order": 23,
+      "page_number": 3,
+      "bbox": [
+        215.06,
+        470.96,
+        546.94,
+        512.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0024",
+      "type": "text",
+      "content": "Для накопления бактериальной массы штаммов была использована среда\nБорде-Жангу (Becton and Dickinson, США); для удаления внеклеточных протеаз\nи белков питательной среды клетки центрифугировали при 5000g в течение 3\nминут и ресуспендировали в калиево-фосфатном буфере при температуре 37°С.\nВторым этапом добавляли к осадку SDS буфера (t=95°C) и тщательно\nперемешивали на центрифуге-вортексе (ELMI CM-50, Чехия). Разрушение\nбактериальных клеток проводили на ультразвуковом гомогенизаторе Soniprep\n150 (MSE, Великобритания). Пробы инкубировали при 95°С в течение 5 минут.\nЗатем образцы охлаждали до 20°C и вносили 250 мкл 2x кратного буфера для\nобразцов SDS-PAGE, и инкубировали 20 мин при комнатной температуре. Для\nполучения бактериальных протеинов в супернатанте пробы центрифугировали\nпри 12500g в течение 30 минут.",
+      "parent_id": "elem_0023",
+      "order": 24,
+      "page_number": 3,
+      "bbox": [
+        130.06,
+        518.96,
+        1145.94,
+        1093.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0025",
+      "type": "text",
+      "content": "Электрофорез был проведен в вертикальной камере (Mini-protean\ntetra,Bio-rad) в полиакриламидном геле 8-16 % (Criterion TGX,Bio-Rad) в Трис-\nглицироновом буфере. В работе также был использован маркер молекулярного\nвеса 3,5-245 кДа (Abcam, Великобритания).",
+      "parent_id": "elem_0023",
+      "order": 25,
+      "page_number": 3,
+      "bbox": [
+        130.06,
+        1096.96,
+        1145.94,
+        1286.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0026",
+      "type": "text",
+      "content": "После электрофореза гель прокрашивали в растворе для окраски.\nНесвязавшийся \nкраситель \nотмывали \nв \nпроявляющем \nрастворе.\nДенситометрический анализ in-silico был проведен при использовании ПО\nGelAnalizer2010a.",
+      "parent_id": "elem_0023",
+      "order": 26,
+      "page_number": 3,
+      "bbox": [
+        130.06,
+        1291.96,
+        1145.94,
+        1476.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0027",
+      "type": "list_item",
+      "content": "1) \nБуферный раствор Трис-глициновый для электрофореза- 10x SDS-\nPAGE (1 L) – (250 mM Tris, 1.92 M glycine, 1% SDS, pH 8.3) - Tris base 30.3 g,\nGlycine 144.1 g, SDS 10 g, diH2O to 1 L;",
+      "parent_id": "elem_0023",
+      "order": 27,
+      "page_number": 3,
+      "bbox": [
+        130.06,
+        1485.96,
+        1145.94,
+        1624.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0028",
+      "type": "list_item",
+      "content": "2) \nБуфер для образцов - 2x SDS-PAGE (Laemmli, 30 ml) – (62.5 mM Tris-\nHCl, pH 6.8, 2% SDS, 25% glycerol, 0.01% bromophenol blue, 5% β-\nmercaptoethanol) - 0.5 M Tris-HCl, pH 6.8 3.75 ml, 50% Glycerol 15.0 ml, 1.0%\nBromophenol blue 0.3 ml, 10% SDS 6.0 ml, diH2O to 30 ml, add β-mercaptoethanol\n(50 µl to 950 µl sample buffer) before use.\n\n3) \nРаствор для окраски – на 100 мл – Coomassie Blue R250 – 0.25 g,\nmethanol 45 ml, diH2O 45 ml, acetic acid 10ml.\n\n4) \nПроявляющий раствор – 10% acetic acid.",
+      "parent_id": "elem_0023",
+      "order": 28,
+      "page_number": 4,
+      "bbox": [
+        133.06,
+        179.95999999999998,
+        1146.94,
+        560.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0029",
+      "type": "header_1",
+      "content": "Результаты",
+      "parent_id": "elem_0014",
+      "order": 29,
+      "page_number": 4,
+      "bbox": [
+        217.06,
+        616.96,
+        422.94,
+        657.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0030",
+      "type": "text",
+      "content": "В \nрезультате \nпроведенного \nисследования \nнами \nбыла \nполучена\nэлектрофореграмма проведенная в ПААГ B. parapertussis, B. pertussis, B.\nbronchiseptica, B. avium, B. holmesii, B. trematum и B. petrii (рис.1). На основании\nмаркера молекулярного веса белков был построен калибровочный график (рис.\n2-5).              1      2      3      4      5      6      7      8      9     10           11",
+      "parent_id": "elem_0029",
+      "order": 30,
+      "page_number": 4,
+      "bbox": [
+        131.06,
+        665.96,
+        1146.94,
+        897.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0031",
+      "type": "image",
+      "content": "",
+      "parent_id": "elem_0032",
+      "order": 31,
+      "page_number": 4,
+      "bbox": [
+        225.06,
+        916.96,
+        1023.94,
+        1218.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0032",
+      "type": "caption",
+      "content": "Рис. 1. Электрофореграмма протеомов: 1, 2 - B.parapertussis, 3, 4 - B.pertussis,\n5 - B.bronchiseptica, 6 - B.holmesii, 7, 8 - B.avium, 9 - B.trematum, 10 - B.petrii,\n11 – маркер молекулярного веса 3,5-245 кДа.",
+      "parent_id": "elem_0029",
+      "order": 32,
+      "page_number": 4,
+      "bbox": [
+        152.06,
+        1243.96,
+        1128.94,
+        1383.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0033",
+      "type": "image",
+      "content": "",
+      "parent_id": "elem_0034",
+      "order": 33,
+      "page_number": 5,
+      "bbox": [
+        232.06,
+        177.95999999999998,
+        1091.94,
+        517.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0034",
+      "type": "caption",
+      "content": "Рис. 2. Профилограмма маркера молекулярного веса 3,5-245 кДа.",
+      "parent_id": "elem_0029",
+      "order": 34,
+      "page_number": 5,
+      "bbox": [
+        226.06,
+        527.96,
+        1052.94,
+        569.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0035",
+      "type": "image",
+      "content": "",
+      "parent_id": "elem_0036",
+      "order": 35,
+      "page_number": 5,
+      "bbox": [
+        146.06,
+        618.96,
+        1132.94,
+        1004.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0036",
+      "type": "caption",
+      "content": "Рис. 3. Калибровочная кривая маркера молекулярного веса 3,5-245 кДа.",
+      "parent_id": "elem_0029",
+      "order": 36,
+      "page_number": 5,
+      "bbox": [
+        189.06,
+        1014.96,
+        1092.94,
+        1055.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0037",
+      "type": "image",
+      "content": "",
+      "parent_id": "elem_0038",
+      "order": 37,
+      "page_number": 5,
+      "bbox": [
+        152.06,
+        1058.96,
+        1126.94,
+        1486.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0038",
+      "type": "caption",
+      "content": "Рис. 4. Профилограмма протеомов B. bronchiseptica",
+      "parent_id": "elem_0029",
+      "order": 38,
+      "page_number": 5,
+      "bbox": [
+        308.06,
+        1497.96,
+        973.94,
+        1537.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0039",
+      "type": "image",
+      "content": "",
+      "parent_id": "elem_0040",
+      "order": 39,
+      "page_number": 6,
+      "bbox": [
+        186.06,
+        175.95999999999998,
+        1091.94,
+        469.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0040",
+      "type": "caption",
+      "content": "Рис. 5. Молекулярный вес протеомов B. bronchiseptica",
+      "parent_id": "elem_0029",
+      "order": 40,
+      "page_number": 6,
+      "bbox": [
+        291.06,
+        475.96,
+        987.94,
+        519.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0041",
+      "type": "text",
+      "content": "Нами были установлены молекулярные массы белков, входящих в состав\nбактериальных клеток данных видов и являющиеся общими для исследуемых\nвидов. Среди изолированных белков представителей рода Bordetella только 6 из\nних с молекулярной массой 20-59 кДа являлись уникальными, т.е. были\nвыявлены \nу \nвсех \nисследуемых \nвидов, \nи \nне \nвстречались \nу \nдругих\nблизкородственных видов.",
+      "parent_id": "elem_0029",
+      "order": 41,
+      "page_number": 6,
+      "bbox": [
+        129.06,
+        571.96,
+        1148.94,
+        856.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0042",
+      "type": "text",
+      "content": "В системе NCBI нами был проведён in-silico анализ аналогии полученных\nрезультатов аннотированным протеомам в соответствии с молекулярными\nмассами – в результате идентифицировано 4423 белка.",
+      "parent_id": "elem_0029",
+      "order": 42,
+      "page_number": 6,
+      "bbox": [
+        129.06,
+        862.96,
+        1148.94,
+        1000.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0043",
+      "type": "text",
+      "content": "Из аннотированных белков нами были проанализированы те, которые\nвходят в состав клеточной стенки. Для протеомного анализа нами были\nиспользованы ресурсы систем NCBI (https://www.ncbi.nlm.nih.gov/protein) и\nUniProt (https://www.uniprot.org). Результаты проведённого анализа in-silico\nпредставлены в таблице 1.",
+      "parent_id": "elem_0029",
+      "order": 43,
+      "page_number": 6,
+      "bbox": [
+        129.06,
+        1006.96,
+        1148.94,
+        1243.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0044",
+      "type": "caption",
+      "content": "Таблица 1. Анализ in-silico протеомного состава",
+      "parent_id": "elem_0029",
+      "order": 44,
+      "page_number": 6,
+      "bbox": [
+        132.06,
+        1296.96,
+        760.94,
+        1338.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0045",
+      "type": "table",
+      "content": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>inverse autotransporter beta-barrel domain-containing protein</td><td>152414</td></tr><tr><td>outer membrane protein assembly factor BamA</td><td>88197</td></tr><tr><td>hypothetical protein</td><td>58068</td></tr></tbody></table>",
+      "parent_id": "elem_0044",
+      "order": 45,
+      "page_number": 6,
+      "bbox": [
+        144.06,
+        1338.96,
+        1134.94,
+        1601.04
+      ],
+      "metadata": {
+        "table_structure": {
+          "html": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>inverse autotransporter beta-barrel domain-containing protein</td><td>152414</td></tr><tr><td>outer membrane protein assembly factor BamA</td><td>88197</td></tr><tr><td>hypothetical protein</td><td>58068</td></tr></tbody></table>",
+          "cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "Наименование белка",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": "Молекулярная масса, Да",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "content": "inverse autotransporter beta-barrel domain-containing protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "content": "152414",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "content": "outer membrane protein assembly factor BamA",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "content": "88197",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 1,
+              "content": "58068",
+              "rowspan": 1,
+              "colspan": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "elem_0046",
+      "type": "table",
+      "content": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>flagellar basal body M-ring protein FliF</td><td>59556</td></tr><tr><td>efflux transporter outer membrane subunit</td><td>51320</td></tr><tr><td>hypothetical protein</td><td>50238</td></tr><tr><td>efflux transporter outer membrane subunit</td><td>50930</td></tr><tr><td>flagellar hook-length control protein FliK</td><td>42248</td></tr><tr><td>hypothetical protein</td><td>42783</td></tr><tr><td>autotransporter outer membrane beta-barrel domain-containing protein</td><td>36283</td></tr><tr><td>flagellar motor switch protein FliG</td><td>36438</td></tr><tr><td>hypothetical protein</td><td>35184</td></tr><tr><td>hypothetical protein</td><td>31694</td></tr><tr><td>hypothetical protein</td><td>31538</td></tr><tr><td>membrane transport family protein 1</td><td>31186</td></tr><tr><td>outer membrane protein assembly factor BamD</td><td>30958</td></tr><tr><td>hypothetical protein</td><td>30807</td></tr><tr><td>hypothetical protein</td><td>30389</td></tr><tr><td>flagellar biosynthetic protein FliR</td><td>27623</td></tr><tr><td>flagellar type III secretion system pore protein FliP</td><td>27397</td></tr><tr><td>CPBP family intramembrane metalloprotease</td><td>27324</td></tr><tr><td>flagellar brake protein</td><td>27145</td></tr><tr><td>30S ribosomal protein S2</td><td>27426</td></tr><tr><td>flagellar biosynthetic protein FliR</td><td>27623</td></tr><tr><td>hypothetical protein</td><td>27859</td></tr><tr><td>hypothetical proteinwt</td><td>28913</td></tr><tr><td>50S ribosomal protein L3</td><td>24311</td></tr><tr><td>protein TolQ</td><td>24612</td></tr><tr><td>hypothetical protein</td><td>25400</td></tr></tbody></table>",
+      "parent_id": "elem_0044",
+      "order": 46,
+      "page_number": 7,
+      "bbox": [
+        145.06,
+        174.95999999999998,
+        1133.94,
+        1617.04
+      ],
+      "metadata": {
+        "table_structure": {
+          "html": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>flagellar basal body M-ring protein FliF</td><td>59556</td></tr><tr><td>efflux transporter outer membrane subunit</td><td>51320</td></tr><tr><td>hypothetical protein</td><td>50238</td></tr><tr><td>efflux transporter outer membrane subunit</td><td>50930</td></tr><tr><td>flagellar hook-length control protein FliK</td><td>42248</td></tr><tr><td>hypothetical protein</td><td>42783</td></tr><tr><td>autotransporter outer membrane beta-barrel domain-containing protein</td><td>36283</td></tr><tr><td>flagellar motor switch protein FliG</td><td>36438</td></tr><tr><td>hypothetical protein</td><td>35184</td></tr><tr><td>hypothetical protein</td><td>31694</td></tr><tr><td>hypothetical protein</td><td>31538</td></tr><tr><td>membrane transport family protein 1</td><td>31186</td></tr><tr><td>outer membrane protein assembly factor BamD</td><td>30958</td></tr><tr><td>hypothetical protein</td><td>30807</td></tr><tr><td>hypothetical protein</td><td>30389</td></tr><tr><td>flagellar biosynthetic protein FliR</td><td>27623</td></tr><tr><td>flagellar type III secretion system pore protein FliP</td><td>27397</td></tr><tr><td>CPBP family intramembrane metalloprotease</td><td>27324</td></tr><tr><td>flagellar brake protein</td><td>27145</td></tr><tr><td>30S ribosomal protein S2</td><td>27426</td></tr><tr><td>flagellar biosynthetic protein FliR</td><td>27623</td></tr><tr><td>hypothetical protein</td><td>27859</td></tr><tr><td>hypothetical proteinwt</td><td>28913</td></tr><tr><td>50S ribosomal protein L3</td><td>24311</td></tr><tr><td>protein TolQ</td><td>24612</td></tr><tr><td>hypothetical protein</td><td>25400</td></tr></tbody></table>",
+          "cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "Наименование белка",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": "Молекулярная масса, Да",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "content": "flagellar basal body M-ring protein FliF",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "content": "59556",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "content": "efflux transporter outer membrane subunit",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "content": "51320",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 1,
+              "content": "50238",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 0,
+              "content": "efflux transporter outer membrane subunit",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 1,
+              "content": "50930",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 0,
+              "content": "flagellar hook-length control protein FliK",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 1,
+              "content": "42248",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 1,
+              "content": "42783",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 0,
+              "content": "autotransporter outer membrane beta-barrel domain-containing protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 1,
+              "content": "36283",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 0,
+              "content": "flagellar motor switch protein FliG",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 1,
+              "content": "36438",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 1,
+              "content": "35184",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 1,
+              "content": "31694",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 11,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 11,
+              "col": 1,
+              "content": "31538",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 12,
+              "col": 0,
+              "content": "membrane transport family protein 1",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 12,
+              "col": 1,
+              "content": "31186",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 13,
+              "col": 0,
+              "content": "outer membrane protein assembly factor BamD",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 13,
+              "col": 1,
+              "content": "30958",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 14,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 14,
+              "col": 1,
+              "content": "30807",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 15,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 15,
+              "col": 1,
+              "content": "30389",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 16,
+              "col": 0,
+              "content": "flagellar biosynthetic protein FliR",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 16,
+              "col": 1,
+              "content": "27623",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 17,
+              "col": 0,
+              "content": "flagellar type III secretion system pore protein FliP",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 17,
+              "col": 1,
+              "content": "27397",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 18,
+              "col": 0,
+              "content": "CPBP family intramembrane metalloprotease",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 18,
+              "col": 1,
+              "content": "27324",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 19,
+              "col": 0,
+              "content": "flagellar brake protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 19,
+              "col": 1,
+              "content": "27145",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 20,
+              "col": 0,
+              "content": "30S ribosomal protein S2",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 20,
+              "col": 1,
+              "content": "27426",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 21,
+              "col": 0,
+              "content": "flagellar biosynthetic protein FliR",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 21,
+              "col": 1,
+              "content": "27623",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 22,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 22,
+              "col": 1,
+              "content": "27859",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 23,
+              "col": 0,
+              "content": "hypothetical proteinwt",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 23,
+              "col": 1,
+              "content": "28913",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 24,
+              "col": 0,
+              "content": "50S ribosomal protein L3",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 24,
+              "col": 1,
+              "content": "24311",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 25,
+              "col": 0,
+              "content": "protein TolQ",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 25,
+              "col": 1,
+              "content": "24612",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 26,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 26,
+              "col": 1,
+              "content": "25400",
+              "rowspan": 1,
+              "colspan": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "elem_0047",
+      "type": "table",
+      "content": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>membrane protein</td><td>24306</td></tr><tr><td>50S ribosomal protein L25/general stress protein Ctc</td><td>21134</td></tr><tr><td>outer membrane lipoprotein LolB</td><td>20756</td></tr><tr><td>OmpA family protein</td><td>20847</td></tr><tr><td>energy-coupling factor transporter transmembrane protein EcfT</td><td>21088</td></tr><tr><td>hypothetical protein</td><td>21256</td></tr><tr><td>flagellar protein FliL</td><td>20700</td></tr><tr><td>OmpH family outer membrane protein</td><td>20330</td></tr><tr><td>hypothetical protein</td><td>19187</td></tr><tr><td>membrane protein</td><td>19995</td></tr></tbody></table>",
+      "parent_id": "elem_0044",
+      "order": 47,
+      "page_number": 8,
+      "bbox": [
+        143.06,
+        173.95999999999998,
+        1136.94,
+        783.04
+      ],
+      "metadata": {
+        "table_structure": {
+          "html": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>membrane protein</td><td>24306</td></tr><tr><td>50S ribosomal protein L25/general stress protein Ctc</td><td>21134</td></tr><tr><td>outer membrane lipoprotein LolB</td><td>20756</td></tr><tr><td>OmpA family protein</td><td>20847</td></tr><tr><td>energy-coupling factor transporter transmembrane protein EcfT</td><td>21088</td></tr><tr><td>hypothetical protein</td><td>21256</td></tr><tr><td>flagellar protein FliL</td><td>20700</td></tr><tr><td>OmpH family outer membrane protein</td><td>20330</td></tr><tr><td>hypothetical protein</td><td>19187</td></tr><tr><td>membrane protein</td><td>19995</td></tr></tbody></table>",
+          "cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "Наименование белка",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": "Молекулярная масса, Да",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "content": "membrane protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "content": "24306",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "content": "50S ribosomal protein L25/general stress protein Ctc",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "content": "21134",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "content": "outer membrane lipoprotein LolB",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 1,
+              "content": "20756",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 0,
+              "content": "OmpA family protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 1,
+              "content": "20847",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 0,
+              "content": "energy-coupling factor transporter transmembrane protein EcfT",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 1,
+              "content": "21088",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 1,
+              "content": "21256",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 0,
+              "content": "flagellar protein FliL",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 1,
+              "content": "20700",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 0,
+              "content": "OmpH family outer membrane protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 1,
+              "content": "20330",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 0,
+              "content": "hypothetical protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 1,
+              "content": "19187",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 0,
+              "content": "membrane protein",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 1,
+              "content": "19995",
+              "rowspan": 1,
+              "colspan": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "elem_0048",
+      "type": "header_1",
+      "content": "Выводы",
+      "parent_id": "elem_0014",
+      "order": 48,
+      "page_number": 8,
+      "bbox": [
+        218.06,
+        820.96,
+        365.94,
+        859.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0049",
+      "type": "text",
+      "content": "В \nрезультате \nпроведенного \nисследования \nнами \nбыла \nполучена\nэлектрофореграмма белков проведенная в ПААГ B. parapertussis, B. pertussis, B.\nbronchiseptica, B. avium, B. holmesii, B. trematum и B. petrii. Были установлены\nмолекулярные массы белков, входящих в состав бактериальных клеток данных\nвидов. Нами были выявлены белковые структуры со следующей молекулярной\nмассой: 20,21, 23, 25, 29, 31, 36, 46, 51, 59, 72, 88, 100, 113, 129, 138, 150, 174, 210\nкДа. Были аннотированы белки, входящие в состав их клеточных стенок. По\nрезультатам проведенного анализа становится очевидным, что каждому из\nвыявленных белков может соответствовать антиген.",
+      "parent_id": "elem_0048",
+      "order": 49,
+      "page_number": 8,
+      "bbox": [
+        131.06,
+        869.96,
+        1147.94,
+        1294.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0050",
+      "type": "text",
+      "content": "Среди выявленных белков, только 6 из них были выявлены у исследуемых\nвидов Bordetella (т.е. являлись общими), и не были выявлены у других видов и\nблизкородственных родов.",
+      "parent_id": "elem_0048",
+      "order": 50,
+      "page_number": 8,
+      "bbox": [
+        131.06,
+        1304.96,
+        1147.94,
+        1442.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0051",
+      "type": "text",
+      "content": "Предложенная система электрофореза в ПААГ может быть использована\nдля детекции бактерий рода Bordetella при выявлении 6 специфических\nфрагментов 20, 29, 30, 36, 46, 59 кДа.",
+      "parent_id": "elem_0048",
+      "order": 51,
+      "page_number": 8,
+      "bbox": [
+        131.06,
+        1447.96,
+        1147.94,
+        1587.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0052",
+      "type": "text",
+      "content": "Также данное исследование может быть использовано в дальнейшей\nработе изучения антигенной структуры и разработке соответствующих\nсерологических диагностикумов.",
+      "parent_id": "elem_0048",
+      "order": 52,
+      "page_number": 9,
+      "bbox": [
+        132.06,
+        180.95999999999998,
+        1145.94,
+        319.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0053",
+      "type": "header_1",
+      "content": "СПИСОК ЛИТЕРАТУРЫ:",
+      "parent_id": "elem_0014",
+      "order": 53,
+      "page_number": 9,
+      "bbox": [
+        446.06,
+        371.96,
+        830.94,
+        412.04
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0054",
+      "type": "text",
+      "content": "1. \nVandamme P. A. et al. Bordetella bronchialis sp. nov., Bordetella flabilis sp. nov.\nand Bordetella sputigena sp. nov., isolated from human respiratory specimens, and\nreclassification of Achromobacter sediminum Zhang et al. 2014 as Verticia sediminum\ngen. nov., comb. nov //International Journal of Systematic and Evolutionary\nMicrobiology. – 2015. – Т. 65. – №. Pt_10. – С. 3674-3682.\n2. \nU. K. Laemmli. Cleavage of Structural Proteins during the Assembly of the He\nad of Bacteriophage T4. Nature,1970; V.227, P.680 — 685.\n3. \nGross R., Keidel K., Schmitt K. Resemblance and divergence: the “new”\nmembers of the genus Bordetella //Medical microbiology and immunology. – 2010. –\nТ. 199. – №. 3. – С. 155-163.\n4. \nSaito M. et al. Development of vaccines against pertussis caused by Bordetella\nholmesii using a mouse intranasal challenge model //Microbiology and immunology. –\n2016. – Т. 60. – №. 9. – С. 599-608.",
+      "parent_id": "elem_0048",
+      "order": 54,
+      "page_number": 9,
+      "bbox": [
+        121.06,
+        468.96,
+        1146.94,
+        1090.04
+      ],
+      "metadata": {}
+    }
+  ],
+  "statistics": {
+    "total_elements": 55,
+    "total_pages": 9,
+    "elements_by_type": {
+      "text": 34,
+      "title": 1,
+      "header_1": 4,
+      "list_item": 2,
+      "image": 5,
+      "caption": 6,
+      "table": 3
+    },
+    "table_count": 3,
+    "image_count": 5
+  }
+}
