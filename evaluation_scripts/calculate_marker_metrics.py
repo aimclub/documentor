@@ -350,8 +350,8 @@ def process_pdf_with_marker(pdf_path: Path) -> str:
     try:
         import sys
         project_root = Path(__file__).parent.parent
-        marker_path = project_root / "experiments" / "pdf_text_extraction" / "marker_local"
-        venv_marker = project_root / "experiments" / "pdf_text_extraction" / "venv_marker"
+        marker_path = project_root / "evaluation_scripts" / "marker"
+        venv_marker = project_root / "evaluation_scripts" / "venv_marker"
         
         if marker_path.exists() and str(marker_path) not in sys.path:
             sys.path.insert(0, str(marker_path))
@@ -362,14 +362,14 @@ def process_pdf_with_marker(pdf_path: Path) -> str:
         
         from marker.models import create_model_dict
         from marker.converters.pdf import PdfConverter
-        from marker.renderers.markdown import MarkdownRenderer
+        from marker.output import text_from_rendered
         
         model_dict = create_model_dict()
-        renderer = MarkdownRenderer()
-        converter = PdfConverter(artifact_dict=model_dict, renderer=renderer)
+        converter = PdfConverter(artifact_dict=model_dict)
         
-        result = converter(str(pdf_path.absolute()))
-        return result
+        rendered = converter(str(pdf_path.absolute()))
+        text, _, _ = text_from_rendered(rendered)
+        return text
     except ImportError as e:
         raise ImportError(f"Marker is not installed or unavailable: {e}")
     except Exception as e:
