@@ -1,0 +1,211 @@
+{
+	"cells": [
+		{
+			"id": 5,
+			"tex": "Boolean query operators (AND, OR, NOT)",
+			"content": [
+				"Boolean",
+				"query",
+				"operators",
+				"(AND,",
+				"OR,",
+				"NOT)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 9,
+			"tex": "query learning problem",
+			"content": [
+				"query",
+				"learning",
+				"problem"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 12,
+			"tex": "mutation",
+			"content": [
+				"mutation"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 15,
+			"tex": "principles.",
+			"content": [
+				"principles."
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 1,
+			"tex": "Meaning in Wiki-query",
+			"content": [
+				"Meaning",
+				"in",
+				"Wiki-query"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 13,
+			"tex": "of Wiki-queries according to the evolutionary",
+			"content": [
+				"of",
+				"Wiki-queries",
+				"according",
+				"to",
+				"the",
+				"evolutionary"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 8,
+			"tex": "",
+			"content": [],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 10,
+			"tex": "Reproduction, crossover, and",
+			"content": [
+				"Reproduction,",
+				"crossover,",
+				"and"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 14,
+			"tex": "",
+			"content": [],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 0,
+			"tex": "GP component",
+			"content": [
+				"GP",
+				"component"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 3,
+			"tex": "Wikipedia-concepts in a query-tree",
+			"content": [
+				"Wikipedia-concepts",
+				"in",
+				"a",
+				"query-tree"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 7,
+			"tex": "The objective function (F-score) in the",
+			"content": [
+				"The",
+				"objective",
+				"function",
+				"(F-score)",
+				"in",
+				"the"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 4,
+			"tex": "Functions (non-leaf nodes)",
+			"content": [
+				"Functions",
+				"(non-leaf",
+				"nodes)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 11,
+			"tex": "Genetic operators for driving the development",
+			"content": [
+				"Genetic",
+				"operators",
+				"for",
+				"driving",
+				"the",
+				"development"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 2,
+			"tex": "Terminals (leaf nodes)",
+			"content": [
+				"Terminals",
+				"(leaf",
+				"nodes)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 6,
+			"tex": "Fitness function",
+			"content": [
+				"Fitness",
+				"function"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		}
+	]
+}

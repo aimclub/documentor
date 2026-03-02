@@ -1,0 +1,289 @@
+{
+	"cells": [
+		{
+			"id": 6,
+			"tex": "3",
+			"content": [
+				"3"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 2,
+			"tex": "1",
+			"content": [
+				"1"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 5,
+			"tex": "transmitted acclaimed pressed shipped stolen swept marketed contested blamed judged",
+			"content": [
+				"transmitted",
+				"acclaimed",
+				"pressed",
+				"shipped",
+				"stolen",
+				"swept",
+				"marketed",
+				"contested",
+				"blamed",
+				"judged"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 7,
+			"tex": "delivering\tselecting\tissuing\tstealing\timposing\tlowering\tasserting\tsupplying\tregulating",
+			"content": [
+				"delivering",
+				"selecting",
+				"issuing",
+				"stealing",
+				"imposing",
+				"lowering",
+				"asserting",
+				"supplying",
+				"regulating"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 4,
+			"tex": "2",
+			"content": [
+				"2"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 9,
+			"tex": "kn mw dy volts cubes volt kcal mev ohm bhp o unces megabytes",
+			"content": [
+				"kn",
+				"mw",
+				"dy",
+				"volts",
+				"cubes",
+				"volt",
+				"kcal",
+				"mev",
+				"ohm",
+				"bhp",
+				"o",
+				"unces",
+				"megabytes"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "be\thave\tuse\tdo\tinclude\tmake\tbecome\tsupport\ttake\tshow\tplay\tchange\trun",
+			"content": [
+				"be",
+				"have",
+				"use",
+				"do",
+				"include",
+				"make",
+				"become",
+				"support",
+				"take",
+				"show",
+				"play",
+				"change",
+				"run"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 16,
+			"tex": "8",
+			"content": [
+				"8"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 13,
+			"tex": "actor author writer singer actress director composer poet musician artist politician bishop",
+			"content": [
+				"actor",
+				"author",
+				"writer",
+				"singer",
+				"actress",
+				"director",
+				"composer",
+				"poet",
+				"musician",
+				"artist",
+				"politician",
+				"bishop"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 11,
+			"tex": "empire catholic romans byzantine rulers emperors conquest catholics kingdoms catholicism",
+			"content": [
+				"empire",
+				"catholic",
+				"romans",
+				"byzantine",
+				"rulers",
+				"emperors",
+				"conquest",
+				"catholics",
+				"kingdoms",
+				"catholicism"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 8,
+			"tex": "4",
+			"content": [
+				"4"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 17,
+			"tex": "iraq\ttexas\tafghanistan\tsweden\tboston\thungary\tbrazil\tiran\twales\tmichigan\tdenmark\tvirginia",
+			"content": [
+				"iraq",
+				"texas",
+				"afghanistan",
+				"sweden",
+				"boston",
+				"hungary",
+				"brazil",
+				"iran",
+				"wales",
+				"michigan",
+				"denmark",
+				"virginia"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 0,
+			"tex": "Cluster",
+			"content": [
+				"Cluster"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 12,
+			"tex": "6",
+			"content": [
+				"6"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 10,
+			"tex": "5",
+			"content": [
+				"5"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 14,
+			"tex": "7",
+			"content": [
+				"7"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 15,
+			"tex": "zeus\tachilles\tvenus\tleto\theracles\tsaul\tptolemy\thera\taphrodite\tbeowulf\tajax\tathena\tcaligula",
+			"content": [
+				"zeus",
+				"achilles",
+				"venus",
+				"leto",
+				"heracles",
+				"saul",
+				"ptolemy",
+				"hera",
+				"aphrodite",
+				"beowulf",
+				"ajax",
+				"athena",
+				"caligula"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 1,
+			"tex": "Words in same cluster",
+			"content": [
+				"Words",
+				"in",
+				"same",
+				"cluster"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		}
+	]
+}

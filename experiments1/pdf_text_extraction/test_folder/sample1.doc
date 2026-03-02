@@ -1,0 +1,554 @@
+;                DOCUMENTATION AND SAMPLE RUN FILE
+;                            for
+;                       ACUCHEM/ACUPLOT
+;                             a
+;        Computer Program for Modeling Complex Reaction Systems
+;
+;                Walter Braun and John T. Herron
+;                  Chemical Kinetics Division
+;                             and
+;                         David Kahaner
+;                 Scientific Computing Division
+;
+;         National Bureau of Standards, Gaithersburg, Md 20899
+;
+;11/2/1986
+;
+; I.  The Programs.
+;There are two executable programs on this disk, Acuchem and Acuplot.  Acuchem
+;models spacially homogeneous, isothermal, multicomponent chemical reaction
+;systems, prepares an output file which can be read using the program
+;Acuplot.  There are two versions of Acuchem/Acuplot available. One handles 
+;40 species and 80 reactions, the other 99 species and 200 reactions.
+;The version on this disk is the 40 species/80 reactions one.
+;
+;  A.  Acuchem.
+;This program reads an input file containing one or more reaction mechanisms,
+;processes this file, then solves the resulting system of differential
+;equations.   Acuchem then generates an output file, containing species con-
+;centrations vs. reaction time for user chosen reaction times, or print-times.
+;
+;  B.  Acuplot.
+;The Acuchem output file can then be read by executing the program Acuplot,
+;which displays the file data, in either tabular or graphical form.
+;
+; II.  Hardware Requirements.
+;These programs will run on IBM Personal Computer Family Models,  or PC
+;compatible microcomputers which operate on MS-DOS or equivalent operating
+;systems.  At least 250k of memory and a math co-processor, either a 8087 or
+;80287 is required.  The graphics routines within Acuplot require one of the
+;following display adapters:
+;	a)  IBM Color Graphics Adapter (CGA)
+;	b)  IBM Enhanced Graphics Adapter (EGA)
+;	c)  IBM Professional Graphics Adapter (CGA emulation mode only)
+;	d)  Hercules Monochrome Graphics Adapter (HMGC)
+;	e)  Video-7 Enhanced Graphics Adapter (CGA, EGA, or HMGC mode)
+;Hard-copy of a graphical display can be achieved by using any one of many
+;dot matrix printers. At least the following are supported:
+;	a)  IBM Personal Computer Graphics Printer (Model 5152)
+;	b)  IBM Propinter (Model 4201)
+;	c)  Epson MX-80 Printer
+;	d)  Epson MX-100 Printer
+;	e)  Epson MX-III Printer
+;	f)  Epson FX-80 Printer
+;	g)  Epson FX-100 Printer
+;	h)  Epson FX-80+ Printer
+;	j)  Epson FX-100+ Printer
+;	k)  Epson RX-80 Printer
+;	l)  Epson RX-100 Printer
+;	m)  Epson JX-80 Printer
+;
+;
+;  III:  Set-up of the Acuchem input file.
+;
+;The documentation in this section describes how to set up an Acuchem input
+;data file and how to execute the Acuchem/Acuplot programs.  Additional
+;details, which may be helpful to the user, are also included.
+;
+;This documentation file is also an Acuchem input file.
+;Up to this point all lines in this documentation contain leading semicolons.
+;The reason for this is that an Acuchem input file can contain comment or
+;documentation lines, which are not read by the program, if prefaced by a
+;semicolon.  The semicolon need not be left justified, but must be the first
+;non-(blank or horizontal tab) character on the line.
+;
+;  A:  Heading or Identification Line is the first line read by Acuchem.
+;
+Example.doc, an example mechanism file which can be run by Acuchem.
+;
+;Line above, without a leading semicolon, is the first line read by Acuchem.
+;It is reserved as an identification line and must appear even if it is left
+;blank!!  It is copied directly to the Acuchem output file and serves as
+;a heading line on the final hard-copy.
+;
+;Additional comment lines, such as the present lines of text, can be
+;interspersed within the file but must also contain a leading semicolon.
+;Comments can also directly follow input data on the same line if also
+;preceeded by a semicolon.
+;
+;In data lines which follow, in all cases, the data must be present in the
+;correct order, the correct number and the correct data type or else a file
+;read error will occur.
+;
+;No input line can be longer than 79 characters.
+;
+;  B:  Option Line is second line read by Acuchem.
+;
+;
+;There are four consecutive single digit options which are either 0 or 1,
+;(0=no, 1=yes), representing answers to the questions below.
+;
+;     computer        Printer         50 equi-             display         
+;     supports        supports        spaced print-        print-time     
+;     graphics?       graphics?       times to out-        to monitor     
+;                                     put file?            screen?        
+;
+;     no              no              no                   yes           
+;
+;      
+      0               0               0                    1             
+;
+;The above option line, without a semicolon, is the second line read by
+;Acuchem! A blank (space) or horizontal tab can be the only character
+;separating these single digit numbers.  No space, however, is required.
+;The above line could have been written as:
+;0001
+;omitting the leading semicolon.  Option explanations appear in sections below.
+;
+;
+;  C:  Beginning of Reaction Mechanism, the third line read by Acuchem.
+;
+	 1,a+b=c,1
+;The line above, without a semicolon, is the third line read by Acuchem.
+;
+;Leading number is for user's convenience in numbering reactions. It can be a
+;number or characters or both.  Only 4 alphanumeric characters are allowed. 
+;This identification sequence is not actually used by the program.  If
+;it is used it must be followed by a comma; if it is not used, a comma must 
+;still preceed the reaction mechanism.
+;
+;The comma following species, c, is also required!  The number
+;following the comma is the reaction rate constant and can be an integer,
+;a decimal,  or in E format.
+;
+;also note that the use of blanks is allowed within the line, and the line
+;need not be left justified provided that there are only leading blanks or
+;horizontal tabs.  For example reaction 1, can also be written as:
+;              1, a + b = c , 1.0E00
+;without the leading semicolon.
+;
+;Species names can be 12 characters long, not counting embedded spaces.
+;
+;only zero order, first order and second order reactions are allowed!
+;
+;An example of a first order reaction is:
+;              77,sam=aBb,7.0e-14
+;which is interpreted as aBb is formed from sam at a rate 7.0e-14 in
+;units of per time. Species sam is lost at the same rate.  The mechanism
+;equations need not be stoichiometric but a species balance is always
+;maintained, e.g. the loss of 1 molecule of Sam results in the gain of
+;one molecule of aBb.
+;
+;Note that species characters are ordered and cased e.g. aBb is distinct 
+;from AbB  and AB is distinct from BA etc.
+;
+;An example of a zero order rate equation is:
+;              78,=aBb,8.0e-12
+;which is interpreted as aBb is formed from (nothing) at the constant rate
+;of 8.0e-12 in units of concentration/time.
+;
+;An example of a second order rate equation is:
+;              79,CH3+C2H5=CH4+C2H4,7.0E-12
+;This line is interpreted as,  CH3 reacts with C2H5 to yield one CH4 and one
+;C2H4 with a rate constant of 7.0E-12 in units of 1/(concentration*time).
+;
+;Reactions are interpreted as proceeding only in the forward direction,
+;left to right.  In order to represent a reversible reaction, such as
+; a + b = c + d, it must be entered as two separate (forward) rate processes,
+;for example:
+;              80,a+b=c+d,3.4e-14
+;              81,c+d=a+b,6.25678e-15
+;replacing 81,with
+;              82,a+b=c+d,-6.2567e-15
+;will not give the same result as 81 and should be avoided!!
+;
+;Termolecular rates, with rate constants in units of
+;1/(time*concentration*concentration) cannot be explicitely handled by
+;this program (that is, not in one reaction step).
+;Such a rate process as, for example,
+;              83,a+b+c=ab+c,4.5e-37
+;can be treated in one of two possible ways:
+;The first way is quite simple; it is the preferred method, if it can be
+;used.  If one of the species concentrations is quasi-constant it can be
+;incorporated into the rate constant.  Assume that the species c has a
+;concentration of 1.0e17 which is at least two orders of magnitude larger
+;than that of either a or b.  We can then write reaction 83 as:
+;              84,a+b=ab,4.5e-20
+;that is, the rate constant for reaction 83, 4.5e-37 is multiplied by 1.0e17
+;and the product, 4.5e-20 is used as an effective second order rate constant.
+;It is very usual, in termolecular reactions, that one species is in large
+;excess and can legitimately be taken as quasi-constant!
+;
+;The second method (which is the way most termolecular reactions actually 
+;proceed) involves the use of the reversible reaction represented
+;by 85 and 86 below, followed by the second order reaction, 87:
+;              85,a+b=ab*,k(85)
+;              86,ab*=a+b,k(86)
+;              87,ab*+c=ab+c,k(87)
+;where,
+;              k(83)=k(85)*k(87)/(k(86)+k(87)*c).
+;If k(86) is chosen much larger than k(87)*c(0), where c(0) is the initial
+;concentration of species c, then the following expression applies:
+;                k(83)=k(85)*k(87)/k(86).
+;Having chosen the ratio of k(86) to k(87) so that the latter approximation
+;is valid, the ratio of k(85) to k(86) should be chosen so that the con-
+;centration of ab* is always much less than a, b, or c.
+;
+;If two species react to form three, such as:
+;              88,a+b=c+d+e,5.345e-14
+;This should be entered into the file as,
+;              88a,a+b=c+dummy,5.34e-14
+;              88b,dummy=e,1.0e14
+;The first order rate constant for the decay of dummy should be fast
+;enough that its concentration is small compared with the other major species.
+;
+;More complex schemes can be composed of simpler reversible bimolecular
+;and unimolecular reactions involving hypothetical intermediates. Complex
+;reactions always proceed by simpler steps so that such an excercise, while
+;necessary to the use of the program, is usually also instructive.
+;An example of a complex reaction is the equilibrium reaction between NO2
+;and water to yield nitric acid and NO:
+;
+;              992, 3NO2  + H2O = 2 HNO3 + NO , K(992)
+;
+;The following four reversible reactions, added together will result
+;in the overall stoichiometry of reaction 992:
+;
+;              993,   NO2 + NO  = N2O3 ,        K(993)
+;              994,  N2O3 + H2O = HONO + HONO , K(994)
+;              995,  HONO + NO2 = HNO3 + NO ,   K(995)
+;              996,  HONO + NO2 = HNO3 + NO ,   K(996)
+;
+;Here the K's are not rate constants, but equilibrium constants.  The
+;equilibrium constant, K(992) can be calculated from tabulated Free
+;Energies, since all of the reactants are stable molecules.  The Free
+;Energies of some of the intermediates in the reaction sequence 993-
+;996 have been estimated, and thus even for these, the equilibrium constants
+;can be determined.  The following relationship must be adhered to:
+;               K(992)=K(993)*K(994)*K(995)*K(996).
+;Further, each of the reversible reactions 993-996 must be presented 
+;as two separate reactions, as expained above; and as well, rate constants,
+;not equilibrium constants should be used.  That poses no particullar problem
+;once it is understood that the Equilibrium constant is equal to the ratio of
+;the forward rate constant divided by the reverse rate constant.  As an
+;example reaction 993 is written as 993a, and 993b:
+;
+;              993a, NO2 + NO = N2O3 ,     k(993a)
+;              993b, N2O3     = NO2 + NO , k(993b) 
+;
+;and K(993)=k(993a)/k(993b), where the small k's are rate constants in
+;correct units.  If the individual rate constants for steps 994,995 and
+;996 are chosen much larger than those for reaction 993, these steps will
+;always be in equilibrium and reaction 993 will be the rate controlling step.
+;Under these conditions K(992)=k(993a)*k(994a)*k(995a)*k(996a)/(k(993b)*
+;k(994b)*k(995b)*k(996b)).  This relationship must be strictly adhered to
+;even if the ratios of the individual rate constants are arbitrarily chosen
+;(because the equilibrium constants for the reactions 993-996 are either not
+;known or the decision not to use them has been made). 
+;
+;Duplicate reaction mechanisms can be run simultaneously.  For example,
+;              100,a1+b1=c1+d1,k(1,1)
+;              101,a2+b2=c2+d2,k(2,1)
+;              102,a1+c1=e1,k(1,2)
+;              103,a2+c2=e2,k(2,2)
+;essentially duplicates a mechanism and allows a change in one or more rate
+;constants or concentrations.  The effects of the changes in the mechanism
+;parameters can thus be probed in the same run file.  Of course the duplicate
+;species names must be identified differently.  The use of matrix notation,
+;for example A(1), A(2), B(1), B(2) is an alternative notation.
+;
+;Entering the same reaction line twice, for example,
+;              87,h+i=j+k,4.0e-12
+;              97,h+i=j+k,4.0e-12
+;has the effect of doubling the rate constant.  The net effect is:
+;              98,h+i=j+k,8.0e-12
+;
+;Also note that the main use of the comment (semicolon) option is to
+;allow the user to remove certain mechanism lines and later re-activate them
+;by simply placing and removing a semicolon.  This saves typing time and
+;provides the user with a record of previous iterations.
+;
+;The user can use any choice of concentration units, either molecular or
+;molar.  The Acuchem program actually scales the concentrations and rate
+;constants and runs identically irrespective of the units.  Outputs are then
+;re-scalled to the user's units. Rate constants must be in units consistent
+;with the concentration and time units.
+;
+; 
+;the remainder of this mechanism file continues 
+;
+2, c=a+b,.001; a comment can be added here if the user desires!!
+3,a+b=d,1.
+4,d=a+b,1.0E-03
+;
+;  D:  End of Reaction Mechanism Statement:
+;
+end; This line is required!
+;It is essential that the end statement be added to close the mechanism
+;sequence.  Upper case END is also allowed.  Blanks between the E and the N
+;and the N and the D and the use of leading blanks is allowed.
+;
+;  E:  Species Identification and Concentration:
+;
+;the following line(s) specify the species and their concentrations.  If a
+;species and its concentration is not listed the program will assume that
+;it is 0.0000.
+;
+a,1.0
+b,2.10789
+;
+;This information must be entered in in the order:  species name, a comma,
+;the concentration, then a blank or a semicolon.
+;Only one species and its concentration per line!!
+;
+;  F:  End of Species, Concentration Sequence:
+;   
+end; This line is required!
+;
+;An end statement specifies that all non-zero concentrations have been
+;logged in.  This also must be present or else a file read error will
+;be generated!!
+;
+;  G:  Integration Tolerance:
+;
+0.001
+;
+;The above line specifies the integration tolerance.  It must be positive.
+;Small values cause the program to run longer, larger values can result in
+;inaccurate results.  The usual range for this parameter is from about 0.0001
+;to 0.1 but values outside of this range are possible.
+;
+;
+;  H:  Print-times, for which Reaction time & Concentrations are
+;      Written to the Acuchem Output File.
+;
+1.E-4,1.E-3,1.E-2,1.E-1,1.,
+2.,3.0,4.0,10.
+
+The lines above specify the reaction times for which each species
+concentration is written to the Acuchem output file.
+
+If a line in this section ends with a comma, Acuchem expects additional
+Print-time lines.  If a line in this section ends with a blank or semicolon,
+Acuchem does not expect any additional information and assumes that the 
+input file is complete.  For that reason, all of the lines of text following
+the entry 10., above are written without leading semicolons!
+
+Note that there are 9 print-times specified above.  These will determine
+the print-time entries that will be written to the Acuchem out-put file
+unless the third option in the option line is set to 1.  In that case there
+will be 50 equispaced print-times written to the Acuchem output file up
+to the largest time value in the print-time sequence above,
+which is 10. in the present case. There is no need to log in print-times in
+the order of increasing time since the program sorts (and then orders) them.
+
+   IV.  How to Run Acuchem/Acuplot.
+
+This documentation represents an unusual input file, but it will run and the
+user can try this file as a trial run.  Execute Acuchem by typing Acuchem.
+Acuchem then requests the name of the input file and this file, called
+EXAMPLE.DOC, should be entered.  Acuchem further requests the name of an
+output file and some suitably chosen name such as EXAMPLE.OUT should be
+entered.  Alternatively, all or part of this file information can be included
+directly on the command line, and the file information will not be requested
+by the program, unless a file duplication condition is detected.
+
+Standard MS-DOS file specifiers can be used.  For example the following
+command lines are illustrative:
+
+               Acuchem  A:\kin\example.doc  B:\results\example.out
+also,
+               Acuplot  B:\results\example.out
+
+That is, the input and output file names, here included on the command line,
+can be entered in the form,  disk:\directory\filename.ext.  In general,
+results should be kept separate from the Acuchem/acuplot programs since space
+limitations, if a floppy disk is used, will eventually require such action.
+ 
+Acuchem will take several seconds to run this file.  Note, when running much
+more complex mechanism files, the user can terminate execution by typing in
+a control c at any time.  If option 4 on the option line is set to 1, the
+print-times are writted to the monitor which shows the number of
+time-concentration entries that have been written to the Acuchem output
+file.  On premature termination of Acuchem, these data entries exist on the
+output file and can be scanned.  That is, an acuchem output file will be
+produced which has fewer print-times than the number specified in the
+Acuchem input file.
+
+After running Acuchem the user should type Acuplot, with or without the
+Acuchem output file specified. If it is not specified, Acuplot will request
+the output file name which must then be entered.  Acuplot will display the
+results to either the monitor screen or to the printer with the further
+option of graphically displaying the results (if option 1 on line 2 is set
+to 1).  Also, if option 2 on file line 2 is set to 1 the program will assume
+that the user has a printer which is supported by the graphics package and 
+the option of generating a hard-copy on the printer is requested by the
+program.
+
+Acuplot reads the Acuchem output file and if requested, the user can scan the
+the reaction time, species concentrations in the Acuchem output file in a
+convenient way, either to the monitor screen or to a printer.  The display to
+the monitor occurs one page at a time.  Using the z or Z key, scans the file
+forward; using the a or A key scans the file backwards (towards the
+beginning).  Once the end of the data file is reached, the user is notified,
+and another chance of scanning the file towards the beginning is possible 
+by typing in the a or A key. At this point typing in z or Z will exit this
+file display mode.
+
+The graphics routines, within Acuplot, can display the Acuchem results on the
+monitor screen-up to 5 species at a time.  If a graphics printer is attached,
+a hard-copy of the screen display can be obtained.  A heading line can also be
+included.  Concentrations are automatically scaled.  The species are
+distinguished on the graph using different plotting symbols and further
+identified in the figure legend by name and symbol with the appropriate
+concentration scale factors. To convert species concentrations to their
+real (unscaled) values the value on the graph must be multiplied by the
+displayed scale factor.  This can be done virtually by inspection to an
+accuracy of better than 2% (at the ordinate midscale).  Scale factors are
+integer and result in sensible displays.  The abscissa, time, is not scaled
+and a maximum time value should be chosen which is divisible by 2 or 5 to
+allow for a sensible time axis display.
+
+  V.  Run time Errors.
+
+Certain safety features are included in Acuchem:   1)  If a specified input
+file is not found a message to that effect is written to the monitor and
+the program is terminated.  2)  The same is true if an output file is 
+designated as an Acuchem input file.  3)  If an output file is specified 
+which already exists Acuchem will flag this condition and allow the option
+of overwriting the file or substituting another file name.  4)  Certain
+input file errors are detected as such and are flagged with a relatively
+friendly message followed by program termination.  However, out of sequence
+numeric input data will generally result in a compiler generated error message
+as will insufficient disk space for the output file.  These will also result
+in run termination.  5)  The differential equation solver flags certain errors
+which are displayed to the monitor screen such as an unreasonable integration
+tolerance or too many internal integration steps.
+
+Most errors are the result of typograhical errors in the input file, missing
+end statements, data entered out of proper sequence or insufficient disk 
+space for the output file. 
+
+  VI.  Additional Comments.
+
+We suggest that the user make backup copies of the Acuchem/Acuplot programs.
+At that time the user can use the standard MS-DOS Rename command and change
+the names of these programs to AC.exe and AP.exe to simplify typing.
+
+The present executable programs, Acuchem and Acuplot were compiled using
+the F77L Fortran77 Compiler, Ver 2.0, written by Lahey Computer Systems,
+Inc.,  31244 Palos Verdes Drive West, Suite #243,
+Rancho Palos Verdes, Ca 90274.
+
+
+
+  VII.  Description of Acuchem Output File.
+
+The following details will only be of interest to users who are interested
+in programming and wish to interact with the current programs through
+their own routines.
+
+The following describes the format in which the Acuchem output file is
+written.  The user can write individualized programs to read this
+output file, to use other graphics, to insert laboratory data
+into the Acuchem output file to compare calculated and experimental
+results.
+A possible algorithm to do this is the following:
+1)  read the Acuchem output file,
+2)  add additional species entries to accomodate actual laboratory data,
+3)  add laboratory data entries,
+4)  finally, generate a merged file.
+This new file can then by read by Acuplot and the calculated and experimental
+results can be compared directly through the graphics mode.  
+
+The Reaction Mechanism matrix is used to write the output reaction mechanism
+in shorthand form.  It is not necessary for the user to know this is done,
+but for the sake of completeness the following describes how the Reaction
+Matrix is defined.
+ 
+The Reaction Matrix, defined as JS(A,B), is a shorthand way of describing
+the reaction mechanism, where A is the species position index within the the
+mechanism line and B is the reaction number.
+
+Each mechanism line is of the form,  one equal sign with 0, 1 or 2 species
+entries on either side of it.  The JS( ) matrix notation always assumes that
+there are exactly 4 species entries per reaction mechanism line, two to the
+left of the equal sign, two to the right, whether they are present or not.
+If a species entry is missing, the JS( ) index for that entry is set to zero.
+Acuchem numbers species consecutively as it scans the reaction mechanism
+sequence and then generates the JS(  ) shorthand for each mechanism line.
+An example best shows how this is done.  Consider the following three line
+mechanism,
+
+               001, A+B=C,k(001)
+               002,   C=D+E,k(002)
+               003,    =F,k(003)
+               etc.
+
+The JS( ) matrix is:
+
+                     JS(i=1,k) + JS(i=2,k)  =  JS(i=3,k) + JS(i=4,k)
+                   
+JS((i=1,4),k=1) :        1     +     2      =      0     +     3
+JS((i=1,4),k=2) :        0     +     3      =      4     +     5 
+JS((i=1,4),k=3) :        0     +     0      =      0     +     6
+etc.  
+
+Note the indexing and that the value of JS( ) = 0 when an entry does
+not appear on the reaction mechanism line.  Once a species is identified
+by a number e.g. C is number 3, every time species C appears in the reaction
+mechanism it is specified as number 3, and that number must appear in the
+JS(  ) matrix for that line with i=1 or 2 if it is on the left side of
+equal sign or i=3 or 4 if it appears to the right of the equal sign.  There 
+is no significance to the particullar ordering of i=1 and i=2 nor to the
+ordering, of i=3 and i=4.  That is, JS(i=1,k)=0 and JS(i=2,k)=3 is entirely
+equivalent to JS(i=2,k)=0 and JS(i=1,k)=3.
+
+Format of Acuchem output file follows:
+
+Line1: format(79A1), contains the entry O*TPUT, identifying this as
+       an output file.
+Line2: format(79A1), line copied directly from Acuchem input file, contains
+       identification line information.
+Line3: format(5I1), contains 5 options, without leading or imbedded blanks.
+line4: format(E10.4), contains the Integration Tolerance parameter in the
+       specified format.
+line5: format(2(1x,I4)), contains total number of species, N; and total number
+       of mechanism lines, L, in the format specified.
+line6
+thru
+line(6+L/9):
+       format(8(1x,4I2), contains 4*L, JS( ) matrix entries, up to 32/line.
+
+line(6+L/9+1)
+thru
+line(6+L/9+1+N/7):
+       format(6(1x,A12)), contains N species names up to 6/line.
+
+line(6+L/9+N/7+2)
+thru
+line(6+L/9+N/7+2+L/7):
+       format(6(1x,E12.6)), contains L rate constants, up to 6/line.
+
+line(6+L/9+L/7+N/7+3)
+to
+end of file:
+       format(1x,I3,2x,E12.6), contains print #, 1 for first, 2 for second,
+       etc., and print-time, on one line,
+           followed by,
+       format(6(1x,E12.6)), a total of N concentrations, as many as 6/line.
+       then, this sequence is repeated for each successive print-time.
+       e.g.
+       next print #, and print-time, if it is there!
+           again followed by a total of N concentrations, etc. 
+                                                

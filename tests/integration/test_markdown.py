@@ -1,14 +1,14 @@
 """
-Интеграционные тесты для Markdown парсера.
+Integration tests for Markdown parser.
 
-Тестирует парсинг реальных Markdown документов через Pipeline.
-Проверяет end-to-end сценарии использования.
+Tests parsing of real Markdown documents via Pipeline.
+Covers end-to-end usage scenarios.
 """
 
 import sys
 from pathlib import Path
 
-# Добавляем корневую директорию проекта в PYTHONPATH для прямого запуска
+# Add project root to PYTHONPATH for direct run
 _project_root = Path(__file__).parent.parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
@@ -21,13 +21,13 @@ from documentor.domain import DocumentFormat, ElementType
 
 
 class TestMarkdownIntegrationBasic:
-    """Базовые интеграционные тесты для Markdown через Pipeline."""
+    """Basic integration tests for Markdown via Pipeline."""
 
     def test_pipeline_parse_simple_markdown(self):
-        """Тест парсинга простого Markdown через Pipeline."""
+        """Test parsing simple Markdown via Pipeline."""
         pipeline_instance = Pipeline()
         doc = Document(
-            page_content="# Заголовок\n\nТекст параграфа.",
+            page_content="# Header\n\nParagraph text.",
             metadata={"source": "test.md"}
         )
         
@@ -40,9 +40,9 @@ class TestMarkdownIntegrationBasic:
         assert result.elements[1].type == ElementType.TEXT
 
     def test_pipeline_function_simple_markdown(self):
-        """Тест парсинга через функцию pipeline()."""
+        """Test parsing via pipeline() function."""
         doc = Document(
-            page_content="## Подзаголовок\n\nПростой текст.",
+            page_content="## Subheader\n\nPlain text.",
             metadata={"source": "test.md"}
         )
         
@@ -52,12 +52,12 @@ class TestMarkdownIntegrationBasic:
         assert len(result.elements) >= 2
 
     def test_pipeline_parse_many_markdown(self):
-        """Тест пакетной обработки нескольких Markdown документов."""
+        """Test batch processing of multiple Markdown documents."""
         pipeline_instance = Pipeline()
         documents = [
-            Document(page_content="# Документ 1", metadata={"source": "doc1.md"}),
-            Document(page_content="# Документ 2", metadata={"source": "doc2.md"}),
-            Document(page_content="# Документ 3", metadata={"source": "doc3.md"}),
+            Document(page_content="# Document 1", metadata={"source": "doc1.md"}),
+            Document(page_content="# Document 2", metadata={"source": "doc2.md"}),
+            Document(page_content="# Document 3", metadata={"source": "doc3.md"}),
         ]
         
         results = pipeline_instance.parse_many(documents)
@@ -70,16 +70,16 @@ class TestMarkdownIntegrationBasic:
 
 
 class TestMarkdownIntegrationWithFile:
-    """Интеграционные тесты с загрузкой файлов."""
+    """Integration tests with file loading."""
 
     def test_load_and_parse_markdown_file(self):
-        """Тест загрузки и парсинга Markdown файла."""
-        test_file = _project_root / "tests" / "files_for_tests" / "md.md"
+        """Test loading and parsing Markdown file."""
+        test_file = _project_root / "tests" / "data" / "md.md"
         
         if not test_file.exists():
-            pytest.skip(f"Тестовый файл не найден: {test_file}")
+            pytest.skip(f"Test file not found: {test_file}")
         
-        # Пользователь сам создает Document из файла
+        # User creates Document from file
         content = test_file.read_text(encoding="utf-8")
         doc = Document(
             page_content=content,
@@ -92,13 +92,13 @@ class TestMarkdownIntegrationWithFile:
         assert len(result.elements) > 0
 
     def test_load_and_parse_full_markdown_file(self):
-        """Тест парсинга полного markdown файла со всеми элементами."""
-        test_file = _project_root / "tests" / "files_for_tests" / "full_markdown.md"
+        """Test parsing full markdown file with all element types."""
+        test_file = _project_root / "tests" / "data" / "full_markdown.md"
         
         if not test_file.exists():
-            pytest.skip(f"Тестовый файл не найден: {test_file}")
+            pytest.skip(f"Test file not found: {test_file}")
         
-        # Пользователь сам создает Document из файла
+        # User creates Document from file
         content = test_file.read_text(encoding="utf-8")
         doc = Document(
             page_content=content,
@@ -106,35 +106,35 @@ class TestMarkdownIntegrationWithFile:
         )
         result = pipeline(doc)
         
-        # Базовые проверки
+        # Basic checks
         assert result.format == DocumentFormat.MARKDOWN
         assert result.source == str(test_file)
         assert len(result.elements) > 0
         
-        # Проверяем наличие различных типов элементов
+        # Check presence of various element types
         element_types = {elem.type for elem in result.elements}
         
-        # Заголовки всех уровней должны быть
+        # All header levels should be present
         assert ElementType.HEADER_1 in element_types
         assert ElementType.HEADER_2 in element_types
         assert ElementType.HEADER_3 in element_types
         
-        # Другие элементы
+        # Other elements
         assert ElementType.TEXT in element_types
         assert ElementType.LIST_ITEM in element_types
         assert ElementType.TABLE in element_types
         assert ElementType.CODE_BLOCK in element_types
 
     def test_parse_many_from_files(self):
-        """Тест пакетной обработки файлов."""
-        test_dir = _project_root / "tests" / "files_for_tests"
+        """Test batch processing of files."""
+        test_dir = _project_root / "tests" / "data"
         md_file = test_dir / "md.md"
         full_md_file = test_dir / "full_markdown.md"
         
         if not md_file.exists() or not full_md_file.exists():
-            pytest.skip("Тестовые файлы не найдены")
+            pytest.skip("Test files not found")
         
-        # Пользователь сам создает Document из файлов
+        # User creates Documents from files
         documents = [
             Document(
                 page_content=md_file.read_text(encoding="utf-8"),
@@ -154,41 +154,41 @@ class TestMarkdownIntegrationWithFile:
 
 
 class TestMarkdownIntegrationMetrics:
-    """Тесты метрик производительности."""
+    """Performance metrics tests."""
 
     def test_pipeline_metrics_in_metadata(self):
-        """Тест наличия метрик в метаданных результата."""
+        """Test that result metadata contains metrics."""
         doc = Document(
-            page_content="# Заголовок\n\nТекст.",
+            page_content="# Header\n\nText.",
             metadata={"source": "test.md"}
         )
         
         result = pipeline(doc)
         
-        # Проверяем наличие метрик
+        # Check metrics presence
         assert result.metadata is not None
         assert "pipeline_metrics" in result.metadata
         
         metrics = result.metadata["pipeline_metrics"]
         
-        # Проверяем структуру базовых метрик
+        # Check basic metrics structure
         assert "parsing_time_seconds" in metrics
         assert "num_elements" in metrics
         assert "parser_class" in metrics
         
-        # Проверяем новые метрики
+        # Check new metrics
         assert "elements_by_type" in metrics
         assert "elements_per_second" in metrics
         assert "document_size_bytes" in metrics
         assert "document_lines" in metrics
         
-        # Проверяем значения базовых метрик
+        # Check basic metric values
         assert isinstance(metrics["parsing_time_seconds"], (int, float))
         assert metrics["parsing_time_seconds"] >= 0
         assert metrics["num_elements"] == len(result.elements)
         assert metrics["parser_class"] == "MarkdownParser"
         
-        # Проверяем значения новых метрик
+        # Check new metric values
         assert isinstance(metrics["elements_by_type"], dict)
         assert isinstance(metrics["elements_per_second"], (int, float))
         assert metrics["elements_per_second"] >= 0
@@ -198,8 +198,8 @@ class TestMarkdownIntegrationMetrics:
         assert metrics["document_lines"] >= 0
 
     def test_metrics_accuracy(self):
-        """Тест точности метрик."""
-        content = "# H1\n## H2\n### H3\n\nТекст."
+        """Test metrics accuracy."""
+        content = "# H1\n## H2\n### H3\n\nText."
         doc = Document(
             page_content=content,
             metadata={"source": "test.md"}
@@ -208,157 +208,147 @@ class TestMarkdownIntegrationMetrics:
         result = pipeline(doc)
         metrics = result.metadata["pipeline_metrics"]
         
-        # Количество элементов должно совпадать
+        # Element count should match
         assert metrics["num_elements"] == len(result.elements)
-        assert metrics["num_elements"] >= 4  # минимум 3 заголовка + текст
+        assert metrics["num_elements"] >= 4  # at least 3 headers + text
         
-        # Время парсинга должно быть разумным (меньше 5 секунд для простого документа)
+        # Parsing time should be reasonable (under 5 seconds for simple doc)
         assert metrics["parsing_time_seconds"] < 5.0
         
-        # Проверяем elements_by_type
+        # Check elements_by_type
         elements_by_type = metrics["elements_by_type"]
         assert isinstance(elements_by_type, dict)
-        # Должны быть заголовки
+        # Headers should be present
         assert "header_1" in elements_by_type or sum(
             v for k, v in elements_by_type.items() if k.startswith("header_")
         ) >= 3
         
-        # Проверяем document_size_bytes и document_lines
+        # Check document_size_bytes and document_lines
         expected_bytes = len(content.encode("utf-8"))
         expected_lines = len(content.splitlines())
         assert metrics["document_size_bytes"] == expected_bytes
         assert metrics["document_lines"] == expected_lines
         
-        # Проверяем elements_per_second
-        # Учитываем, что в pipeline.py используется round(..., 2), поэтому допуск должен быть больше
+        # Check elements_per_second (pipeline.py uses round(..., 2), so allow tolerance)
         if metrics["parsing_time_seconds"] > 0:
             expected_eps = metrics["num_elements"] / metrics["parsing_time_seconds"]
-            # Учитываем округление до 2 знаков после запятой в pipeline.py
-            # Максимальная ошибка округления: 0.005 * 2 = 0.01, но лучше дать запас
-            assert abs(metrics["elements_per_second"] - expected_eps) < 0.5  # допуск на округление
+            # Account for rounding to 2 decimal places in pipeline.py
+            assert abs(metrics["elements_per_second"] - expected_eps) < 0.5
 
 
 class TestMarkdownIntegrationHierarchy:
-    """Тесты иерархии элементов."""
+    """Element hierarchy tests."""
 
     def test_hierarchy_structure(self):
-        """Тест корректности построения иерархии."""
+        """Test hierarchy is built correctly."""
         doc = Document(
-            page_content="""# Главный заголовок
+            page_content="""# Main header
 
-Текст под главным заголовком.
+Text under main header.
 
-## Подзаголовок 1
+## Subheader 1
 
-Текст под подзаголовком 1.
+Text under subheader 1.
 
-### Подподзаголовок
+### Sub-subheader
 
-Текст под подподзаголовком.
+Text under sub-subheader.
 
-## Подзаголовок 2
+## Subheader 2
 
-Текст под подзаголовком 2.
+Text under subheader 2.
 """,
             metadata={"source": "test.md"}
         )
         
         result = pipeline(doc)
         
-        # Находим заголовки
+        # Find headers
         headers = [e for e in result.elements if e.type in [
             ElementType.HEADER_1, ElementType.HEADER_2, ElementType.HEADER_3
         ]]
         
         assert len(headers) >= 4
         
-        # Проверяем, что элементы текста имеют правильные parent_id
+        # Check that text elements have correct parent_id
         text_elements = [e for e in result.elements if e.type == ElementType.TEXT]
         for text_elem in text_elements:
             if text_elem.parent_id:
-                # parent_id должен ссылаться на существующий элемент
+                # parent_id must reference an existing element
                 parent_ids = {e.id for e in result.elements}
                 assert text_elem.parent_id in parent_ids
 
     def test_hierarchy_with_lists(self):
-        """Тест иерархии со списками."""
+        """Test hierarchy with lists."""
         doc = Document(
-            page_content="""# Заголовок
+            page_content="""# Header
 
-- Элемент 1
-- Элемент 2
-  - Вложенный элемент
-- Элемент 3
+- Item 1
+- Item 2
+  - Nested item
+- Item 3
 """,
             metadata={"source": "test.md"}
         )
         
         result = pipeline(doc)
         
-        # Должен быть заголовок и элементы списка
+        # Should have header and list items
         assert any(e.type == ElementType.HEADER_1 for e in result.elements)
         assert any(e.type == ElementType.LIST_ITEM for e in result.elements)
 
 
 class TestMarkdownIntegrationTables:
-    """Тесты парсинга таблиц."""
+    """Table parsing tests."""
 
     def test_table_parsing(self):
-        """Тест парсинга таблицы."""
+        """Test table parsing."""
         doc = Document(
-            page_content="""# Таблица
+            page_content="""# Table
 
-| Колонка 1 | Колонка 2 | Колонка 3 |
-|-----------|-----------|-----------|
-| Данные 1  | Данные 2  | Данные 3  |
-| Значение A| Значение B| Значение C|
+| Column 1 | Column 2 | Column 3 |
+|----------|----------|----------|
+| Data 1   | Data 2   | Data 3   |
+| Value A  | Value B  | Value C  |
 """,
             metadata={"source": "test.md"}
         )
         
         result = pipeline(doc)
         
-        # Находим таблицу
+        # Find table
         tables = [e for e in result.elements if e.type == ElementType.TABLE]
         assert len(tables) > 0
         
         table = tables[0]
-        
-        # Проверяем наличие DataFrame в метаданных
         assert table.metadata is not None
-        assert "dataframe" in table.metadata or "rows" in table.metadata
-        
-        # Если есть DataFrame, проверяем его структуру
-        if "dataframe" in table.metadata and table.metadata["dataframe"] is not None:
-            df = table.metadata["dataframe"]
-            assert df.shape[0] >= 2  # минимум 2 строки данных
-            assert df.shape[1] == 3  # 3 колонки
+        # Tables are stored as HTML in content
+        assert isinstance(table.content, str)
+        assert "<table>" in table.content
+        assert "</table>" in table.content
 
 
 class TestMarkdownIntegrationErrorHandling:
-    """Тесты обработки ошибок."""
+    """Error handling tests."""
 
     def test_invalid_document_format(self):
-        """Тест обработки неподдерживаемого формата."""
+        """Test handling unsupported format."""
         pipeline_instance = Pipeline()
-        # Создаем документ с неправильным форматом в метаданных
+        # Create document with wrong format in metadata
         doc = Document(
             page_content="Some content",
             metadata={"source": "file.xyz", "format": "unknown"}
         )
         
-        # Pipeline должен определить формат по расширению или вернуть ошибку
-        # В зависимости от реализации может быть UNKNOWN или ошибка
+        # Pipeline should detect format by extension or return error
         try:
             result = pipeline_instance.parse(doc)
-            # Если парсинг прошел, формат должен быть определен
             assert result.format in [DocumentFormat.MARKDOWN, DocumentFormat.UNKNOWN]
         except Exception:
-            # Если возникла ошибка - это тоже нормально для неподдерживаемого формата
             pass
 
     def test_empty_document(self):
-        """Тест обработки пустого документа."""
+        """Test handling empty document."""
         doc = Document(page_content="", metadata={"source": "empty.md"})
         result = pipeline(doc)
         
@@ -366,25 +356,24 @@ class TestMarkdownIntegrationErrorHandling:
         assert len(result.elements) == 0
 
     def test_missing_source(self):
-        """Тест обработки документа без source."""
+        """Test handling document without source."""
         from documentor.exceptions import UnsupportedFormatError
         
-        doc = Document(page_content="# Заголовок", metadata={})
+        doc = Document(page_content="# Header", metadata={})
         
-        # Без source формат определяется как UNKNOWN, парсера для него нет
-        # Это корректное поведение - должна быть ошибка
+        # Without source format is UNKNOWN, no parser for it
         with pytest.raises(UnsupportedFormatError, match="No parser available for format: unknown"):
             pipeline(doc)
 
 
 class TestMarkdownIntegrationPerformance:
-    """Тесты производительности."""
+    """Performance tests."""
 
     def test_large_document_performance(self):
-        """Тест производительности на большом документе."""
-        # Создаем большой документ
-        content = "# Заголовок\n\n" + "\n\n".join([
-            f"## Раздел {i}\n\nТекст раздела {i}." 
+        """Test performance on large document."""
+        # Create large document
+        content = "# Header\n\n" + "\n\n".join([
+            f"## Section {i}\n\nSection {i} text." 
             for i in range(100)
         ])
         
@@ -393,8 +382,8 @@ class TestMarkdownIntegrationPerformance:
         result = pipeline(doc)
         metrics = result.metadata["pipeline_metrics"]
         
-        # Проверяем, что парсинг прошел успешно
+        # Parsing should succeed
         assert len(result.elements) > 100
         
-        # Проверяем, что время парсинга разумное (меньше 5 секунд для 100 разделов)
+        # Parsing time should be reasonable (under 5 seconds for 100 sections)
         assert metrics["parsing_time_seconds"] < 5.0

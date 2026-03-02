@@ -1,6 +1,6 @@
 """
-Тесты для парсинга стилей DOCX.
+Tests for DOCX style parsing.
 
-Тестируемый класс:
+Class under test:
 - DocxStyleParser
 """

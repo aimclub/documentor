@@ -1,0 +1,1793 @@
+
+================================================================================
+ID: 00000001
+Type: TITLE
+Parent: None
+================================================================================
+Rethinking Verification for LLM Code Generation:
+From Generation to Testing
+
+================================================================================
+ID: 00000002
+Type: TEXT
+Parent: None
+================================================================================
+Zihan Ma1,2,3,∗, Taolin Zhang1,∗, Maosong Cao1, Wenwei Zhang1,
+Minnan Luo2,3,†, Songyang Zhang1,†, ‡, ,Kai Chen1,†
+1
+
+================================================================================
+ID: 00000003
+Type: TEXT
+Parent: None
+================================================================================
+, Songyang Zhang
+1Shanghai AI Laboratory
+
+================================================================================
+ID: 00000004
+Type: TEXT
+Parent: None
+================================================================================
+Shanghai AI Laboratory
+2School of Computer Science and Technology, Xi’an Jiaotong University, China
+3MOE KLINNS Lab, Xi’an Jiaotong University, China
+{mazihan880}@stu.xjtu.edu.cn
+{zhangtaolin,zhangsongyang}@pjlab.org.cn
+{minnluo}@xjtu.edu.cn
+
+================================================================================
+ID: 00000005
+Type: TEXT
+Parent: None
+================================================================================
+arXiv:2507.06920v1  [cs.CL]  9 Jul 2025
+
+================================================================================
+ID: 00000006
+Type: HEADER_1
+Parent: None
+================================================================================
+Abstract
+
+================================================================================
+ID: 00000007
+Type: TEXT
+Parent: 00000006
+================================================================================
+Large language models (LLMs) have recently achieved notable success in
+code-generation benchmarks such as HumanEval and LiveCodeBench. However, a
+detailed examination reveals that these evaluation suites often comprise only a lim-
+ited number of homogeneous test cases, resulting in subtle faults going undetected.
+This not only artificially inflates measured performance but also compromises ac-
+curate reward estimation in reinforcement learning frameworks utilizing verifiable
+rewards (RLVR). To address these critical shortcomings, we systematically investi-
+gate the test-case generation (TCG) task by proposing multi-dimensional metrics
+designed to rigorously quantify test-suite thoroughness. Furthermore, we introduce
+a human-LLM collaborative method (SAGA), leveraging human programming
+expertise with LLM reasoning capability, aimed at significantly enhancing both
+the coverage and the quality of generated test cases. In addition, we develop a
+TCGBench to facilitate the study of the TCG task. Experiments show that SAGA
+achieves a detection rate of 90.62% and a verifier accuracy of 32.58% on TCG-
+Bench. The Verifier Accuracy (Verifier Acc) of the code generation evaluation
+benchmark synthesized by SAGA is 10.78% higher than that of LiveCodeBench-v6.
+These results demonstrate the effectiveness of our proposed method. We hope
+this work contributes to building a scalable foundation for reliable LLM code
+evaluation, further advancing RLVR in code generation, and paving the way for
+automated adversarial test synthesis and adaptive benchmark integration. 1
+
+================================================================================
+ID: 00000008
+Type: HEADER_1
+Parent: None
+================================================================================
+1
+Introduction
+
+================================================================================
+ID: 00000009
+Type: TEXT
+Parent: 00000008
+================================================================================
+Large Language Models (LLMs) have triggered a paradigm shift in automatic code generation,
+demonstrating capabilities on par with or even exceeding human programmers on numerous bench-
+mark tasks. As LLMs become increasingly integrated into software development workflows, ensuring
+the quality and reliability of the code they produce is paramount. This necessitates reliable evaluation
+methodologies, where code verifiers—typically powered by test suites—play a critical role. This
+raises a crucial question: Are the test cases of current benchmarks for evaluating models’ code
+capabilities robust enough?
+
+================================================================================
+ID: 00000010
+Type: TEXT
+Parent: 00000008
+================================================================================
+Initial analyses of benchmarks like HumanEval [6] (avg. 7.7 tests/problem), MBPP [3] (3 tests/prob-
+lem), and EvalPlus [27, 28] (which saw a 15% pass rate drop with 80× more tests) indicate the
+fragility of current evaluation setups due to sparse test coverage. While methods like TestEval [41]
+tailor tests to specific solutions, they are inefficient for large-scale evaluation and impractical for
+dynamic integration into RL training loops, thereby hindering the development of models robust
+against diverse failures. LiveCodeBench [19] employs LLMs to generate numerous tests from golden
+solutions and synthetic inputs, aiming to enhance robustness.
+
+================================================================================
+ID: 00000011
+Type: TEXT
+Parent: 00000008
+================================================================================
+However, a fundamental concern is that such
+methods may inadvertently create tests biased
+towards typical, often homogenized, LLM er-
+ror patterns, which starkly contrast with diverse
+human reasoning errors. Conversely, compet-
+itive programming platforms (Online Judges)
+possess extensive, rigorously curated test suites
+for assessing code robustness, but these are often
+private and inaccessible. This underscores the
+urgent need for accessible and robust code ver-
+ifiers to enable reliable performance evaluation
+and reward estimation.
+
+================================================================================
+ID: 00000013
+Type: CAPTION
+Parent: 00000008
+================================================================================
+Figure 1: (a) Verifiers synthesized primarily from
+LLM-generated data exhibit a high failure rate
+when testing human-written bugs. (b) PCA analy-
+sis reveals that LLM-induced errors are highly clus-
+tered, indicating systematic weaknesses, whereas
+human errors are diverse and dispersed, posing
+greater challenges to existing verifiers.
+
+================================================================================
+ID: 00000014
+Type: TEXT
+Parent: 00000008
+================================================================================
+In this work, we first identify limitations in
+current benchmarks through preliminary exper-
+iments. Our investigation reveals critical weak-
+nesses in existing verifier suites. Specifically,
+
+================================================================================
+ID: 00000015
+Type: TEXT
+Parent: 00000008
+================================================================================
+when we took LLM-generated solutions that had passed LiveCodeBench’s private tests and re-
+evaluated them on LeetCode’s online judge, we found that for a significant portion of these solu-
+tions—20% for medium and 40% for hard problems, respectively—LeetCode identified errors that
+LiveCodeBench’s verifier had missed. This demonstrates that LiveCodeBench’s verifiers can be
+flawed, failing to achieve comprehensive error detection and thereby overestimating the true quality
+of the LLM-generated solutions. Furthermore, these LLM-centric verifiers themselves exhibit a high
+failure rate (i.e., they fail to detect existing bugs) when evaluating human-written faulty code, a rate
+much higher than any apparent failure rate on LLM-generated errors (Figure 1(a)). PCA analysis
+of error patterns (Figure 1(b)) reveals that LLM errors cluster tightly, indicating shared systematic
+biases, while human errors are widely distributed across a complex error landscape.
+
+================================================================================
+ID: 00000016
+Type: TEXT
+Parent: 00000008
+================================================================================
+These findings underscore the fundamental inadequacy of constructing verifiers solely from LLM-
+generated data, as such approaches misassess LLMs’ coding capabilities and provide flawed training
+feedback, manifesting two critical challenges: (1) Test Case Homogenization and LLM-Centric
+Bias: LLM-based TCG methods produce test suites that mirror the generating models’ error patterns
+and cognitive biases, creating a “homogenization trap” where tests focus on LLM-like failures while
+neglecting diverse human programming errors (e.g., logical flaws, integer overflows). (2) Verifier
+Ineffectiveness and Persistent Blind Spots: Verifiers built on such test suites exhibit blind spots
+for human-like errors, failing to rigorously evaluate code due to challenges in generating tests for
+complex boundary conditions and interaction scenarios, compounded by LLM-centric test design.
+These challenges impede reinforcement learning frameworks (e.g., DeepSeek-R1 [8], O1-IOI [10])
+from leveraging verifiable rewards, leading to optimization misdirection via reward hacking2.
+
+================================================================================
+ID: 00000017
+Type: TEXT
+Parent: 00000008
+================================================================================
+To address these challenges, we develop a comprehensive measurement framework for code verifiers,
+introducing multi-dimensional evaluation metrics (detection rate, verifier accuracy) and identifying
+test case diversity and per-case strength as critical quality factors. We derive an upper bound for
+detection rate and validate it empirically across 1,500+ coding problems. Using this framework, we
+uncover systemic test quality issues in leading benchmarks, such as CodeForce-CoTs [37], where
+50% of problems had tests failing to detect known errors and 84% of verifiers were flawed, further
+underscoring these limitations.
+
+================================================================================
+ID: 00000018
+Type: TEXT
+Parent: 00000008
+================================================================================
+To systematically improve the quality of code verifiers, we formally define the Test Case Generation
+(TCG) task, comprising three core components: task formulation, benchmark construction, and
+method exploration. We introduce TCGBench, a benchmark curated by aggregating representative
+
+================================================================================
+ID: 00000019
+Type: TEXT
+Parent: 00000008
+================================================================================
+problems from three leading competitive programming platforms—Atcoder, Codeforces, and Now-
+coder. TCGBench curates human-verified adversarial examples spanning diverse error patterns (e.g.,
+logical flaws, edge cases) and supports comprehensive evaluation of TCG methods. We further
+investigate current TCG methods and propose SAGA (Strategic Adversarial & Constraint-differential
+GenerAtive workflow), a novel human-LLM collaborative framework. SAGA is designed to system-
+atically generate high-coverage, highly discriminative test cases by leveraging both human-derived
+constraints from correct solutions and insights from failure modes in incorrect solutions. This dual-
+pronged analytical approach allows SAGA to achieve improvements over current state-of-the-art
+TCG methods, with the Detection Rate increasing by 9.55% and Verifier Accuracy by 12.14%.
+
+================================================================================
+ID: 00000020
+Type: TEXT
+Parent: 00000008
+================================================================================
+Additionally, we leverage SAGA to enhance the quality of the popular code generation benchmark
+LiveCodeBench-v6 (subset)3, and develop CodeCompass, a new high-quality code benchmark. We
+believe SAGA can further be employed to scale datasets, enabling the production of training data
+with robust and accurate reward estimation for coding tasks. Our main contributions are as follows:
+
+================================================================================
+ID: 00000022
+Type: HEADER_1
+Parent: None
+================================================================================
+2
+Evaluating Verifier Quality: Metrics and TCG Paradigms
+
+================================================================================
+ID: 00000023
+Type: TEXT
+Parent: 00000022
+================================================================================
+The reliable evaluation of LLM-generated
+code is critically constrained by the quality
+and accessibility of verifiers. Standard bench-
+marks like HumanEval [6] often employ lim-
+ited test suites, while the extensive private ver-
+ifiers of Online Judges remain largely inac-
+cessible for broader research. This scarcity
+of robust, accessible verifiers impedes accu-
+rate LLM evaluation and the advancement of
+RLVR. To surmount this challenge, we focus
+on leveraging LLMs themselves for Test Case
+Generation—the systematic synthesis of test
+suites. Figure 2 illustrates the pivotal role
+of a Code Verifierin the LLM code evalua-
+tion pipeline. It also highlights distinct TCG
+paradigms:
+
+================================================================================
+ID: 00000025
+Type: CAPTION
+Parent: 00000022
+================================================================================
+Figure 2: The code evaluation pipeline and different
+TCG paradigms.
+
+================================================================================
+ID: 00000028
+Type: CAPTION
+Parent: 00000022
+================================================================================
+Figure 3: Direct generation issues: (a) Low quality of LLM-generated tests. (b) High self-pass rates
+suggest model blind spots.
+
+================================================================================
+ID: 00000029
+Type: HEADER_2
+Parent: 00000022
+================================================================================
+2.1
+Problem Definition
+
+================================================================================
+ID: 00000030
+Type: TEXT
+Parent: 00000029
+================================================================================
+Formally, for a programming problem P ∈P with description D, input space XP , and ground-truth
+solution fP : XP →YP , a TCG method aims to produce a test case set T = {(Ii, Oi)}n
+i=1, where
+each input Ii ∈XP and its corresponding output Oi = fP (Ii). To quantify the quality of such
+generated test suites, we employ two key metrics:
+
+================================================================================
+ID: 00000031
+Type: TEXT
+Parent: 00000029
+================================================================================
+Definition 1 (Detection Rate (DR)). A solution-level metric, DR quantifies a test suite’s ability to
+detect errors in a specific incorrect candidate solution S ̸= fP . It is the probability that T identifies
+at least one error in S: ϵS(T) = P (∃(I, O) ∈T s.t. S(I) ̸= O) . If Ei = {S(Ii) ̸= fP (Ii)} is the
+event that S fails on test case i, then ϵS(T) = 1 −P
+��n
+i=1 Ei
+�
+. A higher average DR across many
+incorrect solutions indicates the test suite is effective at exposing diverse faults.
+
+================================================================================
+ID: 00000032
+Type: TEXT
+Parent: 00000029
+================================================================================
+Definition 2 (Verifier Accuracy (VAcc)). A problem-level metric, VAcc assesses whether a test suite
+T can successfully identify all known incorrect solutions for a given problem P. Given Swrong(P) =
+{S : XP →YP | S ̸= fP } as the set of all incorrect solutions for P, the Verifier Accuracy is:
+VAcc(T) = I (∀S ∈Swrong(P), ∃(I, O) ∈T s.t. S(I) ̸= O) , where I(·) is the indicator function.
+VAcc(T) = 1 if T rejects every solution in Swrong(P), signifying perfect diagnostic capability.
+
+================================================================================
+ID: 00000033
+Type: HEADER_2
+Parent: 00000022
+================================================================================
+2.2
+Investigating Current TCG Paradigms and Their Limitations
+
+================================================================================
+ID: 00000034
+Type: TEXT
+Parent: 00000033
+================================================================================
+To ground our exploration of TCG effectiveness, we leverage TCGBench, a dataset we curated
+comprising 1840 recent programming problems from Atcoder, Codeforces, and Nowcoder, along
+with an average of 36.66 incorrect user submissions per problem. This rich resource (detailed in
+Appendix D) facilitates rigorous evaluation of TCG methodologies. Our analysis employ open-
+source LLMs: DeepSeek-V3-0324, Qwen2.5-72B-Instruct, and Qwen2.5-Coder-32B-Instruct with
+the greedy decoding strategy.
+
+================================================================================
+ID: 00000035
+Type: HEADER_3
+Parent: 00000033
+================================================================================
+For paradigm 1: Is Direct LLM-based Test Case Generation Effective?
+
+================================================================================
+ID: 00000036
+Type: TEXT
+Parent: 00000035
+================================================================================
+Directly prompting an LLM to generate complete test cases (inputs ILLM
+i
+, outputs OLLM
+i
+) from a
+problem description P, depends heavily on the LLM’s deep comprehension, particularly of edge
+cases. Our experiments (Figure 3), involving LLM generation of 50 diverse test cases per problem,
+reveal the issues. The retention rate (proportion of valid tests post-verification against ground truth)
+is very low, indicating unreliable quality. This results in poor overall DR (often <60%) and VAcc
+(<10%). Moreover, LLM-generated solutions easily pass these self-generated tests. Notably, on
+AtCoder problems with historical official tests4, LLM solutions performed substantially better on
+their own generated tests, suggesting such tests fail to challenge the model’s cognitive biases.
+
+================================================================================
+ID: 00000037
+Type: HEADER_3
+Parent: 00000033
+================================================================================
+For paradigm 2: Can a Large Number of Inputs from an Input-Interpreter Approach Compen-
+sate for Low Quality?
+
+================================================================================
+ID: 00000038
+Type: TEXT
+Parent: 00000037
+================================================================================
+The Input-Interpreter paradigm, where an LLM generates random inputs IRand
+i
+∼XP for a ground-
+truth interpreter, is employed by benchmarks like LiveCodeBench [19]. While generating many tests
+is feasible, merely increasing the quantity n does not fundamentally improve the detection rate. This
+
+================================================================================
+ID: 00000040
+Type: CAPTION
+Parent: 00000037
+================================================================================
+Figure 4: Experimental validation of Input-Interpreter (random sampling) limitations on TCGBench.
+(a) Detection rate vs. number of test cases (linear scale), showing clear saturation below 100%. (b)
+Detection rate vs. log of the number of test cases (semi-log scale), illustrating diminishing returns
+consistent with the theoretical upper bound 1 −(1 −¯p)neff, validating the impact of correlation ¯ρ.
+
+================================================================================
+ID: 00000041
+Type: TEXT
+Parent: 00000037
+================================================================================
+limitation arises from inherent correlations between test cases. We propose here a corollary for the
+upper bound of the detection rate5:
+
+================================================================================
+ID: 00000042
+Type: TEXT
+Parent: 00000037
+================================================================================
+Corollary 1 (Asymptotic Saturation of Detection Rate). As the number of generated test
+cases n →∞, if ¯p (the average probability of a single test detecting an error, 0 < ¯p < 1)
+and ¯ρeff (the effective average positive correlation between detection events, ¯ρeff > 0) are
+stable characteristics, the approximate upper bound on the detection rate ϵS(T) converges to:
+limn→∞ϵS(T) ≈1 −(1 −¯p)1/¯ρeff < 1.
+
+================================================================================
+ID: 00000043
+Type: TEXT
+Parent: 00000037
+================================================================================
+This corollary implies that due to inter-test correlation ¯ρeff, simply increasing the number of random
+tests cannot guarantee 100% error detection; the detection rate will saturate. The underlying reasoning
+involves the concept of an "effective sample size" neff ≈n/(1 + (n −1)¯ρeff) [20], which quantifies
+the diminishing utility of additional correlated tests. Our experiments on TCGBench (Figure 4)
+confirm this: detection rates plateau (Fig. 4(a)), and marginal gains diminish rapidly. Notably,
+plotting the detection rate against the logarithm of the number of test cases (Fig. 4(b)) reveals a trend
+consistent with our derived theoretical upper bound, further validating the impact of correlation ¯ρ.
+
+================================================================================
+ID: 00000044
+Type: TEXT
+Parent: 00000037
+================================================================================
+Beyond DR and Acc, to more deeply quantify the intrinsic quality and efficiency of TCG strategies
+like SAGA (introduced in Section 3), we employ two advanced metrics. These provide observable
+insights into test suite characteristics related to ¯p (average test potency) and ¯ρeff (inter-test correlation):
+
+================================================================================
+ID: 00000047
+Type: TEXT
+Parent: 00000037
+================================================================================
+Higher AUC@N indicates superior average verifier accuracy, reflecting potent (high ¯p) and
+efficiently diverse tests.
+
+================================================================================
+ID: 00000048
+Type: TEXT
+Parent: 00000037
+================================================================================
+Detailed explanations and derivations for these metrics are in Appendix B.
+
+================================================================================
+ID: 00000050
+Type: CAPTION
+Parent: 00000037
+================================================================================
+Figure 5: Overview of the SAGA framework. SAGA leverages both GroundTruth (correct human
+solutions) and Human Bugs (incorrect submissions) alongside the Problem description. An LLM
+performs Multi-Dimensional Analysis and Differential Analysis to generate Python Case Scripts for
+test input synthesis. These scripts are accompanied by Math Explanations (capturing testing strategies
+and constraints) and Self-Validation code. The generated Test Inputs are then passed to an Interpreter
+(ground-truth solution) to produce Test Outputs, forming the final test cases.
+
+================================================================================
+ID: 00000051
+Type: HEADER_1
+Parent: None
+================================================================================
+3
+SAGA: A Human-LLM Collaborative Framework for Advanced TCG
+
+================================================================================
+ID: 00000052
+Type: TEXT
+Parent: 00000051
+================================================================================
+The preceding analysis (Section 2.2) revealed critical limitations in prevalent Test Case Generation
+(TCG) paradigms, such as low test quality and homogeneity. To address this, we introduce SAGA
+(Strategic Adversarial & Constraint-differential GenerAtive workflow), a novel human-LLM collabo-
+rative framework (Figure 5). SAGA systematically generates high-quality, diverse, and discriminative
+test suites by maximizing test potency (¯p) and diversity (lowering correlation ¯ρ). Additionally, we
+trained TCGCoder-7B, a SAGA-distilled 7B specialist model from 15,000 problems (details in
+Appendix J), as a strong TCG baseline and reference.
+
+================================================================================
+ID: 00000053
+Type: HEADER_2
+Parent: 00000051
+================================================================================
+3.1
+The SAGA Framework: Integrating Human Expertise
+
+================================================================================
+ID: 00000054
+Type: TEXT
+Parent: 00000053
+================================================================================
+Recognizing the limitations of naive TCG,
+SAGA explores the integration of human ex-
+pertise. Intuitively, leveraging human problem-
+solving insights should enhance TCG. Table 1
+shows that incorporating simple human priors
+(e.g., boundary values from Shuman) into basic
+TCG paradigms on TCGBench-Full yields some
+improvement. However, these gains are often
+marginal, failing to fully exploit LLM potential
+for detecting complex flaws. While methods
+
+================================================================================
+ID: 00000055
+Type: CAPTION
+Parent: 00000053
+================================================================================
+Table 1: Initial Impact of Incorporating Simple
+Human Priors (Shuman) into Basic TCG Paradigms
+on AtCoder Results (Accuracy@50).
+
+================================================================================
+ID: 00000057
+Type: TEXT
+Parent: 00000053
+================================================================================
+like EvalPlus [27] use human solutions, it’s often for mutating seeds or formatting inputs, not deeply
+guiding large-scale challenging test generation.
+
+================================================================================
+ID: 00000058
+Type: TEXT
+Parent: 00000053
+================================================================================
+SAGA advances beyond such superficial integration. As depicted in Figure 5, it deeply incorporates
+multifaceted human programming insights—from both correct solutions (GroundTruth, Shuman) and
+incorrect submissions (Human Bugs, Swrong)—with LLM reasoning via a structured, dual-pronged
+analytical strategy. An LLM is fed the problem description P and insights gleaned from human
+solutions through a customized prompting module. This process generates Python Case Scripts to
+produce test inputs, accompanied by Math Explanations and Self-Validation code to ensure correctness
+and relevance. The generated inputs are then processed by an Interpreter (ground-truth solution) to
+yield test outputs, forming the final test cases. SAGA’s core analytical dimensions are:
+
+================================================================================
+ID: 00000061
+Type: CAPTION
+Parent: 00000053
+================================================================================
+Figure 6: SAGA outperforms the Baseline (Random Input-Interpreter) and its individual analytical
+components (Multidimensional Analysis leveraging Shuman; Differential Analysis leveraging Swrong)
+on the AtCoder subset of the full TCGBench across: (a) Detection Rate, (b) Verifier Accuracy (with
+AUC@50 values), (c) Distinct Error Pattern Coverage (DEPC), and (d) Diversity Ratio. Dotted lines
+in (a) & (b) show baseline performance at n = 100. See Appendix F for SAGA’s performance on
+other platforms within the full TCGBench.
+
+================================================================================
+ID: 00000064
+Type: TEXT
+Parent: 00000053
+================================================================================
+The Self-Validation scripts (Figure 5) ensure that generated test inputs adhere to problem constraints
+and the intended testing strategy before execution. For Multidimensional Analysis, SAGA leverages
+insights from 10 distinct, correct user solutions per problem to broaden perspective. In Differential
+Analysis, it meticulously pairs a user’s correct solution with their most recent preceding incorrect
+submission. This focus on closely related yet differing attempts enhances SAGA’s ability to identify
+subtle error patterns and generate challenging corner cases. By synergistically combining these
+refined analytical dimensions, SAGA produces comprehensive and highly effective test suites.
+
+================================================================================
+ID: 00000065
+Type: HEADER_2
+Parent: 00000051
+================================================================================
+3.2
+Experimental Validation of SAGA
+
+================================================================================
+ID: 00000066
+Type: TEXT
+Parent: 00000065
+================================================================================
+SAGA’s effectiveness was initially validated on the TCGBench. Figure 6 visually summarizes
+SAGA’s multifaceted superiority in this context, comparing it against the random Input-Interpreter
+baseline and its core analytical components (Multidimensional Analysis and Differential Analysis).
+
+================================================================================
+ID: 00000067
+Type: TEXT
+Parent: 00000065
+================================================================================
+Key Findings from Comparison on TCGBench (Fig. 6): SAGA markedly improves solution
+vetting capabilities: its DR surpasses 93.81% (vs. baseline’s 82.85% at n = 100) and VAcc reaches
+41.33% (vs. baseline’s 21.89% at n = 100) with only 50 tests. SAGA’s AUC@50 (0.5445) more
+than doubles the baseline’s (0.2586), showcasing superior efficiency. SAGA also generates test suites
+of superior intrinsic quality: it achieves the highest DEPC (broader error coverage, lower ¯ρ) and
+Diversity Ratio (more efficient error discovery per test). Both Multidimensional and Differential
+analysis components individually outperform the baseline, but their synergy in SAGA yields optimal
+results. This robustly validates SAGA’s systematic leveraging of human insights on a large scale.
+
+================================================================================
+ID: 00000068
+Type: HEADER_3
+Parent: 00000065
+================================================================================
+3.2.1
+Main Results and Analysis on TCGBench-Lite
+
+================================================================================
+ID: 00000069
+Type: TEXT
+Parent: 00000068
+================================================================================
+For focused main comparisons and ablation studies, we curated TCGBench-Lite, a challenging
+subset of 270 problems from AtCoder, Codeforces, and Nowcoder contests since June 2024. This
+
+================================================================================
+ID: 00000070
+Type: CAPTION
+Parent: 00000068
+================================================================================
+Table 2: Experimental Results: Main Comparison of SAGA with Baselines and Ablation Studies
+on TCGBench-Lite. Metrics are DR@k, VAcc@k, AUC@50, and DivRatio@50. All methods use
+DeepSeek-V3-0324 backbone unless specified in ablation.
+
+================================================================================
+ID: 00000072
+Type: TEXT
+Parent: 00000068
+================================================================================
+ensures contemporary relevance and minimizes potential data leakage. TCGBench-Lite includes an
+average of 41.41 incorrect submissions (Swrong) per problem. Its difficulty distribution (Easy: 27.04%,
+Medium: 32.59%, Hard: 40.37%) was determined by platform tags and contest characteristics
+(details in Appendix E). This curated set allows for rigorous yet manageable evaluation. Unless
+specified, all LLM-driven methods use DeepSeek-V3-0324 as the backbone for fair comparison. We
+evaluate against the Input-Interpreter (LiveCodeBench-style random sampling), TestChain [22],
+EvalPlus [27], and our SAGA-distilled TCGCoder-7B. Results are in Table 2.
+
+================================================================================
+ID: 00000073
+Type: TEXT
+Parent: 00000068
+================================================================================
+Analysis of Main Comparison (Table 2): SAGA’s structured integration of human insights yields
+substantial gains over other TCG methods on TCGBench-Lite. Notably, SAGA achieves an AUC@50
+of 0.2228, surpassing the Input-Interpreter (0.1234), which is limited by random sampling’s homo-
+geneity. This highlights SAGA’s ability to produce more consistently effective tests. While EvalPlus
+achieves a high raw Diversity Ratio through mutation, its lower AUC@50 (0.1278) suggests that
+SAGA’s deep analysis of human solutions is more critical for overall verifier quality than mere test
+variety. TestChain, lacking rich human priors, performs weakest. Crucially, our SAGA-distilled
+TCGCoder-7B (AUC@50: 0.1890) outperforms all these established baselines, even when they
+utilize a much larger backbone model (DeepSeek-V3-0324). This demonstrates SAGA’s potential to
+distill effective TCG strategies into smaller, specialized, and highly capable models, thereby making
+advanced TCG more accessible.
+
+================================================================================
+ID: 00000074
+Type: TEXT
+Parent: 00000068
+================================================================================
+Analysis of Ablation Studies (Table 2): Value of Structured Human Insights: Isolating SAGA’s
+Multidimensional Analysis (leveraging Shuman) and Differential Analysis (leveraging Swrong) reveals
+that both significantly outperform simpler prompting (SimpleCOT) and the Input-Interpreter baseline
+in terms of AUC@50. This underscores that structured analysis of human solutions, whether correct
+or incorrect, is fundamental for higher-quality verifiers. The full SAGA framework, synergistically
+combining both analytical dimensions, achieves the optimal overall quality (highest AUC@50),
+confirming their complementary benefits. Importance of Prompt Design: The substantial performance
+degradation when replacing SAGA’s detailed, insight-driven prompts with generic CoT (SimpleCOT)
+highlights that the methodology of integrating human insights is as critical as the insights themselves
+for effective TCG. Robustness Across LLMs: SAGA demonstrates commendable robustness when
+paired with different LLM backbones. While peak performance on specific metrics can vary with
+the LLM (e.g., SAGA with Qwen2.5-Coder-32B-Instruct yields the highest VAcc@50), the SAGA
+framework with its default DeepSeek-V3 backbone consistently provides the best overall AUC@50.
+This indicates SAGA’s comprehensive design is more impactful for holistic verifier quality than
+relying on specific LLM capabilities or optimizing for isolated metrics like Diversity Ratio. Notably,
+SAGA also shows strong performance with Qwen2.5-Coder-7B-Instruct (TCGCoder-7B’s base
+model), further validating SAGA’s efficacy on smaller, specialized coder models.
+
+================================================================================
+ID: 00000076
+Type: CAPTION
+Parent: 00000068
+================================================================================
+Table 3: Verifier Quality: CodeCompass vs.
+LCB-v6 (Shared Subset, @40 tests).
+
+================================================================================
+ID: 00000078
+Type: CAPTION
+Parent: 00000068
+================================================================================
+Figure 8: Model Ranking Changes.
+
+================================================================================
+ID: 00000079
+Type: CAPTION
+Parent: 00000068
+================================================================================
+Figure 7: Avg. Pass@1 by Difficulty.
+
+================================================================================
+ID: 00000080
+Type: HEADER_1
+Parent: None
+================================================================================
+4
+Towards Advanced Applications of SAGA
+
+================================================================================
+ID: 00000081
+Type: TEXT
+Parent: 00000080
+================================================================================
+SAGA’s proven capability in generating high-quality, diverse, and discriminative test suites (Section 3)
+enables advancements in LLM code evaluation and training. This section primarily explores the
+development of a superior code generation benchmark, CodeComPass, while also noting the potential
+for SAGA-enhanced verifiers to contribute to more reliable Reinforcement Learning from Verifiable
+Rewards (RLVR).
+
+================================================================================
+ID: 00000082
+Type: HEADER_2
+Parent: 00000080
+================================================================================
+CodeCompass: A SAGA-Enhanced Benchmark for Code Generation Evaluation
+
+================================================================================
+ID: 00000083
+Type: TEXT
+Parent: 00000082
+================================================================================
+To address the need for more challenging and discerning evaluation of LLM code generation models,
+we introduce CodeCompass. The verifiers within CodeCompass are synthesized using SAGA for the
+270 contemporary problems that also constitute TCGBench-Lite (detailed in Appendix E), ensuring
+relevance and minimizing data leakage risks. Each problem in CodeCompass features a rich test suite,
+averaging 50.54 SAGA-generated test cases, meticulously curated to ensure comprehensive coverage
+(with additional manual curation applied if initial generation yielded fewer than a target threshold).
+
+================================================================================
+ID: 00000084
+Type: TEXT
+Parent: 00000082
+================================================================================
+For comparative analysis of verifier quality and impact on model evaluation, we focus on a shared
+subset of 101 AtCoder problems that overlap between our CodeCompass verifiers and the test suites
+used by LiveCodeBench-v6. This allows for a direct comparison on common ground.
+
+================================================================================
+ID: 00000085
+Type: TEXT
+Parent: 00000082
+================================================================================
+Superior Verifier Quality of CodeCompass. We first establish the intrinsic quality of CodeCompass
+verifiers using core TCG metrics against those of LiveCodeBench-v6 on the shared AtCoder subset
+(Table 3). CodeCompass demonstrates markedly higher efficacy in identifying faulty solutions,
+greater efficiency in discovering unique error patterns (Diversity Ratio@40: +43.13%), and faster
+convergence to quality. This confirms that SAGA produces verifiers that are intrinsically more diverse,
+discriminative, and effective.
+
+================================================================================
+ID: 00000086
+Type: TEXT
+Parent: 00000082
+================================================================================
+Enhanced Discriminative Power for Code Generation Model Evaluation. This superior verifier
+quality translates directly to a more challenging and discerning evaluation for LLM code generation
+models. As shown in Figure 7, CodeComPass consistently elicits lower average Pass@1 rates across
+all problem difficulties compared to LiveCodeBench-v6 on the shared subset, indicating a more
+rigorous test. Critically, this increased stringency enhances discriminative power (Figure 8): when
+evaluated on CodeComPass, the average Pass@1 for various models drops by a relative 9.56%
+compared to their performance on LiveCodeBench-v6. This relative decrease leads to a re-ranking
+of models (e.g., Qwen2.5-72B and Qwen2.5-Coder-32B switch relative positions). This ability to
+expose nuanced differences in model capabilities confirms that CodeComPass offers a more robust
+and insightful assessment of true code generation proficiency.
+
+================================================================================
+ID: 00000087
+Type: TEXT
+Parent: 00000082
+================================================================================
+Meanwhile, the superior SAGA-generated verifiers, exemplified by CodeComPass, promise to
+enhance Reinforcement Learning from Verifiable Rewards (RLVR) frameworks [8, 10] by delivering
+more accurate reward signals and mitigating reward hacking, thereby fostering more robust and
+capable code generation models.
+
+================================================================================
+ID: 00000088
+Type: HEADER_1
+Parent: None
+================================================================================
+5
+Conclusion
+
+================================================================================
+ID: 00000089
+Type: TEXT
+Parent: 00000088
+================================================================================
+This paper critically re-evaluates LLM-based Test Case Generation (TCG), highlighting current
+verifier limitations and formalizing key quality metrics alongside TCGBench, a foundational TCG
+research dataset. We introduce SAGA, a novel human-LLM collaborative framework that integrates
+human programming insights with LLM reasoning to demonstrably generate superior test suites.
+Leveraging SAGA, we developed CodeComPass, an enhanced verifier suite for robust code gen-
+eration evaluation, and distilled TCGCoder-7B, a specialized, efficient TCG model. Collectively,
+these contributions significantly advance reliable LLM code evaluation and pave the way for future
+automated test synthesis and effective adversarial testing.
+
+================================================================================
+ID: 00000090
+Type: HEADER_1
+Parent: None
+================================================================================
+References
+
+================================================================================
+ID: 00000091
+Type: TEXT
+Parent: 00000090
+================================================================================
+[1] Saswat Anand, Edmund K. Burke, Tsong Yueh Chen, John A. Clark, Myra B. Cohen, Wolfgang
+Grieskamp, Mark Harman, Mary Jean Harrold, and Phil McMinn. An orchestrated survey of
+methodologies for automated software test case generation. J. Syst. Softw., 86(8):1978–2001,
+2013. doi: 10.1016/J.JSS.2013.02.061. URL https://doi.org/10.1016/j.jss.2013.02.
+061.
+[2] Rohan Anil, Sebastian Borgeaud, Yonghui Wu, Jean-Baptiste Alayrac, Jiahui Yu, Radu Soricut,
+Johan Schalkwyk, Andrew M. Dai, Anja Hauth, Katie Millican, David Silver, Slav Petrov,
+Melvin Johnson, Ioannis Antonoglou, Julian Schrittwieser, Amelia Glaese, Jilin Chen, Emily
+Pitler, Timothy P. Lillicrap, Angeliki Lazaridou, Orhan Firat, James Molloy, Michael Is-
+ard, Paul Ronald Barham, Tom Hennigan, Benjamin Lee, Fabio Viola, Malcolm Reynolds,
+Yuanzhong Xu, Ryan Doherty, Eli Collins, Clemens Meyer, Eliza Rutherford, Erica Moreira, Ka-
+reem Ayoub, Megha Goel, George Tucker, Enrique Piqueras, Maxim Krikun, Iain Barr, Nikolay
+Savinov, Ivo Danihelka, Becca Roelofs, Anaïs White, Anders Andreassen, Tamara von Glehn,
+Lakshman Yagati, Mehran Kazemi, Lucas Gonzalez, Misha Khalman, Jakub Sygnowski, and
+et al. Gemini: A family of highly capable multimodal models. CoRR, abs/2312.11805, 2023. doi:
+10.48550/ARXIV.2312.11805. URL https://doi.org/10.48550/arXiv.2312.11805.
+[3] Jacob Austin, Augustus Odena, Maxwell I. Nye, Maarten Bosma, Henryk Michalewski, David
+Dohan, Ellen Jiang, Carrie J. Cai, Michael Terry, Quoc V. Le, and Charles Sutton. Program
+synthesis with large language models. CoRR, abs/2108.07732, 2021. URL https://arxiv.
+org/abs/2108.07732.
+[4] S. Beyleda and V. Gruhn. Bintest - search-based test case generation. In Proceedings 27th
+Annual International Computer Software and Applications Conference. COMPAC 2003, pages
+28–33, 2003. doi: 10.1109/CMPSAC.2003.1245318.
+[5] Cristian Cadar and Koushik Sen. Symbolic execution for software testing: three decades
+later. Commun. ACM, 56(2):82–90, 2013. doi: 10.1145/2408776.2408795. URL https:
+//doi.org/10.1145/2408776.2408795.
+[6] Mark Chen, Jerry Tworek, Heewoo Jun, Qiming Yuan, Henrique Pondé de Oliveira Pinto,
+Jared Kaplan, Harri Edwards, Yuri Burda, Nicholas Joseph, Greg Brockman, Alex Ray, Raul
+Puri, Gretchen Krueger, Michael Petrov, Heidy Khlaaf, Girish Sastry, Pamela Mishkin, Brooke
+Chan, Scott Gray, Nick Ryder, Mikhail Pavlov, Alethea Power, Lukasz Kaiser, Mohammad
+Bavarian, Clemens Winter, Philippe Tillet, Felipe Petroski Such, Dave Cummings, Matthias
+Plappert, Fotios Chantzis, Elizabeth Barnes, Ariel Herbert-Voss, William Hebgen Guss, Alex
+Nichol, Alex Paino, Nikolas Tezak, Jie Tang, Igor Babuschkin, Suchir Balaji, Shantanu Jain,
+William Saunders, Christopher Hesse, Andrew N. Carr, Jan Leike, Joshua Achiam, Vedant
+Misra, Evan Morikawa, Alec Radford, Matthew Knight, Miles Brundage, Mira Murati, Katie
+Mayer, Peter Welinder, Bob McGrew, Dario Amodei, Sam McCandlish, Ilya Sutskever, and
+Wojciech Zaremba. Evaluating large language models trained on code. CoRR, abs/2107.03374,
+2021. URL https://arxiv.org/abs/2107.03374.
+[7] Xinyun Chen, Maxwell Lin, Nathanael Schärli, and Denny Zhou. Teaching large language
+models to self-debug. arXiv preprint arXiv:2304.05128, 2023.
+[8] DeepSeek-AI. Deepseek-r1: Incentivizing reasoning capability in llms via reinforcement
+learning, 2025. URL https://arxiv.org/abs/2501.12948.
+
+================================================================================
+ID: 00000092
+Type: TEXT
+Parent: 00000090
+================================================================================
+[9] Zhiyu Duan, Yujia Li, Pubo Ma, Xiaodong Gou, and Shunkun Yang. A multi-layer fault
+triggering framework based on evolutionary strategy guided symbolic execution for automated
+test case generation. In 22nd IEEE International Conference on Software Quality, Reliability,
+and Security, QRS 2022 - Companion, Guangzhou, China, December 5-9, 2022, pages 255–262.
+IEEE, 2022. doi: 10.1109/QRS-C57518.2022.00045. URL https://doi.org/10.1109/
+QRS-C57518.2022.00045.
+[10] Ahmed El-Kishky, Alexander Wei, Andre Saraiva, Borys Minaiev, Daniel Selsam, David Dohan,
+Francis Song, Hunter Lightman, Ignasi Clavera Gilaberte, Jakub Pachocki, Jerry Tworek, Lorenz
+Kuhn, Lukasz Kaiser, Mark Chen, Max Schwarzer, Mostafa Rohaninejad, Nat McAleese,
+o3 contributors, Oleg Mürk, Rhythm Garg, Rui Shu, Szymon Sidor, Vineet Kosaraju, and
+Wenda Zhou. Competitive programming with large reasoning models. CoRR, abs/2502.06807,
+2025. doi: 10.48550/ARXIV.2502.06807. URL https://doi.org/10.48550/arXiv.2502.
+06807.
+[11] Andrea Fioraldi, Alessandro Mantovani, Dominik Christian Maier, and Davide Balzarotti.
+Dissecting american fuzzy lop: A fuzzbench evaluation. ACM Trans. Softw. Eng. Methodol., 32
+(2):52:1–52:26, 2023. doi: 10.1145/3580596. URL https://doi.org/10.1145/3580596.
+[12] Garrett M Fitzmaurice, Nan M Laird, and James H Ware. Applied longitudinal analysis. John
+Wiley & Sons, 2012.
+[13] Daya Guo, Qihao Zhu, Dejian Yang, Zhenda Xie, Kai Dong, Wentao Zhang, Guanting Chen,
+Xiao Bi, Y. Wu, Y. K. Li, Fuli Luo, Yingfei Xiong, and Wenfeng Liang. Deepseek-coder:
+When the large language model meets programming - the rise of code intelligence. CoRR,
+abs/2401.14196, 2024. doi: 10.48550/ARXIV.2401.14196. URL https://doi.org/10.
+48550/arXiv.2401.14196.
+[14] Mark Harman, S. Afshin Mansouri, and Yuanyuan Zhang. Search-based software engineering:
+Trends, techniques and applications. ACM Comput. Surv., 45(1), December 2012. ISSN
+0360-0300. doi: 10.1145/2379776.2379787. URL https://doi.org/10.1145/2379776.
+2379787.
+[15] Dong Huang, Qingwen Bu, Yuhao Qing, and Heming Cui. Codecot: Tackling code syntax errors
+in cot reasoning for code generation, 2024. URL https://arxiv.org/abs/2308.08784.
+[16] Dong Huang, Jie M. Zhang, Michael Luck, Qingwen Bu, Yuhao Qing, and Heming Cui.
+Agentcoder: Multi-agent-based code generation with iterative testing and optimisation, 2024.
+URL https://arxiv.org/abs/2312.13010.
+[17] Binyuan Hui, Jian Yang, Zeyu Cui, Jiaxi Yang, Dayiheng Liu, Lei Zhang, Tianyu Liu, Jia-
+jun Zhang, Bowen Yu, Kai Dang, et al. Qwen2. 5-coder technical report. arXiv preprint
+arXiv:2409.12186, 2024.
+[18] Kush Jain, Gabriel Synnaeve, and Baptiste Rozière. Testgeneval: A real world unit test
+generation and test completion benchmark, 2024.
+[19] Naman Jain, King Han, Alex Gu, Wen-Ding Li, Fanjia Yan, Tianjun Zhang, Sida Wang, Ar-
+mando Solar-Lezama, Koushik Sen, and Ion Stoica. Livecodebench: Holistic and contamination
+free evaluation of large language models for code. arXiv preprint arXiv:2403.07974, 2024.
+[20] Leslie Kish. Survey sampling. new york: John wesley & sons. Am Polit Sci Rev, 59(4):1025,
+1965.
+[21] Hung Le, Yue Wang, Akhilesh Deepak Gotmare, Silvio Savarese, and Steven Chu-Hong
+Hoi. Coderl: Mastering code generation through pretrained models and deep reinforcement
+learning. In Sanmi Koyejo, S. Mohamed, A. Agarwal, Danielle Belgrave, K. Cho, and A. Oh,
+editors, Advances in Neural Information Processing Systems 35: Annual Conference on Neural
+Information Processing Systems 2022, NeurIPS 2022, New Orleans, LA, USA, November 28
+- December 9, 2022, 2022. URL http://papers.nips.cc/paper_files/paper/2022/
+hash/8636419dea1aa9fbd25fc4248e702da4-Abstract-Conference.html.
+
+================================================================================
+ID: 00000093
+Type: TEXT
+Parent: 00000090
+================================================================================
+[22] Kefan Li and Yuan Yuan. Large language models as test case generators: Performance evaluation
+and enhancement. CoRR, abs/2404.13340, 2024. doi: 10.48550/ARXIV.2404.13340. URL
+https://doi.org/10.48550/arXiv.2404.13340.
+[23] Raymond Li, Loubna Ben Allal, Yangtian Zi, Niklas Muennighoff, Denis Kocetkov, Chenghao
+Mou, Marc Marone, Christopher Akiki, Jia Li, Jenny Chim, Qian Liu, Evgenii Zheltonozhskii,
+Terry Yue Zhuo, Thomas Wang, Olivier Dehaene, Mishig Davaadorj, Joel Lamy-Poirier, João
+Monteiro, Oleh Shliazhko, Nicolas Gontier, Nicholas Meade, Armel Zebaze, Ming-Ho Yee,
+Logesh Kumar Umapathi, Jian Zhu, Benjamin Lipkin, Muhtasham Oblokulov, Zhiruo Wang,
+Rudra Murthy V, Jason T. Stillerman, Siva Sankalp Patel, Dmitry Abulkhanov, Marco Zocca,
+Manan Dey, Zhihan Zhang, Nour Fahmy, Urvashi Bhattacharyya, Wenhao Yu, Swayam Singh,
+Sasha Luccioni, Paulo Villegas, Maxim Kunakov, Fedor Zhdanov, Manuel Romero, Tony
+Lee, Nadav Timor, Jennifer Ding, Claire Schlesinger, Hailey Schoelkopf, Jan Ebert, Tri Dao,
+Mayank Mishra, Alex Gu, Jennifer Robinson, Carolyn Jane Anderson, Brendan Dolan-Gavitt,
+Danish Contractor, Siva Reddy, Daniel Fried, Dzmitry Bahdanau, Yacine Jernite, Carlos Muñoz
+Ferrandis, Sean Hughes, Thomas Wolf, Arjun Guha, Leandro von Werra, and Harm de Vries.
+Starcoder: may the source be with you!
+Trans. Mach. Learn. Res., 2023, 2023.
+URL
+https://openreview.net/forum?id=KoFOg41haE.
+[24] Rongao Li, Jie Fu, Bo-Wen Zhang, Tao Huang, Zhihong Sun, Chen Lyu, Guang Liu, Zhi Jin, and
+Ge Li. Taco: Topics in algorithmic code generation dataset. arXiv preprint arXiv:2312.14852,
+2023.
+[25] Yujia Li, David H. Choi, Junyoung Chung, Nate Kushman, Julian Schrittwieser, Rémi Leblond,
+Tom Eccles, James Keeling, Felix Gimeno, Agustin Dal Lago, Thomas Hubert, Peter Choy,
+Cyprien de Masson d’Autume, Igor Babuschkin, Xinyun Chen, Po-Sen Huang, Johannes Welbl,
+Sven Gowal, Alexey Cherepanov, James Molloy, Daniel J. Mankowitz, Esme Sutherland Robson,
+Pushmeet Kohli, Nando de Freitas, Koray Kavukcuoglu, and Oriol Vinyals. Competition-level
+code generation with alphacode. CoRR, abs/2203.07814, 2022. doi: 10.48550/ARXIV.2203.
+07814. URL https://doi.org/10.48550/arXiv.2203.07814.
+[26] Guanghan Liu and Kung-Yee Liang. Sample size calculations for studies with correlated
+observations. Biometrics, pages 937–947, 1997.
+[27] Jiawei Liu, Chunqiu Steven Xia, Yuyao Wang, and Lingming Zhang. Is your code generated
+by chatGPT really correct? rigorous evaluation of large language models for code generation.
+In Thirty-seventh Conference on Neural Information Processing Systems, 2023. URL https:
+//openreview.net/forum?id=1qvx610Cu7.
+[28] Jiawei Liu, Songrun Xie, Junhao Wang, Yuxiang Wei, Yifeng Ding, and Lingming Zhang.
+Evaluating language models for efficient code generation. In First Conference on Language
+Modeling, 2024. URL https://openreview.net/forum?id=IBCBMeAhmC.
+[29] Kaibo Liu, Yudong Han, Yiyang Liu, Jie M. Zhang, Zhenpeng Chen, Federica Sarro, Gang
+Huang, and Yun Ma. Trickybugs: A dataset of corner-case bugs in plausible programs. In
+2024 IEEE/ACM 21st International Conference on Mining Software Repositories (MSR), pages
+113–117, 2024.
+[30] Sharon L Lohr. Sampling: design and analysis. Chapman and Hall/CRC, 2021.
+[31] Zeyao Ma, Xiaokang Zhang, Jing Zhang, Jifan Yu, Sijia Luo, and Jie Tang. Dynamic scaling of
+unit tests for code reward modeling, 2025. URL https://arxiv.org/abs/2501.01054.
+[32] Valentin J.M. Manès, HyungSeok Han, Choongwoo Han, Sang Kil Cha, Manuel Egele, Edward J.
+Schwartz, and Maverick Woo. The art, science, and engineering of fuzzing: A survey. IEEE
+Transactions on Software Engineering, 47(11):2312–2331, 2021. doi: 10.1109/TSE.2019.
+2946563.
+[33] Phil McMinn. Search-based software test data generation: a survey. Softw. Test. Verification
+Reliab., 14(2):105–156, 2004. doi: 10.1002/STVR.294. URL https://doi.org/10.1002/
+stvr.294.
+
+================================================================================
+ID: 00000094
+Type: TEXT
+Parent: 00000090
+================================================================================
+[34] Ansong Ni, Srini Iyer, Dragomir Radev, Veselin Stoyanov, Wen-Tau Yih, Sida I. Wang, and
+Xi Victoria Lin. LEVER: learning to verify language-to-code generation with execution. In
+Andreas Krause, Emma Brunskill, Kyunghyun Cho, Barbara Engelhardt, Sivan Sabato, and
+Jonathan Scarlett, editors, International Conference on Machine Learning, ICML 2023, 23-29
+July 2023, Honolulu, Hawaii, USA, volume 202 of Proceedings of Machine Learning Research,
+pages 26106–26128. PMLR, 2023. URL https://proceedings.mlr.press/v202/ni23b.
+html.
+[35] OpenAI. GPT-4 technical report. CoRR, abs/2303.08774, 2023. doi: 10.48550/ARXIV.2303.
+08774. URL https://doi.org/10.48550/arXiv.2303.08774.
+[36] Carlos Pacheco and Michael D. Ernst. Randoop: feedback-directed random testing for java. In
+Companion to the 22nd ACM SIGPLAN Conference on Object-Oriented Programming Systems
+and Applications Companion, OOPSLA ’07, page 815–816, New York, NY, USA, 2007.
+Association for Computing Machinery. ISBN 9781595938657. doi: 10.1145/1297846.1297902.
+URL https://doi.org/10.1145/1297846.1297902.
+[37] Guilherme Penedo, Anton Lozhkov, Hynek Kydlíˇcek, Loubna Ben Allal, Edward Beech-
+ing, Agustín Piqueres Lajarín, Quentin Gallouédec, Nathan Habib, Lewis Tunstall, and
+Leandro von Werra. Codeforces cots. https://huggingface.co/datasets/open-r1/
+codeforces-cots, 2025.
+[38] Baptiste Rozière, Jonas Gehring, Fabian Gloeckle, Sten Sootla, Itai Gat, Xiaoqing Ellen Tan,
+Yossi Adi, Jingyu Liu, Tal Remez, Jérémy Rapin, Artyom Kozhevnikov, Ivan Evtimov, Joanna
+Bitton, Manish Bhatt, Cristian Canton-Ferrer, Aaron Grattafiori, Wenhan Xiong, Alexandre
+Défossez, Jade Copet, Faisal Azhar, Hugo Touvron, Louis Martin, Nicolas Usunier, Thomas
+Scialom, and Gabriel Synnaeve. Code llama: Open foundation models for code. CoRR,
+abs/2308.12950, 2023. doi: 10.48550/ARXIV.2308.12950. URL https://doi.org/10.
+48550/arXiv.2308.12950.
+[39] Kostya Serebryany and the LLVM Team. libFuzzer – a library for coverage-guided fuzz testing.
+https://llvm.org/docs/LibFuzzer.html, 2016. Accessed: 2024-04-15.
+[40] Parshin Shojaee, Aneesh Jain, Sindhu Tipirneni, and Chandan K Reddy. Execution-based code
+generation using deep reinforcement learning. arXiv preprint arXiv:2301.13816, 2023.
+[41] Wenhan Wang, Chenyuan Yang, Zhijie Wang, Yuheng Huang, Zhaoyang Chu, Da Song, Ling-
+ming Zhang, An Ran Chen, and Lei Ma. TESTEVAL: benchmarking large language models for
+test case generation. CoRR, abs/2406.04531, 2024. doi: 10.48550/ARXIV.2406.04531. URL
+https://doi.org/10.48550/arXiv.2406.04531.
+[42] Yue Wang, Weishi Wang, Shafiq R. Joty, and Steven C. H. Hoi. Codet5: Identifier-aware unified
+pre-trained encoder-decoder models for code understanding and generation. In Marie-Francine
+Moens, Xuanjing Huang, Lucia Specia, and Scott Wen-tau Yih, editors, Proceedings of the
+2021 Conference on Empirical Methods in Natural Language Processing, EMNLP 2021, Virtual
+Event / Punta Cana, Dominican Republic, 7-11 November, 2021, pages 8696–8708. Association
+for Computational Linguistics, 2021. doi: 10.18653/V1/2021.EMNLP-MAIN.685. URL
+https://doi.org/10.18653/v1/2021.emnlp-main.685.
+[43] Yue Wang, Hung Le, Akhilesh Gotmare, Nghi D. Q. Bui, Junnan Li, and Steven C. H. Hoi.
+Codet5+: Open code large language models for code understanding and generation. In Houda
+Bouamor, Juan Pino, and Kalika Bali, editors, Proceedings of the 2023 Conference on Empirical
+Methods in Natural Language Processing, EMNLP 2023, Singapore, December 6-10, 2023,
+pages 1069–1088. Association for Computational Linguistics, 2023. doi: 10.18653/V1/2023.
+EMNLP-MAIN.68. URL https://doi.org/10.18653/v1/2023.emnlp-main.68.
+[44] An Yang, Baosong Yang, Binyuan Hui, Bo Zheng, Bowen Yu, Chang Zhou, Chengpeng Li,
+Chengyuan Li, Dayiheng Liu, Fei Huang, Guanting Dong, Haoran Wei, Huan Lin, Jialong
+Tang, Jialin Wang, Jian Yang, Jianhong Tu, Jianwei Zhang, Jianxin Ma, Jin Xu, Jingren Zhou,
+Jinze Bai, Jinzheng He, Junyang Lin, Kai Dang, Keming Lu, Keqin Chen, Kexin Yang, Mei Li,
+Mingfeng Xue, Na Ni, Pei Zhang, Peng Wang, Ru Peng, Rui Men, Ruize Gao, Runji Lin, Shijie
+Wang, Shuai Bai, Sinan Tan, Tianhang Zhu, Tianhao Li, Tianyu Liu, Wenbin Ge, Xiaodong
+
+================================================================================
+ID: 00000095
+Type: TEXT
+Parent: 00000090
+================================================================================
+Deng, Xiaohuan Zhou, Xingzhang Ren, Xinyu Zhang, Xipin Wei, Xuancheng Ren, Yang Fan,
+Yang Yao, Yichang Zhang, Yu Wan, Yunfei Chu, Yuqiong Liu, Zeyu Cui, Zhenru Zhang, and
+Zhihao Fan. Qwen2 technical report. arXiv preprint arXiv:2407.10671, 2024.
+[45] Kohsuke Yatoh, Kazunori Sakamoto, Fuyuki Ishikawa, and Shinichi Honiden. Feedback-
+controlled random test generation. In Michal Young and Tao Xie, editors, Proceedings of the
+2015 International Symposium on Software Testing and Analysis, ISSTA 2015, Baltimore, MD,
+USA, July 12-17, 2015, pages 316–326. ACM, 2015. doi: 10.1145/2771783.2771805. URL
+https://doi.org/10.1145/2771783.2771805.
+[46] Huaye Zeng, Dongfu Jiang, Haozhe Wang, Ping Nie, Xiaotong Chen, and Wenhu Chen.
+Acecoder: Acing coder rl via automated test-case synthesis. ArXiv, 2502.01718, 2025.
+[47] Qinkai Zheng, Xiao Xia, Xu Zou, Yuxiao Dong, Shan Wang, Yufei Xue, Lei Shen, Zihan
+Wang, Andi Wang, Yang Li, Teng Su, Zhilin Yang, and Jie Tang. Codegeex: A pre-trained
+model for code generation with multilingual benchmarking on humaneval-x. In Proceedings
+of the 29th ACM SIGKDD Conference on Knowledge Discovery and Data Mining, KDD
+’23, page 5673–5684, New York, NY, USA, 2023. Association for Computing Machinery.
+ISBN 9798400701030. doi: 10.1145/3580305.3599790. URL https://doi.org/10.1145/
+3580305.3599790.
+[48] Terry Yue Zhuo, Minh Chien Vu, Jenny Chim, Han Hu, Wenhao Yu, Ratnadira Widyasari,
+Imam Nur Bani Yusuf, Haolan Zhan, Junda He, Indraneil Paul, et al. Bigcodebench: Bench-
+marking code generation with diverse function calls and complex instructions. arXiv preprint
+arXiv:2406.15877, 2024.
+
+================================================================================
+ID: 00000096
+Type: HEADER_1
+Parent: None
+================================================================================
+Appendix
+
+================================================================================
+ID: 00000097
+Type: HEADER_2
+Parent: 00000096
+================================================================================
+A
+Related Works
+
+================================================================================
+ID: 00000098
+Type: HEADER_3
+Parent: 00000097
+================================================================================
+A.1
+Advancements and Challenges in LLM-based Code Generation and Evaluation
+
+================================================================================
+ID: 00000099
+Type: TEXT
+Parent: 00000098
+================================================================================
+Large Language Models (LLMs) have revolutionized automated code generation, with models like Al-
+phaCode [25], GPT-4 [35], Gemini [2], and specialized code models such as CodeT5 [42, 43],
+StarCoder [23], DeepSeek Coder [13], CodeLlama [38], and Qwen2.5-Coder [44, 17] demon-
+strating remarkable capabilities. These models, whether trained via Supervised Fine-Tuning or
+enhanced through Reinforcement Learning (RL) with execution feedback (e.g., AlphaCode [25],
+PPOCoder [40], CodeRL [21]), increasingly match or exceed human performance on diverse pro-
+gramming benchmarks.
+
+================================================================================
+ID: 00000100
+Type: TEXT
+Parent: 00000098
+================================================================================
+The reliable evaluation of these sophisticated models is paramount and hinges on the quality of Code
+Verifiers—typically test suites—that ascertain the functional correctness of generated code. This
+is especially critical for RL frameworks employing verifiable rewards (RLVR) [8, 10, 34], where
+test case quality directly impacts reward accuracy and training efficacy. However, as highlighted in
+Section 1, the comprehensiveness and robustness of verifiers often present a significant bottleneck,
+underscoring the critical need for effective Test Case Generation.
+
+================================================================================
+ID: 00000101
+Type: TEXT
+Parent: 00000098
+================================================================================
+To this end, the research community has developed numerous benchmarks. Early benchmarks like Hu-
+manEval [6] and MBPP [3] provided foundational testbeds. Subsequent efforts like EvalPlus [27, 28]
+and MBPP-Plus aimed to improve robustness by expanding existing test sets. More comprehen-
+sive benchmarks such as TACO [24], CodeContests [25] (focused on algorithmic problems), Big-
+CodeBench [48] (complex multi-library tasks), LiveCodeBench [19] (simulating online judge envi-
+ronments), and HumanEvalPack [47] (multilingual program synthesis) have broadened the evaluative
+scope. Concurrently, dedicated TCG benchmarks like TESTEVAL [41] and TestGenEval [18] have
+emerged. Despite these advancements, persistent issues in test case quality, coverage, and potential
+LLM-centric biases necessitate continuous efforts towards developing high-quality, diverse, and
+unbiased Code Verifiers.
+
+================================================================================
+ID: 00000102
+Type: HEADER_3
+Parent: 00000097
+================================================================================
+A.2
+Methodologies for Test Case Generation (TCG)
+
+================================================================================
+ID: 00000103
+Type: TEXT
+Parent: 00000102
+================================================================================
+TCG is fundamental to validating code correctness and providing feedback for both evaluation and
+training of code generation models. While formally defined as a distinct task in this paper, TCG
+principles are integral to benchmark creation (e.g., LiveCodeBench [19], TESTEVAL [41]) and RL
+data pipelines (e.g., ACECODER [46], CodeRL [21]). However, suboptimal test quality in existing
+datasets (e.g., TACO [24], CodeForces-CoTs [37]) can lead to overestimated model performance and
+reward hacking, particularly in rule-based RL systems like AlphaCode [25] and DeepSeek Coder [13],
+thus highlighting the urgent need for effective TCG.
+
+================================================================================
+ID: 00000104
+Type: TEXT
+Parent: 00000102
+================================================================================
+Traditional TCG Techniques: Software testing has a rich history of TCG. Search-Based Software
+Testing (SBST) [1, 14] uses metaheuristics like genetic algorithms [4, 33] to optimize for coverage
+criteria, though it can be computationally intensive. Symbolic Execution [9, 5] explores program
+paths systematically but faces path explosion and challenges with complex code. Fuzzing [32, 11],
+especially coverage-guided variants like AFL [11] and libFuzzer [39], excels at finding crashes and
+vulnerabilities by mutating inputs, though it may lack semantic depth for logical tests. Feedback-
+directed random testing [45, 36] also discovers defects but can sometimes lack diversity.
+
+================================================================================
+ID: 00000105
+Type: TEXT
+Parent: 00000102
+================================================================================
+LLM-based TCG Paradigms: With the rise of LLMs, new TCG methods have emerged, leveraging
+semantic understanding for potentially greater coverage and diversity. As discussed in Section 2,
+these generally follow two paradigms:
+
+================================================================================
+ID: 00000107
+Type: TEXT
+Parent: 00000102
+================================================================================
+guided fuzzing. EvalPlus [27, 28] also aligns by mutating seed inputs for execution. TestChain [22]
+also showed improvements by decoupling input and output generation.
+
+================================================================================
+ID: 00000108
+Type: TEXT
+Parent: 00000102
+================================================================================
+Advanced and Specialized TCG Approaches: In RL contexts, dynamic TCG is crucial. CodeRM-
+8B [31] adjusts test quantity by problem difficulty. LEVER [34] uses learned verifiers, and other
+works focus on execution-feedback for reward model optimization, all highlighting the impact of test
+quality on RL outcomes. Differential testing, as in AID [29], compares program versions to expose
+bugs, showing strong results on datasets like TrickyBugs [29] and EvalPlus [27]. Recent efforts also
+explore generating tests targeting prior failures [7] or using LLMs for test suite refinement.
+
+================================================================================
+ID: 00000109
+Type: TEXT
+Parent: 00000102
+================================================================================
+Despite these diverse approaches, achieving comprehensive logical coverage, generating truly diverse
+and challenging corner-case tests, and maintaining computational efficiency remain significant
+hurdles. Furthermore, many LLM-centric TCG methods may perpetuate biases inherent in the LLMs
+themselves (Section 1). This paper’s SAGA framework addresses these limitations by proposing a
+novel human-LLM collaborative paradigm that systematically integrates deep human insights from
+both correct and incorrect solutions. By focusing on a dynamic, adaptive, and efficient TCG process,
+SAGA aims to enhance the reliability of LLM code evaluation and training, paving a new path for
+TCG research.
+
+================================================================================
+ID: 00000110
+Type: HEADER_2
+Parent: 00000096
+================================================================================
+B
+Formulation and Interpretation of Advanced Evaluation Metrics
+
+================================================================================
+ID: 00000111
+Type: TEXT
+Parent: 00000110
+================================================================================
+This section provides detailed explanations and interpretations for the advanced metrics introduced in
+Section 2.2 to evaluate the intrinsic quality of test suites.
+
+================================================================================
+ID: 00000112
+Type: HEADER_3
+Parent: 00000110
+================================================================================
+B.1
+Distinct Error Pattern Coverage (DEPC) and Diversity Ratio
+
+================================================================================
+ID: 00000113
+Type: TEXT
+Parent: 00000112
+================================================================================
+Formulation (from main text): For a test suite T and NP problems, let v(tk) be the NP -dimensional
+binary error pattern vector for test tk (where v(tk)j = 1 if tk reveals an error for problem j).
+
+================================================================================
+ID: 00000115
+Type: TEXT
+Parent: 00000112
+================================================================================
+The Diversity Ratio is DEPC(T )/n, where n = |T |.
+
+================================================================================
+ID: 00000116
+Type: TEXT
+Parent: 00000112
+================================================================================
+Interpretation: DEPC measures the breadth of error coverage by counting the number of unique ways
+(patterns) in which the test suite can detect failures across a set of problems. A higher DEPC signifies
+that the test suite is capable of identifying a wider variety of distinct error types or combinations
+of errors. This directly relates to the concept of inter-test case correlation (¯ρeff) discussed in our
+theoretical model (Appendix C): a test suite with high DEPC is likely composed of tests that are less
+correlated in terms of the errors they detect, thus having a lower ¯ρeff. The Diversity Ratio normalizes
+DEPC by the number of test cases, indicating the average efficiency of each test in contributing a
+new, distinct error pattern. A high Diversity Ratio suggests that the test suite is not only diverse but
+also concise, with less redundancy among its test cases.
+
+================================================================================
+ID: 00000117
+Type: HEADER_3
+Parent: 00000110
+================================================================================
+B.2
+Normalized Area Under the Accuracy-Number of test cases Curve (AUC-AccN)
+
+================================================================================
+ID: 00000118
+Type: TEXT
+Parent: 00000117
+================================================================================
+Formulation (from main text): For Verifier Accuracy Acc(k) achieved with a test suite of size k
+(up to a maximum N, starting from kmin), the AUC-AccN is approximated by the trapezoidal rule:
+
+================================================================================
+ID: 00000120
+Type: TEXT
+Parent: 00000117
+================================================================================
+Interpretation: AUC-AccN quantifies the average Verifier Accuracy as the test suite size grows,
+providing a single scalar value to compare the overall effectiveness and efficiency of different TCG
+strategies. A higher AUC@N (ranging from 0 to 1) indicates that a TCG strategy consistently
+generates test suites that achieve higher verifier accuracy across various sizes up to N. This metric
+is a composite reflection of both the average potency of individual test cases (¯p) and the effective
+diversity of the test suite (related to ¯ρeff).
+
+================================================================================
+ID: 00000123
+Type: TEXT
+Parent: 00000117
+================================================================================
+Therefore, a high AUC@N signifies a TCG strategy that excels at generating tests that are individually
+powerful (high ¯p) and collectively non-redundant (low ¯ρeff), leading to efficient and robust verifier
+construction within the specified test suite size limit. It reflects a better overall quality of the generated
+test cases in achieving high average performance.
+
+================================================================================
+ID: 00000124
+Type: HEADER_2
+Parent: 00000096
+================================================================================
+C
+Theoretical Analysis of Detection Rate
+
+================================================================================
+ID: 00000125
+Type: TEXT
+Parent: 00000124
+================================================================================
+We analyze the detection rate ϵS(T) = P(X ≥1) for a test suite T = {t1, . . . , tn}, where X =
+�n
+i=1 1Ei and pi = P(Ei) is the probability that test ti detects an error.
+
+================================================================================
+ID: 00000126
+Type: HEADER_3
+Parent: 00000124
+================================================================================
+C.1
+Modeling Correlated Heterogeneous Bernoulli Trials
+
+================================================================================
+ID: 00000127
+Type: TEXT
+Parent: 00000126
+================================================================================
+The expectation of X is E[X] = �pi = n¯p, where ¯p =
+1
+n
+�pi. The variance is Var(X) =
+�pi(1 −pi) + �
+i̸=j Cov(1Ei, 1Ej).
+
+================================================================================
+ID: 00000128
+Type: TEXT
+Parent: 00000126
+================================================================================
+To model the effect of correlation in a tractable manner that allows for insights similar to the
+homogeneous case (uniform p, uniform ρ), we consider an approximating model. We define an
+effective average pairwise covariance, ¯Ceff, and an average individual variance, ¯σ2p = 1
+n
+�pi(1 −
+pi). We then model the variance as if it arose from a system with these averaged second-order
+characteristics:
+¯¯
+
+================================================================================
+ID: 00000130
+Type: TEXT
+Parent: 00000126
+================================================================================
+If we further posit that these average characteristics can be related through an effective average
+correlation ¯ρeff such that ¯Ceff ≈¯ρeff
+�
+avg(pi(1 −pi))2 or, more simply for conceptual linkage,
+¯Ceff ≈¯ρeff ¯p(1 −¯p) (assuming pi are not excessively dispersed, making ¯σ2p ≈¯p(1 −¯p)), then:
+
+================================================================================
+ID: 00000132
+Type: TEXT
+Parent: 00000126
+================================================================================
+This equation models the variance of X as if it were a sum of n Bernoulli trials with a common
+success probability ¯p and a common pairwise correlation ¯ρeff. The validity of this approximation
+depends on the actual distribution of pi and the structure of covariances. However, it serves as a
+useful model to understand the qualitative impact of average correlation.
+
+================================================================================
+ID: 00000133
+Type: TEXT
+Parent: 00000126
+================================================================================
+Definition 3 (Model-Based Effective Sample Size n∗
+eff). Within this approximating model (Eq. 1),
+and by analogy to Kish’s design effect [20] (where deff∗≈1+(n−1)¯ρeff), the model-based effective
+sample size is:
+n
+
+================================================================================
+ID: 00000135
+Type: TEXT
+Parent: 00000126
+================================================================================
+eff
+This n∗
+eff represents the number of hypothetical independent Bernoulli(¯p) trials that would exhibit the
+variance given by Eq. 1. This is consistent with adjustments for correlated data [30, 12, 26].
+
+================================================================================
+ID: 00000136
+Type: HEADER_3
+Parent: 00000124
+================================================================================
+C.2
+Upper Bound and Saturation within the Model
+
+================================================================================
+ID: 00000137
+Type: TEXT
+Parent: 00000136
+================================================================================
+Using n∗
+eff and ¯p from our model, we analyze the detection rate ϵS(T) = 1 −P(X = 0).
+
+================================================================================
+ID: 00000138
+Type: TEXT
+Parent: 00000136
+================================================================================
+Theorem 1 (Model-Based Approximate Upper Bound on Detection Rate). Within the described
+approximating model, the detection rate ϵS(T) is approximately upper bounded by:
+
+================================================================================
+ID: 00000140
+Type: TEXT
+Parent: 00000136
+================================================================================
+Proof Sketch. The probability P(X = 0) is approximated by that of n∗
+eff independent Bernoulli(¯p)
+trials, which is (1 −¯p)n∗
+eff.
+
+================================================================================
+ID: 00000141
+Type: TEXT
+Parent: 00000136
+================================================================================
+This theorem suggests that even when individual pi vary, if there’s an effective positive average
+correlation ¯ρeff > 0, the system behaves as if it has fewer independent tests, limiting the detection
+rate.
+
+================================================================================
+ID: 00000142
+Type: HEADER_3
+Parent: 00000124
+================================================================================
+C.3
+Interpretation and Implications for Performance Metrics
+
+================================================================================
+ID: 00000143
+Type: TEXT
+Parent: 00000142
+================================================================================
+The derivation above, employing an approximating model based on average parameters (¯p, ¯ρeff),
+robustly indicates that a persistent positive effective correlation among test case detection events leads
+to a saturation of the overall detection rate. The core insight—that redundancy limits the marginal
+gain from additional tests—remains. This theoretical observation is crucial for understanding the
+performance of TCG strategies and their impact on the empirical metrics used in this paper:
+
+================================================================================
+ID: 00000145
+Type: TEXT
+Parent: 00000142
+================================================================================
+Therefore, the pursuit of TCG methods like SAGA, which aim to enhance both individual test case
+strength (targeting a higher ¯p) and inter-test case diversity (targeting a lower ¯ρeff), is theoretically
+well-founded for optimizing these key verifier performance metrics.
+
+================================================================================
+ID: 00000146
+Type: HEADER_2
+Parent: 00000096
+================================================================================
+D
+TCGBench: Foundational Dataset for TCG Research
+
+================================================================================
+ID: 00000147
+Type: TEXT
+Parent: 00000146
+================================================================================
+As introduced in Section 2.2, TCGBench is the comprehensive dataset curated for our Test Case
+Generation (TCG) research.
+It aggregates 1840 recent programming problems sourced from
+three leading competitive programming platforms: AtCoder (https://atcoder.jp), Codeforces
+(https://codeforces.com), and Nowcoder (https://www.nowcoder.com). These platforms
+are recognized for their diverse algorithmic challenges. For each problem in TCGBench, we also
+collected an average of 36.66 incorrect human submissions, specifically those resulting in "Wrong
+Answer" (WA) or "Time Limit Exceeded" (TLE) verdicts. This large-scale collection of problems,
+along with their corresponding WA/TLE submissions, provides a rich empirical foundation for
+studying human error patterns and rigorously developing and evaluating TCG methodologies. The
+problems are sourced from recent contests to ensure currency and minimize data leakage risks when
+evaluating contemporary LLMs. Further details on data collection, filtering criteria, and specific
+contest sources are available in supplementary materials.
+
+================================================================================
+ID: 00000148
+Type: HEADER_2
+Parent: 00000096
+================================================================================
+E
+TCGBench-Lite and CodeCompass: Curated Set for Evaluation
+
+================================================================================
+ID: 00000149
+Type: TEXT
+Parent: 00000148
+================================================================================
+For the main experimental comparisons and ablation studies presented in Section 3.2.1, and for
+constructing the CodeCompass verifiers (Section 4), we curated TCGBench-Lite. This is a focused
+subset of 270 problems sourced from AtCoder, Codeforces, and Nowcoder contests held since June
+2024, ensuring high contemporary relevance and minimizing potential data leakage for evaluating
+newer models. TCGBench-Lite features an average of 41.41 incorrect submissions per problem.
+
+================================================================================
+ID: 00000150
+Type: TEXT
+Parent: 00000148
+================================================================================
+The difficulty distribution for TCGBench-Lite and CodeCompass (Easy: 27.04%, Medium: 32.59%,
+Hard: 40.37%) was determined by a multi-faceted approach. This involved considering platform-
+provided difficulty tags, the type of contest round (e.g., AtCoder Beginner Contest vs. Regular
+Contest; Codeforces Div.4/3 vs. Div.2/1), typical problem-solving patterns associated with specific
+problem slots within these contests, and general community perception of difficulty for similar
+problems. For instance, early problems in beginner-focused contests were generally classified
+as ’Easy’, while later problems in advanced contests or those requiring complex algorithms/data
+structures were classified as ’Hard’. This classification aims to provide a balanced yet challenging
+set for rigorous evaluation. The verifiers in CodeCompass, used for code generation evaluation,
+consist of an average of 50.54 SAGA-generated test cases per problem for these 270 problems. The
+characteristics are summarized in Table 4.
+
+================================================================================
+ID: 00000151
+Type: CAPTION
+Parent: 00000148
+================================================================================
+Table 4: Overview of TCGBench-Lite (Core Dataset for CodeCompass Verifiers).
+
+================================================================================
+ID: 00000154
+Type: CAPTION
+Parent: 00000148
+================================================================================
+Figure 9: SAGA performance on Codeforces (CF) and Nowcoder (NC) problems from the full
+TCGBench dataset: (a) Detection Rate, (b) Verifier Accuracy (with AUC@50), (c) DEPC, and
+(d) Diversity Ratio, compared to Baseline (Input-Interpreter) and SAGA’s analytical components
+(Multidimensional Analysis and Differential Analysis). Dotted lines in (a) & (b) show respective
+baseline performance at n = 100.
+
+================================================================================
+ID: 00000155
+Type: HEADER_2
+Parent: 00000096
+================================================================================
+F
+SAGA Performance on Full TCGBench
+
+================================================================================
+ID: 00000156
+Type: TEXT
+Parent: 00000155
+================================================================================
+To demonstrate SAGA’s broader applicability beyond the AtCoder subset shown in Figure 6 (which
+used the full TCGBench for that visualization), Figure 9 presents SAGA’s performance on the
+Codeforces and Nowcoder portions of the complete TCGBench dataset. SAGA consistently replicates
+its superior performance, exhibiting enhanced efficacy (DR, Acc) and superior test suite quality
+(DEPC, Diversity Ratio) compared to the baseline and its individual analytical components across
+these platforms as well. This consistent pattern of improvement underscores the fundamental benefits
+of SAGA’s structured, insight-driven approach to TCG.
+
+================================================================================
+ID: 00000157
+Type: TEXT
+Parent: 00000155
+================================================================================
+To further demonstrate SAGA’s broad applicability and robustness, Figure 10 presents its Detection
+Rate (DR) and Verifier Accuracy (VAcc) when paired with different LLM backbones (Qwen2.5-
+Coder-7B-Instruct, Qwen2.5-72B-Instruct, and DeepSeek-V3-0324) on the Codeforces and Nowcoder
+portions of the full TCGBench dataset, compared against the Input-Interpreter baseline (using
+DeepSeek-V3). Across both platforms and all LLM backbones, SAGA consistently and significantly
+outperforms the baseline in DR and VAcc at various test case sizes. Notably, even SAGA with
+the smaller Qwen2.5-Coder-7B often surpasses the baseline that utilizes the larger DeepSeek-V3,
+highlighting SAGA’s ability to effectively guide diverse LLMs. While larger SAGA backbones
+generally yield higher absolute performance, the consistent uplift provided by the SAGA framework
+across different models and problem sources underscores its fundamental benefits and general
+applicability for advanced TCG.
+
+================================================================================
+ID: 00000159
+Type: CAPTION
+Parent: 00000155
+================================================================================
+Figure 10: SAGA performance with different LLM backbones (Qwen-Coder, Qwen-72B, DeepSeek-
+V3) compared to the Baseline (Input-Interpreter with DeepSeek-V3) on Codeforces and Nowcoder
+portions of the full TCGBench dataset. Metrics: Detection Rate (DR) and Verifier Accuracy (VAcc)
+at varying test case sizes. Dashed lines indicate baseline performance.
+
+================================================================================
+ID: 00000160
+Type: HEADER_2
+Parent: 00000096
+================================================================================
+G
+Detailed Performance Analysis on TCGBench-Lite by Difficulty
+
+================================================================================
+ID: 00000161
+Type: TEXT
+Parent: 00000160
+================================================================================
+To provide a more granular understanding of how different Test Case Generation (TCG) methods
+perform across varying levels of problem complexity, Figure 11 illustrates the Verifier Accuracy
+(VAcc@50) and Detection Rate (DR@50) of SAGA, its analytical components (Multidimensional
+Analysis only, denoted "w/ MultiDim"; Differential Analysis only, denoted "w/ Differ"), and baseline
+TCG methods (TestChain, EvalPlus, and Random Input-Interpreter) on the Easy, Medium, and Hard
+problem subsets within TCGBench-Lite.
+
+================================================================================
+ID: 00000162
+Type: TEXT
+Parent: 00000160
+================================================================================
+Key Observations from Figure 11:
+
+================================================================================
+ID: 00000165
+Type: CAPTION
+Parent: 00000160
+================================================================================
+Figure 11: Performance comparison (VAcc@50 and DR@50) of SAGA, its components, and
+baseline TCG methods across Easy, Medium, and Hard problem subsets of TCGBench-Lite. SAGA
+consistently outperforms baselines across all difficulties, and its full framework generally surpasses
+its individual analytical components, especially on harder problems.
+
+================================================================================
+ID: 00000167
+Type: TEXT
+Parent: 00000160
+================================================================================
+A similar synergistic effect is generally observed for DR@50, where the full SAGA framework
+often provides the highest or near-highest detection rates.
+
+================================================================================
+ID: 00000169
+Type: HEADER_2
+Parent: 00000096
+================================================================================
+H
+Supplementary Experimental Analyses
+
+================================================================================
+ID: 00000170
+Type: TEXT
+Parent: 00000169
+================================================================================
+To further explore mechanisms for robust test suite construction and the value of diverse generation
+strategies, we present two additional studies: an analysis of mixing random test cases from different
+LLMs, and an ablation study on SAGA’s knowledge sources.
+
+================================================================================
+ID: 00000171
+Type: HEADER_3
+Parent: 00000169
+================================================================================
+H.1
+Efficacy of Mixing Random Test Cases from Different Language Models
+
+================================================================================
+ID: 00000172
+Type: TEXT
+Parent: 00000171
+================================================================================
+Our theoretical framework highlights that test suite quality is influenced by individual test potency (¯p)
+and inter-test case correlation (¯ρeff). We investigated managing ¯ρeff by mixing random test cases (akin
+to the Input-Interpreter paradigm from Section 2.2) sourced from different LLMs (V3: DeepSeek-V3-
+0324, 72B: Qwen2.5-72B-Instruct, Coder: Qwen2.5-Coder-7B-Instruct). The hypothesis is that tests
+from different models may exhibit lower inter-source correlation, leading to improved combined suite
+characteristics. Figure 12 shows the AUC@50 when mixing random tests, with diagonal elements
+representing single-LLM suites.
+
+================================================================================
+ID: 00000173
+Type: HEADER_4
+Parent: 00000171
+================================================================================
+Observations
+
+================================================================================
+ID: 00000175
+Type: CAPTION
+Parent: 00000173
+================================================================================
+Figure 12: Heatmap illustrating AUC@50 performance of mixed random test suites. Diagonal
+elements: suites from a single model (V3, 72B, Coder). Off-diagonal (i,j): mixing random tests from
+model i and model j.
+
+================================================================================
+ID: 00000177
+Type: HEADER_3
+Parent: 00000169
+================================================================================
+H.2
+Ablation Study: Impact of Human Knowledge Source Volume in SAGA
+
+================================================================================
+ID: 00000178
+Type: TEXT
+Parent: 00000177
+================================================================================
+To dissect SAGA’s knowledge source contributions, we conducted an ablation study on the Codeforces
+portion of TCGBench. We modified SAGA by removing its Differential Analysis component (insights
+from incorrect solutions, Swrong) entirely. Instead, we doubled the volume of correct human solutions
+(Shuman) fed into SAGA’s Multidimensional Analysis component, creating a "Multidim-Enhanced"
+version. The aim was to see if increasing one type of human insight could compensate for omitting
+another. Table 5 compares the original SAGA with this "Multidim-Enhanced" configuration.
+
+================================================================================
+ID: 00000179
+Type: TEXT
+Parent: 00000177
+================================================================================
+Analysis of Ablation Results (Table 5):
+
+================================================================================
+ID: 00000181
+Type: CAPTION
+Parent: 00000177
+================================================================================
+Table 5: Ablation Study on Codeforces (TCGBench): SAGA vs. Multidim-Enhanced (Double Shuman
+for Multidimensional Analysis, No Differential Analysis).
+
+================================================================================
+ID: 00000184
+Type: HEADER_2
+Parent: 00000096
+================================================================================
+I
+Model Performance on CodeCompass
+
+================================================================================
+ID: 00000185
+Type: TEXT
+Parent: 00000184
+================================================================================
+To further illustrate the utility of CodeCompass as a challenging benchmark for evaluating LLM
+code generation capabilities, Table 6 summarizes the Pass@1 performance of several contemporary
+LLMs. The evaluation was conducted separately for C++ and Python problem instances within
+CodeCompass, utilizing its SAGA-enhanced verifier suite.
+
+================================================================================
+ID: 00000186
+Type: TEXT
+Parent: 00000184
+================================================================================
+The results demonstrate a clear differentiation among models in both languages, underscoring
+CodeCompass’s ability to effectively rank and assess current code generation models. The challenging
+nature of the SAGA-generated test cases in CodeCompass provides a rigorous testbed for future
+model development and comparison.
+
+================================================================================
+ID: 00000187
+Type: CAPTION
+Parent: 00000184
+================================================================================
+Table 6: Performance of Various LLMs on CodeCompass (Pass@1) for C++ and Python.
+
+================================================================================
+ID: 00000189
+Type: TEXT
+Parent: 00000184
+================================================================================
+From Table 6, it is evident that CodeCompass effectively differentiates LLM performance across
+both C++ and Python. While relative model rankings show some consistency, language-specific
+performance variations are also notable, highlighting the benchmark’s capacity to reveal nuanced
+capabilities. The generally moderate Pass@1 rates underscore the challenging nature of CodeCompass
+due to its SAGA-enhanced test suites, making it a valuable resource for rigorous multi-lingual code
+generation assessment.
+
+================================================================================
+ID: 00000190
+Type: HEADER_2
+Parent: 00000096
+================================================================================
+J
+TCGCoder-7B Training Details
+
+================================================================================
+ID: 00000191
+Type: TEXT
+Parent: 00000190
+================================================================================
+TCGCoder-7B, our specialist 7-billion-parameter model for Test Case Generation (TCG), was fine-
+tuned from Qwen2.5-Coder-7B-Instruct [44, 17]. The training dataset, distinct from our evaluation
+sets to prevent data leakage, comprised 15,000 early-stage programming problems from Codeforces
+and NowCoder, processed by our SAGA framework (Section 3) to generate structured outputs (Python
+Case Scripts, Math Explanations, Self-Validation code, per Figure 5). The fine-tuning aimed to distill
+SAGA’s TCG reasoning into TCGCoder-7B. Key training configurations included 3 epochs, a global
+batch size of 16, an initial learning rate of 5e-6 (minimum 3e-7), a max sequence length of 61,335
+
+================================================================================
+ID: 00000192
+Type: TEXT
+Parent: 00000190
+================================================================================
+tokens, and the qwen2 chat template. Training utilized Fully Sharded Data Parallel (FSDP) across 2
+nodes, each with 8 GPUs.

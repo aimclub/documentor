@@ -1,0 +1,2826 @@
+{
+	"cells": [
+		{
+			"id": 42,
+			"tex": "\\#16 - Mozilla Firefox 11.0 Ubuntu",
+			"content": [
+				"#16",
+				"-",
+				"Mozilla",
+				"Firefox",
+				"11.0",
+				"Ubuntu"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 162,
+			"tex": "\\#83 - Firefox 11.0",
+			"content": [
+				"#83",
+				"-",
+				"Firefox",
+				"11.0"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 24,
+			"tex": "\\#11 - Konqueror 4.7.4/KHTML",
+			"content": [
+				"#11",
+				"-",
+				"Konqueror",
+				"4.7.4/KHTML"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 73,
+			"tex": "\\#39 - Firefox 11.0",
+			"content": [
+				"#39",
+				"-",
+				"Firefox",
+				"11.0"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 163,
+			"tex": "\\#4 - Firefox 8.0.1",
+			"content": [
+				"#4",
+				"-",
+				"Firefox",
+				"8.0.1"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 22,
+			"tex": "1",
+			"content": [
+				"1"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 83,
+			"tex": "68.5",
+			"content": [
+				"68.5"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 164,
+			"tex": "4",
+			"content": [
+				"4"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 14,
+			"tex": "7",
+			"content": [
+				"7"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 67,
+			"tex": "\\#39 - Firefox 11.0",
+			"content": [
+				"#39",
+				"-",
+				"Firefox",
+				"11.0"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 165,
+			"tex": "5",
+			"content": [
+				"5"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 50,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 166,
+			"tex": "15",
+			"content": [
+				"15"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 2,
+			"tex": "MHD",
+			"content": [
+				"MHD"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 60,
+			"tex": "\\#51 - Mozilla Firefox 8.0",
+			"content": [
+				"#51",
+				"-",
+				"Mozilla",
+				"Firefox",
+				"8.0"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 167,
+			"tex": "70.0",
+			"content": [
+				"70.0"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 36,
+			"tex": "\\#9 - Firefox 10.0/Ubuntu/Linaro",
+			"content": [
+				"#9",
+				"-",
+				"Firefox",
+				"10.0/Ubuntu/Linaro"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 168,
+			"tex": "\\#19 - Firefox 7.0",
+			"content": [
+				"#19",
+				"-",
+				"Firefox",
+				"7.0"
+			],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 15,
+			"tex": "-",
+			"content": [
+				"-"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 169,
+			"tex": "\\#39 - Firefox 11.0",
+			"content": [
+				"#39",
+				"-",
+				"Firefox",
+				"11.0"
+			],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 170,
+			"tex": "5",
+			"content": [
+				"5"
+			],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 171,
+			"tex": "5",
+			"content": [
+				"5"
+			],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 26,
+			"tex": "52",
+			"content": [
+				"52"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 59,
+			"tex": "67.5",
+			"content": [
+				"67.5"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 172,
+			"tex": "15",
+			"content": [
+				"15"
+			],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 8,
+			"tex": "3",
+			"content": [
+				"3"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 173,
+			"tex": "70.5",
+			"content": [
+				"70.5"
+			],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 174,
+			"tex": "\\#55 - Chrome 7.0.517.41",
+			"content": [
+				"#55",
+				"-",
+				"Chrome",
+				"7.0.517.41"
+			],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 6,
+			"tex": "\\#89 - Origin Browser",
+			"content": [
+				"#89",
+				"-",
+				"Origin",
+				"Browser"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 175,
+			"tex": "\\#57 - Chrome 9.0.597.94",
+			"content": [
+				"#57",
+				"-",
+				"Chrome",
+				"9.0.597.94"
+			],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 176,
+			"tex": "3",
+			"content": [
+				"3"
+			],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 19,
+			"tex": "\\#40 - Safari 5.0.6",
+			"content": [
+				"#40",
+				"-",
+				"Safari",
+				"5.0.6"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 177,
+			"tex": "7",
+			"content": [
+				"7"
+			],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 34,
+			"tex": "15",
+			"content": [
+				"15"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 178,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 179,
+			"tex": "72.5",
+			"content": [
+				"72.5"
+			],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 65,
+			"tex": "67.5",
+			"content": [
+				"67.5"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 180,
+			"tex": "\\#53 - Chrome 6.0.453.1",
+			"content": [
+				"#53",
+				"-",
+				"Chrome",
+				"6.0.453.1"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 63,
+			"tex": "0,5",
+			"content": [
+				"0,5"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 181,
+			"tex": "\\#57 - Chrome 9.0.597.94",
+			"content": [
+				"#57",
+				"-",
+				"Chrome",
+				"9.0.597.94"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 17,
+			"tex": "127.5",
+			"content": [
+				"127.5"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 52,
+			"tex": "15",
+			"content": [
+				"15"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 182,
+			"tex": "7",
+			"content": [
+				"7"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 183,
+			"tex": "7,5",
+			"content": [
+				"7,5"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 82,
+			"tex": "15",
+			"content": [
+				"15"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 184,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 47,
+			"tex": "67.5",
+			"content": [
+				"67.5"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 185,
+			"tex": "72.0",
+			"content": [
+				"72.0"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 7,
+			"tex": "\\#28 - Safari 5.1.5/MacOSX 10.7.3",
+			"content": [
+				"#28",
+				"-",
+				"Safari",
+				"5.1.5/MacOSX",
+				"10.7.3"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 57,
+			"tex": "0,5",
+			"content": [
+				"0,5"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 186,
+			"tex": "\\#96 - Chrome Nexus S",
+			"content": [
+				"#96",
+				"-",
+				"Chrome",
+				"Nexus",
+				"S"
+			],
+			"start_row": 31,
+			"end_row": 31,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 48,
+			"tex": "\\#21 - Firefox 10",
+			"content": [
+				"#21",
+				"-",
+				"Firefox",
+				"10"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 187,
+			"tex": "\\#15 - Chromium 18.0",
+			"content": [
+				"#15",
+				"-",
+				"Chromium",
+				"18.0"
+			],
+			"start_row": 31,
+			"end_row": 31,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 46,
+			"tex": "15",
+			"content": [
+				"15"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 188,
+			"tex": "6",
+			"content": [
+				"6"
+			],
+			"start_row": 31,
+			"end_row": 31,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 39,
+			"tex": "0,5",
+			"content": [
+				"0,5"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 189,
+			"tex": "8,5",
+			"content": [
+				"8,5"
+			],
+			"start_row": 31,
+			"end_row": 31,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 38,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 190,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 31,
+			"end_row": 31,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 28,
+			"tex": "1",
+			"content": [
+				"1"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 72,
+			"tex": "\\#60 - Mozilla Firefox 10.0",
+			"content": [
+				"#60",
+				"-",
+				"Mozilla",
+				"Firefox",
+				"10.0"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 191,
+			"tex": "69.5",
+			"content": [
+				"69.5"
+			],
+			"start_row": 31,
+			"end_row": 31,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 12,
+			"tex": "\\#25 - fbx v6",
+			"content": [
+				"#25",
+				"-",
+				"fbx",
+				"v6"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 49,
+			"tex": "\\#39 - Firefox 11.0",
+			"content": [
+				"#39",
+				"-",
+				"Firefox",
+				"11.0"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 192,
+			"tex": "\\#73 - Chrome 18.0",
+			"content": [
+				"#73",
+				"-",
+				"Chrome",
+				"18.0"
+			],
+			"start_row": 32,
+			"end_row": 32,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 56,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 193,
+			"tex": "\\#15 - Chromium 18.0",
+			"content": [
+				"#15",
+				"-",
+				"Chromium",
+				"18.0"
+			],
+			"start_row": 32,
+			"end_row": 32,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 71,
+			"tex": "67.5",
+			"content": [
+				"67.5"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 194,
+			"tex": "9",
+			"content": [
+				"9"
+			],
+			"start_row": 32,
+			"end_row": 32,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 70,
+			"tex": "15",
+			"content": [
+				"15"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 11,
+			"tex": "129.0",
+			"content": [
+				"129.0"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 195,
+			"tex": "11",
+			"content": [
+				"11"
+			],
+			"start_row": 32,
+			"end_row": 32,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 31,
+			"tex": "\\#39 - Firefox 11.0",
+			"content": [
+				"#39",
+				"-",
+				"Firefox",
+				"11.0"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 196,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 32,
+			"end_row": 32,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 4,
+			"tex": "Fsize",
+			"content": [
+				"Fsize"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 197,
+			"tex": "76.5",
+			"content": [
+				"76.5"
+			],
+			"start_row": 32,
+			"end_row": 32,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 68,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 198,
+			"tex": "\\#68 - Opera 11.65 Mac OS X 10.7.3",
+			"content": [
+				"#68",
+				"-",
+				"Opera",
+				"11.65",
+				"Mac",
+				"OS",
+				"X",
+				"10.7.3"
+			],
+			"start_row": 33,
+			"end_row": 33,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 199,
+			"tex": "\\#2 - Opera 11.11",
+			"content": [
+				"#2",
+				"-",
+				"Opera",
+				"11.11"
+			],
+			"start_row": 33,
+			"end_row": 33,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 69,
+			"tex": "0,5",
+			"content": [
+				"0,5"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 200,
+			"tex": "9",
+			"content": [
+				"9"
+			],
+			"start_row": 33,
+			"end_row": 33,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 79,
+			"tex": "\\#88 - Firefox 11.0 linux",
+			"content": [
+				"#88",
+				"-",
+				"Firefox",
+				"11.0",
+				"linux"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 201,
+			"tex": "14",
+			"content": [
+				"14"
+			],
+			"start_row": 33,
+			"end_row": 33,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 21,
+			"tex": "-",
+			"content": [
+				"-"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 76,
+			"tex": "15",
+			"content": [
+				"15"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 202,
+			"tex": "6",
+			"content": [
+				"6"
+			],
+			"start_row": 33,
+			"end_row": 33,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 58,
+			"tex": "15",
+			"content": [
+				"15"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 203,
+			"tex": "124.0",
+			"content": [
+				"124.0"
+			],
+			"start_row": 33,
+			"end_row": 33,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 51,
+			"tex": "0,5",
+			"content": [
+				"0,5"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 204,
+			"tex": "\\#107 - IE 9",
+			"content": [
+				"#107",
+				"-",
+				"IE",
+				"9"
+			],
+			"start_row": 34,
+			"end_row": 34,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 44,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 205,
+			"tex": "\\#3 - IE 9.0",
+			"content": [
+				"#3",
+				"-",
+				"IE",
+				"9.0"
+			],
+			"start_row": 34,
+			"end_row": 34,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 74,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 206,
+			"tex": "9",
+			"content": [
+				"9"
+			],
+			"start_row": 34,
+			"end_row": 34,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 33,
+			"tex": "0,5",
+			"content": [
+				"0,5"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 207,
+			"tex": "17,5",
+			"content": [
+				"17,5"
+			],
+			"start_row": 34,
+			"end_row": 34,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 208,
+			"tex": "6",
+			"content": [
+				"6"
+			],
+			"start_row": 34,
+			"end_row": 34,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 29,
+			"tex": "88.5",
+			"content": [
+				"88.5"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 53,
+			"tex": "62.5",
+			"content": [
+				"62.5"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 209,
+			"tex": "69.0",
+			"content": [
+				"69.0"
+			],
+			"start_row": 34,
+			"end_row": 34,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 78,
+			"tex": "\\#4 - Firefox 8.0.1",
+			"content": [
+				"#4",
+				"-",
+				"Firefox",
+				"8.0.1"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 210,
+			"tex": "\\#24 - IE 7.0",
+			"content": [
+				"#24",
+				"-",
+				"IE",
+				"7.0"
+			],
+			"start_row": 35,
+			"end_row": 35,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 25,
+			"tex": "\\#46 - Chrome 3.0.182.2",
+			"content": [
+				"#46",
+				"-",
+				"Chrome",
+				"3.0.182.2"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 81,
+			"tex": "1",
+			"content": [
+				"1"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 211,
+			"tex": "\\#86 - IE 7.0",
+			"content": [
+				"#86",
+				"-",
+				"IE",
+				"7.0"
+			],
+			"start_row": 35,
+			"end_row": 35,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 27,
+			"tex": "-",
+			"content": [
+				"-"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 37,
+			"tex": "\\#39 - Firefox 11.0",
+			"content": [
+				"#39",
+				"-",
+				"Firefox",
+				"11.0"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 212,
+			"tex": "1",
+			"content": [
+				"1"
+			],
+			"start_row": 35,
+			"end_row": 35,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 18,
+			"tex": "\\#27 - Rekonq Linux",
+			"content": [
+				"#27",
+				"-",
+				"Rekonq",
+				"Linux"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 213,
+			"tex": "21",
+			"content": [
+				"21"
+			],
+			"start_row": 35,
+			"end_row": 35,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 214,
+			"tex": "6",
+			"content": [
+				"6"
+			],
+			"start_row": 35,
+			"end_row": 35,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 20,
+			"tex": "15",
+			"content": [
+				"15"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 215,
+			"tex": "76.0",
+			"content": [
+				"76.0"
+			],
+			"start_row": 35,
+			"end_row": 35,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 10,
+			"tex": "1",
+			"content": [
+				"1"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 54,
+			"tex": "\\#39 - Firefox 11.0",
+			"content": [
+				"#39",
+				"-",
+				"Firefox",
+				"11.0"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 216,
+			"tex": "\\#86 - IE 7.0",
+			"content": [
+				"#86",
+				"-",
+				"IE",
+				"7.0"
+			],
+			"start_row": 36,
+			"end_row": 36,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 9,
+			"tex": "-",
+			"content": [
+				"-"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 64,
+			"tex": "15",
+			"content": [
+				"15"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 217,
+			"tex": "\\#24 - IE 7.0",
+			"content": [
+				"#24",
+				"-",
+				"IE",
+				"7.0"
+			],
+			"start_row": 36,
+			"end_row": 36,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 77,
+			"tex": "67.5",
+			"content": [
+				"67.5"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 218,
+			"tex": "1",
+			"content": [
+				"1"
+			],
+			"start_row": 36,
+			"end_row": 36,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 13,
+			"tex": "\\#8 - Safari 5.1.5",
+			"content": [
+				"#8",
+				"-",
+				"Safari",
+				"5.1.5"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 40,
+			"tex": "15",
+			"content": [
+				"15"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 160,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 3,
+			"tex": "MDF",
+			"content": [
+				"MDF"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 35,
+			"tex": "67.5",
+			"content": [
+				"67.5"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 219,
+			"tex": "21",
+			"content": [
+				"21"
+			],
+			"start_row": 36,
+			"end_row": 36,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 220,
+			"tex": "6",
+			"content": [
+				"6"
+			],
+			"start_row": 36,
+			"end_row": 36,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 16,
+			"tex": "1",
+			"content": [
+				"1"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 84,
+			"tex": "\\#88 - Firefox 11.0 linux",
+			"content": [
+				"#88",
+				"-",
+				"Firefox",
+				"11.0",
+				"linux"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 221,
+			"tex": "77.0",
+			"content": [
+				"77.0"
+			],
+			"start_row": 36,
+			"end_row": 36,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 41,
+			"tex": "67.5",
+			"content": [
+				"67.5"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 222,
+			"tex": "\\#2 - Opera 11.11",
+			"content": [
+				"#2",
+				"-",
+				"Opera",
+				"11.11"
+			],
+			"start_row": 37,
+			"end_row": 37,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 61,
+			"tex": "\\#39 - Firefox 11.0",
+			"content": [
+				"#39",
+				"-",
+				"Firefox",
+				"11.0"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 223,
+			"tex": "\\#7 - Opera 11.52/Win7",
+			"content": [
+				"#7",
+				"-",
+				"Opera",
+				"11.52/Win7"
+			],
+			"start_row": 37,
+			"end_row": 37,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 30,
+			"tex": "\\#5 - Firefox 11.0/Win7",
+			"content": [
+				"#5",
+				"-",
+				"Firefox",
+				"11.0/Win7"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 43,
+			"tex": "\\#39 - Firefox 11.0",
+			"content": [
+				"#39",
+				"-",
+				"Firefox",
+				"11.0"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 224,
+			"tex": "3",
+			"content": [
+				"3"
+			],
+			"start_row": 37,
+			"end_row": 37,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 225,
+			"tex": "21",
+			"content": [
+				"21"
+			],
+			"start_row": 37,
+			"end_row": 37,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 62,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 226,
+			"tex": "6",
+			"content": [
+				"6"
+			],
+			"start_row": 37,
+			"end_row": 37,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 5,
+			"tex": "MDD",
+			"content": [
+				"MDD"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 55,
+			"tex": "\\#59 - Mozilla Firefox 9.0",
+			"content": [
+				"#59",
+				"-",
+				"Mozilla",
+				"Firefox",
+				"9.0"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 227,
+			"tex": "136.0",
+			"content": [
+				"136.0"
+			],
+			"start_row": 37,
+			"end_row": 37,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 228,
+			"tex": "\\#84 - IE 7.0",
+			"content": [
+				"#84",
+				"-",
+				"IE",
+				"7.0"
+			],
+			"start_row": 38,
+			"end_row": 38,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 23,
+			"tex": "131.0",
+			"content": [
+				"131.0"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 45,
+			"tex": "0,5",
+			"content": [
+				"0,5"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 229,
+			"tex": "\\#86 - IE 7.0",
+			"content": [
+				"#86",
+				"-",
+				"IE",
+				"7.0"
+			],
+			"start_row": 38,
+			"end_row": 38,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 0,
+			"tex": "Browser",
+			"content": [
+				"Browser"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 80,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 230,
+			"tex": "4",
+			"content": [
+				"4"
+			],
+			"start_row": 38,
+			"end_row": 38,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 1,
+			"tex": "Nearest Neighbor (MHD)",
+			"content": [
+				"Nearest",
+				"Neighbor",
+				"(MHD)"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 66,
+			"tex": "\\#59 - Mozilla Firefox 9.0",
+			"content": [
+				"#59",
+				"-",
+				"Mozilla",
+				"Firefox",
+				"9.0"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 231,
+			"tex": "22",
+			"content": [
+				"22"
+			],
+			"start_row": 38,
+			"end_row": 38,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 32,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 232,
+			"tex": "6",
+			"content": [
+				"6"
+			],
+			"start_row": 38,
+			"end_row": 38,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 75,
+			"tex": "0,5",
+			"content": [
+				"0,5"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 233,
+			"tex": "78.0",
+			"content": [
+				"78.0"
+			],
+			"start_row": 38,
+			"end_row": 38,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 90,
+			"tex": "\\#62 - Chrome 12.0.742.91",
+			"content": [
+				"#62",
+				"-",
+				"Chrome",
+				"12.0.742.91"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 91,
+			"tex": "\\#63 - Chrome 13.0.782.99",
+			"content": [
+				"#63",
+				"-",
+				"Chrome",
+				"13.0.782.99"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 92,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 93,
+			"tex": "2",
+			"content": [
+				"2"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 94,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 95,
+			"tex": "71.5",
+			"content": [
+				"71.5"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 96,
+			"tex": "\\#63 - Chrome 13.0.782.99",
+			"content": [
+				"#63",
+				"-",
+				"Chrome",
+				"13.0.782.99"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 97,
+			"tex": "\\#62 - Chrome 12.0.742.91",
+			"content": [
+				"#62",
+				"-",
+				"Chrome",
+				"12.0.742.91"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 98,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 99,
+			"tex": "2",
+			"content": [
+				"2"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 100,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 101,
+			"tex": "71.5",
+			"content": [
+				"71.5"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 102,
+			"tex": "\\#58 - Chrome 10.0.648.133",
+			"content": [
+				"#58",
+				"-",
+				"Chrome",
+				"10.0.648.133"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 103,
+			"tex": "\\#57 - Chrome 9.0.597.94",
+			"content": [
+				"#57",
+				"-",
+				"Chrome",
+				"9.0.597.94"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 104,
+			"tex": "1",
+			"content": [
+				"1"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 105,
+			"tex": "3",
+			"content": [
+				"3"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 106,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 107,
+			"tex": "72.5",
+			"content": [
+				"72.5"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 108,
+			"tex": "\\#1 - Chrome 18.0",
+			"content": [
+				"#1",
+				"-",
+				"Chrome",
+				"18.0"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 109,
+			"tex": "\\#15 - Chromium 18.0",
+			"content": [
+				"#15",
+				"-",
+				"Chromium",
+				"18.0"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 110,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 111,
+			"tex": "3,5",
+			"content": [
+				"3,5"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 112,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 113,
+			"tex": "69.5",
+			"content": [
+				"69.5"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 114,
+			"tex": "\\#15 - Chromium 18.0",
+			"content": [
+				"#15",
+				"-",
+				"Chromium",
+				"18.0"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 115,
+			"tex": "\\#65 - Chrome 16",
+			"content": [
+				"#65",
+				"-",
+				"Chrome",
+				"16"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 116,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 88,
+			"tex": "15",
+			"content": [
+				"15"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 117,
+			"tex": "3,5",
+			"content": [
+				"3,5"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 118,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 119,
+			"tex": "69.5",
+			"content": [
+				"69.5"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 120,
+			"tex": "\\#64 - Chrome 14.0.814.0",
+			"content": [
+				"#64",
+				"-",
+				"Chrome",
+				"14.0.814.0"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 121,
+			"tex": "\\#15 - Chromium 18.0",
+			"content": [
+				"#15",
+				"-",
+				"Chromium",
+				"18.0"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 122,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 123,
+			"tex": "3,5",
+			"content": [
+				"3,5"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 124,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 125,
+			"tex": "69.5",
+			"content": [
+				"69.5"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 126,
+			"tex": "\\#65 - Chrome 16",
+			"content": [
+				"#65",
+				"-",
+				"Chrome",
+				"16"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 127,
+			"tex": "\\#15 - Chromium 18.0",
+			"content": [
+				"#15",
+				"-",
+				"Chromium",
+				"18.0"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 128,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 129,
+			"tex": "3,5",
+			"content": [
+				"3,5"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 130,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 131,
+			"tex": "69.5",
+			"content": [
+				"69.5"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 87,
+			"tex": "1",
+			"content": [
+				"1"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 132,
+			"tex": "\\#70 - Chrome 17.0.963.8",
+			"content": [
+				"#70",
+				"-",
+				"Chrome",
+				"17.0.963.8"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 133,
+			"tex": "\\#15 - Chromium 18.0",
+			"content": [
+				"#15",
+				"-",
+				"Chromium",
+				"18.0"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 134,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 135,
+			"tex": "3,5",
+			"content": [
+				"3,5"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 136,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 137,
+			"tex": "69.5",
+			"content": [
+				"69.5"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 138,
+			"tex": "\\#75 - Chrome 18 / Win XP 32",
+			"content": [
+				"#75",
+				"-",
+				"Chrome",
+				"18",
+				"/",
+				"Win",
+				"XP",
+				"32"
+			],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 139,
+			"tex": "\\#15 - Chromium 18.0",
+			"content": [
+				"#15",
+				"-",
+				"Chromium",
+				"18.0"
+			],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 140,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 141,
+			"tex": "3,5",
+			"content": [
+				"3,5"
+			],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 142,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 86,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 143,
+			"tex": "69.5",
+			"content": [
+				"69.5"
+			],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 89,
+			"tex": "68.5",
+			"content": [
+				"68.5"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 144,
+			"tex": "\\#66 - Chrome 15.0.874.106",
+			"content": [
+				"#66",
+				"-",
+				"Chrome",
+				"15.0.874.106"
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 145,
+			"tex": "\\#15 - Chromium 18.0",
+			"content": [
+				"#15",
+				"-",
+				"Chromium",
+				"18.0"
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 146,
+			"tex": "1",
+			"content": [
+				"1"
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 147,
+			"tex": "3,5",
+			"content": [
+				"3,5"
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 148,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 149,
+			"tex": "69.5",
+			"content": [
+				"69.5"
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 150,
+			"tex": "\\#56 - Chrome 8.0.552.215",
+			"content": [
+				"#56",
+				"-",
+				"Chrome",
+				"8.0.552.215"
+			],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 151,
+			"tex": "\\#57 - Chrome 9.0.597.94",
+			"content": [
+				"#57",
+				"-",
+				"Chrome",
+				"9.0.597.94"
+			],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 152,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 153,
+			"tex": "4",
+			"content": [
+				"4"
+			],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 154,
+			"tex": "19",
+			"content": [
+				"19"
+			],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 155,
+			"tex": "73.5",
+			"content": [
+				"73.5"
+			],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 156,
+			"tex": "\\#57 - Chrome 9.0.597.94",
+			"content": [
+				"#57",
+				"-",
+				"Chrome",
+				"9.0.597.94"
+			],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 157,
+			"tex": "\\#56 - Chrome 8.0.552.215",
+			"content": [
+				"#56",
+				"-",
+				"Chrome",
+				"8.0.552.215"
+			],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 158,
+			"tex": "0",
+			"content": [
+				"0"
+			],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 159,
+			"tex": "4",
+			"content": [
+				"4"
+			],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 85,
+			"tex": "\\#4 - Firefox 8.0.1",
+			"content": [
+				"#4",
+				"-",
+				"Firefox",
+				"8.0.1"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 161,
+			"tex": "73.5",
+			"content": [
+				"73.5"
+			],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 5,
+			"end_col": 5
+		}
+	]
+}

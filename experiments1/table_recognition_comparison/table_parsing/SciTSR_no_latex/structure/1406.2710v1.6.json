@@ -1,0 +1,2144 @@
+{
+	"cells": [
+		{
+			"id": 38,
+			"tex": "united mexican states",
+			"content": [
+				"united",
+				"mexican",
+				"states"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 75,
+			"tex": "institute of police",
+			"content": [
+				"institute",
+				"of",
+				"police"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 134,
+			"tex": "high-ranking military",
+			"content": [
+				"high-ranking",
+				"military"
+			],
+			"start_row": 33,
+			"end_row": 33,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 58,
+			"tex": "ersten auftritt",
+			"content": [
+				"ersten",
+				"auftritt"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 44,
+			"tex": "",
+			"content": [],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 30,
+			"tex": "millions de dollars",
+			"content": [
+				"millions",
+				"de",
+				"dollars"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 139,
+			"tex": "attache militaire de",
+			"content": [
+				"attache",
+				"militaire",
+				"de"
+			],
+			"start_row": 34,
+			"end_row": 34,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 48,
+			"tex": "first session",
+			"content": [
+				"\ufb01rst",
+				"session"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 31,
+			"tex": "de EUR millions",
+			"content": [
+				"de",
+				"EUR",
+				"millions"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 35,
+			"tex": "eine halbe millionen",
+			"content": [
+				"eine",
+				"halbe",
+				"millionen"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 21,
+			"tex": "privaten sektor",
+			"content": [
+				"privaten",
+				"sektor"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 125,
+			"tex": "a faibles revenus",
+			"content": [
+				"a",
+				"faibles",
+				"revenus"
+			],
+			"start_row": 31,
+			"end_row": 31,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 54,
+			"tex": "premiere phase",
+			"content": [
+				"premiere",
+				"phase"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 126,
+			"tex": "a faible revenu",
+			"content": [
+				"a",
+				"faible",
+				"revenu"
+			],
+			"start_row": 31,
+			"end_row": 31,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 63,
+			"tex": "european union undertook",
+			"content": [
+				"european",
+				"union",
+				"undertook"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 14,
+			"tex": "private sector there",
+			"content": [
+				"private",
+				"sector",
+				"there"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 15,
+			"tex": "private sector in",
+			"content": [
+				"private",
+				"sector",
+				"in"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 13,
+			"tex": "private sector which",
+			"content": [
+				"private",
+				"sector",
+				"which"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 34,
+			"tex": "millionen von dollar",
+			"content": [
+				"millionen",
+				"von",
+				"dollar"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 50,
+			"tex": "first appearance",
+			"content": [
+				"\ufb01rst",
+				"appearance"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 137,
+			"tex": "composante militaire",
+			"content": [
+				"composante",
+				"militaire"
+			],
+			"start_row": 34,
+			"end_row": 34,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 29,
+			"tex": "quelque EUR millions",
+			"content": [
+				"quelque",
+				"EUR",
+				"millions"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 72,
+			"tex": "police officer",
+			"content": [
+				"police",
+				"o\ufb03cer"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 25,
+			"tex": "around one million",
+			"content": [
+				"around",
+				"one",
+				"million"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 45,
+			"tex": "vereinigten staaten",
+			"content": [
+				"vereinigten",
+				"staaten"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 40,
+			"tex": "",
+			"content": [],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 12,
+			"tex": "private sector",
+			"content": [
+				"private",
+				"sector"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 59,
+			"tex": "ersten vizeprasidenten",
+			"content": [
+				"ersten",
+				"vizeprasidenten"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 11,
+			"tex": "kalte krieg",
+			"content": [
+				"kalte",
+				"krieg"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 67,
+			"tex": "'union europeenne",
+			"content": [
+				"\u2019union",
+				"europeenne"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 74,
+			"tex": "police academy",
+			"content": [
+				"police",
+				"academy"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 41,
+			"tex": "etats-unis investissent",
+			"content": [
+				"etats-unis",
+				"investissent"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 57,
+			"tex": "ersten wahlgang",
+			"content": [
+				"ersten",
+				"wahlgang"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 42,
+			"tex": "etats-unis bloquent",
+			"content": [
+				"etats-unis",
+				"bloquent"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 127,
+			"tex": "faible revenu",
+			"content": [
+				"faible",
+				"revenu"
+			],
+			"start_row": 31,
+			"end_row": 31,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 16,
+			"tex": "",
+			"content": [],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 28,
+			"tex": "",
+			"content": [],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 43,
+			"tex": "etats-unis",
+			"content": [
+				"etats-unis"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 135,
+			"tex": "military tribunals",
+			"content": [
+				"military",
+				"tribunals"
+			],
+			"start_row": 33,
+			"end_row": 33,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 18,
+			"tex": "secteur prive dans",
+			"content": [
+				"secteur",
+				"prive",
+				"dans"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 71,
+			"tex": "europaische union",
+			"content": [
+				"europaische",
+				"union"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 128,
+			"tex": "",
+			"content": [],
+			"start_row": 32,
+			"end_row": 32,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 56,
+			"tex": "",
+			"content": [],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 65,
+			"tex": "union europeenne",
+			"content": [
+				"union",
+				"europeenne"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 26,
+			"tex": "one hundred million",
+			"content": [
+				"one",
+				"hundred",
+				"million"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 76,
+			"tex": "",
+			"content": [],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 132,
+			"tex": "military invasion",
+			"content": [
+				"military",
+				"invasion"
+			],
+			"start_row": 33,
+			"end_row": 33,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 61,
+			"tex": "european union 1-6",
+			"content": [
+				"european",
+				"union",
+				"1-6"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 69,
+			"tex": "zur europaischen union",
+			"content": [
+				"zur",
+				"europaischen",
+				"union"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 64,
+			"tex": "",
+			"content": [],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 133,
+			"tex": "military invasion of",
+			"content": [
+				"military",
+				"invasion",
+				"of"
+			],
+			"start_row": 33,
+			"end_row": 33,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 70,
+			"tex": "europaischen union",
+			"content": [
+				"europaischen",
+				"union"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 52,
+			"tex": "",
+			"content": [],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 73,
+			"tex": "police",
+			"content": [
+				"police"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 131,
+			"tex": "landwirtschaftlichen einkommen",
+			"content": [
+				"landwirtschaftlichen",
+				"einkommen"
+			],
+			"start_row": 32,
+			"end_row": 32,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 53,
+			"tex": "premiere session",
+			"content": [
+				"premiere",
+				"session"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 66,
+			"tex": "'union europeenne aa-afns",
+			"content": [
+				"\u2019union",
+				"europeenne",
+				"aa-afns"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 55,
+			"tex": "premiere observation",
+			"content": [
+				"premiere",
+				"observation"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 32,
+			"tex": "",
+			"content": [],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 130,
+			"tex": "geringen einkommen",
+			"content": [
+				"geringen",
+				"einkommen"
+			],
+			"start_row": 32,
+			"end_row": 32,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 60,
+			"tex": "european union",
+			"content": [
+				"european",
+				"union"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 17,
+			"tex": "secteur prive",
+			"content": [
+				"secteur",
+				"prive"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 124,
+			"tex": "",
+			"content": [],
+			"start_row": 31,
+			"end_row": 31,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 51,
+			"tex": "first anniversary of",
+			"content": [
+				"\ufb01rst",
+				"anniversary",
+				"of"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 36,
+			"tex": "united states",
+			"content": [
+				"united",
+				"states"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 46,
+			"tex": "den vereinigten staaten",
+			"content": [
+				"den",
+				"vereinigten",
+				"staaten"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 138,
+			"tex": "sous occupation militaire",
+			"content": [
+				"sous",
+				"occupation",
+				"militaire"
+			],
+			"start_row": 34,
+			"end_row": 34,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 37,
+			"tex": "united states australia",
+			"content": [
+				"united",
+				"states",
+				"australia"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 20,
+			"tex": "",
+			"content": [],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 39,
+			"tex": "united states takes",
+			"content": [
+				"united",
+				"states",
+				"takes"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 22,
+			"tex": "dem privaten sektor",
+			"content": [
+				"dem",
+				"privaten",
+				"sektor"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 24,
+			"tex": "one million euros",
+			"content": [
+				"one",
+				"million",
+				"euros"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 68,
+			"tex": "",
+			"content": [],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 47,
+			"tex": "vereinigten staaten bei",
+			"content": [
+				"vereinigten",
+				"staaten",
+				"bei"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 136,
+			"tex": "",
+			"content": [],
+			"start_row": 34,
+			"end_row": 34,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 23,
+			"tex": "den privaten sektor",
+			"content": [
+				"den",
+				"privaten",
+				"sektor"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 62,
+			"tex": "european union spends",
+			"content": [
+				"european",
+				"union",
+				"spends"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 33,
+			"tex": "anderthalb millionen",
+			"content": [
+				"anderthalb",
+				"millionen"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 129,
+			"tex": "niedrigen einkommen",
+			"content": [
+				"niedrigen",
+				"einkommen"
+			],
+			"start_row": 32,
+			"end_row": 32,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 27,
+			"tex": "million euros",
+			"content": [
+				"million",
+				"euros"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 19,
+			"tex": "du secteur prive",
+			"content": [
+				"du",
+				"secteur",
+				"prive"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 49,
+			"tex": "first meeting",
+			"content": [
+				"\ufb01rst",
+				"meeting"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 84,
+			"tex": "on monday",
+			"content": [
+				"on",
+				"monday"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 162,
+			"tex": "'etat providence et",
+			"content": [
+				"\u2019etat",
+				"providence",
+				"et"
+			],
+			"start_row": 40,
+			"end_row": 40,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 161,
+			"tex": "comportements racistes et",
+			"content": [
+				"comportements",
+				"racistes",
+				"et"
+			],
+			"start_row": 40,
+			"end_row": 40,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 8,
+			"tex": "",
+			"content": [],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 160,
+			"tex": "",
+			"content": [],
+			"start_row": 40,
+			"end_row": 40,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 159,
+			"tex": "rogue state and",
+			"content": [
+				"rogue",
+				"state",
+				"and"
+			],
+			"start_row": 39,
+			"end_row": 39,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 4,
+			"tex": "",
+			"content": [],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 158,
+			"tex": "protectionism and state",
+			"content": [
+				"protectionism",
+				"and",
+				"state"
+			],
+			"start_row": 39,
+			"end_row": 39,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 110,
+			"tex": "poor levels",
+			"content": [
+				"poor",
+				"levels"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 157,
+			"tex": "state and non-state",
+			"content": [
+				"state",
+				"and",
+				"non-state"
+			],
+			"start_row": 39,
+			"end_row": 39,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 156,
+			"tex": "church and state",
+			"content": [
+				"church",
+				"and",
+				"state"
+			],
+			"start_row": 39,
+			"end_row": 39,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 97,
+			"tex": "south africa of",
+			"content": [
+				"south",
+				"africa",
+				"of"
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 155,
+			"tex": "warum schicken wir",
+			"content": [
+				"warum",
+				"schicken",
+				"wir"
+			],
+			"start_row": 38,
+			"end_row": 38,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 154,
+			"tex": "grunde warum wir",
+			"content": [
+				"grunde",
+				"warum",
+				"wir"
+			],
+			"start_row": 38,
+			"end_row": 38,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 167,
+			"tex": "kirche und staat",
+			"content": [
+				"kirche",
+				"und",
+				"staat"
+			],
+			"start_row": 41,
+			"end_row": 41,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 166,
+			"tex": "und psychische",
+			"content": [
+				"und",
+				"psychische"
+			],
+			"start_row": 41,
+			"end_row": 41,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 165,
+			"tex": "korperliche und psychische",
+			"content": [
+				"korperliche",
+				"und",
+				"psychische"
+			],
+			"start_row": 41,
+			"end_row": 41,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 86,
+			"tex": "relating to monday",
+			"content": [
+				"relating",
+				"to",
+				"monday"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 164,
+			"tex": "",
+			"content": [],
+			"start_row": 41,
+			"end_row": 41,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 163,
+			"tex": "raciales et ethniques",
+			"content": [
+				"raciales",
+				"et",
+				"ethniques"
+			],
+			"start_row": 40,
+			"end_row": 40,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 153,
+			"tex": "warum lehnen wir",
+			"content": [
+				"warum",
+				"lehnen",
+				"wir"
+			],
+			"start_row": 38,
+			"end_row": 38,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 152,
+			"tex": "",
+			"content": [],
+			"start_row": 38,
+			"end_row": 38,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 9,
+			"tex": "den drohenden krieg",
+			"content": [
+				"den",
+				"drohenden",
+				"krieg"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 151,
+			"tex": "pourquoi nous lancons",
+			"content": [
+				"pourquoi",
+				"nous",
+				"lancons"
+			],
+			"start_row": 37,
+			"end_row": 37,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 150,
+			"tex": "pourquoi nous approuvons",
+			"content": [
+				"pourquoi",
+				"nous",
+				"approuvons"
+			],
+			"start_row": 37,
+			"end_row": 37,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 149,
+			"tex": "pourquoi nous votons",
+			"content": [
+				"pourquoi",
+				"nous",
+				"votons"
+			],
+			"start_row": 37,
+			"end_row": 37,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 148,
+			"tex": "",
+			"content": [],
+			"start_row": 37,
+			"end_row": 37,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 147,
+			"tex": "why we",
+			"content": [
+				"why",
+				"we"
+			],
+			"start_row": 36,
+			"end_row": 36,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 10,
+			"tex": "drohenden krieg",
+			"content": [
+				"drohenden",
+				"krieg"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 146,
+			"tex": "reasons why we",
+			"content": [
+				"reasons",
+				"why",
+				"we"
+			],
+			"start_row": 36,
+			"end_row": 36,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 2,
+			"tex": "to declare war",
+			"content": [
+				"to",
+				"declare",
+				"war"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 123,
+			"tex": "lower incomes",
+			"content": [
+				"lower",
+				"incomes"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 145,
+			"tex": "why we abstained",
+			"content": [
+				"why",
+				"we",
+				"abstained"
+			],
+			"start_row": 36,
+			"end_row": 36,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 90,
+			"tex": "soiree de lundi",
+			"content": [
+				"soiree",
+				"de",
+				"lundi"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 144,
+			"tex": "why we oppose",
+			"content": [
+				"why",
+				"we",
+				"oppose"
+			],
+			"start_row": 36,
+			"end_row": 36,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 0,
+			"tex": "declare war",
+			"content": [
+				"declare",
+				"war"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 143,
+			"tex": "militarischen intervention",
+			"content": [
+				"militarischen",
+				"intervention"
+			],
+			"start_row": 35,
+			"end_row": 35,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 168,
+			"tex": "islamic republic",
+			"content": [
+				"islamic",
+				"republic"
+			],
+			"start_row": 42,
+			"end_row": 42,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 108,
+			"tex": "poor performance",
+			"content": [
+				"poor",
+				"performance"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 96,
+			"tex": "south africa",
+			"content": [
+				"south",
+				"africa"
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 77,
+			"tex": "academie de police",
+			"content": [
+				"academie",
+				"de",
+				"police"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 118,
+			"tex": "hoch verschuldeten armen",
+			"content": [
+				"hoch",
+				"verschuldeten",
+				"armen"
+			],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 82,
+			"tex": "polizei militar",
+			"content": [
+				"polizei",
+				"militar"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 6,
+			"tex": "guerre",
+			"content": [
+				"guerre"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 120,
+			"tex": "low income",
+			"content": [
+				"low",
+				"income"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 115,
+			"tex": "pauvres lourdement endettes",
+			"content": [
+				"pauvres",
+				"lourdement",
+				"endettes"
+			],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 92,
+			"tex": "",
+			"content": [],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 107,
+			"tex": "sudliche afrika",
+			"content": [
+				"sudliche",
+				"afrika"
+			],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 102,
+			"tex": "afrique du sud",
+			"content": [
+				"afrique",
+				"du",
+				"sud"
+			],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 93,
+			"tex": "am montag vor",
+			"content": [
+				"am",
+				"montag",
+				"vor"
+			],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 112,
+			"tex": "",
+			"content": [],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 89,
+			"tex": "au mois d'octobre",
+			"content": [
+				"au",
+				"mois",
+				"d\u2019octobre"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 104,
+			"tex": "",
+			"content": [],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 141,
+			"tex": "militarischen",
+			"content": [
+				"militarischen"
+			],
+			"start_row": 35,
+			"end_row": 35,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 103,
+			"tex": "l'afrique du sud",
+			"content": [
+				"l\u2019afrique",
+				"du",
+				"sud"
+			],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 85,
+			"tex": "meeting on monday",
+			"content": [
+				"meeting",
+				"on",
+				"monday"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 91,
+			"tex": "lundi",
+			"content": [
+				"lundi"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 106,
+			"tex": "sudlichen afrikas",
+			"content": [
+				"sudlichen",
+				"afrikas"
+			],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 79,
+			"tex": "officiers de police",
+			"content": [
+				"o\ufb03ciers",
+				"de",
+				"police"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 1,
+			"tex": "declare war on",
+			"content": [
+				"declare",
+				"war",
+				"on"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 117,
+			"tex": "armen",
+			"content": [
+				"armen"
+			],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 114,
+			"tex": "pauvres recoivent",
+			"content": [
+				"pauvres",
+				"recoivent"
+			],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 169,
+			"tex": "islamic republic of",
+			"content": [
+				"islamic",
+				"republic",
+				"of"
+			],
+			"start_row": 42,
+			"end_row": 42,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 105,
+			"tex": "sudlichen afrika",
+			"content": [
+				"sudlichen",
+				"afrika"
+			],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 170,
+			"tex": "islamic federal republic",
+			"content": [
+				"islamic",
+				"federal",
+				"republic"
+			],
+			"start_row": 42,
+			"end_row": 42,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 142,
+			"tex": "anschaffung von militarischen",
+			"content": [
+				"anscha\ufb00ung",
+				"von",
+				"militarischen"
+			],
+			"start_row": 35,
+			"end_row": 35,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 171,
+			"tex": "the islamic republic",
+			"content": [
+				"the",
+				"islamic",
+				"republic"
+			],
+			"start_row": 42,
+			"end_row": 42,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 101,
+			"tex": "'afrique du sud",
+			"content": [
+				"\u2019afrique",
+				"du",
+				"sud"
+			],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 172,
+			"tex": "",
+			"content": [],
+			"start_row": 43,
+			"end_row": 43,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 3,
+			"tex": "declares war",
+			"content": [
+				"declares",
+				"war"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 119,
+			"tex": "den armen",
+			"content": [
+				"den",
+				"armen"
+			],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 173,
+			"tex": "republique islamique",
+			"content": [
+				"republique",
+				"islamique"
+			],
+			"start_row": 43,
+			"end_row": 43,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 174,
+			"tex": "en republique islamique",
+			"content": [
+				"en",
+				"republique",
+				"islamique"
+			],
+			"start_row": 43,
+			"end_row": 43,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 99,
+			"tex": "from south africa",
+			"content": [
+				"from",
+				"south",
+				"africa"
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 175,
+			"tex": "republique islamique d",
+			"content": [
+				"republique",
+				"islamique",
+				"d"
+			],
+			"start_row": 43,
+			"end_row": 43,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 109,
+			"tex": "poor",
+			"content": [
+				"poor"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 140,
+			"tex": "",
+			"content": [],
+			"start_row": 35,
+			"end_row": 35,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 176,
+			"tex": "",
+			"content": [],
+			"start_row": 44,
+			"end_row": 44,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 94,
+			"tex": "am montag mit",
+			"content": [
+				"am",
+				"montag",
+				"mit"
+			],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 177,
+			"tex": "islamischen republik",
+			"content": [
+				"islamischen",
+				"republik"
+			],
+			"start_row": 44,
+			"end_row": 44,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 7,
+			"tex": "la guerre iran-irak",
+			"content": [
+				"la",
+				"guerre",
+				"iran-irak"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 178,
+			"tex": "islamische republik iran",
+			"content": [
+				"islamische",
+				"republik",
+				"iran"
+			],
+			"start_row": 44,
+			"end_row": 44,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 98,
+			"tex": "of south africa",
+			"content": [
+				"of",
+				"south",
+				"africa"
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 179,
+			"tex": "islamische republik",
+			"content": [
+				"islamische",
+				"republik"
+			],
+			"start_row": 44,
+			"end_row": 44,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 121,
+			"tex": "low incomes",
+			"content": [
+				"low",
+				"incomes"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 87,
+			"tex": "monday",
+			"content": [
+				"monday"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 88,
+			"tex": "",
+			"content": [],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 5,
+			"tex": "guerre eclair",
+			"content": [
+				"guerre",
+				"eclair"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 100,
+			"tex": "",
+			"content": [],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 113,
+			"tex": "pauvres",
+			"content": [
+				"pauvres"
+			],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 83,
+			"tex": "kriminellen handlungen in",
+			"content": [
+				"kriminellen",
+				"handlungen",
+				"in"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 81,
+			"tex": "polizei",
+			"content": [
+				"polizei"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 111,
+			"tex": "bitterly poor",
+			"content": [
+				"bitterly",
+				"poor"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 122,
+			"tex": "on low incomes",
+			"content": [
+				"on",
+				"low",
+				"incomes"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 80,
+			"tex": "",
+			"content": [],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 95,
+			"tex": "montag am",
+			"content": [
+				"montag",
+				"am"
+			],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 78,
+			"tex": "agents de police",
+			"content": [
+				"agents",
+				"de",
+				"police"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 116,
+			"tex": "",
+			"content": [],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 0,
+			"end_col": 0
+		}
+	]
+}

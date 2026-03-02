@@ -1,6 +1,6 @@
 """
-Тесты для интеграции с Dots.OCR.
+Tests for Dots.OCR integration.
 
-Тестируемый класс:
+Class under test:
 - DotsOCRClient
 """

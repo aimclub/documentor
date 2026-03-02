@@ -1,0 +1,125 @@
+{
+	"cells": [
+		{
+			"id": 5,
+			"tex": "2.74",
+			"content": [
+				"2.74"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 6,
+			"tex": "+\\ Projection Discriminator",
+			"content": [
+				"+",
+				"Projection",
+				"Discriminator"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 2,
+			"tex": "Conditional GAN with spectral norm",
+			"content": [
+				"Conditional",
+				"GAN",
+				"with",
+				"spectral",
+				"norm"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 0,
+			"tex": "Model",
+			"content": [
+				"Model"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 4,
+			"tex": "+\\ Hinge Loss",
+			"content": [
+				"+",
+				"Hinge",
+				"Loss"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 1,
+			"tex": "Average Score",
+			"content": [
+				"Average",
+				"Score"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 7,
+			"tex": "3.16",
+			"content": [
+				"3.16"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "1.90",
+			"content": [
+				"1.90"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 9,
+			"tex": "3.70",
+			"content": [
+				"3.70"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 8,
+			"tex": "+\\ Auxiliary Classifier",
+			"content": [
+				"+",
+				"Auxiliary",
+				"Classi\ufb01er"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		}
+	]
+}

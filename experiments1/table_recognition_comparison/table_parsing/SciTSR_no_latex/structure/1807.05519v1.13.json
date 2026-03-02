@@ -1,0 +1,192 @@
+{
+	"cells": [
+		{
+			"id": 13,
+			"tex": "california texas ohio arizona jersey",
+			"content": [
+				"california",
+				"texas",
+				"ohio",
+				"arizona",
+				"jersey"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 0,
+			"tex": "Type",
+			"content": [
+				"Type"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 4,
+			"tex": "/LOCATION/CONTINENT",
+			"content": [
+				"/LOCATION/CONTINENT"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 1,
+			"tex": "Prototypes",
+			"content": [
+				"Prototypes"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 11,
+			"tex": "soviet edisto canada china france",
+			"content": [
+				"soviet",
+				"edisto",
+				"canada",
+				"china",
+				"france"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "areas connaught earth lane brooklyn",
+			"content": [
+				"areas",
+				"connaught",
+				"earth",
+				"lane",
+				"brooklyn"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 7,
+			"tex": "big\\_bear lake\\_erie champ lake\\_geneva fujisawa",
+			"content": [
+				"big",
+				"bear",
+				"lake",
+				"erie",
+				"champ",
+				"lake",
+				"geneva",
+				"fujisawa"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 2,
+			"tex": "/LOCATION",
+			"content": [
+				"/LOCATION"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 6,
+			"tex": "/LOCATION/LAKE\\_SEA\\_OCEAN",
+			"content": [
+				"/LOCATION/LAKE",
+				"SEA",
+				"OCEAN"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 5,
+			"tex": "north\\_america europe africa north\\_american asia",
+			"content": [
+				"north",
+				"america",
+				"europe",
+				"africa",
+				"north",
+				"american",
+				"asia"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 10,
+			"tex": "/GPE",
+			"content": [
+				"/GPE"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 9,
+			"tex": "hudson thompson mississippi\\_river james\\_river tana",
+			"content": [
+				"hudson",
+				"thompson",
+				"mississippi",
+				"river",
+				"james",
+				"river",
+				"tana"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 8,
+			"tex": "/LOCATION/RIVER",
+			"content": [
+				"/LOCATION/RIVER"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 12,
+			"tex": "/GPE/STATE\\_PROVINCE",
+			"content": [
+				"/GPE/STATE",
+				"PROVINCE"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		}
+	]
+}

@@ -1,0 +1,9 @@
+# Зависимости для графического инструмента разметки
+streamlit>=1.28.0
+PyMuPDF>=1.23.0
+Pillow>=10.0.0
+streamlit-drawable-canvas>=0.9.0
+
+# Примечание: Если возникают проблемы с streamlit-drawable-canvas,
+# попробуйте обновить до последней версии:
+# pip install --upgrade streamlit-drawable-canvas

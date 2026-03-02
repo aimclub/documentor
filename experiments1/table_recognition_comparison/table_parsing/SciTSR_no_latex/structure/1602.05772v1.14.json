@@ -1,0 +1,1425 @@
+{
+	"cells": [
+		{
+			"id": 85,
+			"tex": "yes (3)",
+			"content": [
+				"yes",
+				"(3)"
+			],
+			"start_row": 42,
+			"end_row": 42,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 33,
+			"tex": "yes (3251)",
+			"content": [
+				"yes",
+				"(3251)"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 53,
+			"tex": "yes (6564)",
+			"content": [
+				"yes",
+				"(6564)"
+			],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 21,
+			"tex": "yes (8)",
+			"content": [
+				"yes",
+				"(8)"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 87,
+			"tex": "``the Italian War of 1542-46'' found (2)",
+			"content": [
+				"\u201cthe",
+				"Italian",
+				"War",
+				"of",
+				"1542-46\u201d",
+				"found",
+				"(2)"
+			],
+			"start_row": 43,
+			"end_row": 43,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 80,
+			"tex": "Italian War of 1521-26",
+			"content": [
+				"Italian",
+				"War",
+				"of",
+				"1521-26"
+			],
+			"start_row": 40,
+			"end_row": 40,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 17,
+			"tex": "yes (3) ``Pyotr Ilyich Tchaikovsky'' found for kernel ``Pyotr''",
+			"content": [
+				"yes",
+				"(3)",
+				"\u201cPyotr",
+				"Ilyich",
+				"Tchaikovsky\u201d",
+				"found",
+				"for",
+				"kernel",
+				"\u201cPyotr\u201d"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 108,
+			"tex": "French cuisine",
+			"content": [
+				"French",
+				"cuisine"
+			],
+			"start_row": 54,
+			"end_row": 54,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 109,
+			"tex": "yes (78)",
+			"content": [
+				"yes",
+				"(78)"
+			],
+			"start_row": 54,
+			"end_row": 54,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 44,
+			"tex": "Blue-green algae",
+			"content": [
+				"Blue-green",
+				"algae"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 91,
+			"tex": "yes (3), ``the It...'' found (9)",
+			"content": [
+				"yes",
+				"(3),",
+				"\u201cthe",
+				"It...\u201d",
+				"found",
+				"(9)"
+			],
+			"start_row": 45,
+			"end_row": 45,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 15,
+			"tex": "yes (140)",
+			"content": [
+				"yes",
+				"(140)"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 79,
+			"tex": "yes (166)",
+			"content": [
+				"yes",
+				"(166)"
+			],
+			"start_row": 39,
+			"end_row": 39,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 95,
+			"tex": "yes (336)",
+			"content": [
+				"yes",
+				"(336)"
+			],
+			"start_row": 47,
+			"end_row": 47,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 36,
+			"tex": "Blue whale",
+			"content": [
+				"Blue",
+				"whale"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 64,
+			"tex": "Brown gold",
+			"content": [
+				"Brown",
+				"gold"
+			],
+			"start_row": 32,
+			"end_row": 32,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 3,
+			"tex": "yes (602)",
+			"content": [
+				"yes",
+				"(602)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 50,
+			"tex": "Blue1",
+			"content": [
+				"Blue1"
+			],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 1,
+			"tex": "yes (356)",
+			"content": [
+				"yes",
+				"(356)"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 90,
+			"tex": "Italian Democratic Socialist Party",
+			"content": [
+				"Italian",
+				"Democratic",
+				"Socialist",
+				"Party"
+			],
+			"start_row": 45,
+			"end_row": 45,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 97,
+			"tex": "``French Spacing'' found (3)",
+			"content": [
+				"\u201cFrench",
+				"Spacing\u201d",
+				"found",
+				"(3)"
+			],
+			"start_row": 48,
+			"end_row": 48,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 42,
+			"tex": "Blue ray disc",
+			"content": [
+				"Blue",
+				"ray",
+				"disc"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 100,
+			"tex": "French Revolution",
+			"content": [
+				"French",
+				"Revolution"
+			],
+			"start_row": 50,
+			"end_row": 50,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 22,
+			"tex": "Peter Sellers",
+			"content": [
+				"Peter",
+				"Sellers"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 61,
+			"tex": "yes (3)",
+			"content": [
+				"yes",
+				"(3)"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 43,
+			"tex": "no",
+			"content": [
+				"no"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 77,
+			"tex": "yes (1137)",
+			"content": [
+				"yes",
+				"(1137)"
+			],
+			"start_row": 38,
+			"end_row": 38,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 9,
+			"tex": "``J. R. R. Tolkien'' found for kernel ``J. ''",
+			"content": [
+				"\u201cJ.",
+				"R.",
+				"R.",
+				"Tolkien\u201d",
+				"found",
+				"for",
+				"kernel",
+				"\u201cJ.",
+				"\u201d"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 94,
+			"tex": "French language",
+			"content": [
+				"French",
+				"language"
+			],
+			"start_row": 47,
+			"end_row": 47,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 26,
+			"tex": "Peter Jennings",
+			"content": [
+				"Peter",
+				"Jennings"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 88,
+			"tex": "Italian American",
+			"content": [
+				"Italian",
+				"American"
+			],
+			"start_row": 44,
+			"end_row": 44,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 34,
+			"tex": "Blue's Clues",
+			"content": [
+				"Blue\u2019s",
+				"Clues"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 106,
+			"tex": "French Mandate for Syria and the Lebanon",
+			"content": [
+				"French",
+				"Mandate",
+				"for",
+				"Syria",
+				"and",
+				"the",
+				"Lebanon"
+			],
+			"start_row": 53,
+			"end_row": 53,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 6,
+			"tex": "John, Paul, George, and Ringo",
+			"content": [
+				"John,",
+				"Paul,",
+				"George,",
+				"and",
+				"Ringo"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 89,
+			"tex": "yes (100)",
+			"content": [
+				"yes",
+				"(100)"
+			],
+			"start_row": 44,
+			"end_row": 44,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 4,
+			"tex": "John, King of England",
+			"content": [
+				"John,",
+				"King",
+				"of",
+				"England"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 71,
+			"tex": "yes (5)",
+			"content": [
+				"yes",
+				"(5)"
+			],
+			"start_row": 35,
+			"end_row": 35,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 47,
+			"tex": "``Blue iguana,'' found (3)",
+			"content": [
+				"\u201cBlue",
+				"iguana,\u201d",
+				"found",
+				"(3)"
+			],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 16,
+			"tex": "Peter Ilyich Tchaikovsky",
+			"content": [
+				"Peter",
+				"Ilyich",
+				"Tchaikovsky"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 72,
+			"tex": "Italian",
+			"content": [
+				"Italian"
+			],
+			"start_row": 36,
+			"end_row": 36,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 73,
+			"tex": "yes (5409)",
+			"content": [
+				"yes",
+				"(5409)"
+			],
+			"start_row": 36,
+			"end_row": 36,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 41,
+			"tex": "yes (1931)",
+			"content": [
+				"yes",
+				"(1931)"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 92,
+			"tex": "French",
+			"content": [
+				"French"
+			],
+			"start_row": 46,
+			"end_row": 46,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 27,
+			"tex": "yes (47)",
+			"content": [
+				"yes",
+				"(47)"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 76,
+			"tex": "Italians",
+			"content": [
+				"Italians"
+			],
+			"start_row": 38,
+			"end_row": 38,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 48,
+			"tex": "Blues rock",
+			"content": [
+				"Blues",
+				"rock"
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 0,
+			"tex": "John McCain",
+			"content": [
+				"John",
+				"McCain"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 75,
+			"tex": "yes (14)",
+			"content": [
+				"yes",
+				"(14)"
+			],
+			"start_row": 37,
+			"end_row": 37,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 105,
+			"tex": "yes (10)",
+			"content": [
+				"yes",
+				"(10)"
+			],
+			"start_row": 52,
+			"end_row": 52,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 7,
+			"tex": "yes (2), also variants found",
+			"content": [
+				"yes",
+				"(2),",
+				"also",
+				"variants",
+				"found"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 101,
+			"tex": "yes (149)",
+			"content": [
+				"yes",
+				"(149)"
+			],
+			"start_row": 50,
+			"end_row": 50,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 58,
+			"tex": "Brownhills",
+			"content": [
+				"Brownhills"
+			],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 46,
+			"tex": "Blue iguana",
+			"content": [
+				"Blue",
+				"iguana"
+			],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 63,
+			"tex": "yes (11)",
+			"content": [
+				"yes",
+				"(11)"
+			],
+			"start_row": 31,
+			"end_row": 31,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 51,
+			"tex": "yes (8)",
+			"content": [
+				"yes",
+				"(8)"
+			],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 40,
+			"tex": "Blues",
+			"content": [
+				"Blues"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 62,
+			"tex": "Browning Hi-Power",
+			"content": [
+				"Browning",
+				"Hi-Power"
+			],
+			"start_row": 31,
+			"end_row": 31,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 55,
+			"tex": "yes (32)",
+			"content": [
+				"yes",
+				"(32)"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 11,
+			"tex": "``John A. Macdonald'' found (62)",
+			"content": [
+				"\u201cJohn",
+				"A.",
+				"Macdonald\u201d",
+				"found",
+				"(62)"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 60,
+			"tex": "Brown Dog affair",
+			"content": [
+				"Brown",
+				"Dog",
+				"a\ufb00air"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 13,
+			"tex": "yes (27)",
+			"content": [
+				"yes",
+				"(27)"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 86,
+			"tex": "Italian War of 1542-46",
+			"content": [
+				"Italian",
+				"War",
+				"of",
+				"1542-46"
+			],
+			"start_row": 43,
+			"end_row": 43,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 30,
+			"tex": "Peterloo Massacre",
+			"content": [
+				"Peterloo",
+				"Massacre"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 70,
+			"tex": "Browning M2",
+			"content": [
+				"Browning",
+				"M2"
+			],
+			"start_row": 35,
+			"end_row": 35,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 23,
+			"tex": "yes (187)",
+			"content": [
+				"yes",
+				"(187)"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 84,
+			"tex": "Italian ballet",
+			"content": [
+				"Italian",
+				"ballet"
+			],
+			"start_row": 42,
+			"end_row": 42,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 32,
+			"tex": "Blue",
+			"content": [
+				"Blue"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 83,
+			"tex": "``Italian films'' found",
+			"content": [
+				"\u201cItalian",
+				"\ufb01lms\u201d",
+				"found"
+			],
+			"start_row": 41,
+			"end_row": 41,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 39,
+			"tex": "yes (358)",
+			"content": [
+				"yes",
+				"(358)"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 78,
+			"tex": "Italian language",
+			"content": [
+				"Italian",
+				"language"
+			],
+			"start_row": 39,
+			"end_row": 39,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 20,
+			"tex": "Peter Parker, the Spectacular Spider-Man",
+			"content": [
+				"Peter",
+				"Parker,",
+				"the",
+				"Spectacular",
+				"Spider-Man"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 59,
+			"tex": "yes (49)",
+			"content": [
+				"yes",
+				"(49)"
+			],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 12,
+			"tex": "John Wayne Gacy",
+			"content": [
+				"John",
+				"Wayne",
+				"Gacy"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 52,
+			"tex": "Brown",
+			"content": [
+				"Brown"
+			],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 110,
+			"tex": "French people",
+			"content": [
+				"French",
+				"people"
+			],
+			"start_row": 55,
+			"end_row": 55,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 38,
+			"tex": "Bluetooth",
+			"content": [
+				"Bluetooth"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 67,
+			"tex": "``brown dwarf'' (84) found for kernel ``brown''",
+			"content": [
+				"\u201cbrown",
+				"dwarf\u201d",
+				"(84)",
+				"found",
+				"for",
+				"kernel",
+				"\u201cbrown\u201d"
+			],
+			"start_row": 33,
+			"end_row": 33,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 65,
+			"tex": "no",
+			"content": [
+				"no"
+			],
+			"start_row": 32,
+			"end_row": 32,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 102,
+			"tex": "French and Indian War",
+			"content": [
+				"French",
+				"and",
+				"Indian",
+				"War"
+			],
+			"start_row": 51,
+			"end_row": 51,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 18,
+			"tex": "Peterborough",
+			"content": [
+				"Peterborough"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 104,
+			"tex": "French colonial empire",
+			"content": [
+				"French",
+				"colonial",
+				"empire"
+			],
+			"start_row": 52,
+			"end_row": 52,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 2,
+			"tex": "John Lennon",
+			"content": [
+				"John",
+				"Lennon"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 74,
+			"tex": "Italianate architecture",
+			"content": [
+				"Italianate",
+				"architecture"
+			],
+			"start_row": 37,
+			"end_row": 37,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 98,
+			"tex": "French fries",
+			"content": [
+				"French",
+				"fries"
+			],
+			"start_row": 49,
+			"end_row": 49,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 25,
+			"tex": "yes (311)",
+			"content": [
+				"yes",
+				"(311)"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 103,
+			"tex": "yes (49)",
+			"content": [
+				"yes",
+				"(49)"
+			],
+			"start_row": 51,
+			"end_row": 51,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 24,
+			"tex": "Peter the Great",
+			"content": [
+				"Peter",
+				"the",
+				"Great"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 31,
+			"tex": "yes (5)",
+			"content": [
+				"yes",
+				"(5)"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 82,
+			"tex": "Italian films of the 2010s",
+			"content": [
+				"Italian",
+				"\ufb01lms",
+				"of",
+				"the",
+				"2010s"
+			],
+			"start_row": 41,
+			"end_row": 41,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 19,
+			"tex": "yes (1098)",
+			"content": [
+				"yes",
+				"(1098)"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 93,
+			"tex": "yes (10538)",
+			"content": [
+				"yes",
+				"(10538)"
+			],
+			"start_row": 46,
+			"end_row": 46,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 45,
+			"tex": "yes (2)",
+			"content": [
+				"yes",
+				"(2)"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 69,
+			"tex": "``brown-grey'' grey( 37)found for kernel ``brown''",
+			"content": [
+				"\u201cbrown-grey\u201d",
+				"grey(",
+				"37)found",
+				"for",
+				"kernel",
+				"\u201cbrown\u201d"
+			],
+			"start_row": 34,
+			"end_row": 34,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 57,
+			"tex": "yes (7)",
+			"content": [
+				"yes",
+				"(7)"
+			],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 28,
+			"tex": "Peter IV of Portugal",
+			"content": [
+				"Peter",
+				"IV",
+				"of",
+				"Portugal"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 107,
+			"tex": "yes (2), ``the Fr..'' found (5)",
+			"content": [
+				"yes",
+				"(2),",
+				"\u201cthe",
+				"Fr..\u201d",
+				"found",
+				"(5)"
+			],
+			"start_row": 53,
+			"end_row": 53,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 10,
+			"tex": "John A. Mcdonald",
+			"content": [
+				"John",
+				"A.",
+				"Mcdonald"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 66,
+			"tex": "Brown dwarf",
+			"content": [
+				"Brown",
+				"dwarf"
+			],
+			"start_row": 33,
+			"end_row": 33,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 99,
+			"tex": "yes (107)",
+			"content": [
+				"yes",
+				"(107)"
+			],
+			"start_row": 49,
+			"end_row": 49,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 37,
+			"tex": "yes (19)",
+			"content": [
+				"yes",
+				"(19)"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 81,
+			"tex": "``the Italian War of 1521-1526,'' found (4)",
+			"content": [
+				"\u201cthe",
+				"Italian",
+				"War",
+				"of",
+				"1521-1526,\u201d",
+				"found",
+				"(4)"
+			],
+			"start_row": 40,
+			"end_row": 40,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 111,
+			"tex": "yes (105)",
+			"content": [
+				"yes",
+				"(105)"
+			],
+			"start_row": 55,
+			"end_row": 55,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 96,
+			"tex": "French spacing (English)",
+			"content": [
+				"French",
+				"spacing",
+				"(English)"
+			],
+			"start_row": 48,
+			"end_row": 48,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 8,
+			"tex": "John Tolkein",
+			"content": [
+				"John",
+				"Tolkein"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 5,
+			"tex": "yes (9)",
+			"content": [
+				"yes",
+				"(9)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 54,
+			"tex": "Brown v. Board of Education",
+			"content": [
+				"Brown",
+				"v.",
+				"Board",
+				"of",
+				"Education"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 35,
+			"tex": "yes (55)",
+			"content": [
+				"yes",
+				"(55)"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 49,
+			"tex": "yes (4)",
+			"content": [
+				"yes",
+				"(4)"
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 29,
+			"tex": "yes (3)",
+			"content": [
+				"yes",
+				"(3)"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 68,
+			"tex": "Brown-grey",
+			"content": [
+				"Brown-grey"
+			],
+			"start_row": 34,
+			"end_row": 34,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 56,
+			"tex": "Brown Mackie College",
+			"content": [
+				"Brown",
+				"Mackie",
+				"College"
+			],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 14,
+			"tex": "John Roberts",
+			"content": [
+				"John",
+				"Roberts"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		}
+	]
+}

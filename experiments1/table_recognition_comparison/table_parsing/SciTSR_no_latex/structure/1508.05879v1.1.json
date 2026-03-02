@@ -1,0 +1,240 @@
+{
+	"cells": [
+		{
+			"id": 2,
+			"tex": "Torres filter",
+			"content": [
+				"Torres",
+				"\ufb01lter"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 8,
+			"tex": "DB-HV",
+			"content": [
+				"DB-HV"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 10,
+			"tex": "26.74 (1.33)",
+			"content": [
+				"26.74",
+				"(1.33)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 5,
+			"tex": "26.72 (1.22)",
+			"content": [
+				"26.72",
+				"(1.22)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 1,
+			"tex": "No filter",
+			"content": [
+				"No",
+				"\ufb01lter"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "Enh.\\ Lee filter",
+			"content": [
+				"Enh.",
+				"Lee",
+				"\ufb01lter"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 18,
+			"tex": "48.16 (0.003)",
+			"content": [
+				"48.16",
+				"(0.003)"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 14,
+			"tex": "26.28 (1.09)",
+			"content": [
+				"26.28",
+				"(1.09)"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 12,
+			"tex": "DB-VV",
+			"content": [
+				"DB-VV"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 0,
+			"tex": "Strategy",
+			"content": [
+				"Strategy"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 4,
+			"tex": "DB-HH",
+			"content": [
+				"DB-HH"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 19,
+			"tex": "30.24 (1.20)",
+			"content": [
+				"30.24",
+				"(1.20)"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 6,
+			"tex": "23.40 (1.92)",
+			"content": [
+				"23.40",
+				"(1.92)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 9,
+			"tex": "30.70 (1.39)",
+			"content": [
+				"30.70",
+				"(1.39)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 15,
+			"tex": "24.83 (1.98)",
+			"content": [
+				"24.83",
+				"(1.98)"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 16,
+			"tex": "ADB",
+			"content": [
+				"ADB"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 17,
+			"tex": "27.87 (1.16)",
+			"content": [
+				"27.87",
+				"(1.16)"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 13,
+			"tex": "29.81 (2.17)",
+			"content": [
+				"29.81",
+				"(2.17)"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 7,
+			"tex": "28.85 (1.86)",
+			"content": [
+				"28.85",
+				"(1.86)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 11,
+			"tex": "66.40 (0.42)",
+			"content": [
+				"66.40",
+				"(0.42)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 3,
+			"end_col": 3
+		}
+	]
+}

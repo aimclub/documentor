@@ -1,5 +1,5 @@
 """
-Интеграционные тесты для Pipeline.
+Integration tests for Pipeline.
 
-Тестирует полный цикл обработки документов различных форматов.
+Tests full document processing cycle for various formats.
 """

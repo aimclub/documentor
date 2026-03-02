@@ -1,0 +1,554 @@
+{
+	"cells": [
+		{
+			"id": 14,
+			"tex": "LOTACAO",
+			"content": [
+				"LOTACAO"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 24,
+			"tex": "CARROCA",
+			"content": [
+				"CARROCA"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 34,
+			"tex": "MES",
+			"content": [
+				"MES"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 33,
+			"tex": "If it was night or day.",
+			"content": [
+				"If",
+				"it",
+				"was",
+				"night",
+				"or",
+				"day."
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 21,
+			"tex": "The count of trucks involved.",
+			"content": [
+				"The",
+				"count",
+				"of",
+				"trucks",
+				"involved."
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 35,
+			"tex": "The month of the accident.",
+			"content": [
+				"The",
+				"month",
+				"of",
+				"the",
+				"accident."
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 36,
+			"tex": "FX\\_HORA",
+			"content": [
+				"FX",
+				"HORA"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 10,
+			"tex": "AUTO",
+			"content": [
+				"AUTO"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 7,
+			"tex": "The day of the week.",
+			"content": [
+				"The",
+				"day",
+				"of",
+				"the",
+				"week."
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 9,
+			"tex": "If a bus were involved, the name of the company.",
+			"content": [
+				"If",
+				"a",
+				"bus",
+				"were",
+				"involved,",
+				"the",
+				"name",
+				"of",
+				"the",
+				"company."
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 39,
+			"tex": "Whether the accident happened in the bus lane road or not.",
+			"content": [
+				"Whether",
+				"the",
+				"accident",
+				"happened",
+				"in",
+				"the",
+				"bus",
+				"lane",
+				"road",
+				"or",
+				"not."
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 8,
+			"tex": "CONSORCIO",
+			"content": [
+				"CONSORCIO"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 11,
+			"tex": "The count of cars involved.",
+			"content": [
+				"The",
+				"count",
+				"of",
+				"cars",
+				"involved."
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 25,
+			"tex": "The count of carts involved.",
+			"content": [
+				"The",
+				"count",
+				"of",
+				"carts",
+				"involved."
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 0,
+			"tex": "Attribute Name",
+			"content": [
+				"Attribute",
+				"Name"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 38,
+			"tex": "CORREDOR",
+			"content": [
+				"CORREDOR"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 13,
+			"tex": "The count of cabs involved.",
+			"content": [
+				"The",
+				"count",
+				"of",
+				"cabs",
+				"involved."
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 4,
+			"tex": "TIPO\\_ACID",
+			"content": [
+				"TIPO",
+				"ACID"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 1,
+			"tex": "Description",
+			"content": [
+				"Description"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 5,
+			"tex": "The type of the accident (collision, fire, etc...).",
+			"content": [
+				"The",
+				"type",
+				"of",
+				"the",
+				"accident",
+				"(collision,",
+				"\ufb01re,",
+				"etc...)."
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 30,
+			"tex": "TEMPO",
+			"content": [
+				"TEMPO"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 6,
+			"tex": "DIA\\_SEM",
+			"content": [
+				"DIA",
+				"SEM"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 31,
+			"tex": "How was the weather (raining, clear, etc.).",
+			"content": [
+				"How",
+				"was",
+				"the",
+				"weather",
+				"(raining,",
+				"clear,",
+				"etc.)."
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 37,
+			"tex": "The hour that accident happened.",
+			"content": [
+				"The",
+				"hour",
+				"that",
+				"accident",
+				"happened."
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 22,
+			"tex": "MOTO",
+			"content": [
+				"MOTO"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 20,
+			"tex": "CAMINHAO",
+			"content": [
+				"CAMINHAO"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 32,
+			"tex": "NOITE\\_DIA",
+			"content": [
+				"NOITE",
+				"DIA"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 2,
+			"tex": "LOCAL",
+			"content": [
+				"LOCAL"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 17,
+			"tex": "The count of urban bus involved.",
+			"content": [
+				"The",
+				"count",
+				"of",
+				"urban",
+				"bus",
+				"involved."
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 18,
+			"tex": "ONIBUS\\_MET",
+			"content": [
+				"ONIBUS",
+				"MET"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 19,
+			"tex": "The count of bus (others) involved.",
+			"content": [
+				"The",
+				"count",
+				"of",
+				"bus",
+				"(others)",
+				"involved."
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "Whether the accident happened on a street or in crossing streets.",
+			"content": [
+				"Whether",
+				"the",
+				"accident",
+				"happened",
+				"on",
+				"a",
+				"street",
+				"or",
+				"in",
+				"crossing",
+				"streets."
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 26,
+			"tex": "BICICLETA",
+			"content": [
+				"BICICLETA"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 12,
+			"tex": "TAXI",
+			"content": [
+				"TAXI"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 27,
+			"tex": "The count of bikes involved.",
+			"content": [
+				"The",
+				"count",
+				"of",
+				"bikes",
+				"involved."
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 28,
+			"tex": "OUTRO",
+			"content": [
+				"OUTRO"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 29,
+			"tex": "The count of vehicles (others) involved.",
+			"content": [
+				"The",
+				"count",
+				"of",
+				"vehicles",
+				"(others)",
+				"involved."
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 15,
+			"tex": "The count of small bus involved.",
+			"content": [
+				"The",
+				"count",
+				"of",
+				"small",
+				"bus",
+				"involved."
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 16,
+			"tex": "ONIBUS\\_URB",
+			"content": [
+				"ONIBUS",
+				"URB"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 23,
+			"tex": "The count of motorcycles involved.",
+			"content": [
+				"The",
+				"count",
+				"of",
+				"motorcycles",
+				"involved."
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 1,
+			"end_col": 1
+		}
+	]
+}

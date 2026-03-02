@@ -1,0 +1,128 @@
+{
+	"cells": [
+		{
+			"id": 2,
+			"tex": "\\# of words",
+			"content": [
+				"#",
+				"of",
+				"words"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 9,
+			"tex": "13",
+			"content": [
+				"13"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 6,
+			"tex": "74,004,228",
+			"content": [
+				"74,004,228"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 4,
+			"tex": "mean \\# of words per sentence",
+			"content": [
+				"mean",
+				"#",
+				"of",
+				"words",
+				"per",
+				"sentence"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 7,
+			"tex": "984,846,357",
+			"content": [
+				"984,846,357"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 5,
+			"tex": "11,038",
+			"content": [
+				"11,038"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 3,
+			"tex": "\\# of unique words",
+			"content": [
+				"#",
+				"of",
+				"unique",
+				"words"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 1,
+			"tex": "\\# of sentences",
+			"content": [
+				"#",
+				"of",
+				"sentences"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 0,
+			"tex": "\\# of books",
+			"content": [
+				"#",
+				"of",
+				"books"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 8,
+			"tex": "1,316,420",
+			"content": [
+				"1,316,420"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 3,
+			"end_col": 3
+		}
+	]
+}

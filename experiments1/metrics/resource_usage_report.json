@@ -1,0 +1,38 @@
+{
+  "dedoc": {
+    "2412.19495v2": {
+      "duration": 2.606048345565796,
+      "cpu_avg_percent": 31.68,
+      "cpu_max_percent": 75.7,
+      "ram_avg_mb": 18066.4828125,
+      "ram_max_mb": 18140.91015625,
+      "gpu_vram_avg_mb": 927.6,
+      "gpu_vram_max_mb": 971.0,
+      "gpu_utilization_avg_percent": 31.0,
+      "gpu_utilization_max_percent": 48.0
+    },
+    "2412.19495v2_scanned": {
+      "duration": 29.199208974838257,
+      "cpu_avg_percent": 22.017777777777777,
+      "cpu_max_percent": 57.9,
+      "ram_avg_mb": 18262.567621527778,
+      "ram_max_mb": 18447.76953125,
+      "gpu_vram_avg_mb": 911.0444444444445,
+      "gpu_vram_max_mb": 944.0,
+      "gpu_utilization_avg_percent": 31.31111111111111,
+      "gpu_utilization_max_percent": 64.0
+    }
+  },
+  "_summary": {
+    "dedoc": {
+      "avg_cpu_percent": 26.848888888888887,
+      "max_cpu_percent": 75.7,
+      "avg_ram_mb": 18164.52521701389,
+      "max_ram_mb": 18447.76953125,
+      "avg_gpu_vram_mb": 919.3222222222223,
+      "max_gpu_vram_mb": 971.0,
+      "avg_gpu_utilization_percent": 31.155555555555555,
+      "max_gpu_utilization_percent": 64.0
+    }
+  }
+}

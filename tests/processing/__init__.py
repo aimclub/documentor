@@ -1,3 +1,3 @@
 """
-Тесты для модуля processing.
+Tests for processing module.
 """

@@ -1,0 +1,252 @@
+{
+	"cells": [
+		{
+			"id": 8,
+			"tex": "conv",
+			"content": [
+				"conv"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 6,
+			"tex": "conv",
+			"content": [
+				"conv"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 5,
+			"tex": "Filter size: 6, Stride size: 3, feature maps: 90",
+			"content": [
+				"Filter",
+				"size:",
+				"6,",
+				"Stride",
+				"size:",
+				"3,",
+				"feature",
+				"maps:",
+				"90"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 11,
+			"tex": "Kernel size: 4, Stride size: 4, Type: Average",
+			"content": [
+				"Kernel",
+				"size:",
+				"4,",
+				"Stride",
+				"size:",
+				"4,",
+				"Type:",
+				"Average"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 10,
+			"tex": "pool",
+			"content": [
+				"pool"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 1,
+			"tex": "Configuration",
+			"content": [
+				"Con\ufb01guration"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 16,
+			"tex": "full",
+			"content": [
+				"full"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 3,
+			"tex": "Filter size: 2, Stride size: 1, feature maps: 32",
+			"content": [
+				"Filter",
+				"size:",
+				"2,",
+				"Stride",
+				"size:",
+				"1,",
+				"feature",
+				"maps:",
+				"32"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 7,
+			"tex": "Filter size: 7, Stride size: 4, feature maps: 101",
+			"content": [
+				"Filter",
+				"size:",
+				"7,",
+				"Stride",
+				"size:",
+				"4,",
+				"feature",
+				"maps:",
+				"101"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 12,
+			"tex": "conv",
+			"content": [
+				"conv"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 15,
+			"tex": "Neurons: 1577",
+			"content": [
+				"Neurons:",
+				"1577"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 13,
+			"tex": "Filter size: 5, Stride size: 3, feature maps: 68",
+			"content": [
+				"Filter",
+				"size:",
+				"5,",
+				"Stride",
+				"size:",
+				"3,",
+				"feature",
+				"maps:",
+				"68"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 4,
+			"tex": "conv",
+			"content": [
+				"conv"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 17,
+			"tex": "Neurons: 10",
+			"content": [
+				"Neurons:",
+				"10"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 0,
+			"tex": "Layer type",
+			"content": [
+				"Layer",
+				"type"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 9,
+			"tex": "Filter size: 7, Stride size: 4, feature maps: 97",
+			"content": [
+				"Filter",
+				"size:",
+				"7,",
+				"Stride",
+				"size:",
+				"4,",
+				"feature",
+				"maps:",
+				"97"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 14,
+			"tex": "full",
+			"content": [
+				"full"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 2,
+			"tex": "conv",
+			"content": [
+				"conv"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		}
+	]
+}

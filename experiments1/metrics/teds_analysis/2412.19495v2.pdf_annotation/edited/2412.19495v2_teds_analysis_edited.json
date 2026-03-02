@@ -1,0 +1,1676 @@
+{
+  "document_id": "2412.19495v2",
+  "metrics": {
+    "document_teds": 0.8612261806130903,
+    "hierarchy_teds": 0.7647058823529411,
+    "ordering_accuracy": 0.9577464788732394
+  },
+  "statistics": {
+    "total_elements": 75,
+    "elements_with_correct_hierarchy": 69,
+    "elements_with_correct_order": 71,
+    "hierarchy_accuracy": 0.92,
+    "ordering_accuracy": 0.9466666666666667,
+    "hierarchy_errors_count": 6
+  },
+  "hierarchy_errors": [
+    {
+      "element_id": "elem_0062",
+      "element_type": "text",
+      "element_content_preview": "Our findings uncover sex- and age-related disparities in model performance as evidenced by the AUC o",
+      "predicted_parent_id": "00000064",
+      "predicted_parent_content": "Discussion",
+      "ground_truth_parent_id": "elem_0061",
+      "ground_truth_parent_content": "Discussion",
+      "page_number": 7,
+      "error_type": "wrong_parent"
+    },
+    {
+      "element_id": "elem_0063",
+      "element_type": "text",
+      "element_content_preview": "Furthermore, upon examining disparities in data complexity and systematic arbitrariness, we observe ",
+      "predicted_parent_id": "00000064",
+      "predicted_parent_content": "Discussion",
+      "ground_truth_parent_id": "elem_0061",
+      "ground_truth_parent_content": "Discussion",
+      "page_number": 7,
+      "error_type": "wrong_parent"
+    },
+    {
+      "element_id": "elem_0064",
+      "element_type": "text",
+      "element_content_preview": "Within the healthcare domain, the legal and ethical dimensions of decision-making are of paramount i",
+      "predicted_parent_id": "00000064",
+      "predicted_parent_content": "Discussion",
+      "ground_truth_parent_id": "elem_0061",
+      "ground_truth_parent_content": "Discussion",
+      "page_number": 7,
+      "error_type": "wrong_parent"
+    },
+    {
+      "element_id": "elem_0065",
+      "element_type": "text",
+      "element_content_preview": "Hospital data, such as the one used in this study, may be indicative solely of the population with h",
+      "predicted_parent_id": "00000064",
+      "predicted_parent_content": "Discussion",
+      "ground_truth_parent_id": "elem_0061",
+      "ground_truth_parent_content": "Discussion",
+      "page_number": 8,
+      "error_type": "wrong_parent"
+    },
+    {
+      "element_id": "00000016",
+      "element_type": "header_2",
+      "element_content_preview": "Methods",
+      "predicted_level": "header_2",
+      "ground_truth_level": "header_1",
+      "page_number": 1,
+      "error_type": "wrong_level"
+    },
+    {
+      "element_id": "00000036",
+      "element_type": "header_2",
+      "element_content_preview": "Results",
+      "predicted_level": "header_2",
+      "ground_truth_level": "header_1",
+      "page_number": 3,
+      "error_type": "wrong_level"
+    }
+  ],
+  "structure_errors": [
+    {
+      "element_id": "elem_0005",
+      "element_type": "text",
+      "element_content_preview": "arXiv:2412.19495v2  [cs.LG]  3 Mar 2025",
+      "predicted_order": 6,
+      "ground_truth_order": 5,
+      "page_number": 1,
+      "error_type": "order_mismatch"
+    },
+    {
+      "element_id": "elem_0004",
+      "element_type": "header_1",
+      "element_content_preview": "Introduction",
+      "predicted_order": 7,
+      "ground_truth_order": 4,
+      "page_number": 1,
+      "error_type": "order_mismatch"
+    },
+    {
+      "element_id": "elem_0023",
+      "element_type": "formula",
+      "element_content_preview": "",
+      "predicted_order": null,
+      "ground_truth_order": 23,
+      "page_number": 3,
+      "error_type": "missing"
+    },
+    {
+      "element_id": "elem_0050",
+      "element_type": "formula",
+      "element_content_preview": "",
+      "predicted_order": null,
+      "ground_truth_order": 50,
+      "page_number": 6,
+      "error_type": "missing"
+    },
+    {
+      "element_id": "00000016",
+      "element_type": "header_2",
+      "element_content_preview": "Methods",
+      "predicted_order": 15,
+      "ground_truth_order": null,
+      "page_number": 1,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000026",
+      "element_type": "text",
+      "element_content_preview": "",
+      "predicted_order": 25,
+      "ground_truth_order": null,
+      "page_number": 2,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000036",
+      "element_type": "header_2",
+      "element_content_preview": "Results",
+      "predicted_order": 35,
+      "ground_truth_order": null,
+      "page_number": 3,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000053",
+      "element_type": "text",
+      "element_content_preview": "",
+      "predicted_order": 52,
+      "ground_truth_order": null,
+      "page_number": 5,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000064",
+      "element_type": "header_2",
+      "element_content_preview": "Discussion",
+      "predicted_order": 63,
+      "ground_truth_order": null,
+      "page_number": 6,
+      "error_type": "extra"
+    }
+  ],
+  "predicted_tree": {
+    "nodes": [
+      {
+        "id": "00000001",
+        "type": "title",
+        "content_preview": "Disparate Model Performance and Stability in Machi",
+        "page_number": 0
+      },
+      {
+        "id": "00000002",
+        "type": "text",
+        "content_preview": "Ioannis Bilionis, MSc1,2, Ricardo C. Berrios1, Lui",
+        "page_number": 0
+      },
+      {
+        "id": "00000003",
+        "type": "text",
+        "content_preview": "Ricardo C. Berrios, Luis\nCarlos Castillo, PhD2,3",
+        "page_number": 0
+      },
+      {
+        "id": "00000004",
+        "type": "text",
+        "content_preview": "Carlos Castillo, PhD\n1Adhera Health, Santa Cruz, U",
+        "page_number": 0
+      },
+      {
+        "id": "00000005",
+        "type": "header_1",
+        "content_preview": "Abstract",
+        "page_number": 0
+      },
+      {
+        "id": "00000006",
+        "type": "text",
+        "content_preview": "Machine Learning (ML) algorithms are vital for sup",
+        "page_number": 0
+      },
+      {
+        "id": "00000007",
+        "type": "text",
+        "content_preview": "arXiv:2412.19495v2  [cs.LG]  3 Mar 2025",
+        "page_number": 0
+      },
+      {
+        "id": "00000008",
+        "type": "header_1",
+        "content_preview": "Introduction",
+        "page_number": 0
+      },
+      {
+        "id": "00000009",
+        "type": "text",
+        "content_preview": "In the realm of biomedicine, Artificial Intelligen",
+        "page_number": 0
+      },
+      {
+        "id": "00000010",
+        "type": "text",
+        "content_preview": "Algorithmic fairness, as a research field, studies",
+        "page_number": 0
+      },
+      {
+        "id": "00000011",
+        "type": "text",
+        "content_preview": "In healthcare applications, prior research has ide",
+        "page_number": 0
+      },
+      {
+        "id": "00000012",
+        "type": "text",
+        "content_preview": "An in-depth knowledge of an ML application and of ",
+        "page_number": 0
+      },
+      {
+        "id": "00000013",
+        "type": "text",
+        "content_preview": "exhibit systematically unbalanced errors [32]. In ",
+        "page_number": 1
+      },
+      {
+        "id": "00000014",
+        "type": "text",
+        "content_preview": "Differences in algorithmic performance are not alw",
+        "page_number": 1
+      },
+      {
+        "id": "00000015",
+        "type": "text",
+        "content_preview": "This paper describes a multifaceted analysis of tr",
+        "page_number": 1
+      },
+      {
+        "id": "00000016",
+        "type": "header_2",
+        "content_preview": "Methods",
+        "page_number": 1
+      },
+      {
+        "id": "00000017",
+        "type": "header_2",
+        "content_preview": "Datasets",
+        "page_number": 1
+      },
+      {
+        "id": "00000018",
+        "type": "text",
+        "content_preview": "We use a list of datasets identified and reported ",
+        "page_number": 1
+      },
+      {
+        "id": "00000019",
+        "type": "header_2",
+        "content_preview": "Model Performance",
+        "page_number": 1
+      },
+      {
+        "id": "00000020",
+        "type": "text",
+        "content_preview": "For the evaluation of model performance, we used t",
+        "page_number": 1
+      },
+      {
+        "id": "00000021",
+        "type": "caption",
+        "content_preview": "Table 1: Characteristics of the datasets used in t",
+        "page_number": 2
+      },
+      {
+        "id": "00000022",
+        "type": "table",
+        "content_preview": "<table><thead><tr><th>Dataset ID</th><th>Therapeut",
+        "page_number": 2
+      },
+      {
+        "id": "00000023",
+        "type": "image",
+        "content_preview": "",
+        "page_number": 2
+      },
+      {
+        "id": "00000024",
+        "type": "caption",
+        "content_preview": "Figure 1: Depiction of our methods regarding learn",
+        "page_number": 2
+      },
+      {
+        "id": "00000025",
+        "type": "text",
+        "content_preview": "Learning curves were obtained through an analogous",
+        "page_number": 2
+      },
+      {
+        "id": "00000026",
+        "type": "text",
+        "content_preview": "",
+        "page_number": 2
+      },
+      {
+        "id": "00000027",
+        "type": "text",
+        "content_preview": "i.e., we calculate the minimal number of additiona",
+        "page_number": 2
+      },
+      {
+        "id": "00000028",
+        "type": "header_2",
+        "content_preview": "Data Complexity Metrics",
+        "page_number": 2
+      },
+      {
+        "id": "00000029",
+        "type": "text",
+        "content_preview": "Data complexity analysis is a systematic effort to",
+        "page_number": 2
+      },
+      {
+        "id": "00000030",
+        "type": "caption",
+        "content_preview": "Table 2: Data complexity: metrics categories and r",
+        "page_number": 3
+      },
+      {
+        "id": "00000031",
+        "type": "table",
+        "content_preview": "<table><thead><tr><th>Family name</th><th>Object o",
+        "page_number": 3
+      },
+      {
+        "id": "00000032",
+        "type": "header_2",
+        "content_preview": "Systematic Arbitrariness",
+        "page_number": 3
+      },
+      {
+        "id": "00000033",
+        "type": "text",
+        "content_preview": "A family of models (e.g., various models built usi",
+        "page_number": 3
+      },
+      {
+        "id": "00000034",
+        "type": "text",
+        "content_preview": "A recent study introduces a metric of Self-Consist",
+        "page_number": 3
+      },
+      {
+        "id": "00000035",
+        "type": "text",
+        "content_preview": "To compare self-consistency scores between groups,",
+        "page_number": 3
+      },
+      {
+        "id": "00000036",
+        "type": "header_2",
+        "content_preview": "Results",
+        "page_number": 3
+      },
+      {
+        "id": "00000037",
+        "type": "header_2",
+        "content_preview": "Variations in model performance",
+        "page_number": 3
+      },
+      {
+        "id": "00000038",
+        "type": "text",
+        "content_preview": "Using datasets collected in prior research, which ",
+        "page_number": 3
+      },
+      {
+        "id": "00000039",
+        "type": "text",
+        "content_preview": "In our analysis, we observe disparities between se",
+        "page_number": 3
+      },
+      {
+        "id": "00000040",
+        "type": "header_2",
+        "content_preview": "Learning curves and the expected impact of additio",
+        "page_number": 3
+      },
+      {
+        "id": "00000041",
+        "type": "text",
+        "content_preview": "Learning curves are a standard tool for monitoring",
+        "page_number": 3
+      },
+      {
+        "id": "00000042",
+        "type": "caption",
+        "content_preview": "Table 3: Model performance (AUC), with average and",
+        "page_number": 4
+      },
+      {
+        "id": "00000043",
+        "type": "table",
+        "content_preview": "<table>\n  <thead>\n    <tr>\n      <th rowspan=\"2\">D",
+        "page_number": 4
+      },
+      {
+        "id": "00000044",
+        "type": "text",
+        "content_preview": "plateauing of performance gains and extrapolate th",
+        "page_number": 4
+      },
+      {
+        "id": "00000045",
+        "type": "text",
+        "content_preview": "Consistently aligning with our previous results re",
+        "page_number": 4
+      },
+      {
+        "id": "00000046",
+        "type": "text",
+        "content_preview": "We have estimated the number of additional data po",
+        "page_number": 4
+      },
+      {
+        "id": "00000047",
+        "type": "text",
+        "content_preview": "Our analysis reveals that there are often imbalanc",
+        "page_number": 4
+      },
+      {
+        "id": "00000048",
+        "type": "caption",
+        "content_preview": "Table 4: Estimation, obtained by extrapolating lea",
+        "page_number": 4
+      },
+      {
+        "id": "00000049",
+        "type": "table",
+        "content_preview": "<table>\n  <thead>\n    <tr>\n      <th>Dataset</th>\n",
+        "page_number": 4
+      },
+      {
+        "id": "00000050",
+        "type": "text",
+        "content_preview": "Focusing on datasets that would benefit from at le",
+        "page_number": 4
+      },
+      {
+        "id": "00000051",
+        "type": "header_2",
+        "content_preview": "Alignment of data complexity with some disparities",
+        "page_number": 5
+      },
+      {
+        "id": "00000052",
+        "type": "text",
+        "content_preview": "We considered sixteen complexity metrics grouped i",
+        "page_number": 5
+      },
+      {
+        "id": "00000053",
+        "type": "text",
+        "content_preview": "",
+        "page_number": 5
+      },
+      {
+        "id": "00000054",
+        "type": "text",
+        "content_preview": "Figure 2 presents the results in a heatmap visuali",
+        "page_number": 5
+      },
+      {
+        "id": "00000055",
+        "type": "image",
+        "content_preview": "",
+        "page_number": 5
+      },
+      {
+        "id": "00000056",
+        "type": "caption",
+        "content_preview": "Figure 2: Consistency of sex- and age-related disp",
+        "page_number": 5
+      },
+      {
+        "id": "00000057",
+        "type": "text",
+        "content_preview": "No obvious patterns can be observed across data in",
+        "page_number": 5
+      },
+      {
+        "id": "00000058",
+        "type": "header_2",
+        "content_preview": "Systematic arbitrariness and model stability",
+        "page_number": 5
+      },
+      {
+        "id": "00000059",
+        "type": "text",
+        "content_preview": "In analyzing a family of models, each trained on d",
+        "page_number": 5
+      },
+      {
+        "id": "00000060",
+        "type": "text",
+        "content_preview": "Systematic arbitrariness is observed when items wi",
+        "page_number": 5
+      },
+      {
+        "id": "00000061",
+        "type": "caption",
+        "content_preview": "Table 5: Sub-group arbitrariness: area under the C",
+        "page_number": 6
+      },
+      {
+        "id": "00000062",
+        "type": "table",
+        "content_preview": "<table><thead><tr><th rowspan=\"2\">Dataset</th><th ",
+        "page_number": 6
+      },
+      {
+        "id": "00000063",
+        "type": "text",
+        "content_preview": "Results show that ML predictions have no significa",
+        "page_number": 6
+      },
+      {
+        "id": "00000064",
+        "type": "header_2",
+        "content_preview": "Discussion",
+        "page_number": 6
+      },
+      {
+        "id": "00000065",
+        "type": "text",
+        "content_preview": "Our findings uncover sex- and age-related disparit",
+        "page_number": 6
+      },
+      {
+        "id": "00000066",
+        "type": "text",
+        "content_preview": "Furthermore, upon examining disparities in data co",
+        "page_number": 6
+      },
+      {
+        "id": "00000067",
+        "type": "text",
+        "content_preview": "Within the healthcare domain, the legal and ethica",
+        "page_number": 6
+      },
+      {
+        "id": "00000068",
+        "type": "text",
+        "content_preview": "Hospital data, such as the one used in this study,",
+        "page_number": 7
+      },
+      {
+        "id": "00000069",
+        "type": "header_1",
+        "content_preview": "Conclusion",
+        "page_number": 7
+      },
+      {
+        "id": "00000070",
+        "type": "text",
+        "content_preview": "In this study, we identified significant age-relat",
+        "page_number": 7
+      },
+      {
+        "id": "00000071",
+        "type": "text",
+        "content_preview": "Acknowledgments This work is funded by Spanish Min",
+        "page_number": 7
+      },
+      {
+        "id": "00000072",
+        "type": "text",
+        "content_preview": "Ethics and Impact Statement This study did not inv",
+        "page_number": 7
+      },
+      {
+        "id": "00000073",
+        "type": "text",
+        "content_preview": "Data Availability A version of the datasets used d",
+        "page_number": 7
+      },
+      {
+        "id": "00000074",
+        "type": "header_1",
+        "content_preview": "References",
+        "page_number": 7
+      },
+      {
+        "id": "00000075",
+        "type": "text",
+        "content_preview": "1. Fogel AL, Kvedar JC. Artificial intelligence po",
+        "page_number": 7
+      },
+      {
+        "id": "00000076",
+        "type": "text",
+        "content_preview": "10. Lippert-Rasmussen K. Born free and equal?: A p",
+        "page_number": 8
+      },
+      {
+        "id": "00000077",
+        "type": "text",
+        "content_preview": "results of commercial ai products.\nIn: Proceedings",
+        "page_number": 9
+      }
+    ],
+    "edges": [
+      {
+        "from": "00000005",
+        "to": "00000006"
+      },
+      {
+        "from": "00000005",
+        "to": "00000007"
+      },
+      {
+        "from": "00000008",
+        "to": "00000009"
+      },
+      {
+        "from": "00000008",
+        "to": "00000010"
+      },
+      {
+        "from": "00000008",
+        "to": "00000011"
+      },
+      {
+        "from": "00000008",
+        "to": "00000012"
+      },
+      {
+        "from": "00000008",
+        "to": "00000013"
+      },
+      {
+        "from": "00000008",
+        "to": "00000014"
+      },
+      {
+        "from": "00000008",
+        "to": "00000015"
+      },
+      {
+        "from": "00000008",
+        "to": "00000016"
+      },
+      {
+        "from": "00000008",
+        "to": "00000017"
+      },
+      {
+        "from": "00000017",
+        "to": "00000018"
+      },
+      {
+        "from": "00000008",
+        "to": "00000019"
+      },
+      {
+        "from": "00000019",
+        "to": "00000020"
+      },
+      {
+        "from": "00000019",
+        "to": "00000021"
+      },
+      {
+        "from": "00000021",
+        "to": "00000022"
+      },
+      {
+        "from": "00000024",
+        "to": "00000023"
+      },
+      {
+        "from": "00000019",
+        "to": "00000024"
+      },
+      {
+        "from": "00000019",
+        "to": "00000025"
+      },
+      {
+        "from": "00000019",
+        "to": "00000026"
+      },
+      {
+        "from": "00000019",
+        "to": "00000027"
+      },
+      {
+        "from": "00000008",
+        "to": "00000028"
+      },
+      {
+        "from": "00000028",
+        "to": "00000029"
+      },
+      {
+        "from": "00000028",
+        "to": "00000030"
+      },
+      {
+        "from": "00000030",
+        "to": "00000031"
+      },
+      {
+        "from": "00000008",
+        "to": "00000032"
+      },
+      {
+        "from": "00000032",
+        "to": "00000033"
+      },
+      {
+        "from": "00000032",
+        "to": "00000034"
+      },
+      {
+        "from": "00000032",
+        "to": "00000035"
+      },
+      {
+        "from": "00000008",
+        "to": "00000036"
+      },
+      {
+        "from": "00000008",
+        "to": "00000037"
+      },
+      {
+        "from": "00000037",
+        "to": "00000038"
+      },
+      {
+        "from": "00000037",
+        "to": "00000039"
+      },
+      {
+        "from": "00000008",
+        "to": "00000040"
+      },
+      {
+        "from": "00000040",
+        "to": "00000041"
+      },
+      {
+        "from": "00000040",
+        "to": "00000042"
+      },
+      {
+        "from": "00000042",
+        "to": "00000043"
+      },
+      {
+        "from": "00000040",
+        "to": "00000044"
+      },
+      {
+        "from": "00000040",
+        "to": "00000045"
+      },
+      {
+        "from": "00000040",
+        "to": "00000046"
+      },
+      {
+        "from": "00000040",
+        "to": "00000047"
+      },
+      {
+        "from": "00000040",
+        "to": "00000048"
+      },
+      {
+        "from": "00000048",
+        "to": "00000049"
+      },
+      {
+        "from": "00000040",
+        "to": "00000050"
+      },
+      {
+        "from": "00000008",
+        "to": "00000051"
+      },
+      {
+        "from": "00000051",
+        "to": "00000052"
+      },
+      {
+        "from": "00000051",
+        "to": "00000053"
+      },
+      {
+        "from": "00000051",
+        "to": "00000054"
+      },
+      {
+        "from": "00000056",
+        "to": "00000055"
+      },
+      {
+        "from": "00000051",
+        "to": "00000056"
+      },
+      {
+        "from": "00000051",
+        "to": "00000057"
+      },
+      {
+        "from": "00000008",
+        "to": "00000058"
+      },
+      {
+        "from": "00000058",
+        "to": "00000059"
+      },
+      {
+        "from": "00000058",
+        "to": "00000060"
+      },
+      {
+        "from": "00000058",
+        "to": "00000061"
+      },
+      {
+        "from": "00000061",
+        "to": "00000062"
+      },
+      {
+        "from": "00000058",
+        "to": "00000063"
+      },
+      {
+        "from": "00000008",
+        "to": "00000064"
+      },
+      {
+        "from": "00000064",
+        "to": "00000065"
+      },
+      {
+        "from": "00000064",
+        "to": "00000066"
+      },
+      {
+        "from": "00000064",
+        "to": "00000067"
+      },
+      {
+        "from": "00000064",
+        "to": "00000068"
+      },
+      {
+        "from": "00000069",
+        "to": "00000070"
+      },
+      {
+        "from": "00000069",
+        "to": "00000071"
+      },
+      {
+        "from": "00000069",
+        "to": "00000072"
+      },
+      {
+        "from": "00000069",
+        "to": "00000073"
+      },
+      {
+        "from": "00000074",
+        "to": "00000075"
+      },
+      {
+        "from": "00000074",
+        "to": "00000076"
+      },
+      {
+        "from": "00000074",
+        "to": "00000077"
+      }
+    ],
+    "root_nodes": [
+      "00000001",
+      "00000002",
+      "00000003",
+      "00000004",
+      "00000005",
+      "00000008",
+      "00000069",
+      "00000074"
+    ],
+    "max_depth": 4,
+    "total_nodes": 77
+  },
+  "ground_truth_tree": {
+    "nodes": [
+      {
+        "id": "elem_0000",
+        "type": "title",
+        "content_preview": "Disparate Model Performance and Stability in Machi",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0001",
+        "type": "text",
+        "content_preview": "Ioannis Bilionis, MSc1,2, Ricardo C. Berrios1, Lui",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0002",
+        "type": "header_1",
+        "content_preview": "Abstract",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0003",
+        "type": "text",
+        "content_preview": "Machine Learning (ML) algorithms are vital for sup",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0004",
+        "type": "header_1",
+        "content_preview": "Introduction",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0005",
+        "type": "text",
+        "content_preview": "arXiv:2412.19495v2  [cs.LG]  3 Mar 2025",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0006",
+        "type": "text",
+        "content_preview": "In the realm of biomedicine, Artificial Intelligen",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0007",
+        "type": "text",
+        "content_preview": "Algorithmic fairness, as a research field, studies",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0008",
+        "type": "text",
+        "content_preview": "In healthcare applications, prior research has ide",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0009",
+        "type": "text",
+        "content_preview": "An in-depth knowledge of an ML application and of ",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0010",
+        "type": "text",
+        "content_preview": "exhibit systematically unbalanced errors [32]. In ",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0011",
+        "type": "text",
+        "content_preview": "Differences in algorithmic performance are not alw",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0012",
+        "type": "text",
+        "content_preview": "This paper describes a multifaceted analysis of tr",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0013",
+        "type": "header_1",
+        "content_preview": "Methods",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0014",
+        "type": "header_2",
+        "content_preview": "Datasets",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0015",
+        "type": "text",
+        "content_preview": "We use a list of datasets identified and reported ",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0016",
+        "type": "header_2",
+        "content_preview": "Model Performance",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0017",
+        "type": "text",
+        "content_preview": "For the evaluation of model performance, we used t",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0018",
+        "type": "caption",
+        "content_preview": "Table 1: Characteristics of the datasets used in t",
+        "page_number": 3
+      },
+      {
+        "id": "elem_0019",
+        "type": "table",
+        "content_preview": "<table><thead><tr><th>Dataset ID</th><th>Therapeut",
+        "page_number": 3
+      },
+      {
+        "id": "elem_0020",
+        "type": "image",
+        "content_preview": "",
+        "page_number": 3
+      },
+      {
+        "id": "elem_0021",
+        "type": "caption",
+        "content_preview": "Figure 1: Depiction of our methods regarding learn",
+        "page_number": 3
+      },
+      {
+        "id": "elem_0022",
+        "type": "text",
+        "content_preview": "Learning curves were obtained through an analogous",
+        "page_number": 3
+      },
+      {
+        "id": "elem_0023",
+        "type": "formula",
+        "content_preview": "",
+        "page_number": 3
+      },
+      {
+        "id": "elem_0024",
+        "type": "text",
+        "content_preview": "i.e., we calculate the minimal number of additiona",
+        "page_number": 3
+      },
+      {
+        "id": "elem_0025",
+        "type": "header_2",
+        "content_preview": "Data Complexity Metrics",
+        "page_number": 3
+      },
+      {
+        "id": "elem_0026",
+        "type": "text",
+        "content_preview": "Data complexity analysis is a systematic effort to",
+        "page_number": 3
+      },
+      {
+        "id": "elem_0027",
+        "type": "caption",
+        "content_preview": "Table 2: Data complexity: metrics categories and r",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0028",
+        "type": "table",
+        "content_preview": "<table><thead><tr><th>Family name</th><th>Object o",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0029",
+        "type": "header_2",
+        "content_preview": "Systematic Arbitrariness",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0030",
+        "type": "text",
+        "content_preview": "A family of models (e.g., various models built usi",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0031",
+        "type": "text",
+        "content_preview": "A recent study introduces a metric of Self-Consist",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0032",
+        "type": "text",
+        "content_preview": "To compare self-consistency scores between groups,",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0033",
+        "type": "header_1",
+        "content_preview": "Results",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0034",
+        "type": "header_2",
+        "content_preview": "Variations in model performance",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0035",
+        "type": "text",
+        "content_preview": "Using datasets collected in prior research, which ",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0036",
+        "type": "text",
+        "content_preview": "In our analysis, we observe disparities between se",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0037",
+        "type": "header_2",
+        "content_preview": "Learning curves and the expected impact of additio",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0038",
+        "type": "text",
+        "content_preview": "Learning curves are a standard tool for monitoring",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0039",
+        "type": "caption",
+        "content_preview": "Table 3: Model performance (AUC), with average and",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0040",
+        "type": "table",
+        "content_preview": "<table>\n  <thead>\n    <tr>\n      <th rowspan=\"2\">D",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0041",
+        "type": "text",
+        "content_preview": "plateauing of performance gains and extrapolate th",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0042",
+        "type": "text",
+        "content_preview": "Consistently aligning with our previous results re",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0043",
+        "type": "text",
+        "content_preview": "We have estimated the number of additional data po",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0044",
+        "type": "text",
+        "content_preview": "Our analysis reveals that there are often imbalanc",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0045",
+        "type": "caption",
+        "content_preview": "Table 4: Estimation, obtained by extrapolating lea",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0046",
+        "type": "table",
+        "content_preview": "<table>\n  <thead>\n    <tr>\n      <th>Dataset</th>\n",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0047",
+        "type": "text",
+        "content_preview": "Focusing on datasets that would benefit from at le",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0048",
+        "type": "header_2",
+        "content_preview": "Alignment of data complexity with some disparities",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0049",
+        "type": "text",
+        "content_preview": "We considered sixteen complexity metrics grouped i",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0050",
+        "type": "formula",
+        "content_preview": "",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0051",
+        "type": "text",
+        "content_preview": "Figure 2 presents the results in a heatmap visuali",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0052",
+        "type": "image",
+        "content_preview": "",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0053",
+        "type": "caption",
+        "content_preview": "Figure 2: Consistency of sex- and age-related disp",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0054",
+        "type": "text",
+        "content_preview": "No obvious patterns can be observed across data in",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0055",
+        "type": "header_2",
+        "content_preview": "Systematic arbitrariness and model stability",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0056",
+        "type": "text",
+        "content_preview": "In analyzing a family of models, each trained on d",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0057",
+        "type": "text",
+        "content_preview": "Systematic arbitrariness is observed when items wi",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0058",
+        "type": "caption",
+        "content_preview": "Table 5: Sub-group arbitrariness: area under the C",
+        "page_number": 7
+      },
+      {
+        "id": "elem_0059",
+        "type": "table",
+        "content_preview": "<table><thead><tr><th rowspan=\"2\">Dataset</th><th ",
+        "page_number": 7
+      },
+      {
+        "id": "elem_0060",
+        "type": "text",
+        "content_preview": "Results show that ML predictions have no significa",
+        "page_number": 7
+      },
+      {
+        "id": "elem_0061",
+        "type": "header_1",
+        "content_preview": "Discussion",
+        "page_number": 7
+      },
+      {
+        "id": "elem_0062",
+        "type": "text",
+        "content_preview": "Our findings uncover sex- and age-related disparit",
+        "page_number": 7
+      },
+      {
+        "id": "elem_0063",
+        "type": "text",
+        "content_preview": "Furthermore, upon examining disparities in data co",
+        "page_number": 7
+      },
+      {
+        "id": "elem_0064",
+        "type": "text",
+        "content_preview": "Within the healthcare domain, the legal and ethica",
+        "page_number": 7
+      },
+      {
+        "id": "elem_0065",
+        "type": "text",
+        "content_preview": "Hospital data, such as the one used in this study,",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0066",
+        "type": "header_1",
+        "content_preview": "Conclusion",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0067",
+        "type": "text",
+        "content_preview": "In this study, we identified significant age-relat",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0068",
+        "type": "text",
+        "content_preview": "Acknowledgments This work is funded by Spanish Min",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0069",
+        "type": "text",
+        "content_preview": "Ethics and Impact Statement This study did not inv",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0070",
+        "type": "text",
+        "content_preview": "Data Availability A version of the datasets used d",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0071",
+        "type": "header_1",
+        "content_preview": "References",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0072",
+        "type": "text",
+        "content_preview": "1. Fogel AL, Kvedar JC. Artificial intelligence po",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0073",
+        "type": "text",
+        "content_preview": "10. Lippert-Rasmussen K. Born free and equal?: A p",
+        "page_number": 9
+      },
+      {
+        "id": "elem_0074",
+        "type": "text",
+        "content_preview": "results of commercial ai products.\nIn: Proceedings",
+        "page_number": 10
+      }
+    ],
+    "edges": [
+      {
+        "from": "elem_0000",
+        "to": "elem_0001"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0002"
+      },
+      {
+        "from": "elem_0002",
+        "to": "elem_0003"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0004"
+      },
+      {
+        "from": "elem_0004",
+        "to": "elem_0005"
+      },
+      {
+        "from": "elem_0004",
+        "to": "elem_0006"
+      },
+      {
+        "from": "elem_0004",
+        "to": "elem_0007"
+      },
+      {
+        "from": "elem_0004",
+        "to": "elem_0008"
+      },
+      {
+        "from": "elem_0004",
+        "to": "elem_0009"
+      },
+      {
+        "from": "elem_0004",
+        "to": "elem_0010"
+      },
+      {
+        "from": "elem_0004",
+        "to": "elem_0011"
+      },
+      {
+        "from": "elem_0004",
+        "to": "elem_0012"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0013"
+      },
+      {
+        "from": "elem_0013",
+        "to": "elem_0014"
+      },
+      {
+        "from": "elem_0014",
+        "to": "elem_0015"
+      },
+      {
+        "from": "elem_0013",
+        "to": "elem_0016"
+      },
+      {
+        "from": "elem_0016",
+        "to": "elem_0017"
+      },
+      {
+        "from": "elem_0016",
+        "to": "elem_0018"
+      },
+      {
+        "from": "elem_0018",
+        "to": "elem_0019"
+      },
+      {
+        "from": "elem_0021",
+        "to": "elem_0020"
+      },
+      {
+        "from": "elem_0016",
+        "to": "elem_0021"
+      },
+      {
+        "from": "elem_0016",
+        "to": "elem_0022"
+      },
+      {
+        "from": "elem_0016",
+        "to": "elem_0023"
+      },
+      {
+        "from": "elem_0016",
+        "to": "elem_0024"
+      },
+      {
+        "from": "elem_0013",
+        "to": "elem_0025"
+      },
+      {
+        "from": "elem_0025",
+        "to": "elem_0026"
+      },
+      {
+        "from": "elem_0025",
+        "to": "elem_0027"
+      },
+      {
+        "from": "elem_0027",
+        "to": "elem_0028"
+      },
+      {
+        "from": "elem_0013",
+        "to": "elem_0029"
+      },
+      {
+        "from": "elem_0029",
+        "to": "elem_0030"
+      },
+      {
+        "from": "elem_0029",
+        "to": "elem_0031"
+      },
+      {
+        "from": "elem_0029",
+        "to": "elem_0032"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0033"
+      },
+      {
+        "from": "elem_0033",
+        "to": "elem_0034"
+      },
+      {
+        "from": "elem_0034",
+        "to": "elem_0035"
+      },
+      {
+        "from": "elem_0034",
+        "to": "elem_0036"
+      },
+      {
+        "from": "elem_0033",
+        "to": "elem_0037"
+      },
+      {
+        "from": "elem_0037",
+        "to": "elem_0038"
+      },
+      {
+        "from": "elem_0037",
+        "to": "elem_0039"
+      },
+      {
+        "from": "elem_0039",
+        "to": "elem_0040"
+      },
+      {
+        "from": "elem_0037",
+        "to": "elem_0041"
+      },
+      {
+        "from": "elem_0037",
+        "to": "elem_0042"
+      },
+      {
+        "from": "elem_0037",
+        "to": "elem_0043"
+      },
+      {
+        "from": "elem_0037",
+        "to": "elem_0044"
+      },
+      {
+        "from": "elem_0037",
+        "to": "elem_0045"
+      },
+      {
+        "from": "elem_0045",
+        "to": "elem_0046"
+      },
+      {
+        "from": "elem_0037",
+        "to": "elem_0047"
+      },
+      {
+        "from": "elem_0033",
+        "to": "elem_0048"
+      },
+      {
+        "from": "elem_0048",
+        "to": "elem_0049"
+      },
+      {
+        "from": "elem_0048",
+        "to": "elem_0050"
+      },
+      {
+        "from": "elem_0048",
+        "to": "elem_0051"
+      },
+      {
+        "from": "elem_0053",
+        "to": "elem_0052"
+      },
+      {
+        "from": "elem_0048",
+        "to": "elem_0053"
+      },
+      {
+        "from": "elem_0048",
+        "to": "elem_0054"
+      },
+      {
+        "from": "elem_0033",
+        "to": "elem_0055"
+      },
+      {
+        "from": "elem_0055",
+        "to": "elem_0056"
+      },
+      {
+        "from": "elem_0055",
+        "to": "elem_0057"
+      },
+      {
+        "from": "elem_0055",
+        "to": "elem_0058"
+      },
+      {
+        "from": "elem_0058",
+        "to": "elem_0059"
+      },
+      {
+        "from": "elem_0055",
+        "to": "elem_0060"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0061"
+      },
+      {
+        "from": "elem_0061",
+        "to": "elem_0062"
+      },
+      {
+        "from": "elem_0061",
+        "to": "elem_0063"
+      },
+      {
+        "from": "elem_0061",
+        "to": "elem_0064"
+      },
+      {
+        "from": "elem_0061",
+        "to": "elem_0065"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0066"
+      },
+      {
+        "from": "elem_0066",
+        "to": "elem_0067"
+      },
+      {
+        "from": "elem_0066",
+        "to": "elem_0068"
+      },
+      {
+        "from": "elem_0066",
+        "to": "elem_0069"
+      },
+      {
+        "from": "elem_0066",
+        "to": "elem_0070"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0071"
+      },
+      {
+        "from": "elem_0071",
+        "to": "elem_0072"
+      },
+      {
+        "from": "elem_0071",
+        "to": "elem_0073"
+      },
+      {
+        "from": "elem_0071",
+        "to": "elem_0074"
+      }
+    ],
+    "root_nodes": [
+      "elem_0000"
+    ],
+    "max_depth": 5,
+    "total_nodes": 75
+  }
+}

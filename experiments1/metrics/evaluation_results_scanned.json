@@ -1,0 +1,304 @@
+{
+  "summary": {
+    "total_documents": 4,
+    "avg_cer": 0.0013033701002755083,
+    "avg_wer": 0.0015888939725657502,
+    "avg_time_per_page": 4.306454441764138,
+    "avg_time_per_document": 49.407160341739655,
+    "avg_document_teds": 0.8796042319749217,
+    "avg_hierarchy_teds": 0.7613636363636364,
+    "avg_bbox_precision": 0.14192353986115075,
+    "avg_bbox_recall": 0.1421077426315604,
+    "avg_bbox_f1": 0.14201524596144052
+  },
+  "per_document": [
+    {
+      "document_id": "2412.19495v2_scanned",
+      "source_file": "e:\\easy\\documentor\\documentor_langchain\\experiments\\metrics\\test_files_for_metrics\\2412.19495v2_scanned.pdf",
+      "cer": 0.0012860203715309828,
+      "wer": 0.001499055312312618,
+      "time_per_page": 6.334539294242859,
+      "time_per_document": 63.34539294242859,
+      "total_pages": 10,
+      "document_teds": 1.0,
+      "hierarchy_teds": 1.0,
+      "total_elements_gt": 76,
+      "total_elements_pred": 76,
+      "matched_elements": 76,
+      "bbox_precision": 0.14473684210526316,
+      "bbox_recall": 0.14473684210526316,
+      "bbox_f1": 0.14473684210526316,
+      "bbox_matched_count": 11,
+      "class_metrics": {
+        "caption": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 7,
+          "count_pred": 7,
+          "count_matched": 7
+        },
+        "table": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 5,
+          "count_pred": 5,
+          "count_matched": 5
+        },
+        "image": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 2,
+          "count_pred": 2,
+          "count_matched": 2
+        },
+        "title": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 1,
+          "count_pred": 1,
+          "count_matched": 1
+        },
+        "header_1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 15,
+          "count_pred": 15,
+          "count_matched": 15
+        },
+        "text": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 46,
+          "count_pred": 46,
+          "count_matched": 46
+        }
+      }
+    },
+    {
+      "document_id": "2508.19267v1_scanned",
+      "source_file": "e:\\easy\\documentor\\documentor_langchain\\experiments\\metrics\\test_files_for_metrics\\2508.19267v1_scanned.pdf",
+      "cer": 0.0036490519642596664,
+      "wer": 0.003199006875477464,
+      "time_per_page": 4.09377654393514,
+      "time_per_document": 36.84398889541626,
+      "total_pages": 9,
+      "document_teds": 1.0,
+      "hierarchy_teds": 1.0,
+      "total_elements_gt": 89,
+      "total_elements_pred": 89,
+      "matched_elements": 83,
+      "bbox_precision": 0.10112359550561797,
+      "bbox_recall": 0.10112359550561797,
+      "bbox_f1": 0.10112359550561796,
+      "bbox_matched_count": 9,
+      "class_metrics": {
+        "caption": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 6,
+          "count_pred": 6,
+          "count_matched": 6
+        },
+        "table": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 3,
+          "count_pred": 3,
+          "count_matched": 3
+        },
+        "image": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 3,
+          "count_pred": 3,
+          "count_matched": 3
+        },
+        "header_2": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 3,
+          "count_pred": 3,
+          "count_matched": 3
+        },
+        "title": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 1,
+          "count_pred": 1,
+          "count_matched": 1
+        },
+        "header_1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 11,
+          "count_pred": 11,
+          "count_matched": 11
+        },
+        "list_item": {
+          "precision": 0.8,
+          "recall": 0.6666666666666666,
+          "f1": 0.7272727272727272,
+          "count_gt": 18,
+          "count_pred": 15,
+          "count_matched": 12
+        },
+        "text": {
+          "precision": 0.9361702127659575,
+          "recall": 1.0,
+          "f1": 0.967032967032967,
+          "count_gt": 44,
+          "count_pred": 47,
+          "count_matched": 44
+        }
+      }
+    },
+    {
+      "document_id": "journal-10-67-5-676-697_scanned",
+      "source_file": "e:\\easy\\documentor\\documentor_langchain\\experiments\\metrics\\test_files_for_metrics\\journal-10-67-5-676-697_scanned.pdf",
+      "cer": 0.0,
+      "wer": 0.0,
+      "time_per_page": 2.7893647822466763,
+      "time_per_document": 61.36602520942688,
+      "total_pages": 22,
+      "document_teds": 0.5184169278996865,
+      "hierarchy_teds": 0.045454545454545456,
+      "total_elements_gt": 116,
+      "total_elements_pred": 117,
+      "matched_elements": 117,
+      "bbox_precision": 0.08547008547008547,
+      "bbox_recall": 0.08620689655172414,
+      "bbox_f1": 0.08583690987124465,
+      "bbox_matched_count": 10,
+      "class_metrics": {
+        "caption": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 12,
+          "count_pred": 12,
+          "count_matched": 12
+        },
+        "table": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 4,
+          "count_pred": 4,
+          "count_matched": 4
+        },
+        "image": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 7,
+          "count_pred": 7,
+          "count_matched": 7
+        },
+        "title": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 1,
+          "count_pred": 1,
+          "count_matched": 1
+        },
+        "header_1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 7,
+          "count_pred": 7,
+          "count_matched": 7
+        },
+        "text": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 85,
+          "count_pred": 86,
+          "count_matched": 85
+        }
+      }
+    },
+    {
+      "document_id": "journal-10-67-5-721-729_scanned",
+      "source_file": "e:\\easy\\documentor\\documentor_langchain\\experiments\\metrics\\test_files_for_metrics\\journal-10-67-5-721-729_scanned.pdf",
+      "cer": 0.0002784080653113836,
+      "wer": 0.0016575137024729188,
+      "time_per_page": 4.008137146631877,
+      "time_per_document": 36.07323431968689,
+      "total_pages": 9,
+      "document_teds": 1.0,
+      "hierarchy_teds": 1.0,
+      "total_elements_gt": 55,
+      "total_elements_pred": 55,
+      "matched_elements": 55,
+      "bbox_precision": 0.23636363636363636,
+      "bbox_recall": 0.23636363636363636,
+      "bbox_f1": 0.23636363636363636,
+      "bbox_matched_count": 13,
+      "class_metrics": {
+        "caption": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 6,
+          "count_pred": 6,
+          "count_matched": 6
+        },
+        "list_item": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 4,
+          "count_pred": 4,
+          "count_matched": 4
+        },
+        "table": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 3,
+          "count_pred": 3,
+          "count_matched": 3
+        },
+        "image": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 5,
+          "count_pred": 5,
+          "count_matched": 5
+        },
+        "header_1": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 5,
+          "count_pred": 5,
+          "count_matched": 5
+        },
+        "text": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "count_gt": 32,
+          "count_pred": 32,
+          "count_matched": 32
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,1906 @@
+{
+  "document_id": "2508.19267v1_scanned",
+  "metrics": {
+    "document_teds": 0.9678332475553268,
+    "hierarchy_teds": 0.9655172413793104,
+    "ordering_accuracy": 0.9701492537313433
+  },
+  "statistics": {
+    "total_elements": 76,
+    "elements_with_correct_hierarchy": 76,
+    "elements_with_correct_order": 76,
+    "hierarchy_accuracy": 1.0,
+    "ordering_accuracy": 1.0,
+    "hierarchy_errors_count": 0,
+    "structure_errors_count": 29
+  },
+  "hierarchy_errors": [],
+  "structure_errors": [
+    {
+      "element_id": "elem_0010",
+      "element_type": "list_item",
+      "element_content_preview": "",
+      "predicted_order": null,
+      "ground_truth_order": 10,
+      "page_number": 2,
+      "error_type": "missing"
+    },
+    {
+      "element_id": "elem_0027",
+      "element_type": "code_block",
+      "element_content_preview": "function resolveDID(did_string):\n// 1. Parse the DID to identify the method (e.g., ’ion’)\nmethod, id",
+      "predicted_order": null,
+      "ground_truth_order": 27,
+      "page_number": 4,
+      "error_type": "missing"
+    },
+    {
+      "element_id": "elem_0030",
+      "element_type": "list_item",
+      "element_content_preview": "",
+      "predicted_order": null,
+      "ground_truth_order": 30,
+      "page_number": 4,
+      "error_type": "missing"
+    },
+    {
+      "element_id": "elem_0032",
+      "element_type": "list_item",
+      "element_content_preview": "",
+      "predicted_order": null,
+      "ground_truth_order": 32,
+      "page_number": 5,
+      "error_type": "missing"
+    },
+    {
+      "element_id": "elem_0040",
+      "element_type": "list_item",
+      "element_content_preview": "",
+      "predicted_order": null,
+      "ground_truth_order": 40,
+      "page_number": 5,
+      "error_type": "missing"
+    },
+    {
+      "element_id": "elem_0070",
+      "element_type": "list_item",
+      "element_content_preview": "",
+      "predicted_order": null,
+      "ground_truth_order": 70,
+      "page_number": 9,
+      "error_type": "missing"
+    },
+    {
+      "element_id": "elem_0072",
+      "element_type": "list_item",
+      "element_content_preview": "",
+      "predicted_order": null,
+      "ground_truth_order": 72,
+      "page_number": 9,
+      "error_type": "missing"
+    },
+    {
+      "element_id": "elem_0074",
+      "element_type": "formula",
+      "element_content_preview": "",
+      "predicted_order": null,
+      "ground_truth_order": 74,
+      "page_number": 9,
+      "error_type": "missing"
+    },
+    {
+      "element_id": "00000002",
+      "element_type": "text",
+      "element_content_preview": "Sai Teja Reddy Adapala¹ and Yashwanth Reddy Alugubelly²",
+      "predicted_order": 1,
+      "ground_truth_order": null,
+      "page_number": 0,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000011",
+      "element_type": "list_item",
+      "element_content_preview": "* A formal, three-layered security protocol that integrates decentralized identity, post-quantum cry",
+      "predicted_order": 10,
+      "ground_truth_order": null,
+      "page_number": 1,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000028",
+      "element_type": "text",
+      "element_content_preview": "```pascal\nfunction resolveDID(did_string):\n  // 1. Parse the DID to identify the method (e.g., 'ion'",
+      "predicted_order": 27,
+      "ground_truth_order": null,
+      "page_number": 3,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000031",
+      "element_type": "list_item",
+      "element_content_preview": "* ML-KEM (Module-Lattice-based Key-Encapsulation Mechanism) for key exchange, compliant with NIST FI",
+      "predicted_order": 30,
+      "ground_truth_order": null,
+      "page_number": 3,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000033",
+      "element_type": "list_item",
+      "element_content_preview": "1. Key Encapsulation (ML-KEM):",
+      "predicted_order": 32,
+      "ground_truth_order": null,
+      "page_number": 4,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000034",
+      "element_type": "list_item",
+      "element_content_preview": "* The sender (A) uses the receiver's (B) public key ($pk_B$) to generate a shared secret ($ss$) and ",
+      "predicted_order": 33,
+      "ground_truth_order": null,
+      "page_number": 4,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000035",
+      "element_type": "list_item",
+      "element_content_preview": "* $c, ss \\leftarrow \\text{ML-KEM.Encapsulate}(pk_B)$",
+      "predicted_order": 34,
+      "ground_truth_order": null,
+      "page_number": 4,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000036",
+      "element_type": "list_item",
+      "element_content_preview": "* A sends $c$ to B. B uses their private key ($sk_B$) to decapsulate $c$ and derive the same shared ",
+      "predicted_order": 35,
+      "ground_truth_order": null,
+      "page_number": 4,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000037",
+      "element_type": "list_item",
+      "element_content_preview": "2. Authenticated Messaging (ML-DSA):",
+      "predicted_order": 36,
+      "ground_truth_order": null,
+      "page_number": 4,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000038",
+      "element_type": "list_item",
+      "element_content_preview": "* To send a message ($m$), the sender signs a hash of the message with their private key ($sk_A$).",
+      "predicted_order": 37,
+      "ground_truth_order": null,
+      "page_number": 4,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000039",
+      "element_type": "list_item",
+      "element_content_preview": "* $\\sigma \\leftarrow \\text{ML-DSA.Sign}(sk_A, \\text{hash}(m))$",
+      "predicted_order": 38,
+      "ground_truth_order": null,
+      "page_number": 4,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000040",
+      "element_type": "list_item",
+      "element_content_preview": "* The receiver verifies the signature using the sender's public key: $\\text{verify} \\leftarrow \\text",
+      "predicted_order": 39,
+      "ground_truth_order": null,
+      "page_number": 4,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000048",
+      "element_type": "list_item",
+      "element_content_preview": "* Constraint 1: $1 \\leq \\text{agent_clearance} \\leq 4$",
+      "predicted_order": 47,
+      "ground_truth_order": null,
+      "page_number": 4,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000049",
+      "element_type": "list_item",
+      "element_content_preview": "* Constraint 2: $1 \\leq \\text{dataClassification} \\leq 4$",
+      "predicted_order": 48,
+      "ground_truth_order": null,
+      "page_number": 4,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000050",
+      "element_type": "list_item",
+      "element_content_preview": "* Constraint 3: $\\text{agent_clearance} - \\text{dataClassification} \\geq 0$",
+      "predicted_order": 49,
+      "ground_truth_order": null,
+      "page_number": 4,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000081",
+      "element_type": "list_item",
+      "element_content_preview": "1. Setup: The Challenger takes a security parameter $\\lambda$ and generates the public parameters fo",
+      "predicted_order": 80,
+      "ground_truth_order": null,
+      "page_number": 8,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000082",
+      "element_type": "list_item",
+      "element_content_preview": "2. Query: The Adversary $A$ can adaptively make a polynomial number of queries to a proof oracle, $O",
+      "predicted_order": 81,
+      "ground_truth_order": null,
+      "page_number": 8,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000083",
+      "element_type": "list_item",
+      "element_content_preview": "3. Forge: The Adversary $A$ outputs a pair $(x^, \\pi^)$.",
+      "predicted_order": 82,
+      "ground_truth_order": null,
+      "page_number": 8,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000085",
+      "element_type": "list_item",
+      "element_content_preview": "* The verifier accepts the proof: $\\text{Verify}(pp, x^, \\pi^) \\rightarrow \\text{True}$.",
+      "predicted_order": 84,
+      "ground_truth_order": null,
+      "page_number": 8,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000086",
+      "element_type": "list_item",
+      "element_content_preview": "* The statement is false: there exists no witness $w^$ such that $R(x^, w^*)$ is true.",
+      "predicted_order": 85,
+      "ground_truth_order": null,
+      "page_number": 8,
+      "error_type": "extra"
+    },
+    {
+      "element_id": "00000088",
+      "element_type": "text",
+      "element_content_preview": "$$ \\Pr[A \\text{ wins}] < \\text{negl}(\\lambda) $$",
+      "predicted_order": 87,
+      "ground_truth_order": null,
+      "page_number": 8,
+      "error_type": "extra"
+    }
+  ],
+  "predicted_tree": {
+    "nodes": [
+      {
+        "id": "00000001",
+        "type": "title",
+        "content_preview": "# The Aegis Protocol: A Foundational Security Fram",
+        "page_number": 0
+      },
+      {
+        "id": "00000002",
+        "type": "text",
+        "content_preview": "Sai Teja Reddy Adapala¹ and Yashwanth Reddy Alugub",
+        "page_number": 0
+      },
+      {
+        "id": "00000003",
+        "type": "text",
+        "content_preview": "¹Independent Researcher, Charlotte, North Carolina",
+        "page_number": 0
+      },
+      {
+        "id": "00000004",
+        "type": "text",
+        "content_preview": "arXiv:2508.19267v1 [cs.CR] 22 Aug 2025",
+        "page_number": 0
+      },
+      {
+        "id": "00000005",
+        "type": "header_1",
+        "content_preview": "Abstract",
+        "page_number": 0
+      },
+      {
+        "id": "00000006",
+        "type": "text",
+        "content_preview": "The proliferation of autonomous AI agents marks a ",
+        "page_number": 0
+      },
+      {
+        "id": "00000007",
+        "type": "header_1",
+        "content_preview": "1 Introduction",
+        "page_number": 0
+      },
+      {
+        "id": "00000008",
+        "type": "text",
+        "content_preview": "The field of artificial intelligence is undergoing",
+        "page_number": 0
+      },
+      {
+        "id": "00000009",
+        "type": "text",
+        "content_preview": "Current agentic frameworks like CrewAI and AutoGen",
+        "page_number": 0
+      },
+      {
+        "id": "00000010",
+        "type": "text",
+        "content_preview": "This paper introduces the Aegis Protocol as a step",
+        "page_number": 1
+      },
+      {
+        "id": "00000011",
+        "type": "list_item",
+        "content_preview": "* A formal, three-layered security protocol that i",
+        "page_number": 1
+      },
+      {
+        "id": "00000012",
+        "type": "text",
+        "content_preview": "We emphasize that while our work provides a theore",
+        "page_number": 1
+      },
+      {
+        "id": "00000013",
+        "type": "header_1",
+        "content_preview": "2 Threat Model and Design Goals",
+        "page_number": 1
+      },
+      {
+        "id": "00000014",
+        "type": "text",
+        "content_preview": "Aegis assumes a powerful adversary based on an ext",
+        "page_number": 1
+      },
+      {
+        "id": "00000015",
+        "type": "image",
+        "content_preview": "",
+        "page_number": 1
+      },
+      {
+        "id": "00000016",
+        "type": "caption",
+        "content_preview": "Figure 1: Adversary Model Comparison. A diagram co",
+        "page_number": 1
+      },
+      {
+        "id": "00000017",
+        "type": "text",
+        "content_preview": "To structure our analysis, we adapt the STRIDE thr",
+        "page_number": 1
+      },
+      {
+        "id": "00000018",
+        "type": "caption",
+        "content_preview": "Table 1: Adapted STRIDE threats, mitigations in Ae",
+        "page_number": 2
+      },
+      {
+        "id": "00000019",
+        "type": "table",
+        "content_preview": "<table><thead><tr><th>STRIDE Category</th><th>Desc",
+        "page_number": 2
+      },
+      {
+        "id": "00000020",
+        "type": "header_1",
+        "content_preview": "3 The Aegis Protocol: Architecture and Mechanisms",
+        "page_number": 3
+      },
+      {
+        "id": "00000021",
+        "type": "text",
+        "content_preview": "The Aegis Protocol is a layered security architect",
+        "page_number": 3
+      },
+      {
+        "id": "00000022",
+        "type": "image",
+        "content_preview": "",
+        "page_number": 3
+      },
+      {
+        "id": "00000023",
+        "type": "caption",
+        "content_preview": "Figure 2: Aegis Protocol 3-Layer Architecture.",
+        "page_number": 3
+      },
+      {
+        "id": "00000024",
+        "type": "header_2",
+        "content_preview": "3.1 Foundational Layer: Decentralized Identity",
+        "page_number": 3
+      },
+      {
+        "id": "00000025",
+        "type": "text",
+        "content_preview": "The root of trust is a decentralized public key in",
+        "page_number": 3
+      },
+      {
+        "id": "00000026",
+        "type": "text",
+        "content_preview": "An agent resolves a DID to retrieve its associated",
+        "page_number": 3
+      },
+      {
+        "id": "00000027",
+        "type": "text",
+        "content_preview": "Pseudocode for DID Resolution:",
+        "page_number": 3
+      },
+      {
+        "id": "00000028",
+        "type": "text",
+        "content_preview": "```pascal\nfunction resolveDID(did_string):\n  // 1.",
+        "page_number": 3
+      },
+      {
+        "id": "00000029",
+        "type": "header_2",
+        "content_preview": "3.2 Communication Layer: Post-Quantum Secure Chann",
+        "page_number": 3
+      },
+      {
+        "id": "00000030",
+        "type": "text",
+        "content_preview": "To secure communications against both classical an",
+        "page_number": 3
+      },
+      {
+        "id": "00000031",
+        "type": "list_item",
+        "content_preview": "* ML-KEM (Module-Lattice-based Key-Encapsulation M",
+        "page_number": 3
+      },
+      {
+        "id": "00000032",
+        "type": "text",
+        "content_preview": "These algorithms were chosen due to their strong s",
+        "page_number": 4
+      },
+      {
+        "id": "00000033",
+        "type": "list_item",
+        "content_preview": "1. Key Encapsulation (ML-KEM):",
+        "page_number": 4
+      },
+      {
+        "id": "00000034",
+        "type": "list_item",
+        "content_preview": "* The sender (A) uses the receiver's (B) public ke",
+        "page_number": 4
+      },
+      {
+        "id": "00000035",
+        "type": "list_item",
+        "content_preview": "* $c, ss \\leftarrow \\text{ML-KEM.Encapsulate}(pk_B",
+        "page_number": 4
+      },
+      {
+        "id": "00000036",
+        "type": "list_item",
+        "content_preview": "* A sends $c$ to B. B uses their private key ($sk_",
+        "page_number": 4
+      },
+      {
+        "id": "00000037",
+        "type": "list_item",
+        "content_preview": "2. Authenticated Messaging (ML-DSA):",
+        "page_number": 4
+      },
+      {
+        "id": "00000038",
+        "type": "list_item",
+        "content_preview": "* To send a message ($m$), the sender signs a hash",
+        "page_number": 4
+      },
+      {
+        "id": "00000039",
+        "type": "list_item",
+        "content_preview": "* $\\sigma \\leftarrow \\text{ML-DSA.Sign}(sk_A, \\tex",
+        "page_number": 4
+      },
+      {
+        "id": "00000040",
+        "type": "list_item",
+        "content_preview": "* The receiver verifies the signature using the se",
+        "page_number": 4
+      },
+      {
+        "id": "00000041",
+        "type": "text",
+        "content_preview": "This combination ensures that messages are both co",
+        "page_number": 4
+      },
+      {
+        "id": "00000042",
+        "type": "header_2",
+        "content_preview": "3.3 Verification Layer: Privacy-Preserving Policy ",
+        "page_number": 4
+      },
+      {
+        "id": "00000043",
+        "type": "text",
+        "content_preview": "Aegis's most novel contribution is its ability to ",
+        "page_number": 4
+      },
+      {
+        "id": "00000044",
+        "type": "text",
+        "content_preview": "The process follows a clear pipeline: Policy $\\rig",
+        "page_number": 4
+      },
+      {
+        "id": "00000045",
+        "type": "text",
+        "content_preview": "For example, a policy stating an analyst agent can",
+        "page_number": 4
+      },
+      {
+        "id": "00000046",
+        "type": "text",
+        "content_preview": "Conceptual Circuit Example for a Data Access Polic",
+        "page_number": 4
+      },
+      {
+        "id": "00000047",
+        "type": "text",
+        "content_preview": "The circuit enforces the following constraints:",
+        "page_number": 4
+      },
+      {
+        "id": "00000048",
+        "type": "list_item",
+        "content_preview": "* Constraint 1: $1 \\leq \\text{agent_clearance} \\le",
+        "page_number": 4
+      },
+      {
+        "id": "00000049",
+        "type": "list_item",
+        "content_preview": "* Constraint 2: $1 \\leq \\text{dataClassification} ",
+        "page_number": 4
+      },
+      {
+        "id": "00000050",
+        "type": "list_item",
+        "content_preview": "* Constraint 3: $\\text{agent_clearance} - \\text{da",
+        "page_number": 4
+      },
+      {
+        "id": "00000051",
+        "type": "text",
+        "content_preview": "Recent Halo2 developments include enhanced securit",
+        "page_number": 4
+      },
+      {
+        "id": "00000052",
+        "type": "header_1",
+        "content_preview": "4 Security Analysis",
+        "page_number": 5
+      },
+      {
+        "id": "00000053",
+        "type": "text",
+        "content_preview": "The protocol’s layered design provides a robust de",
+        "page_number": 5
+      },
+      {
+        "id": "00000054",
+        "type": "text",
+        "content_preview": "The security of this enforcement relies on the com",
+        "page_number": 5
+      },
+      {
+        "id": "00000055",
+        "type": "header_1",
+        "content_preview": "5 Evaluation",
+        "page_number": 5
+      },
+      {
+        "id": "00000056",
+        "type": "text",
+        "content_preview": "We evaluated the protocol’s feasibility and perfor",
+        "page_number": 5
+      },
+      {
+        "id": "00000057",
+        "type": "text",
+        "content_preview": "Our performance analysis quantified the computatio",
+        "page_number": 5
+      },
+      {
+        "id": "00000058",
+        "type": "text",
+        "content_preview": "To test the stability of our findings, we perturbe",
+        "page_number": 5
+      },
+      {
+        "id": "00000059",
+        "type": "caption",
+        "content_preview": "Table 2: Perturbed Simulation Results",
+        "page_number": 5
+      },
+      {
+        "id": "00000060",
+        "type": "table",
+        "content_preview": "<table><thead><tr><td>Latency Perturbation</td><td",
+        "page_number": 5
+      },
+      {
+        "id": "00000061",
+        "type": "text",
+        "content_preview": "In our security effectiveness tests over 20,000 in",
+        "page_number": 5
+      },
+      {
+        "id": "00000062",
+        "type": "header_1",
+        "content_preview": "6 Related Work",
+        "page_number": 5
+      },
+      {
+        "id": "00000063",
+        "type": "text",
+        "content_preview": "To contextualize Aegis, we compare it against repr",
+        "page_number": 5
+      },
+      {
+        "id": "00000064",
+        "type": "image",
+        "content_preview": "",
+        "page_number": 6
+      },
+      {
+        "id": "00000065",
+        "type": "caption",
+        "content_preview": "Figure 3: ZKP Proof Generation Latency. This histo",
+        "page_number": 6
+      },
+      {
+        "id": "00000066",
+        "type": "caption",
+        "content_preview": "Table 3: Comparison of Aegis with related agent se",
+        "page_number": 6
+      },
+      {
+        "id": "00000067",
+        "type": "table",
+        "content_preview": "<table><thead><tr><th>Framework</th><th>Identity M",
+        "page_number": 6
+      },
+      {
+        "id": "00000068",
+        "type": "header_1",
+        "content_preview": "7 Discussion and Future Work",
+        "page_number": 7
+      },
+      {
+        "id": "00000069",
+        "type": "text",
+        "content_preview": "This work establishes the feasibility and robustne",
+        "page_number": 7
+      },
+      {
+        "id": "00000070",
+        "type": "text",
+        "content_preview": "Ethically, while Aegis enhances security, dual-use",
+        "page_number": 7
+      },
+      {
+        "id": "00000071",
+        "type": "text",
+        "content_preview": "Our evaluation was a simulation. This trade-off al",
+        "page_number": 7
+      },
+      {
+        "id": "00000072",
+        "type": "header_1",
+        "content_preview": "8 Conclusion",
+        "page_number": 7
+      },
+      {
+        "id": "00000073",
+        "type": "text",
+        "content_preview": "The shift towards autonomous, multi-agent AI syste",
+        "page_number": 7
+      },
+      {
+        "id": "00000074",
+        "type": "header_1",
+        "content_preview": "References",
+        "page_number": 7
+      },
+      {
+        "id": "00000075",
+        "type": "text",
+        "content_preview": "[1] Z. Xi et al. The rise and potential of large l",
+        "page_number": 7
+      },
+      {
+        "id": "00000076",
+        "type": "text",
+        "content_preview": "[9] A. Shostack. Threat Modeling: Designing for Se",
+        "page_number": 8
+      },
+      {
+        "id": "00000077",
+        "type": "header_2",
+        "content_preview": "A Security Game for Policy Compliance",
+        "page_number": 8
+      },
+      {
+        "id": "00000078",
+        "type": "text",
+        "content_preview": "This appendix provides a more formal definition fo",
+        "page_number": 8
+      },
+      {
+        "id": "00000079",
+        "type": "text",
+        "content_preview": "Security Game: Unforgeability of Policy Compliance",
+        "page_number": 8
+      },
+      {
+        "id": "00000080",
+        "type": "text",
+        "content_preview": "The game is played between a Challenger and a prob",
+        "page_number": 8
+      },
+      {
+        "id": "00000081",
+        "type": "list_item",
+        "content_preview": "1. Setup: The Challenger takes a security paramete",
+        "page_number": 8
+      },
+      {
+        "id": "00000082",
+        "type": "list_item",
+        "content_preview": "2. Query: The Adversary $A$ can adaptively make a ",
+        "page_number": 8
+      },
+      {
+        "id": "00000083",
+        "type": "list_item",
+        "content_preview": "3. Forge: The Adversary $A$ outputs a pair $(x^, \\",
+        "page_number": 8
+      },
+      {
+        "id": "00000084",
+        "type": "text",
+        "content_preview": "The Adversary $A$ wins the game if both of the fol",
+        "page_number": 8
+      },
+      {
+        "id": "00000085",
+        "type": "list_item",
+        "content_preview": "* The verifier accepts the proof: $\\text{Verify}(p",
+        "page_number": 8
+      },
+      {
+        "id": "00000086",
+        "type": "list_item",
+        "content_preview": "* The statement is false: there exists no witness ",
+        "page_number": 8
+      },
+      {
+        "id": "00000087",
+        "type": "text",
+        "content_preview": "The protocol is considered secure against excessiv",
+        "page_number": 8
+      },
+      {
+        "id": "00000088",
+        "type": "text",
+        "content_preview": "$$ \\Pr[A \\text{ wins}] < \\text{negl}(\\lambda) $$",
+        "page_number": 8
+      },
+      {
+        "id": "00000089",
+        "type": "text",
+        "content_preview": "Reduction Sketch: The security of this game relies",
+        "page_number": 8
+      }
+    ],
+    "edges": [
+      {
+        "from": "00000005",
+        "to": "00000006"
+      },
+      {
+        "from": "00000007",
+        "to": "00000008"
+      },
+      {
+        "from": "00000007",
+        "to": "00000009"
+      },
+      {
+        "from": "00000007",
+        "to": "00000010"
+      },
+      {
+        "from": "00000007",
+        "to": "00000011"
+      },
+      {
+        "from": "00000007",
+        "to": "00000012"
+      },
+      {
+        "from": "00000013",
+        "to": "00000014"
+      },
+      {
+        "from": "00000016",
+        "to": "00000015"
+      },
+      {
+        "from": "00000013",
+        "to": "00000016"
+      },
+      {
+        "from": "00000013",
+        "to": "00000017"
+      },
+      {
+        "from": "00000013",
+        "to": "00000018"
+      },
+      {
+        "from": "00000018",
+        "to": "00000019"
+      },
+      {
+        "from": "00000020",
+        "to": "00000021"
+      },
+      {
+        "from": "00000023",
+        "to": "00000022"
+      },
+      {
+        "from": "00000020",
+        "to": "00000023"
+      },
+      {
+        "from": "00000020",
+        "to": "00000024"
+      },
+      {
+        "from": "00000024",
+        "to": "00000025"
+      },
+      {
+        "from": "00000024",
+        "to": "00000026"
+      },
+      {
+        "from": "00000024",
+        "to": "00000027"
+      },
+      {
+        "from": "00000024",
+        "to": "00000028"
+      },
+      {
+        "from": "00000020",
+        "to": "00000029"
+      },
+      {
+        "from": "00000029",
+        "to": "00000030"
+      },
+      {
+        "from": "00000029",
+        "to": "00000031"
+      },
+      {
+        "from": "00000029",
+        "to": "00000032"
+      },
+      {
+        "from": "00000029",
+        "to": "00000033"
+      },
+      {
+        "from": "00000029",
+        "to": "00000034"
+      },
+      {
+        "from": "00000029",
+        "to": "00000035"
+      },
+      {
+        "from": "00000029",
+        "to": "00000036"
+      },
+      {
+        "from": "00000029",
+        "to": "00000037"
+      },
+      {
+        "from": "00000029",
+        "to": "00000038"
+      },
+      {
+        "from": "00000029",
+        "to": "00000039"
+      },
+      {
+        "from": "00000029",
+        "to": "00000040"
+      },
+      {
+        "from": "00000029",
+        "to": "00000041"
+      },
+      {
+        "from": "00000020",
+        "to": "00000042"
+      },
+      {
+        "from": "00000042",
+        "to": "00000043"
+      },
+      {
+        "from": "00000042",
+        "to": "00000044"
+      },
+      {
+        "from": "00000042",
+        "to": "00000045"
+      },
+      {
+        "from": "00000042",
+        "to": "00000046"
+      },
+      {
+        "from": "00000042",
+        "to": "00000047"
+      },
+      {
+        "from": "00000042",
+        "to": "00000048"
+      },
+      {
+        "from": "00000042",
+        "to": "00000049"
+      },
+      {
+        "from": "00000042",
+        "to": "00000050"
+      },
+      {
+        "from": "00000042",
+        "to": "00000051"
+      },
+      {
+        "from": "00000052",
+        "to": "00000053"
+      },
+      {
+        "from": "00000052",
+        "to": "00000054"
+      },
+      {
+        "from": "00000055",
+        "to": "00000056"
+      },
+      {
+        "from": "00000055",
+        "to": "00000057"
+      },
+      {
+        "from": "00000055",
+        "to": "00000058"
+      },
+      {
+        "from": "00000055",
+        "to": "00000059"
+      },
+      {
+        "from": "00000059",
+        "to": "00000060"
+      },
+      {
+        "from": "00000055",
+        "to": "00000061"
+      },
+      {
+        "from": "00000062",
+        "to": "00000063"
+      },
+      {
+        "from": "00000065",
+        "to": "00000064"
+      },
+      {
+        "from": "00000062",
+        "to": "00000065"
+      },
+      {
+        "from": "00000062",
+        "to": "00000066"
+      },
+      {
+        "from": "00000066",
+        "to": "00000067"
+      },
+      {
+        "from": "00000068",
+        "to": "00000069"
+      },
+      {
+        "from": "00000068",
+        "to": "00000070"
+      },
+      {
+        "from": "00000068",
+        "to": "00000071"
+      },
+      {
+        "from": "00000072",
+        "to": "00000073"
+      },
+      {
+        "from": "00000074",
+        "to": "00000075"
+      },
+      {
+        "from": "00000074",
+        "to": "00000076"
+      },
+      {
+        "from": "00000074",
+        "to": "00000077"
+      },
+      {
+        "from": "00000077",
+        "to": "00000078"
+      },
+      {
+        "from": "00000077",
+        "to": "00000079"
+      },
+      {
+        "from": "00000077",
+        "to": "00000080"
+      },
+      {
+        "from": "00000077",
+        "to": "00000081"
+      },
+      {
+        "from": "00000077",
+        "to": "00000082"
+      },
+      {
+        "from": "00000077",
+        "to": "00000083"
+      },
+      {
+        "from": "00000077",
+        "to": "00000084"
+      },
+      {
+        "from": "00000077",
+        "to": "00000085"
+      },
+      {
+        "from": "00000077",
+        "to": "00000086"
+      },
+      {
+        "from": "00000077",
+        "to": "00000087"
+      },
+      {
+        "from": "00000077",
+        "to": "00000088"
+      },
+      {
+        "from": "00000077",
+        "to": "00000089"
+      }
+    ],
+    "root_nodes": [
+      "00000001",
+      "00000002",
+      "00000003",
+      "00000004",
+      "00000005",
+      "00000007",
+      "00000013",
+      "00000020",
+      "00000052",
+      "00000055",
+      "00000062",
+      "00000068",
+      "00000072",
+      "00000074"
+    ],
+    "max_depth": 3,
+    "total_nodes": 89
+  },
+  "ground_truth_tree": {
+    "nodes": [
+      {
+        "id": "elem_0000",
+        "type": "title",
+        "content_preview": "The Aegis Protocol: A Foundational Security Framew",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0001",
+        "type": "text",
+        "content_preview": "Sai Teja Reddy Adapala1 and Yashwanth Reddy Alugub",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0002",
+        "type": "text",
+        "content_preview": "1Independent Researcher, Charlotte, North Carolina",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0003",
+        "type": "header_1",
+        "content_preview": "Abstract",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0004",
+        "type": "text",
+        "content_preview": "The proliferation of autonomous AI agents marks a ",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0005",
+        "type": "text",
+        "content_preview": "arXiv:2508.19267v1  [cs.CR]  22 Aug 2025",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0006",
+        "type": "header_1",
+        "content_preview": "1\nIntroduction",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0007",
+        "type": "text",
+        "content_preview": "The field of artificial intelligence is undergoing",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0008",
+        "type": "text",
+        "content_preview": "Current agentic frameworks like CrewAI and AutoGen",
+        "page_number": 1
+      },
+      {
+        "id": "elem_0009",
+        "type": "text",
+        "content_preview": "This paper introduces the Aegis Protocol as a step",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0010",
+        "type": "list_item",
+        "content_preview": "",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0011",
+        "type": "text",
+        "content_preview": "We emphasize that while our work provides a theore",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0012",
+        "type": "header_1",
+        "content_preview": "2\nThreat Model and Design Goals",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0013",
+        "type": "text",
+        "content_preview": "Aegis assumes a powerful adversary based on an ext",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0014",
+        "type": "image",
+        "content_preview": "",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0015",
+        "type": "caption",
+        "content_preview": "Figure 1: Adversary Model Comparison. A diagram co",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0016",
+        "type": "text",
+        "content_preview": "To structure our analysis, we adapt the STRIDE thr",
+        "page_number": 2
+      },
+      {
+        "id": "elem_0017",
+        "type": "caption",
+        "content_preview": "Table 1: Adapted STRIDE threats, mitigations in Ae",
+        "page_number": 3
+      },
+      {
+        "id": "elem_0018",
+        "type": "table",
+        "content_preview": "<table><thead><tr><th>STRIDE Category</th><th>Desc",
+        "page_number": 3
+      },
+      {
+        "id": "elem_0019",
+        "type": "header_1",
+        "content_preview": "3\nThe Aegis Protocol: Architecture and Mechanisms",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0020",
+        "type": "text",
+        "content_preview": "The Aegis Protocol is a layered security architect",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0021",
+        "type": "image",
+        "content_preview": "",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0022",
+        "type": "caption",
+        "content_preview": "Figure 2: Aegis Protocol 3-Layer Architecture.",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0023",
+        "type": "header_2",
+        "content_preview": "3.1\nFoundational Layer: Decentralized Identity",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0024",
+        "type": "text",
+        "content_preview": "The root of trust is a decentralized public key in",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0025",
+        "type": "text",
+        "content_preview": "An agent resolves a DID to retrieve its associated",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0026",
+        "type": "text",
+        "content_preview": "Pseudocode for DID Resolution:",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0027",
+        "type": "code_block",
+        "content_preview": "function resolveDID(did_string):\n// 1. Parse the D",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0028",
+        "type": "header_2",
+        "content_preview": "3.2\nCommunication Layer: Post-Quantum Secure Chann",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0029",
+        "type": "text",
+        "content_preview": "To secure communications against both classical an",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0030",
+        "type": "list_item",
+        "content_preview": "",
+        "page_number": 4
+      },
+      {
+        "id": "elem_0031",
+        "type": "text",
+        "content_preview": "These algorithms were chosen due to their strong s",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0032",
+        "type": "list_item",
+        "content_preview": "",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0033",
+        "type": "text",
+        "content_preview": "This combination ensures that messages are both co",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0034",
+        "type": "header_2",
+        "content_preview": "3.3\nVerification Layer: Privacy-Preserving Policy ",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0035",
+        "type": "text",
+        "content_preview": "Aegis’s most novel contribution is its ability to ",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0036",
+        "type": "text",
+        "content_preview": "The process follows a clear pipeline: Policy →Arit",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0037",
+        "type": "text",
+        "content_preview": "Verification.\nFor example, a policy stating an ana",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0038",
+        "type": "text",
+        "content_preview": "Conceptual Circuit Example for a Data Access Polic",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0039",
+        "type": "text",
+        "content_preview": "The circuit enforces the following constraints:",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0040",
+        "type": "list_item",
+        "content_preview": "",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0041",
+        "type": "text",
+        "content_preview": "Recent Halo2 developments include enhanced securit",
+        "page_number": 5
+      },
+      {
+        "id": "elem_0042",
+        "type": "header_1",
+        "content_preview": "4\nSecurity Analysis",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0043",
+        "type": "text",
+        "content_preview": "The protocol’s layered design provides a robust de",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0044",
+        "type": "text",
+        "content_preview": "The security of this enforcement relies on the com",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0045",
+        "type": "header_1",
+        "content_preview": "5\nEvaluation",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0046",
+        "type": "text",
+        "content_preview": "We evaluated the protocol’s feasibility and perfor",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0047",
+        "type": "text",
+        "content_preview": "Our performance analysis quantified the computatio",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0048",
+        "type": "text",
+        "content_preview": "To test the stability of our findings, we perturbe",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0049",
+        "type": "caption",
+        "content_preview": "Table 2: Perturbed Simulation Results",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0050",
+        "type": "table",
+        "content_preview": "<table><thead><tr><td>Latency Perturbation</td><td",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0051",
+        "type": "text",
+        "content_preview": "In our security effectiveness tests over 20,000 in",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0052",
+        "type": "header_1",
+        "content_preview": "6\nRelated Work",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0053",
+        "type": "text",
+        "content_preview": "To contextualize Aegis, we compare it against repr",
+        "page_number": 6
+      },
+      {
+        "id": "elem_0054",
+        "type": "image",
+        "content_preview": "",
+        "page_number": 7
+      },
+      {
+        "id": "elem_0055",
+        "type": "caption",
+        "content_preview": "Figure 3: ZKP Proof Generation Latency. This histo",
+        "page_number": 7
+      },
+      {
+        "id": "elem_0056",
+        "type": "caption",
+        "content_preview": "Table 3: Comparison of Aegis with related agent se",
+        "page_number": 7
+      },
+      {
+        "id": "elem_0057",
+        "type": "table",
+        "content_preview": "<table><thead><tr><th>Framework</th><th>Identity M",
+        "page_number": 7
+      },
+      {
+        "id": "elem_0058",
+        "type": "header_1",
+        "content_preview": "7\nDiscussion and Future Work",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0059",
+        "type": "text",
+        "content_preview": "This work establishes the feasibility and robustne",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0060",
+        "type": "text",
+        "content_preview": "Ethically, while Aegis enhances security, dual-use",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0061",
+        "type": "text",
+        "content_preview": "Our evaluation was a simulation. This trade-off al",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0062",
+        "type": "header_1",
+        "content_preview": "8\nConclusion",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0063",
+        "type": "text",
+        "content_preview": "The shift towards autonomous, multi-agent AI syste",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0064",
+        "type": "header_1",
+        "content_preview": "References",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0065",
+        "type": "text",
+        "content_preview": "[1] Z. Xi et al.\nThe rise and potential of large l",
+        "page_number": 8
+      },
+      {
+        "id": "elem_0066",
+        "type": "text",
+        "content_preview": "[9] A. Shostack. Threat Modeling: Designing for Se",
+        "page_number": 9
+      },
+      {
+        "id": "elem_0067",
+        "type": "header_2",
+        "content_preview": "A\nSecurity Game for Policy Compliance",
+        "page_number": 9
+      },
+      {
+        "id": "elem_0068",
+        "type": "text",
+        "content_preview": "This appendix provides a more formal definition fo",
+        "page_number": 9
+      },
+      {
+        "id": "elem_0069",
+        "type": "text",
+        "content_preview": "Security Game: Unforgeability of Policy Compliance",
+        "page_number": 9
+      },
+      {
+        "id": "elem_0070",
+        "type": "list_item",
+        "content_preview": "",
+        "page_number": 9
+      },
+      {
+        "id": "elem_0071",
+        "type": "text",
+        "content_preview": "The Adversary A wins the game if both of the follo",
+        "page_number": 9
+      },
+      {
+        "id": "elem_0072",
+        "type": "list_item",
+        "content_preview": "",
+        "page_number": 9
+      },
+      {
+        "id": "elem_0073",
+        "type": "text",
+        "content_preview": "The protocol is considered secure against excessiv",
+        "page_number": 9
+      },
+      {
+        "id": "elem_0074",
+        "type": "formula",
+        "content_preview": "",
+        "page_number": 9
+      },
+      {
+        "id": "elem_0075",
+        "type": "text",
+        "content_preview": "Reduction Sketch: The security of this game relies",
+        "page_number": 9
+      }
+    ],
+    "edges": [
+      {
+        "from": "elem_0000",
+        "to": "elem_0001"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0002"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0003"
+      },
+      {
+        "from": "elem_0003",
+        "to": "elem_0004"
+      },
+      {
+        "from": "elem_0003",
+        "to": "elem_0005"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0006"
+      },
+      {
+        "from": "elem_0006",
+        "to": "elem_0007"
+      },
+      {
+        "from": "elem_0006",
+        "to": "elem_0008"
+      },
+      {
+        "from": "elem_0006",
+        "to": "elem_0009"
+      },
+      {
+        "from": "elem_0006",
+        "to": "elem_0010"
+      },
+      {
+        "from": "elem_0006",
+        "to": "elem_0011"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0012"
+      },
+      {
+        "from": "elem_0012",
+        "to": "elem_0013"
+      },
+      {
+        "from": "elem_0015",
+        "to": "elem_0014"
+      },
+      {
+        "from": "elem_0012",
+        "to": "elem_0015"
+      },
+      {
+        "from": "elem_0012",
+        "to": "elem_0016"
+      },
+      {
+        "from": "elem_0012",
+        "to": "elem_0017"
+      },
+      {
+        "from": "elem_0017",
+        "to": "elem_0018"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0019"
+      },
+      {
+        "from": "elem_0019",
+        "to": "elem_0020"
+      },
+      {
+        "from": "elem_0022",
+        "to": "elem_0021"
+      },
+      {
+        "from": "elem_0019",
+        "to": "elem_0022"
+      },
+      {
+        "from": "elem_0019",
+        "to": "elem_0023"
+      },
+      {
+        "from": "elem_0023",
+        "to": "elem_0024"
+      },
+      {
+        "from": "elem_0023",
+        "to": "elem_0025"
+      },
+      {
+        "from": "elem_0023",
+        "to": "elem_0026"
+      },
+      {
+        "from": "elem_0023",
+        "to": "elem_0027"
+      },
+      {
+        "from": "elem_0019",
+        "to": "elem_0028"
+      },
+      {
+        "from": "elem_0028",
+        "to": "elem_0029"
+      },
+      {
+        "from": "elem_0028",
+        "to": "elem_0030"
+      },
+      {
+        "from": "elem_0028",
+        "to": "elem_0031"
+      },
+      {
+        "from": "elem_0028",
+        "to": "elem_0032"
+      },
+      {
+        "from": "elem_0028",
+        "to": "elem_0033"
+      },
+      {
+        "from": "elem_0019",
+        "to": "elem_0034"
+      },
+      {
+        "from": "elem_0034",
+        "to": "elem_0035"
+      },
+      {
+        "from": "elem_0034",
+        "to": "elem_0036"
+      },
+      {
+        "from": "elem_0034",
+        "to": "elem_0037"
+      },
+      {
+        "from": "elem_0034",
+        "to": "elem_0038"
+      },
+      {
+        "from": "elem_0034",
+        "to": "elem_0039"
+      },
+      {
+        "from": "elem_0034",
+        "to": "elem_0040"
+      },
+      {
+        "from": "elem_0034",
+        "to": "elem_0041"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0042"
+      },
+      {
+        "from": "elem_0042",
+        "to": "elem_0043"
+      },
+      {
+        "from": "elem_0042",
+        "to": "elem_0044"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0045"
+      },
+      {
+        "from": "elem_0045",
+        "to": "elem_0046"
+      },
+      {
+        "from": "elem_0045",
+        "to": "elem_0047"
+      },
+      {
+        "from": "elem_0045",
+        "to": "elem_0048"
+      },
+      {
+        "from": "elem_0045",
+        "to": "elem_0049"
+      },
+      {
+        "from": "elem_0049",
+        "to": "elem_0050"
+      },
+      {
+        "from": "elem_0045",
+        "to": "elem_0051"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0052"
+      },
+      {
+        "from": "elem_0052",
+        "to": "elem_0053"
+      },
+      {
+        "from": "elem_0055",
+        "to": "elem_0054"
+      },
+      {
+        "from": "elem_0052",
+        "to": "elem_0055"
+      },
+      {
+        "from": "elem_0052",
+        "to": "elem_0056"
+      },
+      {
+        "from": "elem_0056",
+        "to": "elem_0057"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0058"
+      },
+      {
+        "from": "elem_0058",
+        "to": "elem_0059"
+      },
+      {
+        "from": "elem_0058",
+        "to": "elem_0060"
+      },
+      {
+        "from": "elem_0058",
+        "to": "elem_0061"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0062"
+      },
+      {
+        "from": "elem_0062",
+        "to": "elem_0063"
+      },
+      {
+        "from": "elem_0000",
+        "to": "elem_0064"
+      },
+      {
+        "from": "elem_0064",
+        "to": "elem_0065"
+      },
+      {
+        "from": "elem_0064",
+        "to": "elem_0066"
+      },
+      {
+        "from": "elem_0064",
+        "to": "elem_0067"
+      },
+      {
+        "from": "elem_0067",
+        "to": "elem_0068"
+      },
+      {
+        "from": "elem_0067",
+        "to": "elem_0069"
+      },
+      {
+        "from": "elem_0067",
+        "to": "elem_0070"
+      },
+      {
+        "from": "elem_0067",
+        "to": "elem_0071"
+      },
+      {
+        "from": "elem_0067",
+        "to": "elem_0072"
+      },
+      {
+        "from": "elem_0067",
+        "to": "elem_0073"
+      },
+      {
+        "from": "elem_0067",
+        "to": "elem_0074"
+      },
+      {
+        "from": "elem_0067",
+        "to": "elem_0075"
+      }
+    ],
+    "root_nodes": [
+      "elem_0000"
+    ],
+    "max_depth": 4,
+    "total_nodes": 76
+  }
+}

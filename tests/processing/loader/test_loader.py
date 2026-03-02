@@ -1,7 +1,7 @@
 """
-Тесты для document loader.
+Tests for document loader.
 
-Тестируемые функции:
+Tested functions:
 - detect_document_format()
 - get_document_source()
 - validate_document()
@@ -11,7 +11,7 @@
 import sys
 from pathlib import Path
 
-# Добавляем корневую директорию проекта в PYTHONPATH для прямого запуска
+# Add project root to PYTHONPATH for direct run
 _project_root = Path(__file__).parent.parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
@@ -33,42 +33,42 @@ from documentor.processing.loader.loader import (
 )
 
 
-# Фикстуры для тестовых файлов
+# Fixtures for test files
 @pytest.fixture
 def test_files_dir() -> Path:
-    """Возвращает путь к директории с тестовыми файлами."""
-    return Path(__file__).parent.parent.parent / "files_for_tests"
+    """Return path to the directory with test files."""
+    return Path(__file__).parent.parent.parent / "data"
 
 
 @pytest.fixture
 def markdown_file(test_files_dir: Path) -> Path:
-    """Путь к тестовому Markdown файлу."""
+    """Path to test Markdown file."""
     return test_files_dir / "md.md"
 
 
 @pytest.fixture
 def pdf_file(test_files_dir: Path) -> Path:
-    """Путь к тестовому PDF файлу."""
+    """Path to test PDF file."""
     return test_files_dir / "pdf.pdf"
 
 
 @pytest.fixture
 def image_pdf_file(test_files_dir: Path) -> Path:
-    """Путь к тестовому PDF файлу с изображениями."""
+    """Path to test PDF file with images."""
     return test_files_dir / "image.pdf"
 
 
 @pytest.fixture
 def docx_file(test_files_dir: Path) -> Path:
-    """Путь к тестовому DOCX файлу."""
+    """Path to test DOCX file."""
     return test_files_dir / "docx.docx"
 
 
 class TestGetDocumentSource:
-    """Тесты для функции get_document_source()."""
+    """Tests for get_document_source()."""
 
     def test_source_from_source_key(self):
-        """Тест получения source из ключа 'source'."""
+        """Test getting source from 'source' key."""
         doc = Document(
             page_content="test",
             metadata={"source": "/path/to/file.md"}
@@ -76,7 +76,7 @@ class TestGetDocumentSource:
         assert get_document_source(doc) == "/path/to/file.md"
 
     def test_source_from_file_path_key(self):
-        """Тест получения source из ключа 'file_path'."""
+        """Test getting source from 'file_path' key."""
         doc = Document(
             page_content="test",
             metadata={"file_path": "/path/to/file.pdf"}
@@ -84,7 +84,7 @@ class TestGetDocumentSource:
         assert get_document_source(doc) == "/path/to/file.pdf"
 
     def test_source_from_path_key(self):
-        """Тест получения source из ключа 'path'."""
+        """Test getting source from 'path' key."""
         doc = Document(
             page_content="test",
             metadata={"path": "/path/to/file.docx"}
@@ -92,7 +92,7 @@ class TestGetDocumentSource:
         assert get_document_source(doc) == "/path/to/file.docx"
 
     def test_source_from_filename_key(self):
-        """Тест получения source из ключа 'filename'."""
+        """Test getting source from 'filename' key."""
         doc = Document(
             page_content="test",
             metadata={"filename": "/path/to/file.md"}
@@ -100,7 +100,7 @@ class TestGetDocumentSource:
         assert get_document_source(doc) == "/path/to/file.md"
 
     def test_source_from_file_name_key(self):
-        """Тест получения source из ключа 'file_name'."""
+        """Test getting source from 'file_name' key."""
         doc = Document(
             page_content="test",
             metadata={"file_name": "/path/to/file.pdf"}
@@ -108,7 +108,7 @@ class TestGetDocumentSource:
         assert get_document_source(doc) == "/path/to/file.pdf"
 
     def test_source_priority_order(self):
-        """Тест приоритета ключей (source имеет наивысший приоритет)."""
+        """Test key priority (source has highest priority)."""
         doc = Document(
             page_content="test",
             metadata={
@@ -120,18 +120,18 @@ class TestGetDocumentSource:
         assert get_document_source(doc) == "/correct/path.md"
 
     def test_source_unknown_when_no_metadata(self):
-        """Тест возврата 'unknown' когда метаданных нет."""
+        """Test returning 'unknown' when no metadata."""
         doc = Document(page_content="test", metadata={})
         assert get_document_source(doc) == "unknown"
 
     def test_source_unknown_when_metadata_none(self):
-        """Тест возврата 'unknown' когда metadata = None."""
-        # LangChain Document не позволяет metadata=None, используем пустой словарь
+        """Test returning 'unknown' when metadata = None."""
+        # LangChain Document does not allow metadata=None, use empty dict
         doc = Document(page_content="test", metadata={})
         assert get_document_source(doc) == "unknown"
 
     def test_source_unknown_when_no_relevant_keys(self):
-        """Тест возврата 'unknown' когда нет релевантных ключей."""
+        """Test returning 'unknown' when no relevant keys."""
         doc = Document(
             page_content="test",
             metadata={"other_key": "/path/to/file.md"}
@@ -140,119 +140,119 @@ class TestGetDocumentSource:
 
 
 class TestDetectFormatByExtension:
-    """Тесты для функции _detect_format_by_extension()."""
+    """Tests for _detect_format_by_extension()."""
 
     def test_detect_markdown_by_md_extension(self):
-        """Тест определения Markdown по расширению .md."""
+        """Test detecting Markdown by .md extension."""
         assert _detect_format_by_extension("/path/to/file.md") == DocumentFormat.MARKDOWN
 
     def test_detect_markdown_by_markdown_extension(self):
-        """Тест определения Markdown по расширению .markdown."""
+        """Test detecting Markdown by .markdown extension."""
         assert _detect_format_by_extension("/path/to/file.markdown") == DocumentFormat.MARKDOWN
 
     def test_detect_pdf_by_extension(self):
-        """Тест определения PDF по расширению."""
+        """Test detecting PDF by extension."""
         assert _detect_format_by_extension("/path/to/file.pdf") == DocumentFormat.PDF
 
     def test_detect_docx_by_extension(self):
-        """Тест определения DOCX по расширению."""
+        """Test detecting DOCX by extension."""
         assert _detect_format_by_extension("/path/to/file.docx") == DocumentFormat.DOCX
 
     def test_case_insensitive_extension(self):
-        """Тест нечувствительности к регистру расширения."""
+        """Test extension case insensitivity."""
         assert _detect_format_by_extension("/path/to/FILE.PDF") == DocumentFormat.PDF
         assert _detect_format_by_extension("/path/to/FILE.DOCX") == DocumentFormat.DOCX
 
     def test_unknown_extension_returns_none(self):
-        """Тест возврата None для неизвестного расширения."""
+        """Test returning None for unknown extension."""
         assert _detect_format_by_extension("/path/to/file.txt") is None
         assert _detect_format_by_extension("/path/to/file") is None
 
     def test_no_extension_returns_none(self):
-        """Тест возврата None для файла без расширения."""
+        """Test returning None for file without extension."""
         assert _detect_format_by_extension("/path/to/file") is None
 
 
 class TestDetectFormatByMimeType:
-    """Тесты для функции _detect_format_by_mime_type()."""
+    """Tests for _detect_format_by_mime_type()."""
 
     def test_detect_pdf_by_mime_type(self):
-        """Тест определения PDF по MIME типу."""
+        """Test detecting PDF by MIME type."""
         metadata = {"mime_type": "application/pdf"}
         assert _detect_format_by_mime_type(metadata) == DocumentFormat.PDF
 
     def test_detect_docx_by_mime_type(self):
-        """Тест определения DOCX по MIME типу."""
+        """Test detecting DOCX by MIME type."""
         metadata = {"mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"}
         assert _detect_format_by_mime_type(metadata) == DocumentFormat.DOCX
 
     def test_detect_docx_template_by_mime_type(self):
-        """Тест определения DOCX template по MIME типу."""
+        """Test detecting DOCX template by MIME type."""
         metadata = {"mime_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.template"}
         assert _detect_format_by_mime_type(metadata) == DocumentFormat.DOCX
 
     def test_detect_markdown_by_mime_type(self):
-        """Тест определения Markdown по MIME типу."""
+        """Test detecting Markdown by MIME type."""
         metadata = {"mime_type": "text/markdown"}
         assert _detect_format_by_mime_type(metadata) == DocumentFormat.MARKDOWN
 
     def test_detect_markdown_by_alternative_mime_type(self):
-        """Тест определения Markdown по альтернативному MIME типу."""
+        """Test detecting Markdown by alternative MIME type."""
         metadata = {"mime_type": "text/x-markdown"}
         assert _detect_format_by_mime_type(metadata) == DocumentFormat.MARKDOWN
 
     def test_unknown_mime_type_returns_none(self):
-        """Тест возврата None для неизвестного MIME типа."""
+        """Test returning None for unknown MIME type."""
         metadata = {"mime_type": "text/plain"}
         assert _detect_format_by_mime_type(metadata) is None
 
     def test_no_mime_type_returns_none(self):
-        """Тест возврата None когда MIME типа нет."""
+        """Test returning None when no MIME type."""
         metadata = {}
         assert _detect_format_by_mime_type(metadata) is None
 
     def test_empty_mime_type_returns_none(self):
-        """Тест возврата None для пустого MIME типа."""
+        """Test returning None for empty MIME type."""
         metadata = {"mime_type": ""}
         assert _detect_format_by_mime_type(metadata) is None
 
 
 class TestDetectFormatByMagicBytes:
-    """Тесты для функции _detect_format_by_magic_bytes()."""
+    """Tests for _detect_format_by_magic_bytes()."""
 
     def test_detect_pdf_by_magic_bytes(self, pdf_file: Path):
-        """Тест определения PDF по magic bytes."""
+        """Test detecting PDF by magic bytes."""
         assert _detect_format_by_magic_bytes(str(pdf_file)) == DocumentFormat.PDF
 
     def test_detect_pdf_image_by_magic_bytes(self, image_pdf_file: Path):
-        """Тест определения PDF с изображениями по magic bytes."""
+        """Test detecting image PDF by magic bytes."""
         assert _detect_format_by_magic_bytes(str(image_pdf_file)) == DocumentFormat.PDF
 
     def test_detect_docx_by_magic_bytes(self, docx_file: Path):
-        """Тест определения DOCX по magic bytes."""
+        """Test detecting DOCX by magic bytes."""
         assert _detect_format_by_magic_bytes(str(docx_file)) == DocumentFormat.DOCX
 
     def test_nonexistent_file_returns_none(self):
-        """Тест возврата None для несуществующего файла."""
+        """Test returning None for nonexistent file."""
         assert _detect_format_by_magic_bytes("/nonexistent/file.pdf") is None
 
     def test_directory_returns_none(self, test_files_dir: Path):
-        """Тест возврата None для директории."""
+        """Test returning None for directory."""
         assert _detect_format_by_magic_bytes(str(test_files_dir)) is None
 
     def test_markdown_returns_none(self, markdown_file: Path):
-        """Тест возврата None для Markdown (нет magic bytes для текстовых файлов)."""
-        # Markdown - текстовый файл, magic bytes не определяются
+        """Test returning None for Markdown (no magic bytes for text files)."""
+        # Markdown is a text file, magic bytes are not detected
         result = _detect_format_by_magic_bytes(str(markdown_file))
-        # Может быть None или может быть определен по-другому
+        # May be None or detected differently
         assert result is None or result == DocumentFormat.UNKNOWN
 
 
 class TestDetectDocumentFormat:
-    """Тесты для функции detect_document_format()."""
+    """Tests for detect_document_format()."""
 
     def test_detect_markdown_by_extension(self, markdown_file: Path):
-        """Тест определения Markdown по расширению."""
+        """Test detecting Markdown by extension."""
         doc = Document(
             page_content="# Test",
             metadata={"source": str(markdown_file)}
@@ -260,7 +260,7 @@ class TestDetectDocumentFormat:
         assert detect_document_format(doc) == DocumentFormat.MARKDOWN
 
     def test_detect_pdf_by_extension(self, pdf_file: Path):
-        """Тест определения PDF по расширению."""
+        """Test detecting PDF by extension."""
         doc = Document(
             page_content="PDF content",
             metadata={"source": str(pdf_file)}
@@ -268,7 +268,7 @@ class TestDetectDocumentFormat:
         assert detect_document_format(doc) == DocumentFormat.PDF
 
     def test_detect_docx_by_extension(self, docx_file: Path):
-        """Тест определения DOCX по расширению."""
+        """Test detecting DOCX by extension."""
         doc = Document(
             page_content="DOCX content",
             metadata={"source": str(docx_file)}
@@ -276,7 +276,7 @@ class TestDetectDocumentFormat:
         assert detect_document_format(doc) == DocumentFormat.DOCX
 
     def test_detect_by_mime_type_when_no_extension(self):
-        """Тест определения формата по MIME типу когда нет расширения."""
+        """Test detecting format by MIME type when no extension."""
         doc = Document(
             page_content="PDF content",
             metadata={
@@ -287,9 +287,9 @@ class TestDetectDocumentFormat:
         assert detect_document_format(doc) == DocumentFormat.PDF
 
     def test_detect_by_magic_bytes_when_no_extension_or_mime(self, pdf_file: Path):
-        """Тест определения формата по magic bytes когда нет расширения и MIME типа."""
-        # Используем реальный путь к файлу, но без расширения в метаданных
-        # Создаём временный файл без расширения, копируя содержимое PDF
+        """Test detecting format by magic bytes when no extension or MIME type."""
+        # Use real file path but no extension in metadata
+        # Create temp file without extension, copy PDF content
         tmp_dir = tempfile.gettempdir()
         tmp_path = Path(tmp_dir) / f"test_pdf_{tempfile.gettempprefix()}"
         try:
@@ -298,27 +298,27 @@ class TestDetectDocumentFormat:
                 page_content="PDF content",
                 metadata={"source": str(tmp_path)}
             )
-            # Должен определить по magic bytes
+            # Should detect by magic bytes
             assert detect_document_format(doc) == DocumentFormat.PDF
         finally:
             if tmp_path.exists():
                 tmp_path.unlink()
 
     def test_priority_extension_over_mime_type(self, markdown_file: Path):
-        """Тест приоритета расширения над MIME типом."""
+        """Test extension priority over MIME type."""
         doc = Document(
             page_content="# Test",
             metadata={
                 "source": str(markdown_file),
-                "mime_type": "application/pdf"  # Неправильный MIME тип
+                "mime_type": "application/pdf"  # Wrong MIME type
             }
         )
-        # Должен определить по расширению, игнорируя MIME тип
+        # Should detect by extension, ignoring MIME type
         assert detect_document_format(doc) == DocumentFormat.MARKDOWN
 
     def test_priority_mime_type_over_magic_bytes(self, pdf_file: Path):
-        """Тест приоритета MIME типа над magic bytes."""
-        # Создаём документ с неправильным расширением, но правильным MIME типом
+        """Test MIME type priority over magic bytes."""
+        # Create document with wrong extension but correct MIME type
         doc = Document(
             page_content="PDF content",
             metadata={
@@ -326,11 +326,11 @@ class TestDetectDocumentFormat:
                 "mime_type": "application/pdf"
             }
         )
-        # Должен определить по MIME типу
+        # Should detect by MIME type
         assert detect_document_format(doc) == DocumentFormat.PDF
 
     def test_unknown_format_when_all_methods_fail(self):
-        """Тест возврата UNKNOWN когда все методы не сработали."""
+        """Test returning UNKNOWN when all methods fail."""
         doc = Document(
             page_content="Unknown content",
             metadata={"source": "/path/to/unknown.xyz"}
@@ -338,13 +338,13 @@ class TestDetectDocumentFormat:
         assert detect_document_format(doc) == DocumentFormat.UNKNOWN
 
     def test_raises_error_when_no_content_and_no_source(self):
-        """Тест выброса ошибки когда нет ни контента, ни источника."""
+        """Test raising error when no content and no source."""
         doc = Document(page_content="", metadata={})
         with pytest.raises(ValueError, match="Document must contain page_content or source"):
             detect_document_format(doc)
 
     def test_works_with_only_source_no_content(self, markdown_file: Path):
-        """Тест работы когда есть только source, но нет page_content."""
+        """Test when only source is present, no page_content."""
         doc = Document(
             page_content="",
             metadata={"source": str(markdown_file)}
@@ -352,26 +352,26 @@ class TestDetectDocumentFormat:
         assert detect_document_format(doc) == DocumentFormat.MARKDOWN
 
     def test_works_with_only_content_no_source(self):
-        """Тест работы когда есть только page_content, но нет source."""
+        """Test when only page_content is present, no source."""
         doc = Document(
             page_content="# Markdown content",
             metadata={}
         )
-        # Должен вернуть UNKNOWN, так как нет способа определить формат
+        # Should return UNKNOWN as there is no way to detect format
         assert detect_document_format(doc) == DocumentFormat.UNKNOWN
 
 
 class TestValidateDocument:
-    """Тесты для функции validate_document()."""
+    """Tests for validate_document()."""
 
     def test_valid_document_with_content(self):
-        """Тест валидации корректного документа с контентом."""
+        """Test validating valid document with content."""
         doc = Document(page_content="Test content", metadata={})
-        # Не должно быть исключений
+        # Should not raise
         validate_document(doc)
 
     def test_valid_document_with_source(self):
-        """Тест валидации корректного документа с источником."""
+        """Test validating valid document with source."""
         doc = Document(
             page_content="",
             metadata={"source": "/path/to/file.md"}
@@ -379,7 +379,7 @@ class TestValidateDocument:
         validate_document(doc)
 
     def test_valid_document_with_both(self):
-        """Тест валидации корректного документа с контентом и источником."""
+        """Test validating valid document with content and source."""
         doc = Document(
             page_content="Test content",
             metadata={"source": "/path/to/file.md"}
@@ -387,47 +387,47 @@ class TestValidateDocument:
         validate_document(doc)
 
     def test_raises_error_when_none(self):
-        """Тест выброса ошибки когда документ None."""
+        """Test raising error when document is None."""
         with pytest.raises(ValueError, match="Document cannot be None"):
             validate_document(None)
 
     def test_raises_error_when_not_document(self):
-        """Тест выброса ошибки когда передан не Document."""
+        """Test raising error when not a Document is passed."""
         with pytest.raises(TypeError, match="Expected Document"):
             validate_document("not a document")
 
     def test_raises_error_when_no_content_and_no_source(self):
-        """Тест выброса ошибки когда нет ни контента, ни источника."""
+        """Test raising error when no content and no source."""
         doc = Document(page_content="", metadata={})
         with pytest.raises(ValueError, match="Document must contain page_content or source"):
             validate_document(doc)
 
     def test_raises_error_when_content_not_string(self):
-        """Тест выброса ошибки когда page_content не строка."""
-        # LangChain Document не позволяет не-строку для page_content
-        # Проверяем, что Document не создается
+        """Test raising error when page_content is not a string."""
+        # LangChain Document does not allow non-string page_content
+        # Check that Document is not created
         with pytest.raises(Exception):  # Pydantic ValidationError
             Document(page_content=123, metadata={})
 
     def test_raises_error_when_metadata_not_dict(self):
-        """Тест выброса ошибки когда metadata не словарь."""
-        # LangChain Document не позволяет не-словарь для metadata
-        # Проверяем, что Document не создается
+        """Test raising error when metadata is not a dict."""
+        # LangChain Document does not allow non-dict metadata
+        # Check that Document is not created
         with pytest.raises(Exception):  # Pydantic ValidationError
             Document(page_content="test", metadata="not a dict")
 
     def test_valid_with_none_metadata(self):
-        """Тест валидации документа с metadata = None."""
-        # LangChain Document не позволяет metadata=None, используем пустой словарь
+        """Test validating document with metadata = None."""
+        # LangChain Document does not allow metadata=None, use empty dict
         doc = Document(page_content="test", metadata={})
         validate_document(doc)
 
 
 class TestNormalizeMetadata:
-    """Тесты для функции normalize_metadata()."""
+    """Tests for normalize_metadata()."""
 
     def test_adds_source_when_missing(self, markdown_file: Path):
-        """Тест добавления source когда его нет."""
+        """Test adding source when missing."""
         doc = Document(
             page_content="# Test",
             metadata={"file_path": str(markdown_file)}
@@ -437,7 +437,7 @@ class TestNormalizeMetadata:
         assert normalized["source"] == str(markdown_file)
 
     def test_adds_format_when_missing(self, markdown_file: Path):
-        """Тест добавления format когда его нет."""
+        """Test adding format when missing."""
         doc = Document(
             page_content="# Test",
             metadata={"source": str(markdown_file)}
@@ -447,7 +447,7 @@ class TestNormalizeMetadata:
         assert normalized["format"] == "markdown"
 
     def test_preserves_existing_source(self):
-        """Тест сохранения существующего source."""
+        """Test preserving existing source."""
         doc = Document(
             page_content="test",
             metadata={"source": "/custom/path.md"}
@@ -456,7 +456,7 @@ class TestNormalizeMetadata:
         assert normalized["source"] == "/custom/path.md"
 
     def test_preserves_existing_format(self):
-        """Тест сохранения существующего format."""
+        """Test preserving existing format."""
         doc = Document(
             page_content="test",
             metadata={"source": "/path/to/file.md", "format": "custom_format"}
@@ -465,7 +465,7 @@ class TestNormalizeMetadata:
         assert normalized["format"] == "custom_format"
 
     def test_preserves_all_existing_metadata(self):
-        """Тест сохранения всех существующих метаданных."""
+        """Test preserving all existing metadata."""
         doc = Document(
             page_content="test",
             metadata={
@@ -480,41 +480,41 @@ class TestNormalizeMetadata:
         assert "format" in normalized
 
     def test_handles_unknown_source(self):
-        """Тест обработки неизвестного источника."""
+        """Test handling unknown source."""
         doc = Document(
             page_content="test",
             metadata={}
         )
         normalized = normalize_metadata(doc)
-        # source не должен быть добавлен если он unknown
+        # source should not be added if unknown
         assert "source" not in normalized or normalized.get("source") == "unknown"
 
     def test_handles_unknown_format_gracefully(self):
-        """Тест корректной обработки когда формат не определяется."""
+        """Test correct handling when format cannot be detected."""
         doc = Document(
             page_content="test",
             metadata={"source": "/path/to/unknown.xyz"}
         )
         normalized = normalize_metadata(doc)
-        # format может быть "unknown" или отсутствовать
+        # format may be "unknown" or missing
         assert "format" not in normalized or normalized["format"] in ("unknown", "xyz")
 
     def test_creates_new_dict(self):
-        """Тест создания нового словаря (не модификации исходного)."""
+        """Test creating new dict (not modifying original)."""
         doc = Document(
             page_content="test",
             metadata={"source": "/path/to/file.md"}
         )
         original_metadata = doc.metadata.copy()
         normalized = normalize_metadata(doc)
-        # Исходные метаданные не должны измениться
+        # Original metadata must not change
         assert doc.metadata == original_metadata
-        # Нормализованные должны быть новым словарём
+        # Normalized must be a new dict
         assert normalized is not doc.metadata
 
     def test_handles_none_metadata(self, markdown_file: Path):
-        """Тест обработки metadata = None."""
-        # LangChain Document не позволяет metadata=None, используем пустой словарь
+        """Test handling metadata = None."""
+        # LangChain Document does not allow metadata=None, use empty dict
         doc = Document(
             page_content="# Test",
             metadata={"file_path": str(markdown_file)}

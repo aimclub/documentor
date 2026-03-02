@@ -1,0 +1,866 @@
+{
+	"cells": [
+		{
+			"id": 23,
+			"tex": "Who is the husband of Amanda Palmer?",
+			"content": [
+				"Who",
+				"is",
+				"the",
+				"husband",
+				"of",
+				"Amanda",
+				"Palmer?"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 15,
+			"tex": "Who was the father of Queen Elizabeth II?",
+			"content": [
+				"Who",
+				"was",
+				"the",
+				"father",
+				"of",
+				"Queen",
+				"Elizabeth",
+				"II?"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 17,
+			"tex": "What is the birth name of Angela Merkel?",
+			"content": [
+				"What",
+				"is",
+				"the",
+				"birth",
+				"name",
+				"of",
+				"Angela",
+				"Merkel?"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 10,
+			"tex": "Q20",
+			"content": [
+				"Q20"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 27,
+			"tex": "Which cities does the Weser flow through?",
+			"content": [
+				"Which",
+				"cities",
+				"does",
+				"the",
+				"Weser",
+				"\ufb02ow",
+				"through?"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 6,
+			"tex": "Q7",
+			"content": [
+				"Q7"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 43,
+			"tex": "How many employees does Google have?",
+			"content": [
+				"How",
+				"many",
+				"employees",
+				"does",
+				"Google",
+				"have?"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "Who is the mayor of Berlin?",
+			"content": [
+				"Who",
+				"is",
+				"the",
+				"mayor",
+				"of",
+				"Berlin?"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 21,
+			"tex": "How many inhabitants does Maribor have?",
+			"content": [
+				"How",
+				"many",
+				"inhabitants",
+				"does",
+				"Maribor",
+				"have?"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 11,
+			"tex": "How tall is Michael Jordan?",
+			"content": [
+				"How",
+				"tall",
+				"is",
+				"Michael",
+				"Jordan?"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 40,
+			"tex": "Q66",
+			"content": [
+				"Q66"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 37,
+			"tex": "What is the time zone of Salt Lake City?",
+			"content": [
+				"What",
+				"is",
+				"the",
+				"time",
+				"zone",
+				"of",
+				"Salt",
+				"Lake",
+				"City?"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 25,
+			"tex": "Give me all breeds of the German Shepherd dog.",
+			"content": [
+				"Give",
+				"me",
+				"all",
+				"breeds",
+				"of",
+				"the",
+				"German",
+				"Shepherd",
+				"dog."
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 8,
+			"tex": "Q19",
+			"content": [
+				"Q19"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 22,
+			"tex": "Q42",
+			"content": [
+				"Q42"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 1,
+			"tex": "Questions",
+			"content": [
+				"Questions"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 30,
+			"tex": "Q53",
+			"content": [
+				"Q53"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 44,
+			"tex": "Q71",
+			"content": [
+				"Q71"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 36,
+			"tex": "Q58",
+			"content": [
+				"Q58"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 45,
+			"tex": "When was the Statue of Liberty built?",
+			"content": [
+				"When",
+				"was",
+				"the",
+				"Statue",
+				"of",
+				"Liberty",
+				"built?"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 31,
+			"tex": "What is the ruling party in Lisbon?",
+			"content": [
+				"What",
+				"is",
+				"the",
+				"ruling",
+				"party",
+				"in",
+				"Lisbon?"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 46,
+			"tex": "Q74",
+			"content": [
+				"Q74"
+			],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 28,
+			"tex": "Q45",
+			"content": [
+				"Q45"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 47,
+			"tex": "When did Michael Jackson die?",
+			"content": [
+				"When",
+				"did",
+				"Michael",
+				"Jackson",
+				"die?"
+			],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 48,
+			"tex": "Q76",
+			"content": [
+				"Q76"
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 13,
+			"tex": "Who is the governor of Wyoming?",
+			"content": [
+				"Who",
+				"is",
+				"the",
+				"governor",
+				"of",
+				"Wyoming?"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 32,
+			"tex": "Q54",
+			"content": [
+				"Q54"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 49,
+			"tex": "List the children of Margaret Thatcher.",
+			"content": [
+				"List",
+				"the",
+				"children",
+				"of",
+				"Margaret",
+				"Thatcher."
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 50,
+			"tex": "Q81",
+			"content": [
+				"Q81"
+			],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 24,
+			"tex": "Q43",
+			"content": [
+				"Q43"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 51,
+			"tex": "Which books by Kerouac were published by Viking Press?",
+			"content": [
+				"Which",
+				"books",
+				"by",
+				"Kerouac",
+				"were",
+				"published",
+				"by",
+				"Viking",
+				"Press?"
+			],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 14,
+			"tex": "Q24",
+			"content": [
+				"Q24"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 0,
+			"tex": "ID",
+			"content": [
+				"ID"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 52,
+			"tex": "Q83",
+			"content": [
+				"Q83"
+			],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 34,
+			"tex": "Q56",
+			"content": [
+				"Q56"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 53,
+			"tex": "How high is the Mount Everest?",
+			"content": [
+				"How",
+				"high",
+				"is",
+				"the",
+				"Mount",
+				"Everest?"
+			],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 2,
+			"tex": "Q3",
+			"content": [
+				"Q3"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 54,
+			"tex": "Q85",
+			"content": [
+				"Q85"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 55,
+			"tex": "How many people live in the capital of Australia?",
+			"content": [
+				"How",
+				"many",
+				"people",
+				"live",
+				"in",
+				"the",
+				"capital",
+				"of",
+				"Australia?"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 35,
+			"tex": "When were the Hells Angels founded?",
+			"content": [
+				"When",
+				"were",
+				"the",
+				"Hells",
+				"Angels",
+				"founded?"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 29,
+			"tex": "Which countries are connected by the Rhine?",
+			"content": [
+				"Which",
+				"countries",
+				"are",
+				"connected",
+				"by",
+				"the",
+				"Rhine?"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 56,
+			"tex": "Q86",
+			"content": [
+				"Q86"
+			],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 57,
+			"tex": "What is the largest city in Australia?",
+			"content": [
+				"What",
+				"is",
+				"the",
+				"largest",
+				"city",
+				"in",
+				"Australia?"
+			],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 18,
+			"tex": "Q35",
+			"content": [
+				"Q35"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 5,
+			"tex": "How many students does the Free University in Amsterdam have?",
+			"content": [
+				"How",
+				"many",
+				"students",
+				"does",
+				"the",
+				"Free",
+				"University",
+				"in",
+				"Amsterdam",
+				"have?"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 58,
+			"tex": "Q98",
+			"content": [
+				"Q98"
+			],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 33,
+			"tex": "What are the nicknames of San Francisco?",
+			"content": [
+				"What",
+				"are",
+				"the",
+				"nicknames",
+				"of",
+				"San",
+				"Francisco?"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 59,
+			"tex": "Which country does the creator of Miffy come from?",
+			"content": [
+				"Which",
+				"country",
+				"does",
+				"the",
+				"creator",
+				"of",
+				"Mi\ufb00y",
+				"come",
+				"from?"
+			],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 41,
+			"tex": "Which ships were called after Benjamin Franklin?",
+			"content": [
+				"Which",
+				"ships",
+				"were",
+				"called",
+				"after",
+				"Benjamin",
+				"Franklin?"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 19,
+			"tex": "Who developed Minecraft?",
+			"content": [
+				"Who",
+				"developed",
+				"Minecraft?"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 60,
+			"tex": "Q100",
+			"content": [
+				"Q100"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 7,
+			"tex": "When was Alberta admitted as province?",
+			"content": [
+				"When",
+				"was",
+				"Alberta",
+				"admitted",
+				"as",
+				"province?"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 61,
+			"tex": "Who produces Orangina?",
+			"content": [
+				"Who",
+				"produces",
+				"Orangina?"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 39,
+			"tex": "Which instruments did John Lennon play?",
+			"content": [
+				"Which",
+				"instruments",
+				"did",
+				"John",
+				"Lennon",
+				"play?"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 20,
+			"tex": "Q38",
+			"content": [
+				"Q38"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 38,
+			"tex": "Q65",
+			"content": [
+				"Q65"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 42,
+			"tex": "Q68",
+			"content": [
+				"Q68"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 9,
+			"tex": "Give me all people that were born in Vienna and died in Berlin.",
+			"content": [
+				"Give",
+				"me",
+				"all",
+				"people",
+				"that",
+				"were",
+				"born",
+				"in",
+				"Vienna",
+				"and",
+				"died",
+				"in",
+				"Berlin."
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 12,
+			"tex": "Q22",
+			"content": [
+				"Q22"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 16,
+			"tex": "Q30",
+			"content": [
+				"Q30"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 4,
+			"tex": "Q4",
+			"content": [
+				"Q4"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 26,
+			"tex": "Q44",
+			"content": [
+				"Q44"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 0,
+			"end_col": 0
+		}
+	]
+}

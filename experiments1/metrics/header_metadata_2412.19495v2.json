@@ -1,0 +1,307 @@
+{
+  "source_annotation": "experiments/metrics/annotations/2412.19495v2.pdf_annotation.json",
+  "source_pdf": "experiments/metrics/test_files_for_metrics/2412.19495v2.pdf",
+  "total_headers": 15,
+  "headers": [
+    {
+      "id": "elem_0002",
+      "type": "header_1",
+      "text": "Abstract",
+      "page_number": 1,
+      "bbox": [
+        140,
+        358,
+        221,
+        381
+      ],
+      "properties": {
+        "font_name": "NimbusRomNo9L-Medi",
+        "font_size": 9.962599754333496,
+        "is_bold": true,
+        "is_italic": false,
+        "alignment": "left",
+        "is_caps_lock": false
+      }
+    },
+    {
+      "id": "elem_0004",
+      "type": "header_1",
+      "text": "Introduction",
+      "page_number": 1,
+      "bbox": [
+        140,
+        664,
+        254,
+        687
+      ],
+      "properties": {
+        "font_name": "NimbusRomNo9L-Medi",
+        "font_size": 9.962599754333496,
+        "is_bold": true,
+        "is_italic": false,
+        "alignment": "left",
+        "is_caps_lock": false
+      }
+    },
+    {
+      "id": "elem_0013",
+      "type": "header_1",
+      "text": "Methods",
+      "page_number": 2,
+      "bbox": [
+        140.0,
+        856.0,
+        221.0,
+        883.0
+      ],
+      "properties": {
+        "font_name": "NimbusRomNo9L-Medi",
+        "font_size": 9.962599754333496,
+        "is_bold": true,
+        "is_italic": false,
+        "alignment": "left",
+        "is_caps_lock": false
+      }
+    },
+    {
+      "id": "elem_0014",
+      "type": "header_2",
+      "text": "Datasets",
+      "page_number": 2,
+      "bbox": [
+        140,
+        902,
+        216,
+        925
+      ],
+      "properties": {
+        "font_name": "NimbusRomNo9L-MediItal",
+        "font_size": 9.962599754333496,
+        "is_bold": true,
+        "is_italic": true,
+        "alignment": "left",
+        "is_caps_lock": false
+      }
+    },
+    {
+      "id": "elem_0016",
+      "type": "header_2",
+      "text": "Model Performance",
+      "page_number": 2,
+      "bbox": [
+        140,
+        1176,
+        308,
+        1201
+      ],
+      "properties": {
+        "font_name": "NimbusRomNo9L-MediItal",
+        "font_size": 9.962599754333496,
+        "is_bold": true,
+        "is_italic": true,
+        "alignment": "left",
+        "is_caps_lock": false
+      }
+    },
+    {
+      "id": "elem_0025",
+      "type": "header_2",
+      "text": "Data Complexity Metrics",
+      "page_number": 3,
+      "bbox": [
+        140,
+        1272,
+        349,
+        1297
+      ],
+      "properties": {
+        "font_name": "NimbusRomNo9L-MediItal",
+        "font_size": 9.962599754333496,
+        "is_bold": true,
+        "is_italic": true,
+        "alignment": "left",
+        "is_caps_lock": false
+      }
+    },
+    {
+      "id": "elem_0029",
+      "type": "header_2",
+      "text": "Systematic Arbitrariness",
+      "page_number": 4,
+      "bbox": [
+        139,
+        489,
+        348,
+        516
+      ],
+      "properties": {
+        "font_name": "NimbusRomNo9L-MediItal",
+        "font_size": 9.962599754333496,
+        "is_bold": true,
+        "is_italic": true,
+        "alignment": "left",
+        "is_caps_lock": false
+      }
+    },
+    {
+      "id": "elem_0033",
+      "type": "header_1",
+      "text": "Results",
+      "page_number": 4,
+      "bbox": [
+        140.0,
+        844.0,
+        209.0,
+        869.0
+      ],
+      "properties": {
+        "font_name": "NimbusRomNo9L-Medi",
+        "font_size": 9.962599754333496,
+        "is_bold": true,
+        "is_italic": false,
+        "alignment": "left",
+        "is_caps_lock": false
+      }
+    },
+    {
+      "id": "elem_0034",
+      "type": "header_2",
+      "text": "Variations in model performance",
+      "page_number": 4,
+      "bbox": [
+        139,
+        888,
+        417,
+        914
+      ],
+      "properties": {
+        "font_name": "NimbusRomNo9L-MediItal",
+        "font_size": 9.962599754333496,
+        "is_bold": true,
+        "is_italic": true,
+        "alignment": "left",
+        "is_caps_lock": false
+      }
+    },
+    {
+      "id": "elem_0037",
+      "type": "header_2",
+      "text": "Learning curves and the expected impact of additional data",
+      "page_number": 4,
+      "bbox": [
+        139,
+        1315,
+        633,
+        1342
+      ],
+      "properties": {
+        "font_name": "NimbusRomNo9L-MediItal",
+        "font_size": 9.962599754333496,
+        "is_bold": true,
+        "is_italic": true,
+        "alignment": "left",
+        "is_caps_lock": false
+      }
+    },
+    {
+      "id": "elem_0048",
+      "type": "header_2",
+      "text": "Alignment of data complexity with some disparities",
+      "page_number": 6,
+      "bbox": [
+        139,
+        143,
+        566,
+        171
+      ],
+      "properties": {
+        "font_name": "NimbusRomNo9L-MediItal",
+        "font_size": 9.962599754333496,
+        "is_bold": true,
+        "is_italic": true,
+        "alignment": "left",
+        "is_caps_lock": false
+      }
+    },
+    {
+      "id": "elem_0055",
+      "type": "header_2",
+      "text": "Systematic arbitrariness and model stability",
+      "page_number": 6,
+      "bbox": [
+        139,
+        1150,
+        504,
+        1175
+      ],
+      "properties": {
+        "font_name": "NimbusRomNo9L-MediItal",
+        "font_size": 9.962599754333496,
+        "is_bold": true,
+        "is_italic": true,
+        "alignment": "left",
+        "is_caps_lock": false
+      }
+    },
+    {
+      "id": "elem_0061",
+      "type": "header_1",
+      "text": "Discussion",
+      "page_number": 7,
+      "bbox": [
+        139.0,
+        635.0,
+        236.0,
+        660.0
+      ],
+      "properties": {
+        "font_name": "NimbusRomNo9L-Medi",
+        "font_size": 9.962599754333496,
+        "is_bold": true,
+        "is_italic": false,
+        "alignment": "left",
+        "is_caps_lock": false
+      }
+    },
+    {
+      "id": "elem_0066",
+      "type": "header_1",
+      "text": "Conclusion",
+      "page_number": 8,
+      "bbox": [
+        141,
+        451,
+        242,
+        477
+      ],
+      "properties": {
+        "font_name": "NimbusRomNo9L-Medi",
+        "font_size": 9.962599754333496,
+        "is_bold": true,
+        "is_italic": false,
+        "alignment": "left",
+        "is_caps_lock": false
+      }
+    },
+    {
+      "id": "elem_0071",
+      "type": "header_1",
+      "text": "References",
+      "page_number": 8,
+      "bbox": [
+        141,
+        951,
+        238,
+        975
+      ],
+      "properties": {
+        "font_name": "NimbusRomNo9L-Medi",
+        "font_size": 9.962599754333496,
+        "is_bold": true,
+        "is_italic": false,
+        "alignment": "left",
+        "is_caps_lock": false
+      }
+    }
+  ]
+}

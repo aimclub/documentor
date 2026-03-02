@@ -1,0 +1,986 @@
+{
+	"cells": [
+		{
+			"id": 31,
+			"tex": "onion 0.35",
+			"content": [
+				"onion",
+				"0.35"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 42,
+			"tex": "cauliflower 0.67",
+			"content": [
+				"cauli\ufb02ower",
+				"0.67"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 73,
+			"tex": "lettuce 0.41",
+			"content": [
+				"lettuce",
+				"0.41"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 41,
+			"tex": "garlic 0.72",
+			"content": [
+				"garlic",
+				"0.72"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 7,
+			"tex": "broccoli 0.71",
+			"content": [
+				"broccoli",
+				"0.71"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 40,
+			"tex": "clean 0.115",
+			"content": [
+				"clean",
+				"0.115"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 39,
+			"tex": "clean 0.018",
+			"content": [
+				"clean",
+				"0.018"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 6,
+			"tex": "(7)",
+			"content": [
+				"(7)"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 38,
+			"tex": "parsley 0.38",
+			"content": [
+				"parsley",
+				"0.38"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 49,
+			"tex": "tomato 0.67",
+			"content": [
+				"tomato",
+				"0.67"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 3,
+			"tex": "(4)",
+			"content": [
+				"(4)"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 48,
+			"tex": "tomato 0.70",
+			"content": [
+				"tomato",
+				"0.70"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 13,
+			"tex": "cabbage 0.74",
+			"content": [
+				"cabbage",
+				"0.74"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 0,
+			"tex": "(1)",
+			"content": [
+				"(1)"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 47,
+			"tex": "open 0.060",
+			"content": [
+				"open",
+				"0.060"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 4,
+			"tex": "(5)",
+			"content": [
+				"(5)"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 12,
+			"tex": "eat 0.837",
+			"content": [
+				"eat",
+				"0.837"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 46,
+			"tex": "open 0.08",
+			"content": [
+				"open",
+				"0.08"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 11,
+			"tex": "eat 0.19",
+			"content": [
+				"eat",
+				"0.19"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 45,
+			"tex": "broccoli 0.38",
+			"content": [
+				"broccoli",
+				"0.38"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 2,
+			"tex": "(3)",
+			"content": [
+				"(3)"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 10,
+			"tex": "carrots 0.24",
+			"content": [
+				"carrots",
+				"0.24"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 44,
+			"tex": "cabbage 0.21",
+			"content": [
+				"cabbage",
+				"0.21"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 1,
+			"tex": "(2)",
+			"content": [
+				"(2)"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 9,
+			"tex": "carrots 0.16",
+			"content": [
+				"carrots",
+				"0.16"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 43,
+			"tex": "open 0.042",
+			"content": [
+				"open",
+				"0.042"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 5,
+			"tex": "(6)",
+			"content": [
+				"(6)"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 8,
+			"tex": "eat 0.35",
+			"content": [
+				"eat",
+				"0.35"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 54,
+			"tex": "smell 0.059",
+			"content": [
+				"smell",
+				"0.059"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 18,
+			"tex": "taste 0.18",
+			"content": [
+				"taste",
+				"0.18"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 53,
+			"tex": "smell 0.026",
+			"content": [
+				"smell",
+				"0.026"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 17,
+			"tex": "cabbage 0.33",
+			"content": [
+				"cabbage",
+				"0.33"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 52,
+			"tex": "garlic 0.38",
+			"content": [
+				"garlic",
+				"0.38"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 16,
+			"tex": "onions 0.16",
+			"content": [
+				"onions",
+				"0.16"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 51,
+			"tex": "carrot 0.21",
+			"content": [
+				"carrot",
+				"0.21"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 15,
+			"tex": "taste 0.24",
+			"content": [
+				"taste",
+				"0.24"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 50,
+			"tex": "smell 0.189",
+			"content": [
+				"smell",
+				"0.189"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 78,
+			"tex": "(4): Meta-Embeddings (Top 10), (5): Meta-Embeddings Similarity (with Mitchell's 25 words) (Top 10)",
+			"content": [
+				"(4):",
+				"Meta-Embeddings",
+				"(Top",
+				"10),",
+				"(5):",
+				"Meta-Embeddings",
+				"Similarity",
+				"(with",
+				"Mitchell\u2019s",
+				"25",
+				"words)",
+				"(Top",
+				"10)"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 0,
+			"end_col": 6
+		},
+		{
+			"id": 14,
+			"tex": "bellpeppers 0.69",
+			"content": [
+				"bellpeppers",
+				"0.69"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 61,
+			"tex": "touch 0.029",
+			"content": [
+				"touch",
+				"0.029"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 25,
+			"tex": "fill 0.012",
+			"content": [
+				"\ufb01ll",
+				"0.012"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 60,
+			"tex": "touch 0.019",
+			"content": [
+				"touch",
+				"0.019"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 24,
+			"tex": "cauliflower 0.35",
+			"content": [
+				"cauli\ufb02ower",
+				"0.35"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 59,
+			"tex": "potatoes 0.40",
+			"content": [
+				"potatoes",
+				"0.40"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 23,
+			"tex": "parsley 0.18",
+			"content": [
+				"parsley",
+				"0.18"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 79,
+			"tex": "(6): Mitchell's 25 (Top 10), (7): FastText (Top 10)",
+			"content": [
+				"(6):",
+				"Mitchell\u2019s",
+				"25",
+				"(Top",
+				"10),",
+				"(7):",
+				"FastText",
+				"(Top",
+				"10)"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 0,
+			"end_col": 6
+		},
+		{
+			"id": 58,
+			"tex": "spinach 0.22",
+			"content": [
+				"spinach",
+				"0.22"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 22,
+			"tex": "fill 0.051",
+			"content": [
+				"\ufb01ll",
+				"0.051"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 57,
+			"tex": "touch 0.061",
+			"content": [
+				"touch",
+				"0.061"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 21,
+			"tex": "parsley 0.69",
+			"content": [
+				"parsley",
+				"0.69"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 56,
+			"tex": "lettuce 0.67",
+			"content": [
+				"lettuce",
+				"0.67"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 20,
+			"tex": "carrots 0.74",
+			"content": [
+				"carrots",
+				"0.74"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 55,
+			"tex": "potatoes 0.70",
+			"content": [
+				"potatoes",
+				"0.70"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 19,
+			"tex": "taste 0.346",
+			"content": [
+				"taste",
+				"0.346"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 64,
+			"tex": "say 0.094",
+			"content": [
+				"say",
+				"0.094"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 30,
+			"tex": "broccoli 0.20",
+			"content": [
+				"broccoli",
+				"0.20"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 63,
+			"tex": "cherry 0.66",
+			"content": [
+				"cherry",
+				"0.66"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 29,
+			"tex": "see 0.063",
+			"content": [
+				"see",
+				"0.063"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 62,
+			"tex": "parsnips 0.69",
+			"content": [
+				"parsnips",
+				"0.69"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 28,
+			"tex": "cilantro 0.68",
+			"content": [
+				"cilantro",
+				"0.68"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 67,
+			"tex": "say 0.092",
+			"content": [
+				"say",
+				"0.092"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 77,
+			"tex": "(1): Word2Vec(Top 10), (2): Word2Vec Similarity (with Mitchell's 25 words), (3): GloVe(Top 10)",
+			"content": [
+				"(1):",
+				"Word2Vec(Top",
+				"10),",
+				"(2):",
+				"Word2Vec",
+				"Similarity",
+				"(with",
+				"Mitchell\u2019s",
+				"25",
+				"words),",
+				"(3):",
+				"GloVe(Top",
+				"10)"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 0,
+			"end_col": 6
+		},
+		{
+			"id": 27,
+			"tex": "onions 0.73",
+			"content": [
+				"onions",
+				"0.73"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 75,
+			"tex": "hear 0.000",
+			"content": [
+				"hear",
+				"0.000"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 66,
+			"tex": "turnips 0.40",
+			"content": [
+				"turnips",
+				"0.40"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 26,
+			"tex": "fill 0.315",
+			"content": [
+				"\ufb01ll",
+				"0.315"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 65,
+			"tex": "cauliflower 0.22",
+			"content": [
+				"cauli\ufb02ower",
+				"0.22"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 37,
+			"tex": "garlic 0.20",
+			"content": [
+				"garlic",
+				"0.20"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 70,
+			"tex": "Brussels 0.66",
+			"content": [
+				"Brussels",
+				"0.66"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 74,
+			"tex": "hear 0.032",
+			"content": [
+				"hear",
+				"0.032"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 36,
+			"tex": "clean 0.054",
+			"content": [
+				"clean",
+				"0.054"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 69,
+			"tex": "sweetroot 0.69",
+			"content": [
+				"sweetroot",
+				"0.69"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 35,
+			"tex": "cabbage 0.68",
+			"content": [
+				"cabbage",
+				"0.68"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 68,
+			"tex": "say 0.016",
+			"content": [
+				"say",
+				"0.016"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 76,
+			"tex": "lemongrass 0.69",
+			"content": [
+				"lemongrass",
+				"0.69"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 34,
+			"tex": "spinach 0.73",
+			"content": [
+				"spinach",
+				"0.73"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 72,
+			"tex": "asparagus 0.23",
+			"content": [
+				"asparagus",
+				"0.23"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 33,
+			"tex": "see 0.243",
+			"content": [
+				"see",
+				"0.243"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 71,
+			"tex": "hear 0.021",
+			"content": [
+				"hear",
+				"0.021"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 32,
+			"tex": "see 0.07",
+			"content": [
+				"see",
+				"0.07"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 4,
+			"end_col": 4
+		}
+	]
+}

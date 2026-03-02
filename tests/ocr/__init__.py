@@ -1,3 +1,3 @@
 """
-Тесты для OCR модуля.
+Tests for OCR module.
 """

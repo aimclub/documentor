@@ -1,0 +1,230 @@
+{
+	"cells": [
+		{
+			"id": 5,
+			"tex": "(PSNR/gain/time)",
+			"content": [
+				"(PSNR/gain/time)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 1,
+			"tex": "DPN",
+			"content": [
+				"DPN"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 16,
+			"tex": "40.44/--/--",
+			"content": [
+				"40.44/\u2013/\u2013"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 7,
+			"tex": "30.87/+0.05/7.2s",
+			"content": [
+				"30.87/+0.05/7.2s"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 6,
+			"tex": "30.82/--/--",
+			"content": [
+				"30.82/\u2013/\u2013"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 11,
+			"tex": "DPN",
+			"content": [
+				"DPN"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 13,
+			"tex": "scale augmentation",
+			"content": [
+				"scale",
+				"augmentation"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 15,
+			"tex": "(PSNR/gain/time)",
+			"content": [
+				"(PSNR/gain/time)"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 8,
+			"tex": "31.04/+0.22/97.3s",
+			"content": [
+				"31.04/+0.22/97.3s"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 9,
+			"tex": "31.05/+0.23/389.2s",
+			"content": [
+				"31.05/+0.23/389.2s"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 0,
+			"tex": "Urban100",
+			"content": [
+				"Urban100"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 3,
+			"tex": "stride5",
+			"content": [
+				"stride5"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 18,
+			"tex": "40.71/+0.27/288.7s",
+			"content": [
+				"40.71/+0.27/288.7s"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 19,
+			"tex": "40.74/0.30/1154.8s",
+			"content": [
+				"40.74/0.30/1154.8s"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 4,
+			"tex": "performance in plateau",
+			"content": [
+				"performance",
+				"in",
+				"plateau"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 10,
+			"tex": "L20",
+			"content": [
+				"L20"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 2,
+			"tex": "stride20",
+			"content": [
+				"stride20"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 12,
+			"tex": "single scale",
+			"content": [
+				"single",
+				"scale"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 17,
+			"tex": "40.61/+0.17/100.5s",
+			"content": [
+				"40.61/+0.17/100.5s"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 14,
+			"tex": "performance in plateau",
+			"content": [
+				"performance",
+				"in",
+				"plateau"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 4,
+			"end_col": 4
+		}
+	]
+}

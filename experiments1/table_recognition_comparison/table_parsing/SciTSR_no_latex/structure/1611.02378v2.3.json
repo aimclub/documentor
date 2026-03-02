@@ -1,0 +1,264 @@
+{
+	"cells": [
+		{
+			"id": 17,
+			"tex": "advertisements or ones making nonsense",
+			"content": [
+				"advertisements",
+				"or",
+				"ones",
+				"making",
+				"nonsense"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 2,
+			"tex": "Plot of the TV series",
+			"content": [
+				"Plot",
+				"of",
+				"the",
+				"TV",
+				"series"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 16,
+			"tex": "Noise or others",
+			"content": [
+				"Noise",
+				"or",
+				"others"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 14,
+			"tex": "Thumb up or down",
+			"content": [
+				"Thumb",
+				"up",
+				"or",
+				"down"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 5,
+			"tex": "actors related with this TV series",
+			"content": [
+				"actors",
+				"related",
+				"with",
+				"this",
+				"TV",
+				"series"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 1,
+			"tex": "Specific Meaning",
+			"content": [
+				"Speci\ufb01c",
+				"Meaning"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 6,
+			"tex": "Role",
+			"content": [
+				"Role"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 11,
+			"tex": "deep analysis of the plot and role's inner part activity",
+			"content": [
+				"deep",
+				"analysis",
+				"of",
+				"the",
+				"plot",
+				"and",
+				"role\u2019s",
+				"inner",
+				"part",
+				"activity"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 10,
+			"tex": "Analysis",
+			"content": [
+				"Analysis"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 4,
+			"tex": "Actor/actress",
+			"content": [
+				"Actor/actress"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 8,
+			"tex": "Dialogue",
+			"content": [
+				"Dialogue"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 9,
+			"tex": "discussion or analysis of the dialogues",
+			"content": [
+				"discussion",
+				"or",
+				"analysis",
+				"of",
+				"the",
+				"dialogues"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 15,
+			"tex": "simply follow the post with common forum words",
+			"content": [
+				"simply",
+				"follow",
+				"the",
+				"post",
+				"with",
+				"common",
+				"forum",
+				"words"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "development of the plot in TV series",
+			"content": [
+				"development",
+				"of",
+				"the",
+				"plot",
+				"in",
+				"TV",
+				"series"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 13,
+			"tex": "related with specific platform like audience rate on some Channels",
+			"content": [
+				"related",
+				"with",
+				"speci\ufb01c",
+				"platform",
+				"like",
+				"audience",
+				"rate",
+				"on",
+				"some",
+				"Channels"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 12,
+			"tex": "Platform",
+			"content": [
+				"Platform"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 7,
+			"tex": "like or dislike specific roles, or role related",
+			"content": [
+				"like",
+				"or",
+				"dislike",
+				"speci\ufb01c",
+				"roles,",
+				"or",
+				"role",
+				"related"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 0,
+			"tex": "Categories",
+			"content": [
+				"Categories"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		}
+	]
+}

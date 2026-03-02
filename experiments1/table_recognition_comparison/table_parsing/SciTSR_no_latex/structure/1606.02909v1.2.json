@@ -1,0 +1,170 @@
+{
+	"cells": [
+		{
+			"id": 0,
+			"tex": "Method",
+			"content": [
+				"Method"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 7,
+			"tex": "0.2907",
+			"content": [
+				"0.2907"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 4,
+			"tex": "VGG-FACE + Alignment + Neural Network",
+			"content": [
+				"VGG-FACE",
+				"+",
+				"Alignment",
+				"+",
+				"Neural",
+				"Network"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 8,
+			"tex": "3 CNNs + Alignment + max. 1 weighted sum.",
+			"content": [
+				"3",
+				"CNNs",
+				"+",
+				"Alignment",
+				"+",
+				"max.",
+				"1",
+				"weighted",
+				"sum."
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 11,
+			"tex": "0.2897",
+			"content": [
+				"0.2897"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 10,
+			"tex": "3 CNNs + Alignment + max. 5 weighted sum.",
+			"content": [
+				"3",
+				"CNNs",
+				"+",
+				"Alignment",
+				"+",
+				"max.",
+				"5",
+				"weighted",
+				"sum."
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 2,
+			"tex": "VGG-FACE + w/o Alignment + Neural Network",
+			"content": [
+				"VGG-FACE",
+				"+",
+				"w/o",
+				"Alignment",
+				"+",
+				"Neural",
+				"Network"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 1,
+			"tex": "Error",
+			"content": [
+				"Error"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "0.4128",
+			"content": [
+				"0.4128"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 5,
+			"tex": "0.3906",
+			"content": [
+				"0.3906"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 6,
+			"tex": "3 CNNs + Alignment + full weighted sum.",
+			"content": [
+				"3",
+				"CNNs",
+				"+",
+				"Alignment",
+				"+",
+				"full",
+				"weighted",
+				"sum."
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 9,
+			"tex": "0.3000",
+			"content": [
+				"0.3000"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		}
+	]
+}

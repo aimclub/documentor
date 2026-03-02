@@ -1,6 +1,6 @@
 """
-Тесты для извлечения данных из DOCX.
+Tests for DOCX data extraction.
 
-Тестируемый класс:
+Class under test:
 - DocxExtractor
 """

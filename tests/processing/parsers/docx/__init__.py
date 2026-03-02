@@ -1,3 +1,3 @@
 """
-Тесты для DOCX парсера.
+Tests for DOCX parser.
 """

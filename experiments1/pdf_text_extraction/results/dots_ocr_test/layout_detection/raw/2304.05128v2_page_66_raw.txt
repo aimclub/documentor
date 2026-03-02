@@ -1,0 +1,1 @@
+[{"bbox": [294, 71, 851, 109], "category": "Page-header"}, {"bbox": [339, 248, 1361, 756], "category": "Text"}, {"bbox": [294, 829, 830, 865], "category": "Section-header"}, {"bbox": [339, 929, 1333, 2016], "category": "Text"}]

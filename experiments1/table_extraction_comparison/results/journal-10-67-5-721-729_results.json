@@ -1,0 +1,86 @@
+{
+  "pdf_file": "journal-10-67-5-721-729.pdf",
+  "timing": {
+    "method1_seconds": 31.432772874832153,
+    "method2_seconds": 17.485292196273804,
+    "method1_minutes": 0.5238795479138693,
+    "method2_minutes": 0.2914215366045634,
+    "speedup": 0.556275841966016,
+    "time_saved_seconds": -13.94748067855835,
+    "time_saved_percent": -79.76692938268782
+  },
+  "tables_count": {
+    "method1": 3,
+    "method2": 3
+  },
+  "method1": {
+    "tables": [
+      {
+        "page_num": 5,
+        "bbox": [
+          121,
+          1273,
+          1064,
+          1525
+        ],
+        "text": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>inverse autotransporter beta-barrel domain-containing protein</td><td>152414</td></tr><tr><td>outer membrane protein assembly factor BamA</td><td>88197</td></tr><tr><td>hypothetical protein</td><td>58068</td></tr></tbody></table>"
+      },
+      {
+        "page_num": 6,
+        "bbox": [
+          121,
+          108,
+          1064,
+          1541
+        ],
+        "text": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>flagellar basal body M-ring protein FliF</td><td>59556</td></tr><tr><td>efflux transporter outer membrane subunit</td><td>51320</td></tr><tr><td>hypothetical protein</td><td>50238</td></tr><tr><td>efflux transporter outer membrane subunit</td><td>50930</td></tr><tr><td>flagellar hook-length control protein FliK</td><td>42248</td></tr><tr><td>hypothetical protein</td><td>42783</td></tr><tr><td>autotransporter outer membrane beta-barrel domain-containing protein</td><td>36283</td></tr><tr><td>flagellar motor switch protein FliG</td><td>36438</td></tr><tr><td>hypothetical protein</td><td>35184</td></tr><tr><td>hypothetical protein</td><td>31694</td></tr><tr><td>hypothetical protein</td><td>31538</td></tr><tr><td>membrane transport family protein 1</td><td>31186</td></tr><tr><td>outer membrane protein assembly factor BamD</td><td>30958</td></tr><tr><td>hypothetical protein</td><td>30807</td></tr><tr><td>hypothetical protein</td><td>30389</td></tr><tr><td>flagellar biosynthetic protein FliR</td><td>27623</td></tr><tr><td>flagellar type III secretion system pore protein FliP</td><td>27397</td></tr><tr><td>CPBP family intramembrane metalloprotease</td><td>27324</td></tr><tr><td>flagellar brake protein</td><td>27145</td></tr><tr><td>30S ribosomal protein S2</td><td>27426</td></tr><tr><td>flagellar biosynthetic protein FliR</td><td>27623</td></tr><tr><td>hypothetical protein</td><td>27859</td></tr><tr><td>hypothetical proteinwt</td><td>28913</td></tr><tr><td>50S ribosomal protein L3</td><td>24311</td></tr><tr><td>protein TolQ</td><td>24612</td></tr><tr><td>hypothetical protein</td><td>25400</td></tr></tbody></table>"
+      },
+      {
+        "page_num": 7,
+        "bbox": [
+          122,
+          109,
+          1063,
+          704
+        ],
+        "text": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>membrane protein</td><td>24306</td></tr><tr><td>50S ribosomal protein L25/general stress protein Ctc</td><td>21134</td></tr><tr><td>outer membrane lipoprotein LolB</td><td>20756</td></tr><tr><td>OmpA family protein</td><td>20847</td></tr><tr><td>energy-coupling factor transporter transmembrane protein EcfT</td><td>21088</td></tr><tr><td>hypothetical protein</td><td>21256</td></tr><tr><td>flagellar protein FliL</td><td>20700</td></tr><tr><td>OmpH family outer membrane protein</td><td>20330</td></tr><tr><td>hypothetical protein</td><td>19187</td></tr><tr><td>membrane protein</td><td>19995</td></tr></tbody></table>"
+      }
+    ],
+    "timing_seconds": 31.432772874832153
+  },
+  "method2": {
+    "tables": [
+      {
+        "page_num": 5,
+        "bbox": [
+          121,
+          1272,
+          1066,
+          1527
+        ],
+        "text": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>inverse autotransporter beta-barrel domain-containing protein</td><td>152414</td></tr><tr><td>outer membrane protein assembly factor BamA</td><td>88197</td></tr><tr><td>hypothetical protein</td><td>58068</td></tr></tbody></table>"
+      },
+      {
+        "page_num": 6,
+        "bbox": [
+          120,
+          108,
+          1067,
+          1545
+        ],
+        "text": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>flagellar basal body M-ring protein FliF</td><td>59556</td></tr><tr><td>efflux transporter outer membrane subunit</td><td>51320</td></tr><tr><td>hypothetical protein</td><td>50238</td></tr><tr><td>efflux transporter outer membrane subunit</td><td>50930</td></tr><tr><td>flagellar hook-length control protein FliK</td><td>42248</td></tr><tr><td>hypothetical protein</td><td>42783</td></tr><tr><td>autotransporter outer membrane beta-barrel domain-containing protein</td><td>36283</td></tr><tr><td>flagellar motor switch protein FliG</td><td>36438</td></tr><tr><td>hypothetical protein</td><td>35184</td></tr><tr><td>hypothetical protein</td><td>31694</td></tr><tr><td>hypothetical protein</td><td>31538</td></tr><tr><td>membrane transport family protein 1</td><td>31186</td></tr><tr><td>outer membrane protein assembly factor BamD</td><td>30958</td></tr><tr><td>hypothetical protein</td><td>30807</td></tr><tr><td>hypothetical protein</td><td>30389</td></tr><tr><td>flagellar biosynthetic protein FliR</td><td>27623</td></tr><tr><td>flagellar type III secretion system pore protein FliP</td><td>27397</td></tr><tr><td>CPBP family intramembrane metalloprotease</td><td>27324</td></tr><tr><td>flagellar brake protein</td><td>27145</td></tr><tr><td>30S ribosomal protein S2</td><td>27426</td></tr><tr><td>flagellar biosynthetic protein FliR</td><td>27623</td></tr><tr><td>hypothetical protein</td><td>27859</td></tr><tr><td>hypothetical proteinwt</td><td>28913</td></tr><tr><td>50S ribosomal protein L3</td><td>24311</td></tr><tr><td>protein TolQ</td><td>24612</td></tr><tr><td>hypothetical protein</td><td>25400</td></tr></tbody></table>"
+      },
+      {
+        "page_num": 7,
+        "bbox": [
+          119,
+          106,
+          1069,
+          710
+        ],
+        "text": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>membrane protein</td><td>24306</td></tr><tr><td>50S ribosomal protein L25/general stress protein Ctc</td><td>21134</td></tr><tr><td>outer membrane lipoprotein LolB</td><td>20756</td></tr><tr><td>OmpA family protein</td><td>20847</td></tr><tr><td>energy-coupling factor transporter transmembrane protein EcfT</td><td>21088</td></tr><tr><td>hypothetical protein</td><td>21256</td></tr><tr><td>flagellar protein FliL</td><td>20700</td></tr><tr><td>OmpH family outer membrane protein</td><td>20330</td></tr><tr><td>hypothetical protein</td><td>19187</td></tr><tr><td>membrane protein</td><td>19995</td></tr></tbody></table>"
+      }
+    ],
+    "timing_seconds": 17.485292196273804
+  }
+}

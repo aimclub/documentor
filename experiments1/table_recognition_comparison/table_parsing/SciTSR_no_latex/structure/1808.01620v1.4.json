@@ -1,0 +1,221 @@
+{
+	"cells": [
+		{
+			"id": 2,
+			"tex": "\\{(Blackberry pie,1)\\}",
+			"content": [
+				"{(Blackberry",
+				"pie,1)}"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 9,
+			"tex": "pie",
+			"content": [
+				"pie"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 11,
+			"tex": "Natchitoches meat pie",
+			"content": [
+				"Natchitoches",
+				"meat",
+				"pie"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 0,
+			"tex": "(start, len)",
+			"content": [
+				"(start,",
+				"len)"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 17,
+			"tex": "Tiropita",
+			"content": [
+				"Tiropita"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 14,
+			"tex": "\\{(Blackberry pie,3)\\}",
+			"content": [
+				"{(Blackberry",
+				"pie,3)}"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 6,
+			"tex": "\\{(Blackberry pie,2))\\}",
+			"content": [
+				"{(Blackberry",
+				"pie,2))}"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 10,
+			"tex": "\\{(Blackberry pie,2), (Blackberry pie,4\\}",
+			"content": [
+				"{(Blackberry",
+				"pie,2),",
+				"(Blackberry",
+				"pie,4}"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 16,
+			"tex": "\\{(Blackberry pie,4)\\}",
+			"content": [
+				"{(Blackberry",
+				"pie,4)}"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 7,
+			"tex": "Key lime pie",
+			"content": [
+				"Key",
+				"lime",
+				"pie"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "American pies",
+			"content": [
+				"American",
+				"pies"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 13,
+			"tex": "Strawberry pie",
+			"content": [
+				"Strawberry",
+				"pie"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 1,
+			"tex": "end",
+			"content": [
+				"end"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 8,
+			"tex": "\\{(Blackberry pie,2)\\}",
+			"content": [
+				"{(Blackberry",
+				"pie,2)}"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 15,
+			"tex": "Savoury pies",
+			"content": [
+				"Savoury",
+				"pies"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 12,
+			"tex": "\\{(Blackberry pie,2)\\}",
+			"content": [
+				"{(Blackberry",
+				"pie,2)}"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 5,
+			"tex": "Sweet pies",
+			"content": [
+				"Sweet",
+				"pies"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 4,
+			"tex": "\\{(Blackberry pie,1)\\}",
+			"content": [
+				"{(Blackberry",
+				"pie,1)}"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		}
+	]
+}

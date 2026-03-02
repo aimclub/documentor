@@ -1,0 +1,659 @@
+{
+	"cells": [
+		{
+			"id": 25,
+			"tex": "load balancing",
+			"content": [
+				"load",
+				"balancing"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 24,
+			"tex": "average imbalance value of a Cloud datacenter",
+			"content": [
+				"average",
+				"imbalance",
+				"value",
+				"of",
+				"a",
+				"Cloud",
+				"datacenter"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 23,
+			"tex": "CloudSched",
+			"content": [
+				"CloudSched"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 22,
+			"tex": "load balancing",
+			"content": [
+				"load",
+				"balancing"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 37,
+			"tex": "energy-efficiency",
+			"content": [
+				"energy-e\ufb03ciency"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 36,
+			"tex": "total energy consumption of a Cloud data center",
+			"content": [
+				"total",
+				"energy",
+				"consumption",
+				"of",
+				"a",
+				"Cloud",
+				"data",
+				"center"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 35,
+			"tex": "CloudSim, GreenCloud, CloudSched",
+			"content": [
+				"CloudSim,",
+				"GreenCloud,",
+				"CloudSched"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 34,
+			"tex": "energy-efficiency",
+			"content": [
+				"energy-e\ufb03ciency"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 33,
+			"tex": "energy consumption model",
+			"content": [
+				"energy",
+				"consumption",
+				"model"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 32,
+			"tex": "CloudSim, CloudSched",
+			"content": [
+				"CloudSim,",
+				"CloudSched"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 0,
+			"tex": "Metrics",
+			"content": [
+				"Metrics"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 31,
+			"tex": "load balancing",
+			"content": [
+				"load",
+				"balancing"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 30,
+			"tex": "makespan or longest processing time",
+			"content": [
+				"makespan",
+				"or",
+				"longest",
+				"processing",
+				"time"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 5,
+			"tex": "All Four",
+			"content": [
+				"All",
+				"Four"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 29,
+			"tex": "All Four",
+			"content": [
+				"All",
+				"Four"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 4,
+			"tex": "maximizing resource utilization",
+			"content": [
+				"maximizing",
+				"resource",
+				"utilization"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 45,
+			"tex": "cost / per task",
+			"content": [
+				"cost",
+				"/",
+				"per",
+				"task"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 2,
+			"tex": "Simulators",
+			"content": [
+				"Simulators"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 44,
+			"tex": "CloudSim, GreenCloud, CloudSched",
+			"content": [
+				"CloudSim,",
+				"GreenCloud,",
+				"CloudSched"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 46,
+			"tex": "C / P",
+			"content": [
+				"C",
+				"/",
+				"P"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 1,
+			"tex": "Optimization Objectives",
+			"content": [
+				"Optimization",
+				"Objectives"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 43,
+			"tex": "energy-efficiency",
+			"content": [
+				"energy-e\ufb03ciency"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 49,
+			"tex": "confidence interval",
+			"content": [
+				"con\ufb01dence",
+				"interval"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "average resource utilization",
+			"content": [
+				"average",
+				"resource",
+				"utilization"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 42,
+			"tex": "total power-on time of all PMs",
+			"content": [
+				"total",
+				"power-on",
+				"time",
+				"of",
+				"all",
+				"PMs"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 48,
+			"tex": "confidence interval",
+			"content": [
+				"con\ufb01dence",
+				"interval"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 41,
+			"tex": "CloudSim, GreenCloud, CloudSched",
+			"content": [
+				"CloudSim,",
+				"GreenCloud,",
+				"CloudSched"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 47,
+			"tex": "iCanCloud",
+			"content": [
+				"iCanCloud"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 14,
+			"tex": "All Four",
+			"content": [
+				"All",
+				"Four"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 40,
+			"tex": "energy-efficiency",
+			"content": [
+				"energy-e\ufb03ciency"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 13,
+			"tex": "load balancing",
+			"content": [
+				"load",
+				"balancing"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 39,
+			"tex": "total number of PMs used",
+			"content": [
+				"total",
+				"number",
+				"of",
+				"PMs",
+				"used"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 12,
+			"tex": "average utilization of all CPUs in a cloud datacenter",
+			"content": [
+				"average",
+				"utilization",
+				"of",
+				"all",
+				"CPUs",
+				"in",
+				"a",
+				"cloud",
+				"datacenter"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 38,
+			"tex": "CloudSim, GreenCloud, CloudSched",
+			"content": [
+				"CloudSim,",
+				"GreenCloud,",
+				"CloudSched"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 11,
+			"tex": "All",
+			"content": [
+				"All"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 10,
+			"tex": "load balancing",
+			"content": [
+				"load",
+				"balancing"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 9,
+			"tex": "average CPU utilization",
+			"content": [
+				"average",
+				"CPU",
+				"utilization"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 8,
+			"tex": "All Four",
+			"content": [
+				"All",
+				"Four"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 7,
+			"tex": "maximizing resource utilization",
+			"content": [
+				"maximizing",
+				"resource",
+				"utilization"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 6,
+			"tex": "total number of PMs (hosts) need",
+			"content": [
+				"total",
+				"number",
+				"of",
+				"PMs",
+				"(hosts)",
+				"need"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 50,
+			"tex": "CloudSched",
+			"content": [
+				"CloudSched"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 21,
+			"tex": "average imbalance value a physical server",
+			"content": [
+				"average",
+				"imbalance",
+				"value",
+				"a",
+				"physical",
+				"server"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 20,
+			"tex": "CloudSched",
+			"content": [
+				"CloudSched"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 19,
+			"tex": "load balancing",
+			"content": [
+				"load",
+				"balancing"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 18,
+			"tex": "imbalance value of all CPUs",
+			"content": [
+				"imbalance",
+				"value",
+				"of",
+				"all",
+				"CPUs"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 17,
+			"tex": "CloudSched",
+			"content": [
+				"CloudSched"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 16,
+			"tex": "load balancing",
+			"content": [
+				"load",
+				"balancing"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 15,
+			"tex": "integrated load imbalance value of a server",
+			"content": [
+				"integrated",
+				"load",
+				"imbalance",
+				"value",
+				"of",
+				"a",
+				"server"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 28,
+			"tex": "All",
+			"content": [
+				"All"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 27,
+			"tex": "total simulation time",
+			"content": [
+				"total",
+				"simulation",
+				"time"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 26,
+			"tex": "CloudSched",
+			"content": [
+				"CloudSched"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 2,
+			"end_col": 2
+		}
+	]
+}

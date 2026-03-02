@@ -1,0 +1,1219 @@
+{
+	"cells": [
+		{
+			"id": 0,
+			"tex": "SP01",
+			"content": [
+				"SP01"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 40,
+			"tex": "SP21",
+			"content": [
+				"SP21"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 27,
+			"tex": "//Entry[/PIR[/@prim\\_id]/@sec\\_id and /Keyword]//Features[/TRANSMEM[//Descr]/@to]",
+			"content": [
+				"//Entry[/PIR[/@prim",
+				"id]/@sec",
+				"id",
+				"and",
+				"/Keyword]//Features[/TRANSMEM[//Descr]/@to]"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 17,
+			"tex": "//Entry[/PIR/@sec\\_id]/EMBL[/@prim\\_id]",
+			"content": [
+				"//Entry[/PIR/@sec",
+				"id]/EMBL[/@prim",
+				"id]"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 4,
+			"tex": "SP03",
+			"content": [
+				"SP03"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 36,
+			"tex": "SP19",
+			"content": [
+				"SP19"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 28,
+			"tex": "SP15",
+			"content": [
+				"SP15"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 10,
+			"tex": "SP06",
+			"content": [
+				"SP06"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 39,
+			"tex": "//Entry[//REPEAT]/INTERPRO[/@sec\\_id and /@prim\\_id]",
+			"content": [
+				"//Entry[//REPEAT]/INTERPRO[/@sec",
+				"id",
+				"and",
+				"/@prim",
+				"id]"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "//Entry[/@id]/HSSP[/@prim\\_id]/@sec\\_id",
+			"content": [
+				"//Entry[/@id]/HSSP[/@prim",
+				"id]/@sec",
+				"id"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 25,
+			"tex": "//Entry[/@mtype]/PRINTS[/@sec\\_id]/@prim\\_id",
+			"content": [
+				"//Entry[/@mtype]/PRINTS[/@sec",
+				"id]/@prim",
+				"id"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 29,
+			"tex": "//Entry[/PDB/@sec\\_id]/Features[//Descr and /CONFLICT/@from]",
+			"content": [
+				"//Entry[/PDB/@sec",
+				"id]/Features[//Descr",
+				"and",
+				"/CONFLICT/@from]"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 19,
+			"tex": "//Entry[/PROSITE[/@status]/@sec\\_id]/Org",
+			"content": [
+				"//Entry[/PROSITE[/@status]/@sec",
+				"id]/Org"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 22,
+			"tex": "SP12",
+			"content": [
+				"SP12"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 32,
+			"tex": "SP17",
+			"content": [
+				"SP17"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 38,
+			"tex": "SP20",
+			"content": [
+				"SP20"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 6,
+			"tex": "SP04",
+			"content": [
+				"SP04"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 31,
+			"tex": "//Entry[/@id]/Features[/DOMAIN[/Descr]/@from]//VARSPLIC/@to",
+			"content": [
+				"//Entry[/@id]/Features[/DOMAIN[/Descr]/@from]//VARSPLIC/@to"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 9,
+			"tex": "//Entry[/Org and /Descr]//EMBL[/@sec\\_id]/@prim\\_id",
+			"content": [
+				"//Entry[/Org",
+				"and",
+				"/Descr]//EMBL[/@sec",
+				"id]/@prim",
+				"id"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 5,
+			"tex": "//Entry[/Org]/Features[/TRANSMEM[/@from]/@to]",
+			"content": [
+				"//Entry[/Org]/Features[/TRANSMEM[/@from]/@to]"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 7,
+			"tex": "//Entry[/Features//CHAIN[/@from]/Descr]/Keyword",
+			"content": [
+				"//Entry[/Features//CHAIN[/@from]/Descr]/Keyword"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 34,
+			"tex": "SP18",
+			"content": [
+				"SP18"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 37,
+			"tex": "//Entry[/Org and /PFAM[/@status]/@prim\\_id]//Features/TRANSIT/Descr",
+			"content": [
+				"//Entry[/Org",
+				"and",
+				"/PFAM[/@status]/@prim",
+				"id]//Features/TRANSIT/Descr"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 18,
+			"tex": "SP10",
+			"content": [
+				"SP10"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 15,
+			"tex": "//Entry[/PIR[/@prim\\_id]/@sec\\_id and //Org]",
+			"content": [
+				"//Entry[/PIR[/@prim",
+				"id]/@sec",
+				"id",
+				"and",
+				"//Org]"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 26,
+			"tex": "SP14",
+			"content": [
+				"SP14"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 12,
+			"tex": "SP07",
+			"content": [
+				"SP07"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 23,
+			"tex": "//Entry[/@class]/PIR[/@sec\\_id]/@prim\\_id",
+			"content": [
+				"//Entry[/@class]/PIR[/@sec",
+				"id]/@prim",
+				"id"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 24,
+			"tex": "SP13",
+			"content": [
+				"SP13"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 16,
+			"tex": "SP09",
+			"content": [
+				"SP09"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 11,
+			"tex": "//Entry[/Org and //HSSP/@prim\\_id]/@class",
+			"content": [
+				"//Entry[/Org",
+				"and",
+				"//HSSP/@prim",
+				"id]/@class"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 8,
+			"tex": "SP05",
+			"content": [
+				"SP05"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 33,
+			"tex": "//Entry/Features[/NP\\_BIND]//CHAIN[/Descr]/@from",
+			"content": [
+				"//Entry/Features[/NP",
+				"BIND]//CHAIN[/Descr]/@from"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 20,
+			"tex": "SP11",
+			"content": [
+				"SP11"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 35,
+			"tex": "//Entry[/@mtype and /Features/BINDING/@to]",
+			"content": [
+				"//Entry[/@mtype",
+				"and",
+				"/Features/BINDING/@to]"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 1,
+			"tex": "//Entry[//MIM/@sec\\_id and /@class and //Keyword]",
+			"content": [
+				"//Entry[//MIM/@sec",
+				"id",
+				"and",
+				"/@class",
+				"and",
+				"//Keyword]"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 14,
+			"tex": "SP08",
+			"content": [
+				"SP08"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 13,
+			"tex": "//Entry[/@class and //PIR/@prim\\_id]//Keyword",
+			"content": [
+				"//Entry[/@class",
+				"and",
+				"//PIR/@prim",
+				"id]//Keyword"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 30,
+			"tex": "SP16",
+			"content": [
+				"SP16"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 2,
+			"tex": "SP02",
+			"content": [
+				"SP02"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 21,
+			"tex": "//Entry[//PROSITE/@status and /Keyword]/EMBL[/@prim\\_id]",
+			"content": [
+				"//Entry[//PROSITE/@status",
+				"and",
+				"/Keyword]/EMBL[/@prim",
+				"id]"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 78,
+			"tex": "SP40",
+			"content": [
+				"SP40"
+			],
+			"start_row": 39,
+			"end_row": 39,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 48,
+			"tex": "SP25",
+			"content": [
+				"SP25"
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 58,
+			"tex": "SP30",
+			"content": [
+				"SP30"
+			],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 99,
+			"tex": "//Entry[/Mod/@date]//PRINTS[/@prim\\_id]/@sec\\_id",
+			"content": [
+				"//Entry[/Mod/@date]//PRINTS[/@prim",
+				"id]/@sec",
+				"id"
+			],
+			"start_row": 49,
+			"end_row": 49,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 91,
+			"tex": "//Entry[//TUBERCULIST]/Mod[/@date and /@Rel]",
+			"content": [
+				"//Entry[//TUBERCULIST]/Mod[/@date",
+				"and",
+				"/@Rel]"
+			],
+			"start_row": 45,
+			"end_row": 45,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 42,
+			"tex": "SP22",
+			"content": [
+				"SP22"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 41,
+			"tex": "//Entry[/Mod/@Rel]/Features/CHAIN[/Descr and /@from]/@to",
+			"content": [
+				"//Entry[/Mod/@Rel]/Features/CHAIN[/Descr",
+				"and",
+				"/@from]/@to"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 73,
+			"tex": "//Entry[/@class and /EMBL]/HSSP/@sec\\_id",
+			"content": [
+				"//Entry[/@class",
+				"and",
+				"/EMBL]/HSSP/@sec",
+				"id"
+			],
+			"start_row": 36,
+			"end_row": 36,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 46,
+			"tex": "SP24",
+			"content": [
+				"SP24"
+			],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 95,
+			"tex": "//Entry[//Org]//Features/METAL[/@from]/Descr",
+			"content": [
+				"//Entry[//Org]//Features/METAL[/@from]/Descr"
+			],
+			"start_row": 47,
+			"end_row": 47,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 82,
+			"tex": "SP42",
+			"content": [
+				"SP42"
+			],
+			"start_row": 41,
+			"end_row": 41,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 64,
+			"tex": "SP33",
+			"content": [
+				"SP33"
+			],
+			"start_row": 32,
+			"end_row": 32,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 69,
+			"tex": "//Entry[/Org]/Features//NP\\_BIND/@from",
+			"content": [
+				"//Entry[/Org]/Features//NP",
+				"BIND/@from"
+			],
+			"start_row": 34,
+			"end_row": 34,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 55,
+			"tex": "//Entry[/Species]/TIGR[/@sec\\_id]/@prim\\_id",
+			"content": [
+				"//Entry[/Species]/TIGR[/@sec",
+				"id]/@prim",
+				"id"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 90,
+			"tex": "SP46",
+			"content": [
+				"SP46"
+			],
+			"start_row": 45,
+			"end_row": 45,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 43,
+			"tex": "//Entry[//Ref]//PIR[/@prim\\_id]/@sec\\_id",
+			"content": [
+				"//Entry[//Ref]//PIR[/@prim",
+				"id]/@sec",
+				"id"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 62,
+			"tex": "SP32",
+			"content": [
+				"SP32"
+			],
+			"start_row": 31,
+			"end_row": 31,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 85,
+			"tex": "//Entry[//Keyword and /PROSITE[/@sec\\_id and /@status]/@prim\\_id]//Features//ACT\\_SITE[/@to]/@from",
+			"content": [
+				"//Entry[//Keyword",
+				"and",
+				"/PROSITE[/@sec",
+				"id",
+				"and",
+				"/@status]/@prim",
+				"id]//Features//ACT",
+				"SITE[/@to]/@from"
+			],
+			"start_row": 42,
+			"end_row": 42,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 59,
+			"tex": "//Entry[/Features[/DISULFID[/@to]/Descr]/CHAIN]/HSSP/@prim\\_id",
+			"content": [
+				"//Entry[/Features[/DISULFID[/@to]/Descr]/CHAIN]/HSSP/@prim",
+				"id"
+			],
+			"start_row": 29,
+			"end_row": 29,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 97,
+			"tex": "//Entry[/Keyword]/GCRDB[/@sec\\_id]/@prim\\_id",
+			"content": [
+				"//Entry[/Keyword]/GCRDB[/@sec",
+				"id]/@prim",
+				"id"
+			],
+			"start_row": 48,
+			"end_row": 48,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 80,
+			"tex": "SP41",
+			"content": [
+				"SP41"
+			],
+			"start_row": 40,
+			"end_row": 40,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 77,
+			"tex": "//Entry[/Org and /PDB/@sec\\_id]/@mtype",
+			"content": [
+				"//Entry[/Org",
+				"and",
+				"/PDB/@sec",
+				"id]/@mtype"
+			],
+			"start_row": 38,
+			"end_row": 38,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 71,
+			"tex": "//Entry[/Features//METAL[/@to]/@from and /Species]/@class",
+			"content": [
+				"//Entry[/Features//METAL[/@to]/@from",
+				"and",
+				"/Species]/@class"
+			],
+			"start_row": 35,
+			"end_row": 35,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 76,
+			"tex": "SP39",
+			"content": [
+				"SP39"
+			],
+			"start_row": 38,
+			"end_row": 38,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 70,
+			"tex": "SP36",
+			"content": [
+				"SP36"
+			],
+			"start_row": 35,
+			"end_row": 35,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 79,
+			"tex": "//Entry[/PFAM/@status and /MGD/@sec\\_id]",
+			"content": [
+				"//Entry[/PFAM/@status",
+				"and",
+				"/MGD/@sec",
+				"id]"
+			],
+			"start_row": 39,
+			"end_row": 39,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 63,
+			"tex": "//Entry[/@mtype and //SUBTILIST[/@sec\\_id]/@prim\\_id]",
+			"content": [
+				"//Entry[/@mtype",
+				"and",
+				"//SUBTILIST[/@sec",
+				"id]/@prim",
+				"id]"
+			],
+			"start_row": 31,
+			"end_row": 31,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 60,
+			"tex": "SP31",
+			"content": [
+				"SP31"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 96,
+			"tex": "SP49",
+			"content": [
+				"SP49"
+			],
+			"start_row": 48,
+			"end_row": 48,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 53,
+			"tex": "//Entry[/INTERPRO]/Features/ACT\\_SITE[/@from]/Descr",
+			"content": [
+				"//Entry[/INTERPRO]/Features/ACT",
+				"SITE[/@from]/Descr"
+			],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 47,
+			"tex": "//Entry[/Descr]/Features[/SITE/@from]",
+			"content": [
+				"//Entry[/Descr]/Features[/SITE/@from]"
+			],
+			"start_row": 23,
+			"end_row": 23,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 87,
+			"tex": "//Entry[//INTERPRO/@sec\\_id]/PIR/@prim\\_id",
+			"content": [
+				"//Entry[//INTERPRO/@sec",
+				"id]/PIR/@prim",
+				"id"
+			],
+			"start_row": 43,
+			"end_row": 43,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 81,
+			"tex": "//Entry[//Keyword]//PRINTS[/@sec\\_id]/@prim\\_id",
+			"content": [
+				"//Entry[//Keyword]//PRINTS[/@sec",
+				"id]/@prim",
+				"id"
+			],
+			"start_row": 40,
+			"end_row": 40,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 66,
+			"tex": "SP34",
+			"content": [
+				"SP34"
+			],
+			"start_row": 33,
+			"end_row": 33,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 98,
+			"tex": "SP50",
+			"content": [
+				"SP50"
+			],
+			"start_row": 49,
+			"end_row": 49,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 52,
+			"tex": "SP27",
+			"content": [
+				"SP27"
+			],
+			"start_row": 26,
+			"end_row": 26,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 44,
+			"tex": "SP23",
+			"content": [
+				"SP23"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 89,
+			"tex": "//Entry[/Org]/HSSP[/@sec\\_id]/@prim\\_id",
+			"content": [
+				"//Entry[/Org]/HSSP[/@sec",
+				"id]/@prim",
+				"id"
+			],
+			"start_row": 44,
+			"end_row": 44,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 94,
+			"tex": "SP48",
+			"content": [
+				"SP48"
+			],
+			"start_row": 47,
+			"end_row": 47,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 75,
+			"tex": "//Entry[/Org]//MGD[/@prim\\_id]/@sec\\_id",
+			"content": [
+				"//Entry[/Org]//MGD[/@prim",
+				"id]/@sec",
+				"id"
+			],
+			"start_row": 37,
+			"end_row": 37,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 45,
+			"tex": "//Entry[/PFAM/@status and /INTERPRO/@sec\\_id]//Features[//MOD\\_RES/@to]",
+			"content": [
+				"//Entry[/PFAM/@status",
+				"and",
+				"/INTERPRO/@sec",
+				"id]//Features[//MOD",
+				"RES/@to]"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 92,
+			"tex": "SP47",
+			"content": [
+				"SP47"
+			],
+			"start_row": 46,
+			"end_row": 46,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 51,
+			"tex": "//Entry[/Species and /SWISS-2DPAGE/@prim\\_id]",
+			"content": [
+				"//Entry[/Species",
+				"and",
+				"/SWISS-2DPAGE/@prim",
+				"id]"
+			],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 50,
+			"tex": "SP26",
+			"content": [
+				"SP26"
+			],
+			"start_row": 25,
+			"end_row": 25,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 57,
+			"tex": "//Entry[/Org]//Features[/NON\\_TER/@to]/METAL//Descr",
+			"content": [
+				"//Entry[/Org]//Features[/NON",
+				"TER/@to]/METAL//Descr"
+			],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 56,
+			"tex": "SP29",
+			"content": [
+				"SP29"
+			],
+			"start_row": 28,
+			"end_row": 28,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 49,
+			"tex": "//Entry[/TIGR/@prim\\_id and /EMBL/@sec\\_id]",
+			"content": [
+				"//Entry[/TIGR/@prim",
+				"id",
+				"and",
+				"/EMBL/@sec",
+				"id]"
+			],
+			"start_row": 24,
+			"end_row": 24,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 84,
+			"tex": "SP43",
+			"content": [
+				"SP43"
+			],
+			"start_row": 42,
+			"end_row": 42,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 88,
+			"tex": "SP45",
+			"content": [
+				"SP45"
+			],
+			"start_row": 44,
+			"end_row": 44,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 61,
+			"tex": "//Entry[/Features[/CHAIN]/TRANSIT/@from]",
+			"content": [
+				"//Entry[/Features[/CHAIN]/TRANSIT/@from]"
+			],
+			"start_row": 30,
+			"end_row": 30,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 93,
+			"tex": "//Entry[/Mod[/@type and /@Rel]/@date]/PIR/@prim\\_id",
+			"content": [
+				"//Entry[/Mod[/@type",
+				"and",
+				"/@Rel]/@date]/PIR/@prim",
+				"id"
+			],
+			"start_row": 46,
+			"end_row": 46,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 86,
+			"tex": "SP44",
+			"content": [
+				"SP44"
+			],
+			"start_row": 43,
+			"end_row": 43,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 68,
+			"tex": "SP35",
+			"content": [
+				"SP35"
+			],
+			"start_row": 34,
+			"end_row": 34,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 74,
+			"tex": "SP38",
+			"content": [
+				"SP38"
+			],
+			"start_row": 37,
+			"end_row": 37,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 72,
+			"tex": "SP37",
+			"content": [
+				"SP37"
+			],
+			"start_row": 36,
+			"end_row": 36,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 83,
+			"tex": "//Entry[//TIGR[/@prim\\_id]/@sec\\_id]/Org",
+			"content": [
+				"//Entry[//TIGR[/@prim",
+				"id]/@sec",
+				"id]/Org"
+			],
+			"start_row": 41,
+			"end_row": 41,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 67,
+			"tex": "//Entry[/FLYBASE[/@prim\\_id]/@sec\\_id and /Gene]/@seqlen",
+			"content": [
+				"//Entry[/FLYBASE[/@prim",
+				"id]/@sec",
+				"id",
+				"and",
+				"/Gene]/@seqlen"
+			],
+			"start_row": 33,
+			"end_row": 33,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 54,
+			"tex": "SP28",
+			"content": [
+				"SP28"
+			],
+			"start_row": 27,
+			"end_row": 27,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 65,
+			"tex": "//Entry[/Mod[/@type]/@date]/PRINTS/@prim\\_id",
+			"content": [
+				"//Entry[/Mod[/@type]/@date]/PRINTS/@prim",
+				"id"
+			],
+			"start_row": 32,
+			"end_row": 32,
+			"start_col": 1,
+			"end_col": 1
+		}
+	]
+}

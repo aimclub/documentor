@@ -1,0 +1,160 @@
+{
+	"cells": [
+		{
+			"id": 4,
+			"tex": "Empty B",
+			"content": [
+				"Empty",
+				"B"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 7,
+			"tex": "Pour B to C",
+			"content": [
+				"Pour",
+				"B",
+				"to",
+				"C"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 0,
+			"tex": "Empty A",
+			"content": [
+				"Empty",
+				"A"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 11,
+			"tex": "Pour C to B",
+			"content": [
+				"Pour",
+				"C",
+				"to",
+				"B"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 2,
+			"tex": "Pour A to B",
+			"content": [
+				"Pour",
+				"A",
+				"to",
+				"B"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 5,
+			"tex": "Fill B",
+			"content": [
+				"Fill",
+				"B"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "Pour A to C",
+			"content": [
+				"Pour",
+				"A",
+				"to",
+				"C"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 1,
+			"tex": "Fill A",
+			"content": [
+				"Fill",
+				"A"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 10,
+			"tex": "Pour C to A",
+			"content": [
+				"Pour",
+				"C",
+				"to",
+				"A"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 8,
+			"tex": "Empty C",
+			"content": [
+				"Empty",
+				"C"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 9,
+			"tex": "Fill C",
+			"content": [
+				"Fill",
+				"C"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 6,
+			"tex": "Pour B to A",
+			"content": [
+				"Pour",
+				"B",
+				"to",
+				"A"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 2,
+			"end_col": 2
+		}
+	]
+}

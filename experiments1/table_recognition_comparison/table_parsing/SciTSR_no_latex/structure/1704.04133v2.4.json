@@ -1,0 +1,559 @@
+{
+	"cells": [
+		{
+			"id": 38,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 28,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 2,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 19,
+			"tex": "(2x2, 2x2 stride)",
+			"content": [
+				"(2x2,",
+				"2x2",
+				"stride)"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 26,
+			"tex": "MaxPool Layer",
+			"content": [
+				"MaxPool",
+				"Layer"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 44,
+			"tex": "Softmax",
+			"content": [
+				"Softmax"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 42,
+			"tex": "Global average pooling",
+			"content": [
+				"Global",
+				"average",
+				"pooling"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 15,
+			"tex": "(3x3, 256x)",
+			"content": [
+				"(3x3,",
+				"256x)"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 0,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 9,
+			"tex": "(3x3, 128x)",
+			"content": [
+				"(3x3,",
+				"128x)"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 39,
+			"tex": "(1x1, 512x)",
+			"content": [
+				"(1x1,",
+				"512x)"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "(3x3, 64x)",
+			"content": [
+				"(3x3,",
+				"64x)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 33,
+			"tex": "(3x3, 512x)",
+			"content": [
+				"(3x3,",
+				"512x)"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 17,
+			"tex": "(3x3, 256x)",
+			"content": [
+				"(3x3,",
+				"256x)"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 8,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 31,
+			"tex": "(3x3, 512x)",
+			"content": [
+				"(3x3,",
+				"512x)"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 30,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 7,
+			"tex": "(3x3, 128x)",
+			"content": [
+				"(3x3,",
+				"128x)"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 21,
+			"tex": "(3x3, 512x)",
+			"content": [
+				"(3x3,",
+				"512x)"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 41,
+			"tex": "(1x1, 10x)",
+			"content": [
+				"(1x1,",
+				"10x)"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 10,
+			"tex": "MaxPool Layer",
+			"content": [
+				"MaxPool",
+				"Layer"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 34,
+			"tex": "MaxPool Layer",
+			"content": [
+				"MaxPool",
+				"Layer"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 12,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 27,
+			"tex": "(2x2, 2x2 stride)",
+			"content": [
+				"(2x2,",
+				"2x2",
+				"stride)"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 16,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 22,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 11,
+			"tex": "(2x2, 2x2 stride)",
+			"content": [
+				"(2x2,",
+				"2x2",
+				"stride)"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 36,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 29,
+			"tex": "(3x3, 512x)",
+			"content": [
+				"(3x3,",
+				"512x)"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 32,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 13,
+			"tex": "(3x3, 256x)",
+			"content": [
+				"(3x3,",
+				"256x)"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 25,
+			"tex": "(3x3, 512x)",
+			"content": [
+				"(3x3,",
+				"512x)"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 14,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 37,
+			"tex": "(3x3, 512x)",
+			"content": [
+				"(3x3,",
+				"512x)"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 1,
+			"tex": "(3x3, 64x)",
+			"content": [
+				"(3x3,",
+				"64x)"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 23,
+			"tex": "(3x3, 512x)",
+			"content": [
+				"(3x3,",
+				"512x)"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 45,
+			"tex": "(10)",
+			"content": [
+				"(10)"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 20,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 4,
+			"tex": "MaxPool Layer",
+			"content": [
+				"MaxPool",
+				"Layer"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 43,
+			"tex": "(10)",
+			"content": [
+				"(10)"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 24,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 35,
+			"tex": "(2x2, 2x2 stride)",
+			"content": [
+				"(2x2,",
+				"2x2",
+				"stride)"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 6,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 5,
+			"tex": "(2x2, 2x2 stride)",
+			"content": [
+				"(2x2,",
+				"2x2",
+				"stride)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 40,
+			"tex": "Conv Layer",
+			"content": [
+				"Conv",
+				"Layer"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 18,
+			"tex": "MaxPool Layer",
+			"content": [
+				"MaxPool",
+				"Layer"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 0,
+			"end_col": 0
+		}
+	]
+}

@@ -1,0 +1,343 @@
+{
+	"cells": [
+		{
+			"id": 16,
+			"tex": "75 agents, loose goals, no diversification",
+			"content": [
+				"75",
+				"agents,",
+				"loose",
+				"goals,",
+				"no",
+				"diversi\ufb01cation"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 15,
+			"tex": "0.5844",
+			"content": [
+				"0.5844"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "0.4539",
+			"content": [
+				"0.4539"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 13,
+			"tex": "0.5677",
+			"content": [
+				"0.5677"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 19,
+			"tex": "0.5808",
+			"content": [
+				"0.5808"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 11,
+			"tex": "0.5790",
+			"content": [
+				"0.5790"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 25,
+			"tex": "0.4082",
+			"content": [
+				"0.4082"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 20,
+			"tex": "50 agents, loose goals, diversification",
+			"content": [
+				"50",
+				"agents,",
+				"loose",
+				"goals,",
+				"diversi\ufb01cation"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 0,
+			"tex": "Synthetic Crowd Characteristics",
+			"content": [
+				"Synthetic",
+				"Crowd",
+				"Characteristics"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 12,
+			"tex": "100 agents, tight goals, no diversification",
+			"content": [
+				"100",
+				"agents,",
+				"tight",
+				"goals,",
+				"no",
+				"diversi\ufb01cation"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 4,
+			"tex": "75 agents, random paths",
+			"content": [
+				"75",
+				"agents,",
+				"random",
+				"paths"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 14,
+			"tex": "50 agents, loose goals, no diversification",
+			"content": [
+				"50",
+				"agents,",
+				"loose",
+				"goals,",
+				"no",
+				"diversi\ufb01cation"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 24,
+			"tex": "100 agents, loose goals, diversification",
+			"content": [
+				"100",
+				"agents,",
+				"loose",
+				"goals,",
+				"diversi\ufb01cation"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 21,
+			"tex": "0.4866",
+			"content": [
+				"0.4866"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 5,
+			"tex": "0.5048",
+			"content": [
+				"0.5048"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 8,
+			"tex": "50 agents, tight goals, no diversification",
+			"content": [
+				"50",
+				"agents,",
+				"tight",
+				"goals,",
+				"no",
+				"diversi\ufb01cation"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 17,
+			"tex": "0.5845",
+			"content": [
+				"0.5845"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 18,
+			"tex": "100 agents, loose goals, no diversification",
+			"content": [
+				"100",
+				"agents,",
+				"loose",
+				"goals,",
+				"no",
+				"diversi\ufb01cation"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 1,
+			"tex": "Score",
+			"content": [
+				"Score"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 10,
+			"tex": "75 agents, tight goals, no diversification",
+			"content": [
+				"75",
+				"agents,",
+				"tight",
+				"goals,",
+				"no",
+				"diversi\ufb01cation"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 22,
+			"tex": "75 agents, loose goals, diversification",
+			"content": [
+				"75",
+				"agents,",
+				"loose",
+				"goals,",
+				"diversi\ufb01cation"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 23,
+			"tex": "0.5624",
+			"content": [
+				"0.5624"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 7,
+			"tex": "0.4421",
+			"content": [
+				"0.4421"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 9,
+			"tex": "0.6091",
+			"content": [
+				"0.6091"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 6,
+			"tex": "100 agents, random paths",
+			"content": [
+				"100",
+				"agents,",
+				"random",
+				"paths"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 2,
+			"tex": "50 agents, random paths",
+			"content": [
+				"50",
+				"agents,",
+				"random",
+				"paths"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		}
+	]
+}

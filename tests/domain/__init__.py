@@ -1,3 +1,3 @@
 """
-Тесты для доменных моделей.
+Tests for domain models.
 """

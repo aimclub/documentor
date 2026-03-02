@@ -1,0 +1,126 @@
+{
+  "pdf_file": "2412.19495v2.pdf",
+  "timing": {
+    "method1_seconds": 64.70945072174072,
+    "method2_seconds": 27.27684450149536,
+    "method1_minutes": 1.0784908453623454,
+    "method2_minutes": 0.4546140750249227,
+    "speedup": 0.4215279869827583,
+    "time_saved_seconds": -37.43260622024536,
+    "time_saved_percent": -137.2321722118306
+  },
+  "tables_count": {
+    "method1": 5,
+    "method2": 5
+  },
+  "method1": {
+    "tables": [
+      {
+        "page_num": 2,
+        "bbox": [
+          262,
+          162,
+          955,
+          435
+        ],
+        "text": "<table><thead><tr><th>Dataset ID</th><th>Therapeutic Area</th><th>N</th><th>Year</th><th>Sex Ratio Female:Male</th><th>Younger Group Age Range</th><th>Elder Group Age Range</th></tr></thead><tbody><tr><td>D<sub>1</sub></td><td>Diabetes</td><td>768</td><td>1988</td><td>-</td><td>[21, 23]</td><td>[33, 81]</td></tr><tr><td>D<sub>2a</sub></td><td>Diabetes</td><td>4,400</td><td>2014</td><td>1.17</td><td>[5, 65]</td><td>[75, 95]</td></tr><tr><td>D<sub>2b</sub></td><td>Diabetes</td><td>4,400</td><td>2014</td><td>1.09</td><td>[5, 65]</td><td>[75, 95]</td></tr><tr><td>D<sub>3</sub></td><td>Heart Dis.</td><td>920</td><td>1989</td><td>0.29</td><td>[28, 52]</td><td>[57, 77]</td></tr><tr><td>D<sub>4</sub></td><td>Heart Dis.</td><td>452</td><td>1997</td><td>1.27</td><td>[0, 43]</td><td>[51, 83]</td></tr><tr><td>D<sub>5</sub></td><td>Heart Dis.</td><td>4,240</td><td>2010</td><td>1.33</td><td>[32, 46]</td><td>[52, 70]</td></tr><tr><td>D<sub>6</sub></td><td>Heart Dis.</td><td>10,000</td><td>2020</td><td>0.79</td><td>[4, 57]</td><td>[66, 98]</td></tr><tr><td>D<sub>7a</sub></td><td>Heart Dis.</td><td>1,300</td><td>ca.2020</td><td>1.86</td><td>[30, 52]</td><td>[56, 65]</td></tr><tr><td>D<sub>7b</sub></td><td>Heart Dis.</td><td>1,300</td><td>ca.2020</td><td>1.93</td><td>[30, 52]</td><td>[56, 65]</td></tr></tbody></table>"
+      },
+      {
+        "page_num": 3,
+        "bbox": [
+          306,
+          163,
+          914,
+          452
+        ],
+        "text": "<table><thead><tr><th>Family name</th><th>Object of analysis</th><th>Metric used</th></tr></thead><tbody><tr><td>Feature-based</td><td>Feature informativeness</td><td>Max. Fisher's discriminant ratio</td></tr><tr><td>Linearity</td><td>Linear separability</td><td>Sum of the error distance by linear programming</td></tr><tr><td>Neighborhood</td><td>Local class distribution</td><td>Error rate of nearest-neighbors classifier</td></tr><tr><td>Dimensionality</td><td>Data dimensionality/sparsity</td><td>Average number of features per point</td></tr><tr><td>Class imbalance</td><td>Ratio between class examples</td><td>Imbalance ratio</td></tr></tbody></table>"
+      },
+      {
+        "page_num": 4,
+        "bbox": [
+          219,
+          210,
+          999,
+          482
+        ],
+        "text": "<table>\n  <thead>\n    <tr>\n      <th rowspan=\"2\">Dataset</th>\n      <th colspan=\"3\">AUC</th>\n      <th rowspan=\"2\">Old</th>\n      <th rowspan=\"2\">Young</th>\n      <th rowspan=\"2\">p-value</th>\n    </tr>\n    <tr>\n      <th>Female</th>\n      <th>Male</th>\n      <th>p-value</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>D<sub>1</sub></td>\n      <td>-</td>\n      <td>-</td>\n      <td>-</td>\n      <td>0.65 ± 0.04</td>\n      <td><strong>0.69</strong> ± 0.05</td>\n      <td>&lt; 0.0001 ***</td>\n    </tr>\n    <tr>\n      <td>D<sub>2a</sub></td>\n      <td>0.59 ± 0.02</td>\n      <td><strong>0.61</strong> ± 0.02</td>\n      <td>&lt; 0.0001 ***</td>\n      <td>0.58 ± 0.02</td>\n      <td><strong>0.62</strong> ± 0.02</td>\n      <td>&lt; 0.0001 ***</td>\n    </tr>\n    <tr>\n      <td>D<sub>2b</sub></td>\n      <td>0.59 ± 0.02</td>\n      <td>0.59 ± 0.02</td>\n      <td>0.67</td>\n      <td>0.58 ± 0.02</td>\n      <td><strong>0.60</strong> ± 0.02</td>\n      <td>&lt; 0.0001 ***</td>\n    </tr>\n    <tr>\n      <td>D<sub>3</sub></td>\n      <td>0.66 ± 0.07</td>\n      <td><strong>0.71</strong> ± 0.06</td>\n      <td>&lt; 0.0001 ***</td>\n      <td>0.63 ± 0.06</td>\n      <td><strong>0.73</strong> ± 0.06</td>\n      <td>&lt; 0.0001 ***</td>\n    </tr>\n    <tr>\n      <td>D<sub>4</sub></td>\n      <td>0.77 ± 0.04</td>\n      <td>0.78 ± 0.06</td>\n      <td>0.80</td>\n      <td>0.79 ± 0.05</td>\n      <td>0.79 ± 0.06</td>\n      <td>0.95</td>\n    </tr>\n    <tr>\n      <td>D<sub>5</sub></td>\n      <td>0.53 ± 0.02</td>\n      <td><strong>0.56</strong> ± 0.02</td>\n      <td>&lt; 0.0001 ***</td>\n      <td><strong>0.54</strong> ± 0.02</td>\n      <td>0.50 ± 0.01</td>\n      <td>&lt; 0.0001 ***</td>\n    </tr>\n    <tr>\n      <td>D<sub>6</sub></td>\n      <td><strong>0.92</strong> ± 0.01</td>\n      <td>0.87 ± 0.02</td>\n      <td>&lt; 0.0001 ***</td>\n      <td>0.87 ± 0.02</td>\n      <td><strong>0.91</strong> ± 0.01</td>\n      <td>&lt; 0.0001 ***</td>\n    </tr>\n    <tr>\n      <td>D<sub>7a</sub></td>\n      <td><strong>0.68</strong> ± 0.03</td>\n      <td>0.67 ± 0.03</td>\n      <td>&lt; 0.01 *</td>\n      <td>0.62 ± 0.03</td>\n      <td><strong>0.69</strong> ± 0.03</td>\n      <td>&lt; 0.0001 ***</td>\n    </tr>\n    <tr>\n      <td>D<sub>7b</sub></td>\n      <td><strong>0.71</strong> ± 0.02</td>\n      <td>0.67 ± 0.03</td>\n      <td>&lt; 0.0001 ***</td>\n      <td>0.66 ± 0.02</td>\n      <td><strong>0.70</strong> ± 0.03</td>\n      <td>&lt; 0.0001 ***</td>\n    </tr>\n  </tbody>\n</table>"
+      },
+      {
+        "page_num": 4,
+        "bbox": [
+          404,
+          1028,
+          814,
+          1278
+        ],
+        "text": "<table>\n  <thead>\n    <tr>\n      <th>Dataset</th>\n      <th>Group</th>\n      <th>N<sub>add</sub>/N</th>\n      <th>Group</th>\n      <th>N<sub>add</sub>/N</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>D<sub>1</sub></td>\n      <td>-</td>\n      <td>-</td>\n      <td>Old</td>\n      <td>192%</td>\n    </tr>\n    <tr>\n      <td>D<sub>2a</sub></td>\n      <td>Female</td>\n      <td>13%</td>\n      <td>Old</td>\n      <td>112%</td>\n    </tr>\n    <tr>\n      <td>D<sub>2b</sub></td>\n      <td>Female</td>\n      <td>2%</td>\n      <td>Old</td>\n      <td>129%</td>\n    </tr>\n    <tr>\n      <td>D<sub>3</sub></td>\n      <td>Female</td>\n      <td>66%</td>\n      <td>Old</td>\n      <td>&infin;</td>\n    </tr>\n    <tr>\n      <td>D<sub>4</sub></td>\n      <td>Male</td>\n      <td>3%</td>\n      <td>Young</td>\n      <td>2%</td>\n    </tr>\n    <tr>\n      <td>D<sub>5</sub></td>\n      <td>Female</td>\n      <td>57%</td>\n      <td>Young</td>\n      <td>46%</td>\n    </tr>\n    <tr>\n      <td>D<sub>6</sub></td>\n      <td>Male</td>\n      <td>48%</td>\n      <td>Old</td>\n      <td>8%</td>\n    </tr>\n    <tr>\n      <td>D<sub>7a</sub></td>\n      <td>Male</td>\n      <td>6%</td>\n      <td>Old</td>\n      <td>5%</td>\n    </tr>\n    <tr>\n      <td>D<sub>7b</sub></td>\n      <td>Male</td>\n      <td>4%</td>\n      <td>Old</td>\n      <td>33%</td>\n    </tr>\n  </tbody>\n</table>"
+      },
+      {
+        "page_num": 6,
+        "bbox": [
+          271,
+          211,
+          945,
+          482
+        ],
+        "text": "<table><thead><tr><th rowspan=\"2\">Dataset</th><th rowspan=\"2\">Overall</th><th colspan=\"3\">Sex</th><th colspan=\"3\">Age</th></tr><tr><th>Female</th><th>Male</th><th>KS-test</th><th>Elder</th><th>Younger</th><th>KS-test</th></tr></thead><tbody><tr><td>D<sub>1</sub></td><td>0.243</td><td>-</td><td>-</td><td>-</td><td><strong>0.247</strong></td><td>0.172</td><td>0.205</td><td>*</td></tr><tr><td>D<sub>2a</sub></td><td>0.323</td><td>0.308</td><td>0.312</td><td>0.019</td><td>0.295</td><td>0.294</td><td>0.045</td><td></td></tr><tr><td>D<sub>2b</sub></td><td>0.332</td><td>0.313</td><td>0.319</td><td>0.020</td><td>0.302</td><td>0.299</td><td>0.018</td><td></td></tr><tr><td>D<sub>3</sub></td><td>0.258</td><td>0.223</td><td>0.238</td><td>0.071</td><td>0.222</td><td>0.210</td><td>0.043</td><td></td></tr><tr><td>D<sub>4</sub></td><td>0.313</td><td>0.233</td><td>0.247</td><td>0.037</td><td>0.279</td><td>0.263</td><td>0.057</td><td></td></tr><tr><td>D<sub>5</sub></td><td>0.119</td><td>0.105</td><td>0.119</td><td>0.060</td><td><strong>0.169</strong></td><td>0.069</td><td>0.299</td><td>**</td></tr><tr><td>D<sub>6</sub></td><td>0.084</td><td>0.083</td><td>0.078</td><td>0.031</td><td>0.078</td><td>0.085</td><td>0.024</td><td></td></tr><tr><td>D<sub>7a</sub></td><td>0.266</td><td>0.244</td><td>0.233</td><td>0.053</td><td><strong>0.263</strong></td><td>0.233</td><td>0.082</td><td>*</td></tr><tr><td>D<sub>7b</sub></td><td>0.269</td><td>0.247</td><td>0.250</td><td>0.049</td><td><strong>0.262</strong></td><td>0.228</td><td>0.088</td><td>*</td></tr></tbody></table>"
+      }
+    ],
+    "timing_seconds": 64.70945072174072
+  },
+  "method2": {
+    "tables": [
+      {
+        "page_num": 2,
+        "bbox": [
+          262,
+          163,
+          955,
+          434
+        ],
+        "text": "<table><thead><tr><th>Dataset ID</th><th>Therapeutic Area</th><th>N</th><th>Year</th><th>Sex Ratio Female:Male</th><th>Younger Group Age Range</th><th>Elder Group Age Range</th></tr></thead><tbody><tr><td>D<sub>1</sub></td><td>Diabetes</td><td>768</td><td>1988</td><td>-</td><td>[21, 23]</td><td>[33, 81]</td></tr><tr><td>D<sub>2a</sub></td><td>Diabetes</td><td>4,400</td><td>2014</td><td>1.17</td><td>[5, 65]</td><td>[75, 95]</td></tr><tr><td>D<sub>2b</sub></td><td>Diabetes</td><td>4,400</td><td>2014</td><td>1.09</td><td>[5, 65]</td><td>[75, 95]</td></tr><tr><td>D<sub>3</sub></td><td>Heart Dis.</td><td>920</td><td>1989</td><td>0.29</td><td>[28, 52]</td><td>[57, 77]</td></tr><tr><td>D<sub>4</sub></td><td>Heart Dis.</td><td>452</td><td>1997</td><td>1.27</td><td>[0, 43]</td><td>[51, 83]</td></tr><tr><td>D<sub>5</sub></td><td>Heart Dis.</td><td>4,240</td><td>2010</td><td>1.33</td><td>[32, 46]</td><td>[52, 70]</td></tr><tr><td>D<sub>6</sub></td><td>Heart Dis.</td><td>10,000</td><td>2020</td><td>0.79</td><td>[4, 57]</td><td>[66, 98]</td></tr><tr><td>τ<sub>7a</sub></td><td>Heart Dis.</td><td>1,300</td><td>ca.2020</td><td>1.86</td><td>[30, 52]</td><td>[56, 65]</td></tr><tr><td>τ<sub>7b</sub></td><td>Heart Dis.</td><td>1,300</td><td>ca.2020</td><td>1.93</td><td>[30, 52]</td><td>[56, 65]</td></tr></tbody></table>"
+      },
+      {
+        "page_num": 3,
+        "bbox": [
+          305,
+          162,
+          916,
+          453
+        ],
+        "text": "<table><thead><tr><td>Family name</td><td>Object of analysis</td><td>Metric used</td></tr></thead><tbody><tr><td>Feature-based</td><td>Feature informativeness</td><td>Max. Fisher's discriminant ratio</td></tr><tr><td>Linearity</td><td>Linear separability</td><td>Sum of the error distance by linear programming</td></tr><tr><td>Neighborhood</td><td>Local class distribution</td><td>Error rate of nearest-neighbors classifier</td></tr><tr><td>Dimensionality</td><td>Data dimensionality/sparsity</td><td>Average number of features per point</td></tr><tr><td>Class imbalance</td><td>Ratio between class examples</td><td>Imbalance ratio</td></tr></tbody></table>"
+      },
+      {
+        "page_num": 4,
+        "bbox": [
+          221,
+          210,
+          998,
+          480
+        ],
+        "text": "<table><thead><tr><th rowspan=\"2\">Dataset</th><th colspan=\"3\">AUC</th><th rowspan=\"2\">Old</th><th rowspan=\"2\">Young</th><th rowspan=\"2\">p-value</th></tr><tr><th>Female</th><th>Male</th><th>p-value</th></tr></thead><tbody><tr><td>D<sub>1</sub></td><td>–</td><td>–</td><td>–</td><td>0.65 ± 0.04</td><td><strong>0.69</strong> ± 0.05</td><td>&lt; 0.0001 ***</td></tr><tr><td>D<sub>2a</sub></td><td>0.59 ± 0.02</td><td><strong>0.61</strong> ± 0.02</td><td>&lt; 0.0001 ***</td><td>0.58 ± 0.02</td><td><strong>0.62</strong> ± 0.02</td><td>&lt; 0.0001 ***</td></tr><tr><td>D<sub>2b</sub></td><td>0.59 ± 0.02</td><td>0.59 ± 0.02</td><td>0.67</td><td>0.58 ± 0.02</td><td><strong>0.60</strong> ± 0.02</td><td>&lt; 0.0001 ***</td></tr><tr><td>D<sub>3</sub></td><td>0.66 ± 0.07</td><td><strong>0.71</strong> ± 0.06</td><td>&lt; 0.0001 ***</td><td>0.63 ± 0.06</td><td><strong>0.73</strong> ± 0.06</td><td>&lt; 0.0001 ***</td></tr><tr><td>D<sub>4</sub></td><td>0.77 ± 0.04</td><td>0.78 ± 0.06</td><td>0.80</td><td>0.79 ± 0.05</td><td>0.79 ± 0.06</td><td>0.95</td></tr><tr><td>D<sub>5</sub></td><td>0.53 ± 0.02</td><td><strong>0.56</strong> ± 0.02</td><td>&lt; 0.0001 ***</td><td><strong>0.54</strong> ± 0.02</td><td>0.50 ± 0.01</td><td>&lt; 0.0001 ***</td></tr><tr><td>D<sub>6</sub></td><td><strong>0.92</strong> ± 0.01</td><td>0.87 ± 0.02</td><td>&lt; 0.0001 ***</td><td>0.87 ± 0.02</td><td><strong>0.91</strong> ± 0.01</td><td>&lt; 0.0001 ***</td></tr><tr><td>D<sub>7a</sub></td><td><strong>0.68</strong> ± 0.03</td><td>0.67 ± 0.03</td><td>&lt; 0.01 *</td><td>0.62 ± 0.03</td><td><strong>0.69</strong> ± 0.03</td><td>&lt; 0.0001 ***</td></tr><tr><td>D<sub>7b</sub></td><td><strong>0.71</strong> ± 0.02</td><td>0.67 ± 0.03</td><td>&lt; 0.0001 ***</td><td>0.66 ± 0.02</td><td><strong>0.70</strong> ± 0.03</td><td>&lt; 0.0001 ***</td></tr></tbody></table>"
+      },
+      {
+        "page_num": 4,
+        "bbox": [
+          405,
+          1029,
+          814,
+          1277
+        ],
+        "text": "<table><thead><tr><th>Dataset</th><th>Group</th><th>N_add/N</th><th>Group</th><th>N_add/N</th></tr></thead><tbody><tr><td>D<sub>1</sub></td><td>–</td><td>–</td><td>Old</td><td>192%</td></tr><tr><td>D<sub>2a</sub></td><td>Female</td><td>13%</td><td>Old</td><td>112%</td></tr><tr><td>D<sub>2b</sub></td><td>Female</td><td>2%</td><td>Old</td><td>129%</td></tr><tr><td>D<sub>3</sub></td><td>Female</td><td>66%</td><td>Old</td><td>∞</td></tr><tr><td>D<sub>4</sub></td><td>Male</td><td>3%</td><td>Young</td><td>2%</td></tr><tr><td>D<sub>5</sub></td><td>Female</td><td>57%</td><td>Young</td><td>46%</td></tr><tr><td>D<sub>6</sub></td><td>Male</td><td>48%</td><td>Old</td><td>8%</td></tr><tr><td>D<sub>7a</sub></td><td>Male</td><td>6%</td><td>Old</td><td>5%</td></tr><tr><td>D<sub>7b</sub></td><td>Male</td><td>4%</td><td>Old</td><td>33%</td></tr></tbody></table>"
+      },
+      {
+        "page_num": 6,
+        "bbox": [
+          271,
+          210,
+          945,
+          482
+        ],
+        "text": "<table><thead><tr><th rowspan=\"2\">Dataset</th><th rowspan=\"2\">Overall</th><th colspan=\"3\">Sex</th><th colspan=\"3\">Age</th><th rowspan=\"2\"></th></tr><tr><th>Female</th><th>Male</th><th>KS-test</th><th> Elder </th><th>Younger </th><th>KS-test </th></tr></thead><tbody><tr><td> D<sub>1</sub> </td><td> 0.243 </td><td> - </td><td> - </td><td> - </td><td> <strong> 0.247 </strong> </td><td> 0.172 </td><td> 0.205 </td><td> * </td></tr><tr><td> D<sub>2a</sub> </td><td> 0.323 </td><td> 0.308 </td><td> 0.312 </td><td> 0.019 </td><td> 0.295 </td><td> 0.294 </td><td> 0.045 </td><td></td></tr><tr><td> D<sub>2b</sub> </td><td> 0.332 </td><td> 0.313 </td><td> 0.319 </td><td> 0.020 </td><td> 0.302 </td><td> 0.299 </td><td> 0.018 </td><td></td></tr><tr><td> D<sub>3</sub> </td><td> 0.258 </td><td> 0.223 </td><td> 0.238 </td><td> 0.071 </td><td> 0.222 </td><td> 0.210 </td><td> 0.043 </td><td></td></tr><tr><td> D<sub>4</sub> </td><td> 0.313 </td><td> 0.233 </td><td> 0.247 </td><td> 0.037 </td><td> 0.279 </td><td> 0.263 </td><td> 0.057 </td><td></td></tr><tr><td> D<sub>5</sub> </td><td> 0.119 </td><td> 0.105 </td><td> 0.119 </td><td> 0.060 </td><td> <strong> 0.169 </strong> </td><td> 0.069 </td><td> 0.299 </td><td> ** </td></tr><tr><td> D<sub>6</sub> </td><td> 0.084 </td><td> 0.083 </td><td> 0.078 </td><td> 0.031 </td><td> 0.078 </td><td> 0.085 </td><td> 0.024 </td><td></td></tr><tr><td> D<sub>7a</sub> </td><td> 0.266 </td><td> 0.244 </td><td> 0.233 </td><td> 0.053 </td><td> <strong> 0.263 </strong> </td><td> 0.233 </td><td> 0.082 </td><td> * </td></tr><tr><td> D<sub>7b</sub> </td><td> 0.269 </td><td> 0.247 </td><td> 0.250 </td><td> 0.049 </td><td> <strong> 0.262 </strong> </td><td> 0.228 </td><td> 0.088 </td><td> * </td></tr></tbody></table>"
+      }
+    ],
+    "timing_seconds": 27.27684450149536
+  }
+}

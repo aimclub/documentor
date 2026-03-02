@@ -1,0 +1,158 @@
+{
+	"cells": [
+		{
+			"id": 8,
+			"tex": "13.3 (4.2)",
+			"content": [
+				"13.3",
+				"(4.2)"
+			],
+			"start_row": 2,
+			"end_row": 3,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 0,
+			"tex": "Demographic",
+			"content": [
+				"Demographic"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 11,
+			"tex": "6/14",
+			"content": [
+				"6/14"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 7,
+			"tex": "16 (7.6)",
+			"content": [
+				"16",
+				"(7.6)"
+			],
+			"start_row": 2,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 6,
+			"tex": "Avg. Years of",
+			"content": [
+				"Avg.",
+				"Years",
+				"of"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 2,
+			"tex": "MCI",
+			"content": [
+				"MCI"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 12,
+			"tex": "16/7",
+			"content": [
+				"16/7"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 5,
+			"tex": "72,0 (7.4)",
+			"content": [
+				"72,0",
+				"(7.4)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 9,
+			"tex": "Education (SD)",
+			"content": [
+				"Education",
+				"(SD)"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 10,
+			"tex": "No. of Male/Female",
+			"content": [
+				"No.",
+				"of",
+				"Male/Female"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 1,
+			"tex": "Control",
+			"content": [
+				"Control"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 4,
+			"tex": "61 (7.5)",
+			"content": [
+				"61",
+				"(7.5)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "Avg. Age (SD)",
+			"content": [
+				"Avg.",
+				"Age",
+				"(SD)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		}
+	]
+}

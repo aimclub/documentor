@@ -1,0 +1,36 @@
+ОТЧЕТ О ПРОВЕРКЕ image_data ПОЛЕЙ
+================================================================================
+
+Файл: E:\easy\documentor\documentor_langchain\experiments\pdf_text_extraction\results\regular_pdf_parser\2304.05128v2\structure.json
+Всего элементов с image_data: 29
+Найдено проблем: 7
+
+ПРОБЛЕМЫ:
+
+- empty_image_data
+  Элемент: 00000063
+  Детали: Поле image_data существует, но пустое
+
+- empty_image_data
+  Элемент: 00000065
+  Детали: Поле image_data существует, но пустое
+
+- empty_image_data
+  Элемент: 00000077
+  Детали: Поле image_data существует, но пустое
+
+- empty_image_data
+  Элемент: 00000089
+  Детали: Поле image_data существует, но пустое
+
+- empty_image_data
+  Элемент: 00000090
+  Детали: Поле image_data существует, но пустое
+
+- empty_image_data
+  Элемент: 00000114
+  Детали: Поле image_data существует, но пустое
+
+- empty_image_data
+  Элемент: 00000120
+  Детали: Поле image_data существует, но пустое

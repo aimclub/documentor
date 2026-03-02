@@ -1,0 +1,508 @@
+{
+	"cells": [
+		{
+			"id": 8,
+			"tex": "Load Quad Unsigned (64 bits)",
+			"content": [
+				"Load",
+				"Quad",
+				"Unsigned",
+				"(64",
+				"bits)"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 27,
+			"tex": "pgas\\_inc\\_imm",
+			"content": [
+				"pgas",
+				"inc",
+				"imm"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 12,
+			"tex": "Load T\\_float (64 bits, double)",
+			"content": [
+				"Load",
+				"T",
+				"\ufb02oat",
+				"(64",
+				"bits,",
+				"double)"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 33,
+			"tex": "Initialize the 'threads' register",
+			"content": [
+				"Initialize",
+				"the",
+				"\u2019threads\u2019",
+				"register"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 36,
+			"tex": "",
+			"content": [],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 18,
+			"tex": "pgas\\_stl",
+			"content": [
+				"pgas",
+				"stl"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 9,
+			"tex": "pgas\\_lds",
+			"content": [
+				"pgas",
+				"lds"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 11,
+			"tex": "pgas\\_ldt",
+			"content": [
+				"pgas",
+				"ldt"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 32,
+			"tex": "set\\_threads",
+			"content": [
+				"set",
+				"threads"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 5,
+			"tex": "pgas\\_ldl",
+			"content": [
+				"pgas",
+				"ldl"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 30,
+			"tex": "Address increment, register",
+			"content": [
+				"Address",
+				"increment,",
+				"register"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 37,
+			"tex": "look-up table",
+			"content": [
+				"look-up",
+				"table"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 23,
+			"tex": "Store S\\_float (32 bits, float)",
+			"content": [
+				"Store",
+				"S",
+				"\ufb02oat",
+				"(32",
+				"bits,",
+				"\ufb02oat)"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 0,
+			"tex": "Shared Address Loads",
+			"content": [
+				"Shared",
+				"Address",
+				"Loads"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 1
+		},
+		{
+			"id": 16,
+			"tex": "pgas\\_stw",
+			"content": [
+				"pgas",
+				"stw"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 20,
+			"tex": "pgas\\_stq",
+			"content": [
+				"pgas",
+				"stq"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 25,
+			"tex": "Store T\\_float (64 bits, double)",
+			"content": [
+				"Store",
+				"T",
+				"\ufb02oat",
+				"(64",
+				"bits,",
+				"double)"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 34,
+			"tex": "set\\_base\\_address",
+			"content": [
+				"set",
+				"base",
+				"address"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 15,
+			"tex": "Store Byte Unsigned (8 bits)",
+			"content": [
+				"Store",
+				"Byte",
+				"Unsigned",
+				"(8",
+				"bits)"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 14,
+			"tex": "pgas\\_stb",
+			"content": [
+				"pgas",
+				"stb"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 35,
+			"tex": "Set the base address",
+			"content": [
+				"Set",
+				"the",
+				"base",
+				"address"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 13,
+			"tex": "Shared Address Stores",
+			"content": [
+				"Shared",
+				"Address",
+				"Stores"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 1
+		},
+		{
+			"id": 28,
+			"tex": "Address increment, immediate",
+			"content": [
+				"Address",
+				"increment,",
+				"immediate"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 1,
+			"tex": "pgas\\_ldbu",
+			"content": [
+				"pgas",
+				"ldbu"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 3,
+			"tex": "pgas\\_ldwu",
+			"content": [
+				"pgas",
+				"ldwu"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 17,
+			"tex": "Store Word Unsigned (16 bits)",
+			"content": [
+				"Store",
+				"Word",
+				"Unsigned",
+				"(16",
+				"bits)"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 31,
+			"tex": "Initialization",
+			"content": [
+				"Initialization"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 0,
+			"end_col": 1
+		},
+		{
+			"id": 24,
+			"tex": "pgas\\_stt",
+			"content": [
+				"pgas",
+				"stt"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 21,
+			"tex": "Store Quad Unsigned (64 bits)",
+			"content": [
+				"Store",
+				"Quad",
+				"Unsigned",
+				"(64",
+				"bits)"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 26,
+			"tex": "Shared Address Incrementations",
+			"content": [
+				"Shared",
+				"Address",
+				"Incrementations"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 0,
+			"end_col": 1
+		},
+		{
+			"id": 19,
+			"tex": "Store Long Unsigned (32 bits)",
+			"content": [
+				"Store",
+				"Long",
+				"Unsigned",
+				"(32",
+				"bits)"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 29,
+			"tex": "pgas\\_inc\\_reg",
+			"content": [
+				"pgas",
+				"inc",
+				"reg"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 22,
+			"tex": "pgas\\_sts",
+			"content": [
+				"pgas",
+				"sts"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 7,
+			"tex": "pgas\\_ldq",
+			"content": [
+				"pgas",
+				"ldq"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 2,
+			"tex": "Load Byte Unsigned (8 bits)",
+			"content": [
+				"Load",
+				"Byte",
+				"Unsigned",
+				"(8",
+				"bits)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 4,
+			"tex": "Load Word Unsigned (16 bits)",
+			"content": [
+				"Load",
+				"Word",
+				"Unsigned",
+				"(16",
+				"bits)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 6,
+			"tex": "Load Long Unsigned (32 bits)",
+			"content": [
+				"Load",
+				"Long",
+				"Unsigned",
+				"(32",
+				"bits)"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 10,
+			"tex": "Load S\\_float (32 bits, float)",
+			"content": [
+				"Load",
+				"S",
+				"\ufb02oat",
+				"(32",
+				"bits,",
+				"\ufb02oat)"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		}
+	]
+}

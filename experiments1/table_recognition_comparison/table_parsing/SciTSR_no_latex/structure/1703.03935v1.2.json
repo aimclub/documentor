@@ -1,0 +1,535 @@
+{
+	"cells": [
+		{
+			"id": 1,
+			"tex": "MSnot",
+			"content": [
+				"MSnot"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 23,
+			"tex": "double jogging stroller (.82)",
+			"content": [
+				"double",
+				"jogging",
+				"stroller",
+				"(.82)"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 2,
+			"tex": "MSyes",
+			"content": [
+				"MSyes"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 36,
+			"tex": "transmitted disease (.76)",
+			"content": [
+				"transmitted",
+				"disease",
+				"(.76)"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "Teen",
+			"content": [
+				"Teen"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 19,
+			"tex": "week 37 (.74)",
+			"content": [
+				"week",
+				"37",
+				"(.74)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 4,
+			"tex": "Elow",
+			"content": [
+				"Elow"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 8,
+			"tex": "chlamydia and gonorrhea (.81)",
+			"content": [
+				"chlamydia",
+				"and",
+				"gonorrhea",
+				"(.81)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 32,
+			"tex": "uddercovers.com (0.86)",
+			"content": [
+				"uddercovers.com",
+				"(0.86)"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 38,
+			"tex": "None",
+			"content": [
+				"None"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 13,
+			"tex": "post pregnancy (.75)",
+			"content": [
+				"post",
+				"pregnancy",
+				"(.75)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 10,
+			"tex": "names from the bible (.84)",
+			"content": [
+				"names",
+				"from",
+				"the",
+				"bible",
+				"(.84)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 26,
+			"tex": "None",
+			"content": [
+				"None"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 34,
+			"tex": "flying while pregnant (.72)",
+			"content": [
+				"\ufb02ying",
+				"while",
+				"pregnant",
+				"(.72)"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 22,
+			"tex": "treatment for chlamydia (.77)",
+			"content": [
+				"treatment",
+				"for",
+				"chlamydia",
+				"(.77)"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 6,
+			"tex": "Rich",
+			"content": [
+				"Rich"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 25,
+			"tex": "potty train (0.88)",
+			"content": [
+				"potty",
+				"train",
+				"(0.88)"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 15,
+			"tex": "biblical names (.77)",
+			"content": [
+				"biblical",
+				"names",
+				"(.77)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 7,
+			"tex": "pregnancy workout (.88)",
+			"content": [
+				"pregnancy",
+				"workout",
+				"(.88)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 11,
+			"tex": "how to potty (0.90)",
+			"content": [
+				"how",
+				"to",
+				"potty",
+				"(0.90)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 14,
+			"tex": "baby tummy (.87)",
+			"content": [
+				"baby",
+				"tummy",
+				"(.87)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 24,
+			"tex": "None",
+			"content": [
+				"None"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 20,
+			"tex": "chicco key (.73)",
+			"content": [
+				"chicco",
+				"key",
+				"(.73)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 39,
+			"tex": "None",
+			"content": [
+				"None"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 5,
+			"tex": "Ehigh",
+			"content": [
+				"Ehigh"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 35,
+			"tex": "baby trend (.85)",
+			"content": [
+				"baby",
+				"trend",
+				"(.85)"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 12,
+			"tex": "crib reviews (.81)",
+			"content": [
+				"crib",
+				"reviews",
+				"(.81)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 9,
+			"tex": "nursing cover (.84)",
+			"content": [
+				"nursing",
+				"cover",
+				"(.84)"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 40,
+			"tex": "None",
+			"content": [
+				"None"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 41,
+			"tex": "baby card (.71)",
+			"content": [
+				"baby",
+				"card",
+				"(.71)"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 29,
+			"tex": "paternity test (.76)",
+			"content": [
+				"paternity",
+				"test",
+				"(.76)"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 31,
+			"tex": "None",
+			"content": [
+				"None"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 0,
+			"tex": "Gen",
+			"content": [
+				"Gen"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 16,
+			"tex": "jogging stroller reviews (.83)",
+			"content": [
+				"jogging",
+				"stroller",
+				"reviews",
+				"(.83)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 30,
+			"tex": "nursing pads (.82)",
+			"content": [
+				"nursing",
+				"pads",
+				"(.82)"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 17,
+			"tex": "baby in the womb (.81)",
+			"content": [
+				"baby",
+				"in",
+				"the",
+				"womb",
+				"(.81)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 27,
+			"tex": "baby stuffy nose (.73)",
+			"content": [
+				"baby",
+				"stu\ufb00y",
+				"nose",
+				"(.73)"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 28,
+			"tex": "increase breast milk (.85)",
+			"content": [
+				"increase",
+				"breast",
+				"milk",
+				"(.85)"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 37,
+			"tex": "jogging stroller (.81)",
+			"content": [
+				"jogging",
+				"stroller",
+				"(.81)"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 18,
+			"tex": "how to potty train (0.90)",
+			"content": [
+				"how",
+				"to",
+				"potty",
+				"train",
+				"(0.90)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 21,
+			"tex": "baby constipation (.86)",
+			"content": [
+				"baby",
+				"constipation",
+				"(.86)"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 33,
+			"tex": "None",
+			"content": [
+				"None"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 5,
+			"end_col": 5
+		}
+	]
+}

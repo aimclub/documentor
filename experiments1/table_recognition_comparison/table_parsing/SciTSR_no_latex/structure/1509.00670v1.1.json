@@ -1,0 +1,632 @@
+{
+	"cells": [
+		{
+			"id": 1,
+			"tex": "Actions (Avg. per user per active day) (b) ",
+			"content": [
+				"Actions",
+				"(Avg.",
+				"per",
+				"user",
+				"per",
+				"active",
+				"day)",
+				"(b)"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 2,
+			"end_col": 3
+		},
+		{
+			"id": 23,
+			"tex": "Conversation Requests",
+			"content": [
+				"Conversation",
+				"Requests"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 33,
+			"tex": "Num. Members",
+			"content": [
+				"Num.",
+				"Members"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 2,
+			"tex": "Conversations (c) ",
+			"content": [
+				"Conversations",
+				"(c)"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 4,
+			"end_col": 5
+		},
+		{
+			"id": 27,
+			"tex": "Forum Posts",
+			"content": [
+				"Forum",
+				"Posts"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 32,
+			"tex": "383,758 (adult); 136,428 (teenager)",
+			"content": [
+				"383,758",
+				"(adult);",
+				"136,428",
+				"(teenager)"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 26,
+			"tex": "522,863 (adult); 224,939 (teenager)",
+			"content": [
+				"522,863",
+				"(adult);",
+				"224,939",
+				"(teenager)"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 31,
+			"tex": "Type: Personal",
+			"content": [
+				"Type:",
+				"Personal"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 36,
+			"tex": "6.38",
+			"content": [
+				"6.38"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 6,
+			"tex": "May 7 - Nov 18",
+			"content": [
+				"May",
+				"7",
+				"-",
+				"Nov",
+				"18"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 21,
+			"tex": "Chatroom Messages",
+			"content": [
+				"Chatroom",
+				"Messages"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 17,
+			"tex": "Conversation Messages",
+			"content": [
+				"Conversation",
+				"Messages"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 8,
+			"tex": "Dec 5 - Nov 18",
+			"content": [
+				"Dec",
+				"5",
+				"-",
+				"Nov",
+				"18"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 35,
+			"tex": "Forum Post Views",
+			"content": [
+				"Forum",
+				"Post",
+				"Views"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 19,
+			"tex": "Volume (by Guests):",
+			"content": [
+				"Volume",
+				"(by",
+				"Guests):"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 18,
+			"tex": "62.28",
+			"content": [
+				"62.28"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 16,
+			"tex": "53",
+			"content": [
+				"53"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 30,
+			"tex": "2.93",
+			"content": [
+				"2.93"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 9,
+			"tex": "Num. Conversations",
+			"content": [
+				"Num.",
+				"Conversations"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 50,
+			"tex": "61,435 (members); 196 (listeners)",
+			"content": [
+				"61,435",
+				"(members);",
+				"196",
+				"(listeners)"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 14,
+			"tex": "413,256 (adult); 131,449 (teenager)",
+			"content": [
+				"413,256",
+				"(adult);",
+				"131,449",
+				"(teenager)"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 49,
+			"tex": "Terminations",
+			"content": [
+				"Terminations"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 10,
+			"tex": "1.27M",
+			"content": [
+				"1.27M"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 38,
+			"tex": "14.77M (adult); 4.28M (teenager)",
+			"content": [
+				"14.77M",
+				"(adult);",
+				"4.28M",
+				"(teenager)"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 48,
+			"tex": "4.12",
+			"content": [
+				"4.12"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 15,
+			"tex": "Distinct Forums",
+			"content": [
+				"Distinct",
+				"Forums"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 12,
+			"tex": "2.41",
+			"content": [
+				"2.41"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 47,
+			"tex": "Help Guide Views",
+			"content": [
+				"Help",
+				"Guide",
+				"Views"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 22,
+			"tex": "1.07M",
+			"content": [
+				"1.07M"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 46,
+			"tex": "12,038",
+			"content": [
+				"12,038"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 45,
+			"tex": "Num. Hybrid",
+			"content": [
+				"Num.",
+				"Hybrid"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 5,
+			"tex": "Period",
+			"content": [
+				"Period"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 44,
+			"tex": "13.54M (adult); 4.12M (teenager)",
+			"content": [
+				"13.54M",
+				"(adult);",
+				"4.12M",
+				"(teenager)"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 0,
+			"tex": "Participation (a)",
+			"content": [
+				"Participation",
+				"(a)"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 1
+		},
+		{
+			"id": 34,
+			"tex": "87,232",
+			"content": [
+				"87,232"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 43,
+			"tex": "Messages (by Listeners)",
+			"content": [
+				"Messages",
+				"(by",
+				"Listeners)"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 42,
+			"tex": "15.98",
+			"content": [
+				"15.98"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 11,
+			"tex": "Logins",
+			"content": [
+				"Logins"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 7,
+			"tex": "Period",
+			"content": [
+				"Period"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 28,
+			"tex": "82,223",
+			"content": [
+				"82,223"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 29,
+			"tex": "Forum Posts",
+			"content": [
+				"Forum",
+				"Posts"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 41,
+			"tex": "Page Views",
+			"content": [
+				"Page",
+				"Views"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 40,
+			"tex": "33,601",
+			"content": [
+				"33,601"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 4,
+			"tex": "Dec 5 - Nov 18",
+			"content": [
+				"Dec",
+				"5",
+				"-",
+				"Nov",
+				"18"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 39,
+			"tex": "Num. Listeners",
+			"content": [
+				"Num.",
+				"Listeners"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 3,
+			"tex": "Period",
+			"content": [
+				"Period"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 25,
+			"tex": "Type: General",
+			"content": [
+				"Type:",
+				"General"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 24,
+			"tex": "1.83",
+			"content": [
+				"1.83"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 13,
+			"tex": "Volume (by Users):",
+			"content": [
+				"Volume",
+				"(by",
+				"Users):"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 20,
+			"tex": "493,365 (adult); 229,918 (teenager)",
+			"content": [
+				"493,365",
+				"(adult);",
+				"229,918",
+				"(teenager)"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 37,
+			"tex": "Messages (by Non-Listeners)",
+			"content": [
+				"Messages",
+				"(by",
+				"Non-Listeners)"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 4,
+			"end_col": 4
+		}
+	]
+}

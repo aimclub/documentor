@@ -1,0 +1,406 @@
+{
+	"cells": [
+		{
+			"id": 10,
+			"tex": "Value",
+			"content": [
+				"Value"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 32,
+			"tex": "Food",
+			"content": [
+				"Food"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 33,
+			"tex": "cheese,salad,soup,onion,ordered,good,french,delicious,appetizer,lobster",
+			"content": [
+				"cheese,salad,soup,onion,ordered,good,french,delicious,appetizer,lobster"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 29,
+			"tex": "dessert,chocolate,cream,cake,ice,coffee,sweet,creme,tart,also,good,souffle",
+			"content": [
+				"dessert,chocolate,cream,cake,ice,co\ufb00ee,sweet,creme,tart,also,good,sou\ufb04e"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 31,
+			"tex": "bread,egg,french,butter,good,toast,delicious,fry,cheese,fresh,croque",
+			"content": [
+				"bread,egg,french,butter,good,toast,delicious,fry,cheese,fresh,croque"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 15,
+			"tex": "Food (Pizza)",
+			"content": [
+				"Food",
+				"(Pizza)"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 6,
+			"tex": "Food",
+			"content": [
+				"Food"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 11,
+			"tex": "price,portion,food,meal,get,two,small,little,rice,bit",
+			"content": [
+				"price,portion,food,meal,get,two,small,little,rice,bit"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 0,
+			"tex": "Cuisine",
+			"content": [
+				"Cuisine"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 9,
+			"tex": "spicy,spice,flavour,dish,hot,curry,food,like,sauce,taste",
+			"content": [
+				"spicy,spice,\ufb02avour,dish,hot,curry,food,like,sauce,taste"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 16,
+			"tex": "pizza,crust,good,cheese,sauce,slice,thin,like,wing,great,topping",
+			"content": [
+				"pizza,crust,good,cheese,sauce,slice,thin,like,wing,great,topping"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 17,
+			"tex": "Food (Salad)",
+			"content": [
+				"Food",
+				"(Salad)"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 19,
+			"tex": "Service",
+			"content": [
+				"Service"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "Indian",
+			"content": [
+				"Indian"
+			],
+			"start_row": 1,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 7,
+			"tex": "chicken,masala,tikka,curry,naan,lamb,dish,paneer,tandoori,ordered",
+			"content": [
+				"chicken,masala,tikka,curry,naan,lamb,dish,paneer,tandoori,ordered"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 13,
+			"tex": "restaurant,place,nice,decor,inside,strip,little,clean,like,table,look",
+			"content": [
+				"restaurant,place,nice,decor,inside,strip,little,clean,like,table,look"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 25,
+			"tex": "French",
+			"content": [
+				"French"
+			],
+			"start_row": 11,
+			"end_row": 15,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 30,
+			"tex": "Food (Bread)",
+			"content": [
+				"Food",
+				"(Bread)"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 8,
+			"tex": "Flavour",
+			"content": [
+				"Flavour"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 35,
+			"tex": "table,minute,time,wait,reservation,waiter,get,seated,server,took,order,got",
+			"content": [
+				"table,minute,time,wait,reservation,waiter,get,seated,server,took,order,got"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 4,
+			"tex": "Variety",
+			"content": [
+				"Variety"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 2,
+			"tex": "Top Words",
+			"content": [
+				"Top",
+				"Words"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 26,
+			"tex": "Drinks",
+			"content": [
+				"Drinks"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 5,
+			"tex": "buffet,lunch,dish,vegetarian,menu,selection,option,good,item,great",
+			"content": [
+				"bu\ufb00et,lunch,dish,vegetarian,menu,selection,option,good,item,great"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 23,
+			"tex": "Value",
+			"content": [
+				"Value"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 34,
+			"tex": "Service Time",
+			"content": [
+				"Service",
+				"Time"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 24,
+			"tex": "food,good,price,better,much,pretty,like,quality,portion,worth,nothing",
+			"content": [
+				"food,good,price,better,much,pretty,like,quality,portion,worth,nothing"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 28,
+			"tex": "Dessert",
+			"content": [
+				"Dessert"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 18,
+			"tex": "salad,bread,cheese,garlic,tomato,fresh,sauce,olive,delicious,oil",
+			"content": [
+				"salad,bread,cheese,garlic,tomato,fresh,sauce,olive,delicious,oil"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 1,
+			"tex": "Interpreted Topic",
+			"content": [
+				"Interpreted",
+				"Topic"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 20,
+			"tex": "service,staff,friendly,server,owner,customer,waiter,always,attentive",
+			"content": [
+				"service,sta\ufb00,friendly,server,owner,customer,waiter,always,attentive"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 12,
+			"tex": "Atmosphere",
+			"content": [
+				"Atmosphere"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 27,
+			"tex": "menu,wine,course,tasting,glass,bottle,ordered,selection,meal,two",
+			"content": [
+				"menu,wine,course,tasting,glass,bottle,ordered,selection,meal,two"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 22,
+			"tex": "place,restaurant,location,strip,little,find,italian,away,parking,right",
+			"content": [
+				"place,restaurant,location,strip,little,\ufb01nd,italian,away,parking,right"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 21,
+			"tex": "Location",
+			"content": [
+				"Location"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 14,
+			"tex": "Italian",
+			"content": [
+				"Italian"
+			],
+			"start_row": 6,
+			"end_row": 10,
+			"start_col": 0,
+			"end_col": 0
+		}
+	]
+}

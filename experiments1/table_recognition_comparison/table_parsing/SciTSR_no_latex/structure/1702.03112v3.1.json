@@ -1,0 +1,534 @@
+{
+	"cells": [
+		{
+			"id": 13,
+			"tex": "SSL keystore is hard-coded",
+			"content": [
+				"SSL",
+				"keystore",
+				"is",
+				"hard-coded"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "ID-GLOB",
+			"content": [
+				"ID-GLOB"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 4,
+			"tex": "Writes data to globally accessible area",
+			"content": [
+				"Writes",
+				"data",
+				"to",
+				"globally",
+				"accessible",
+				"area"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 33,
+			"tex": "WebView",
+			"content": [
+				"WebView"
+			],
+			"start_row": 18,
+			"end_row": 18,
+			"start_col": 0,
+			"end_col": 1
+		},
+		{
+			"id": 5,
+			"tex": "ID-STOK",
+			"content": [
+				"ID-STOK"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 6,
+			"tex": "Contains secret token",
+			"content": [
+				"Contains",
+				"secret",
+				"token"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 34,
+			"tex": "WV-SSLV",
+			"content": [
+				"WV-SSLV"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 7,
+			"tex": "ID-FGMT",
+			"content": [
+				"ID-FGMT"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 35,
+			"tex": "WebView does not validate SSL",
+			"content": [
+				"WebView",
+				"does",
+				"not",
+				"validate",
+				"SSL"
+			],
+			"start_row": 19,
+			"end_row": 19,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 8,
+			"tex": "Fragment injection vulnerability",
+			"content": [
+				"Fragment",
+				"injection",
+				"vulnerability"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 29,
+			"tex": "IC-EXPT",
+			"content": [
+				"IC-EXPT"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 9,
+			"tex": "SSL/TLS and Cryptography",
+			"content": [
+				"SSL/TLS",
+				"and",
+				"Cryptography"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 1
+		},
+		{
+			"id": 31,
+			"tex": "IC-DEBG",
+			"content": [
+				"IC-DEBG"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 10,
+			"tex": "CR-KSPW",
+			"content": [
+				"CR-KSPW"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 11,
+			"tex": "SSL keystore is not password-protected",
+			"content": [
+				"SSL",
+				"keystore",
+				"is",
+				"not",
+				"password-protected"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 12,
+			"tex": "CR-KSHC",
+			"content": [
+				"CR-KSHC"
+			],
+			"start_row": 7,
+			"end_row": 7,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 38,
+			"tex": "WV-FSYS",
+			"content": [
+				"WV-FSYS"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 37,
+			"tex": "WebView RCE vulnerability",
+			"content": [
+				"WebView",
+				"RCE",
+				"vulnerability"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 20,
+			"tex": "CR-PKEY",
+			"content": [
+				"CR-PKEY"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 36,
+			"tex": "WV-RCEV",
+			"content": [
+				"WV-RCEV"
+			],
+			"start_row": 20,
+			"end_row": 20,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 23,
+			"tex": "IC-CPRV",
+			"content": [
+				"IC-CPRV"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 0,
+			"tex": "ID",
+			"content": [
+				"ID"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 1,
+			"tex": "Descriptions",
+			"content": [
+				"Descriptions"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 39,
+			"tex": "File system access is enabled in WebView",
+			"content": [
+				"File",
+				"system",
+				"access",
+				"is",
+				"enabled",
+				"in",
+				"WebView"
+			],
+			"start_row": 21,
+			"end_row": 21,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 2,
+			"tex": "Information Disclosure",
+			"content": [
+				"Information",
+				"Disclosure"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 1
+		},
+		{
+			"id": 27,
+			"tex": "IC-DNGR",
+			"content": [
+				"IC-DNGR"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 32,
+			"tex": "Debuggable flag is manually set to true",
+			"content": [
+				"Debuggable",
+				"\ufb02ag",
+				"is",
+				"manually",
+				"set",
+				"to",
+				"true"
+			],
+			"start_row": 17,
+			"end_row": 17,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 30,
+			"tex": "Export attribute is missing ``android:'' prefix",
+			"content": [
+				"Export",
+				"attribute",
+				"is",
+				"missing",
+				"\u201candroid:\u201d",
+				"pre\ufb01x"
+			],
+			"start_row": 16,
+			"end_row": 16,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 26,
+			"tex": "Service with intent filter",
+			"content": [
+				"Service",
+				"with",
+				"intent",
+				"\ufb01lter"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 15,
+			"tex": "Miscellaneous SSL validation flaws",
+			"content": [
+				"Miscellaneous",
+				"SSL",
+				"validation",
+				"\ufb02aws"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 17,
+			"tex": "Contains weak certificate",
+			"content": [
+				"Contains",
+				"weak",
+				"certi\ufb01cate"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 19,
+			"tex": "ECB mode encryption is used",
+			"content": [
+				"ECB",
+				"mode",
+				"encryption",
+				"is",
+				"used"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 22,
+			"tex": "Inter-Component Communication",
+			"content": [
+				"Inter-Component",
+				"Communication"
+			],
+			"start_row": 12,
+			"end_row": 12,
+			"start_col": 0,
+			"end_col": 1
+		},
+		{
+			"id": 16,
+			"tex": "CR-CERT",
+			"content": [
+				"CR-CERT"
+			],
+			"start_row": 9,
+			"end_row": 9,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 18,
+			"tex": "CR-ECBM",
+			"content": [
+				"CR-ECBM"
+			],
+			"start_row": 10,
+			"end_row": 10,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 40,
+			"tex": "WV-DOMS",
+			"content": [
+				"WV-DOMS"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 25,
+			"tex": "IC-SRVC",
+			"content": [
+				"IC-SRVC"
+			],
+			"start_row": 14,
+			"end_row": 14,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 41,
+			"tex": "DOM storage is enabled in WebView",
+			"content": [
+				"DOM",
+				"storage",
+				"is",
+				"enabled",
+				"in",
+				"WebView"
+			],
+			"start_row": 22,
+			"end_row": 22,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 24,
+			"tex": "ContentProvider without export attribute",
+			"content": [
+				"ContentProvider",
+				"without",
+				"export",
+				"attribute"
+			],
+			"start_row": 13,
+			"end_row": 13,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 28,
+			"tex": "Declares ``dangerous'' level permission",
+			"content": [
+				"Declares",
+				"\u201cdangerous\u201d",
+				"level",
+				"permission"
+			],
+			"start_row": 15,
+			"end_row": 15,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 21,
+			"tex": "Contains private key",
+			"content": [
+				"Contains",
+				"private",
+				"key"
+			],
+			"start_row": 11,
+			"end_row": 11,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 14,
+			"tex": "CR-SSLV",
+			"content": [
+				"CR-SSLV"
+			],
+			"start_row": 8,
+			"end_row": 8,
+			"start_col": 0,
+			"end_col": 0
+		}
+	]
+}

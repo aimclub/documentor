@@ -1,0 +1,1 @@
+[{"bbox": [292, 71, 852, 110], "category": "Page-header"}, {"bbox": [292, 223, 1422, 2048], "category": "Text"}]

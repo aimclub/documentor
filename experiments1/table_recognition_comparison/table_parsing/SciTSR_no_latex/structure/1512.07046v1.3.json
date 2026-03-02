@@ -1,0 +1,186 @@
+{
+	"cells": [
+		{
+			"id": 13,
+			"tex": "0.89 -- 0.38",
+			"content": [
+				"0.89",
+				"\u2013",
+				"0.38"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 7,
+			"tex": "0.81 -- 0.89",
+			"content": [
+				"0.81",
+				"\u2013",
+				"0.89"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 1,
+			"tex": "en -- ru",
+			"content": [
+				"en",
+				"\u2013",
+				"ru"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 4,
+			"tex": "en -- war",
+			"content": [
+				"en",
+				"\u2013",
+				"war"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 6,
+			"tex": "en -- pms",
+			"content": [
+				"en",
+				"\u2013",
+				"pms"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 6,
+			"end_col": 6
+		},
+		{
+			"id": 8,
+			"tex": "0.8 -- 0.89",
+			"content": [
+				"0.8",
+				"\u2013",
+				"0.89"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "en -- hi",
+			"content": [
+				"en",
+				"\u2013",
+				"hi"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 3,
+			"end_col": 3
+		},
+		{
+			"id": 9,
+			"tex": "0.98 -- 0.96",
+			"content": [
+				"0.98",
+				"\u2013",
+				"0.96"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 12,
+			"tex": "1 -- 0.22",
+			"content": [
+				"1",
+				"\u2013",
+				"0.22"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 0,
+			"tex": "en -- es",
+			"content": [
+				"en",
+				"\u2013",
+				"es"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 11,
+			"tex": "0.74 -- 0.56",
+			"content": [
+				"0.74",
+				"\u2013",
+				"0.56"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 4,
+			"end_col": 4
+		},
+		{
+			"id": 5,
+			"tex": "en -- ht",
+			"content": [
+				"en",
+				"\u2013",
+				"ht"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 5,
+			"end_col": 5
+		},
+		{
+			"id": 2,
+			"tex": "en -- sl",
+			"content": [
+				"en",
+				"\u2013",
+				"sl"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 10,
+			"tex": "1 -- 1",
+			"content": [
+				"1",
+				"\u2013",
+				"1"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 3,
+			"end_col": 3
+		}
+	]
+}

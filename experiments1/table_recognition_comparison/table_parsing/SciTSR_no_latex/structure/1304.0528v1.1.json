@@ -1,0 +1,285 @@
+{
+	"cells": [
+		{
+			"id": 6,
+			"tex": "HS-ch1",
+			"content": [
+				"HS-ch1"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 17,
+			"tex": "2 473 400",
+			"content": [
+				"2",
+				"473",
+				"400"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 7,
+			"tex": "Homo-sapiens chromosome 1, from NCBI 36.49",
+			"content": [
+				"Homo-sapiens",
+				"chromosome",
+				"1,",
+				"from",
+				"NCBI",
+				"36.49"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 9,
+			"tex": "ecoli",
+			"content": [
+				"ecoli"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 19,
+			"tex": "The letter \u2018a\u2019 repeated two million times.",
+			"content": [
+				"The",
+				"letter",
+				"\u2018a\u2019",
+				"repeated",
+				"two",
+				"million",
+				"times."
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 14,
+			"tex": "4 047 392",
+			"content": [
+				"4",
+				"047",
+				"392"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 16,
+			"tex": "The file world192.txt of the large Canterbury corpus",
+			"content": [
+				"The",
+				"\ufb01le",
+				"world192.txt",
+				"of",
+				"the",
+				"large",
+				"Canterbury",
+				"corpus"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 13,
+			"tex": "The file bible.txt of the large Canterbury copus",
+			"content": [
+				"The",
+				"\ufb01le",
+				"bible.txt",
+				"of",
+				"the",
+				"large",
+				"Canterbury",
+				"copus"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 4,
+			"tex": "The Linux Kernel 2.6.31 tar file",
+			"content": [
+				"The",
+				"Linux",
+				"Kernel",
+				"2.6.31",
+				"tar",
+				"\ufb01le"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 3,
+			"tex": "linux",
+			"content": [
+				"linux"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 11,
+			"tex": "4 638 690",
+			"content": [
+				"4",
+				"638",
+				"690"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 1,
+			"tex": "Description",
+			"content": [
+				"Description"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 2,
+			"tex": "Size (bytes)",
+			"content": [
+				"Size",
+				"(bytes)"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 5,
+			"tex": "365 711 360",
+			"content": [
+				"365",
+				"711",
+				"360"
+			],
+			"start_row": 1,
+			"end_row": 1,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 10,
+			"tex": "The file E.coli of the large Canterbury corpus",
+			"content": [
+				"The",
+				"\ufb01le",
+				"E.coli",
+				"of",
+				"the",
+				"large",
+				"Canterbury",
+				"corpus"
+			],
+			"start_row": 3,
+			"end_row": 3,
+			"start_col": 1,
+			"end_col": 1
+		},
+		{
+			"id": 20,
+			"tex": "2 000 000",
+			"content": [
+				"2",
+				"000",
+				"000"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 8,
+			"tex": "251 370 600",
+			"content": [
+				"251",
+				"370",
+				"600"
+			],
+			"start_row": 2,
+			"end_row": 2,
+			"start_col": 2,
+			"end_col": 2
+		},
+		{
+			"id": 12,
+			"tex": "bible",
+			"content": [
+				"bible"
+			],
+			"start_row": 4,
+			"end_row": 4,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 0,
+			"tex": "File",
+			"content": [
+				"File"
+			],
+			"start_row": 0,
+			"end_row": 0,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 15,
+			"tex": "world",
+			"content": [
+				"world"
+			],
+			"start_row": 5,
+			"end_row": 5,
+			"start_col": 0,
+			"end_col": 0
+		},
+		{
+			"id": 18,
+			"tex": "a2M",
+			"content": [
+				"a2M"
+			],
+			"start_row": 6,
+			"end_row": 6,
+			"start_col": 0,
+			"end_col": 0
+		}
+	]
+}

@@ -1,0 +1,755 @@
+{
+  "prompt_name": "prompt_layout_all_en",
+  "total_pages": 9,
+  "pages": [
+    {
+      "page_num": 0,
+      "success": true,
+      "element_count": 16,
+      "type_counts": {
+        "Page-header": 1,
+        "Section-header": 2,
+        "Text": 13
+      },
+      "elements": [
+        {
+          "bbox": [
+            121,
+            40,
+            1065,
+            69
+          ],
+          "category": "Page-header",
+          "text": "Международный научный журнал «ВЕСТНИК НАУКИ» № 10 (67) Том 5. ОКТЯБРЬ 2023 г."
+        },
+        {
+          "bbox": [
+            435,
+            115,
+            751,
+            146
+          ],
+          "category": "Section-header",
+          "text": "# БИОЛОГИЯ (BIOLOGY)"
+        },
+        {
+          "bbox": [
+            111,
+            164,
+            242,
+            194
+          ],
+          "category": "Text",
+          "text": "УДК 579.6"
+        },
+        {
+          "bbox": [
+            483,
+            212,
+            703,
+            239
+          ],
+          "category": "Text",
+          "text": "Мастиленко А.В."
+        },
+        {
+          "bbox": [
+            310,
+            260,
+            878,
+            389
+          ],
+          "category": "Text",
+          "text": "кандидат биологических наук, доцент кафедры\n\"Микробиология, вирусология, эпизоотология\nи ветеринарно-санитарная экспертиза\""
+        },
+        {
+          "bbox": [
+            126,
+            405,
+            1062,
+            484
+          ],
+          "category": "Text",
+          "text": "Ульяновский государственный аграрный университет имени П.А. Столыпина\n(г. Ульяновск, Россия)"
+        },
+        {
+          "bbox": [
+            489,
+            551,
+            698,
+            578
+          ],
+          "category": "Text",
+          "text": "Матюнина М.И."
+        },
+        {
+          "bbox": [
+            140,
+            599,
+            1047,
+            679
+          ],
+          "category": "Text",
+          "text": "биолог бактериологического отдела клинико-диагностической лаборатории\nГУЗ «Городская поликлиника № 5»"
+        },
+        {
+          "bbox": [
+            462,
+            696,
+            727,
+            727
+          ],
+          "category": "Text",
+          "text": "(г. Ульяновск, Россия)"
+        },
+        {
+          "bbox": [
+            494,
+            792,
+            693,
+            822
+          ],
+          "category": "Text",
+          "text": "Батяйкина Д.В."
+        },
+        {
+          "bbox": [
+            140,
+            840,
+            1047,
+            920
+          ],
+          "category": "Text",
+          "text": "биолог бактериологического отдела клинико-диагностической лаборатории\nГУЗ «Городская поликлиника № 5»"
+        },
+        {
+          "bbox": [
+            462,
+            936,
+            727,
+            966
+          ],
+          "category": "Text",
+          "text": "(г. Ульяновск, Россия)"
+        },
+        {
+          "bbox": [
+            338,
+            1033,
+            850,
+            1112
+          ],
+          "category": "Section-header",
+          "text": "## РАЗРАБОТКА СИСТЕМЫ ДЕТЕКЦИИ\nБАКТЕРИЙ РОДА BORDETELLA"
+        },
+        {
+          "bbox": [
+            109,
+            1178,
+            1079,
+            1330
+          ],
+          "category": "Text",
+          "text": "**Аннотация:** в работе рассматривается метод разделения белковых компонентов бактериальных клеток в полиакриламидном геле по Леммли для специфической детекции бактерий рода Bordetella. На основании проведенных авторами экспериментов были выявлены 6 специфических белков, характерных для исследуемых видов."
+        },
+        {
+          "bbox": [
+            235,
+            1384,
+            911,
+            1412
+          ],
+          "category": "Text",
+          "text": "**Ключевые слова:** детекция, разделение в ПААГ, белки, Bordetella."
+        },
+        {
+          "bbox": [
+            109,
+            1468,
+            1075,
+            1548
+          ],
+          "category": "Text",
+          "text": "В настоящее время род Bordetella включает в себя виды: *B. parapertussis*, *B. pertussis*, *B. bronchiseptica*, *B. avium*, *B. hinzii*, *B. holmesii*, *B. petrii*, *B. trematum*,"
+        }
+      ]
+    },
+    {
+      "page_num": 1,
+      "success": true,
+      "element_count": 4,
+      "type_counts": {
+        "Page-header": 1,
+        "Text": 3
+      },
+      "elements": [
+        {
+          "bbox": [
+            121,
+            40,
+            1064,
+            69
+          ],
+          "category": "Page-header",
+          "text": "Международный научный журнал «ВЕСТНИК НАУКИ» № 10 (67) Том 5. ОКТЯБРЬ 2023 г."
+        },
+        {
+          "bbox": [
+            106,
+            114,
+            1076,
+            486
+          ],
+          "category": "Text",
+          "text": "B. bronchialis, B. flabilis, B. muralis, B. pseudohinzii, B. sputigena, B. tumbae, B. tumulicola. Большинство из них способны вызывать инфекционные заболевания человека и животных. Так, B. parapertussis, B. pertussis являются возбудителями коклюша человека, B. bronchiseptica – инфекционной патологии верхних дыхательных путей у многих видов млекопитающих, B. avium – инфекций у птиц, B. holmesii – вызывает инфекции, сходные с проявлением коклюша, B. trematum – изолировали у пациентов с острым отитом и миокардитом. B. bronchialis, B. flabilis и B. sputigena изолировали от пациентов с муковисцидозом [1]."
+        },
+        {
+          "bbox": [
+            108,
+            502,
+            1076,
+            1019
+          ],
+          "category": "Text",
+          "text": "Биологическая характеристика бактерий является основой для разработки методов их идентификации. В настоящее время бактериальная классификация претерпевает постоянные изменения в связи с появлением новых методов, инструментов и принципов типологизации. Наиболее современными и общепринятыми являются молекулярно-генетические методы видовой идентификации – все они базируются на характеристиках уникальности конкретного генома. Однако они не позволяют учесть фенотипические особенности рода, вида, группы или штамма. Этими особенностями обладают методы белкового (протеомного) профилирования. существуют методы разделения биологических высокомолекулярных соединений (в том числе и протеомов) в электрическом поле."
+        },
+        {
+          "bbox": [
+            108,
+            1033,
+            1076,
+            1549
+          ],
+          "category": "Text",
+          "text": "Наиболее современными являются методы профилирования с помощью масс-спектрометрии, однако достаточно дорогостоящее оборудование, квалификационные требования и потребность в специфическом программном обеспечении не позволяют использовать его при рутинных исследованиях. Так несмотря на то, что в настоящее время методы молекулярной генетики и масс-спектрометрии широко внедряются в микробиологическую практику, также остаются востребованы и классические методы белкового профилирования бактериальных таксономических групп. Одной из методик разделения белковых компонентов бактериальных клеток в полиакриламидном геле (ПААГ) является метод Леммли [2]. Одним из главных преимуществ данного подхода остается широкая доступность для практических лабораторий и низкая себестоимость."
+        }
+      ]
+    },
+    {
+      "page_num": 2,
+      "success": true,
+      "element_count": 8,
+      "type_counts": {
+        "Page-header": 1,
+        "Text": 6,
+        "Section-header": 1
+      },
+      "elements": [
+        {
+          "bbox": [
+            120,
+            38,
+            1066,
+            70
+          ],
+          "category": "Page-header",
+          "text": "Международный научный журнал «ВЕСТНИК НАУКИ» № 10 (67) Том 5. ОКТЯБРЬ 2023 г."
+        },
+        {
+          "bbox": [
+            108,
+            114,
+            1078,
+            199
+          ],
+          "category": "Text",
+          "text": "Однако стоит отметить, что качество результатов исследований зависит от квалификации персонала."
+        },
+        {
+          "bbox": [
+            107,
+            210,
+            1077,
+            343
+          ],
+          "category": "Text",
+          "text": "Целью данного исследования является разработка системы детекции *B. parapertussis*, *B. pertussis*, *B. bronchiseptica*, *B. avium*, *B. holmesii*, *B. trematum* и *B. petrii* на основе протеомного состава бактерий данных видов."
+        },
+        {
+          "bbox": [
+            193,
+            404,
+            479,
+            438
+          ],
+          "category": "Section-header",
+          "text": "## Материалы и методы"
+        },
+        {
+          "bbox": [
+            107,
+            452,
+            1078,
+            1020
+          ],
+          "category": "Text",
+          "text": "Для накопления бактериальной массы штаммов была использована среда Борде-Жангу (Becton and Dickinson, США); для удаления внеклеточных протеаз и белков питательной среды клетки центрифугировали при 5000g в течение 3 минут и ресуспендировали в калиево-фосфатном буфере при температуре 37°С. Вторым этапом добавляли к осадку SDS буфера (t=95°С) и тщательно перемешивали на центрифуге-вортексе (ELMI CM-50, Чехия). Разрушение бактериальных клеток проводили на ультразвуковом гомогенизаторе Soniprep 150 (MSE, Великобритания). Пробы инкубировали при 95°С в течение 5 минут. Затем образцы охлаждали до 20°С и вносили 250 мкл 2х кратного буфера для образцов SDS-PAGE, и инкубировали 20 мин при комнатной температуре. Для получения бактериальных протеинов в супернатанте пробы центрифугировали при 12500g в течение 30 минут."
+        },
+        {
+          "bbox": [
+            107,
+            1031,
+            1078,
+            1213
+          ],
+          "category": "Text",
+          "text": "Электрофорез был проведен в вертикальной камере (Mini-protean tetra, Bio-rad) в полиакриламидном геле 8-16 % (Criterion TGX, Bio-Rad) в Трис-глицироновом буфере. В работе также был использован маркер молекулярного веса 3,5-245 кДа (Abcam, Великобритания)."
+        },
+        {
+          "bbox": [
+            107,
+            1224,
+            1078,
+            1403
+          ],
+          "category": "Text",
+          "text": "После электрофореза гель прокрашивали в растворе для окраски. Несвязавшийся краситель отмывали в проявляющем растворе. Денситометрический анализ in-silico был проведен при использовании ПО GelAnalizer2010a."
+        },
+        {
+          "bbox": [
+            107,
+            1417,
+            1078,
+            1550
+          ],
+          "category": "Text",
+          "text": "1) Буферный раствор Трис-глициновый для электрофореза- 10x SDS-PAGE (1 L) – (250 mM Tris, 1.92 M glycine, 1% SDS, pH 8.3) - Tris base 30.3 g, Glycine 144.1 g, SDS 10 g, diH2O to 1 L;"
+        }
+      ]
+    },
+    {
+      "page_num": 3,
+      "success": true,
+      "element_count": 6,
+      "type_counts": {
+        "Page-header": 1,
+        "Text": 2,
+        "Section-header": 1,
+        "Picture": 1,
+        "Caption": 1
+      },
+      "elements": [
+        {
+          "bbox": [
+            121,
+            39,
+            1067,
+            71
+          ],
+          "category": "Page-header",
+          "text": "Международный научный журнал «ВЕСТНИК НАУКИ» № 10 (67) Том 5. ОКТЯБРЬ 2023 г."
+        },
+        {
+          "bbox": [
+            108,
+            112,
+            1079,
+            488
+          ],
+          "category": "Text",
+          "text": "2) Буфер для образцов - 2х SDS-PAGE (Laemmli, 30 ml) – (62.5 mM Tris-HCl, pH 6.8, 2% SDS, 25% glycerol, 0.01% bromophenol blue, 5% β-mercaptoethanol) - 0.5 M Tris-HCl, pH 6.8 3.75 ml, 50% Glycerol 15.0 ml, 1.0% Bromophenol blue 0.3 ml, 10% SDS 6.0 ml, diH2O to 30 ml, add β-mercaptoethanol (50 µl to 950 µl sample buffer) before use.\n3) Раствор для окраски – на 100 мл – Coomassie Blue R250 – 0.25 g, methanol 45 ml, diH2O 45 ml, acetic acid 10ml.\n4) Проявляющий раствор – 10% acetic acid."
+        },
+        {
+          "bbox": [
+            193,
+            550,
+            354,
+            583
+          ],
+          "category": "Section-header",
+          "text": "## Результаты"
+        },
+        {
+          "bbox": [
+            107,
+            597,
+            1078,
+            824
+          ],
+          "category": "Text",
+          "text": "В результате проведенного исследования нами была получена электрофореграмма проведенная в ПААГ *B. parapertussis*, *B. pertussis*, *B. bronchiseptica*, *B. avium*, *B. holmesii*, *B. trematum* и *B. petrii* (рис.1). На основании маркера молекулярного веса белков был построен калибровочный график (рис. 2-5)."
+        },
+        {
+          "bbox": [
+            202,
+            850,
+            957,
+            1145
+          ],
+          "category": "Picture"
+        },
+        {
+          "bbox": [
+            128,
+            1177,
+            1060,
+            1309
+          ],
+          "category": "Caption",
+          "text": "Рис. 1. Электрофореграмма протеомов: 1, 2 - *B.parapertussis*, 3, 4 - *B.pertussis*, 5 - *B.bronchiseptica*, 6 - *B.holmesii*, 7, 8 - *B.avium*, 9 - *B.trematum*, 10 - *B.petrii*, 11 – маркер молекулярного веса 3,5-245 кДа."
+        }
+      ]
+    },
+    {
+      "page_num": 4,
+      "success": true,
+      "element_count": 8,
+      "type_counts": {
+        "Page-header": 1,
+        "Picture": 3,
+        "Caption": 3,
+        "Page-footer": 1
+      },
+      "elements": [
+        {
+          "bbox": [
+            120,
+            40,
+            1065,
+            67
+          ],
+          "category": "Page-header",
+          "text": "Международный научный журнал «ВЕСТНИК НАУКИ» № 10 (67) Том 5. ОКТЯБРЬ 2023 г."
+        },
+        {
+          "bbox": [
+            208,
+            110,
+            1022,
+            442
+          ],
+          "category": "Picture"
+        },
+        {
+          "bbox": [
+            202,
+            462,
+            981,
+            493
+          ],
+          "category": "Caption",
+          "text": "Рис. 2. Профилограмма маркера молекулярного веса 3,5-245 кДа."
+        },
+        {
+          "bbox": [
+            122,
+            552,
+            1063,
+            929
+          ],
+          "category": "Picture"
+        },
+        {
+          "bbox": [
+            165,
+            948,
+            1023,
+            980
+          ],
+          "category": "Caption",
+          "text": "Рис. 3. Калибровочная кривая маркера молекулярного веса 3,5-245 кДа."
+        },
+        {
+          "bbox": [
+            128,
+            992,
+            1056,
+            1410
+          ],
+          "category": "Picture"
+        },
+        {
+          "bbox": [
+            284,
+            1431,
+            903,
+            1462
+          ],
+          "category": "Caption",
+          "text": "Рис. 4. Профилограмма протеомов *B. bronchiseptica*"
+        },
+        {
+          "bbox": [
+            571,
+            1610,
+            615,
+            1634
+          ],
+          "category": "Page-footer",
+          "text": "725"
+        }
+      ]
+    },
+    {
+      "page_num": 5,
+      "success": true,
+      "element_count": 8,
+      "type_counts": {
+        "Page-header": 1,
+        "Picture": 1,
+        "Caption": 2,
+        "Text": 3,
+        "Table": 1
+      },
+      "elements": [
+        {
+          "bbox": [
+            119,
+            38,
+            1065,
+            69
+          ],
+          "category": "Page-header",
+          "text": "Международный научный журнал «ВЕСТНИК НАУКИ» № 10 (67) Том 5. ОКТЯБРЬ 2023 г."
+        },
+        {
+          "bbox": [
+            162,
+            109,
+            1024,
+            394
+          ],
+          "category": "Picture"
+        },
+        {
+          "bbox": [
+            267,
+            410,
+            918,
+            444
+          ],
+          "category": "Caption",
+          "text": "Рис. 5. Молекулярный вес протеомов *B. bronchiseptica*"
+        },
+        {
+          "bbox": [
+            107,
+            505,
+            1077,
+            782
+          ],
+          "category": "Text",
+          "text": "Нами были установлены молекулярные массы белков, входящих в состав бактериальных клеток данных видов и являющиеся общими для исследуемых видов. Среди изолированных белков представителей рода Bordetella только 6 из них с молекулярной массой 20-59 кДа являлись уникальными, т.е. были выявлены у всех исследуемых видов, и не встречались у других близкородственных видов."
+        },
+        {
+          "bbox": [
+            107,
+            796,
+            1077,
+            926
+          ],
+          "category": "Text",
+          "text": "В системе NCBI нами был проведён in-silico анализ аналогии полученных результатов аннотированным протеомам в соответствии с молекулярными массами – в результате идентифицировано 4423 белка."
+        },
+        {
+          "bbox": [
+            107,
+            940,
+            1077,
+            1168
+          ],
+          "category": "Text",
+          "text": "Из аннотированных белков нами были проанализированы те, которые входят в состав клеточной стенки. Для протеомного анализа нами были использованы ресурсы систем NCBI (https://www.ncbi.nlm.nih.gov/protein) и UniProt (https://www.uniprot.org). Результаты проведённого анализа in-silico представлены в таблице 1."
+        },
+        {
+          "bbox": [
+            109,
+            1230,
+            691,
+            1263
+          ],
+          "category": "Caption",
+          "text": "Таблица 1. Анализ in-silico протеомного состава"
+        },
+        {
+          "bbox": [
+            121,
+            1272,
+            1064,
+            1526
+          ],
+          "category": "Table",
+          "text": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>inverse autotransporter beta-barrel domain-containing protein</td><td>152414</td></tr><tr><td>outer membrane protein assembly factor BamA</td><td>88197</td></tr><tr><td>hypothetical protein</td><td>58068</td></tr></tbody></table>"
+        }
+      ]
+    },
+    {
+      "page_num": 6,
+      "success": true,
+      "element_count": 3,
+      "type_counts": {
+        "Page-header": 1,
+        "Table": 1,
+        "Page-footer": 1
+      },
+      "elements": [
+        {
+          "bbox": [
+            119,
+            39,
+            1064,
+            69
+          ],
+          "category": "Page-header",
+          "text": "Международный научный журнал «ВЕСТНИК НАУКИ» № 10 (67) Том 5. ОКТЯБРЬ 2023 г."
+        },
+        {
+          "bbox": [
+            121,
+            108,
+            1064,
+            1542
+          ],
+          "category": "Table",
+          "text": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>flagellar basal body M-ring protein FliF</td><td>59556</td></tr><tr><td>efflux transporter outer membrane subunit</td><td>51320</td></tr><tr><td>hypothetical protein</td><td>50238</td></tr><tr><td>efflux transporter outer membrane subunit</td><td>50930</td></tr><tr><td>flagellar hook-length control protein FliK</td><td>42248</td></tr><tr><td>hypothetical protein</td><td>42783</td></tr><tr><td>autotransporter outer membrane beta-barrel domain-containing protein</td><td>36283</td></tr><tr><td>flagellar motor switch protein FliG</td><td>36438</td></tr><tr><td>hypothetical protein</td><td>35184</td></tr><tr><td>hypothetical protein</td><td>31694</td></tr><tr><td>hypothetical protein</td><td>31538</td></tr><tr><td>membrane transport family protein 1</td><td>31186</td></tr><tr><td>outer membrane protein assembly factor BamD</td><td>30958</td></tr><tr><td>hypothetical protein</td><td>30807</td></tr><tr><td>hypothetical protein</td><td>30389</td></tr><tr><td>flagellar biosynthetic protein FliR</td><td>27623</td></tr><tr><td>flagellar type III secretion system pore protein FliP</td><td>27397</td></tr><tr><td>CPBP family intramembrane metalloprotease</td><td>27324</td></tr><tr><td>flagellar brake protein</td><td>27145</td></tr><tr><td>30S ribosomal protein S2</td><td>27426</td></tr><tr><td>flagellar biosynthetic protein FliR</td><td>27623</td></tr><tr><td>hypothetical protein</td><td>27859</td></tr><tr><td>hypothetical proteinwt</td><td>28913</td></tr><tr><td>50S ribosomal protein L3</td><td>24311</td></tr><tr><td>protein TolQ</td><td>24612</td></tr><tr><td>hypothetical protein</td><td>25400</td></tr></tbody></table>"
+        },
+        {
+          "bbox": [
+            569,
+            1608,
+            618,
+            1636
+          ],
+          "category": "Page-footer",
+          "text": "727"
+        }
+      ]
+    },
+    {
+      "page_num": 7,
+      "success": true,
+      "element_count": 7,
+      "type_counts": {
+        "Page-header": 1,
+        "Table": 1,
+        "Section-header": 1,
+        "Text": 3,
+        "Page-footer": 1
+      },
+      "elements": [
+        {
+          "bbox": [
+            119,
+            38,
+            1065,
+            68
+          ],
+          "category": "Page-header",
+          "text": "Международный научный журнал «ВЕСТНИК НАУКИ» № 10 (67) Том 5. ОКТЯБРЬ 2023 г."
+        },
+        {
+          "bbox": [
+            121,
+            108,
+            1063,
+            706
+          ],
+          "category": "Table",
+          "text": "<table><thead><tr><td>Наименование белка</td><td>Молекулярная масса, Да</td></tr></thead><tbody><tr><td>membrane protein</td><td>24306</td></tr><tr><td>50S ribosomal protein L25/general stress protein Ctc</td><td>21134</td></tr><tr><td>outer membrane lipoprotein LolB</td><td>20756</td></tr><tr><td>OmpA family protein</td><td>20847</td></tr><tr><td>energy-coupling factor transporter transmembrane protein EcfT</td><td>21088</td></tr><tr><td>hypothetical protein</td><td>21256</td></tr><tr><td>flagellar protein FliL</td><td>20700</td></tr><tr><td>OmpH family outer membrane protein</td><td>20330</td></tr><tr><td>hypothetical protein</td><td>19187</td></tr><tr><td>membrane protein</td><td>19995</td></tr></tbody></table>"
+        },
+        {
+          "bbox": [
+            193,
+            755,
+            295,
+            783
+          ],
+          "category": "Section-header",
+          "text": "## Выводы"
+        },
+        {
+          "bbox": [
+            108,
+            803,
+            1077,
+            1219
+          ],
+          "category": "Text",
+          "text": "В результате проведенного исследования нами была получена электрофореграмма белков проведенная в ПААГ *B. parapertussis*, *B. pertussis*, *B. bronchiseptica*, *B. avium*, *B. holmesii*, *B. trematum* и *B. petrii*. Были установлены молекулярные массы белков, входящих в состав бактериальных клеток данных видов. Нами были выявлены белковые структуры со следующей молекулярной массой: 20,21, 23, 25, 29, 31, 36, 46, 51, 59, 72, 88, 100, 113, 129, 138, 150, 174, 210 кДа. Были аннотированы белки, входящие в состав их клеточных стенок. По результатам проведенного анализа становится очевидным, что каждому из выявленных белков может соответствовать антиген."
+        },
+        {
+          "bbox": [
+            108,
+            1237,
+            1077,
+            1367
+          ],
+          "category": "Text",
+          "text": "Среди выявленных белков, только 6 из них были выявлены у исследуемых видов Bordetella (т.е. являлись общими), и не были выявлены у других видов и близкородственных родов."
+        },
+        {
+          "bbox": [
+            108,
+            1382,
+            1077,
+            1512
+          ],
+          "category": "Text",
+          "text": "Предложенная система электрофореза в ПААГ может быть использована для детекции бактерий рода Bordetella при выявлении 6 специфических фрагментов 20, 29, 30, 36, 46, 59 кДа."
+        },
+        {
+          "bbox": [
+            570,
+            1608,
+            616,
+            1636
+          ],
+          "category": "Page-footer",
+          "text": "728"
+        }
+      ]
+    },
+    {
+      "page_num": 8,
+      "success": true,
+      "element_count": 4,
+      "type_counts": {
+        "Page-header": 1,
+        "Text": 2,
+        "Section-header": 1
+      },
+      "elements": [
+        {
+          "bbox": [
+            118,
+            38,
+            1067,
+            70
+          ],
+          "category": "Page-header",
+          "text": "Международный научный журнал «ВЕСТНИК НАУКИ» № 10 (67) Том 5. ОКТЯБРЬ 2023 г."
+        },
+        {
+          "bbox": [
+            107,
+            114,
+            1078,
+            247
+          ],
+          "category": "Text",
+          "text": "Также данное исследование может быть использовано в дальнейшей работе изучения антигенной структуры и разработке соответствующих серологических диагностикумов."
+        },
+        {
+          "bbox": [
+            422,
+            306,
+            763,
+            339
+          ],
+          "category": "Section-header",
+          "text": "СПИСОК ЛИТЕРАТУРЫ:"
+        },
+        {
+          "bbox": [
+            96,
+            402,
+            1080,
+            1017
+          ],
+          "category": "Text",
+          "text": "1. Vandamme P. A. et al. Bordetella bronchialis sp. nov., Bordetella flabilis sp. nov. and Bordetella sputigena sp. nov., isolated from human respiratory specimens, and reclassification of Chromobacter sediminum Zhang et al. 2014 as Verticia sediminum gen. nov., comb. nov //International Journal of Systematic and Evolutionary Microbiology. – 2015. – T. 65. – № Pt_10. – С. 3674-3682.\n2. U. K. Laemmli. Cleavage of Structural Proteins during the Assembly of the He ad of Bacteriophage T4. Nature, 1970; V.227, P.680 – 685.\n3. Gross R., Keidel K., Schmitt K. Resemblance and divergence: the “new” members of the genus Bordetella //Medical microbiology and immunology. – 2010. – T. 199. – № 3. – С. 155-163.\n4. Saito M. et al. Development of vaccines against pertussis caused by Bordetella holmesii using a mouse intranasal challenge model //Microbiology and immunology. – 2016. – T. 60. – № 9. – С. 599-608."
+        }
+      ]
+    }
+  ]
+}
