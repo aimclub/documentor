@@ -1,16 +1,34 @@
 """
 Document processing module.
 
-Contains loaders, parsers, pipelines and processors for document processing.
+Contains parsers, loaders, and hierarchy building utilities for document processing.
 """
 
-from .processors import DocumentProcessor, ProcessingConfig
-from .loaders import RecursiveDocumentLoader
-from .parsers import ParserRegistry
+# Re-export parsers
+from .parsers import (
+    BaseParser,
+    DocxParser,
+    MarkdownParser,
+    PdfParser,
+)
+
+# Re-export loader utilities
+from .loader import (
+    detect_document_format,
+    get_document_source,
+    normalize_metadata,
+    validate_document,
+)
 
 __all__ = [
-    'DocumentProcessor',
-    'ProcessingConfig', 
-    'RecursiveDocumentLoader',
-    'ParserRegistry',
+    # Parsers
+    "BaseParser",
+    "DocxParser",
+    "MarkdownParser",
+    "PdfParser",
+    # Loader utilities
+    "detect_document_format",
+    "get_document_source",
+    "normalize_metadata",
+    "validate_document",
 ]

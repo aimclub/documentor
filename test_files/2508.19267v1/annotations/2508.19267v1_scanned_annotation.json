@@ -1,0 +1,1599 @@
+{
+  "document_id": "2508.19267v1_scanned",
+  "source_file": "E:\\easy\\documentor\\documentor_langchain\\experiments\\metrics\\test_files_for_metrics\\2508.19267v1_scanned.pdf",
+  "document_format": "pdf",
+  "annotation_version": "2.0",
+  "annotator": "qt_visual",
+  "annotation_date": "2026-02-25T07:08:57.593283",
+  "elements": [
+    {
+      "id": "elem_0000",
+      "type": "title",
+      "content": "The Aegis Protocol: A Foundational Security Framework for\nAutonomous AI Agents",
+      "parent_id": null,
+      "order": 0,
+      "page_number": 1,
+      "bbox": [
+        220.5,
+        295.7432432432432,
+        1069.0135135135135,
+        374.06756756756755
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0001",
+      "type": "text",
+      "content": "Sai Teja Reddy Adapala1 and Yashwanth Reddy Alugubelly2",
+      "parent_id": "elem_0000",
+      "order": 1,
+      "page_number": 1,
+      "bbox": [
+        350.5,
+        407.7432432432432,
+        938.0135135135135,
+        435.06756756756755
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0002",
+      "type": "text",
+      "content": "1Independent Researcher, Charlotte, North Carolina, USA\nAlumnus, University of North Carolina at Charlotte\n2Associate Professor, Sree Dattha Group of Institutions, Hyderabad, India\nEmails: sadapala@uncc.edu, yashwanth.alg@gmail.com",
+      "parent_id": "elem_0000",
+      "order": 2,
+      "page_number": 1,
+      "bbox": [
+        287.5,
+        459.7432432432432,
+        1000.0135135135135,
+        567.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0003",
+      "type": "header_1",
+      "content": "Abstract",
+      "parent_id": "elem_0000",
+      "order": 3,
+      "page_number": 1,
+      "bbox": [
+        605.5,
+        649.7432432432432,
+        683.0135135135135,
+        667.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0004",
+      "type": "text",
+      "content": "The proliferation of autonomous AI agents marks a paradigm shift toward complex, emergent\nmulti-agent systems. This transition introduces systemic security risks—including control-flow hi-\njacking and cascading failures—that traditional cybersecurity paradigms are ill-equipped to address.\nThis paper introduces the Aegis Protocol, a layered security framework designed to provide strong\nsecurity guarantees for these open agentic ecosystems. The protocol integrates three technological\npillars: 1) non-spoofable agent identity via W3C Decentralized Identifiers (DIDs); 2) communica-\ntion integrity via NIST-standardized Post-Quantum Cryptography (PQC); and 3) verifiable, privacy-\npreserving policy compliance using the Halo2 Zero-Knowledge Proof (ZKP) system. We formal-\nize an adversary model extending Dolev-Yao for agentic threats and validate the protocol against\nthe STRIDE framework. Our quantitative evaluation used a discrete-event simulation, calibrated\nagainst cryptographic benchmarks, to model 1,000 agents. The simulation demonstrated the proto-\ncol’s effectiveness, showing a 0% success rate across 20,000 attack trials. For policy verification,\nour analysis of the simulation logs reported a median proof-generation latency of 2.79 seconds, es-\ntablishing a performance baseline for this class of security. While our evaluation is simulation-based\nand early-stage, it offers a reproducible baseline for future empirical studies. This work’s novelty\nlies in its systematization and simulation-based validation, positioning Aegis as a foundation for\nsafe, scalable autonomous AI.",
+      "parent_id": "elem_0003",
+      "order": 4,
+      "page_number": 1,
+      "bbox": [
+        242.5,
+        686.7432432432432,
+        1045.0135135135135,
+        1088.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0005",
+      "type": "text",
+      "content": "arXiv:2508.19267v1  [cs.CR]  22 Aug 2025",
+      "parent_id": "elem_0003",
+      "order": 5,
+      "page_number": 1,
+      "bbox": [
+        79.5,
+        560.7432432432432,
+        125.01351351351352,
+        1264.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0006",
+      "type": "header_1",
+      "content": "1\nIntroduction",
+      "parent_id": "elem_0000",
+      "order": 6,
+      "page_number": 1,
+      "bbox": [
+        190.5,
+        1133.7432432432433,
+        394.01351351351354,
+        1158.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0007",
+      "type": "text",
+      "content": "The field of artificial intelligence is undergoing a fundamental architectural transformation from mono-\nlithic models to distributed ecosystems of autonomous AI agents [1]. These agents, powered by Large\nLanguage Models (LLMs), are designed to perceive, reason, plan, and execute complex tasks by in-\nteracting with external tools and each other [2]. This evolution is not merely an extension of existing\nnetworked systems; it creates a new discipline of “multi-agent security,” focused on securing networks\nof decentralized agents against emergent threats that arise from their interaction and autonomy [3]. With\na growing number of vulnerabilities reported in AI/ML platforms and Gartner predicting that over 40%\nof agentic AI projects will be canceled by 2027 due to operational challenges, securing this new attack\nsurface is a critical priority [4, 5].",
+      "parent_id": "elem_0006",
+      "order": 7,
+      "page_number": 1,
+      "bbox": [
+        189.5,
+        1187.7432432432433,
+        1100.0135135135135,
+        1425.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0008",
+      "type": "text",
+      "content": "Current agentic frameworks like CrewAI and AutoGen excel at orchestration but operate on an\nimplicit trust model, lacking native cryptographic identity or verifiable policy compliance [6]. This\nleaves them vulnerable to a range of attacks, from simple impersonation to sophisticated manipulation\nof an agent’s internal state or decision-making process. Recent research has begun to address this gap\nby proposing defenses against agent hijacking and outlining high-level security architectures. However,\na comprehensive, integrated framework that is both formally specified and empirically evaluated has\nremained an open challenge.",
+      "parent_id": "elem_0006",
+      "order": 8,
+      "page_number": 1,
+      "bbox": [
+        189.5,
+        1432.7432432432433,
+        1100.0135135135135,
+        1615.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0009",
+      "type": "text",
+      "content": "This paper introduces the Aegis Protocol as a step toward filling that gap, with a focus on formal\nintegration and simulation-based insights. Our primary contributions are:",
+      "parent_id": "elem_0006",
+      "order": 9,
+      "page_number": 2,
+      "bbox": [
+        186.5,
+        218.74324324324323,
+        1099.0135135135135,
+        268.06756756756755
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0010",
+      "type": "list_item",
+      "content": "",
+      "parent_id": "elem_0006",
+      "order": 10,
+      "page_number": 2,
+      "bbox": [
+        223.5,
+        296.7432432432432,
+        1099.0135135135135,
+        564.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0011",
+      "type": "text",
+      "content": "We emphasize that while our work provides a theoretical and simulated foundation, real-world im-\nplementations are needed to fully validate these mechanisms.",
+      "parent_id": "elem_0006",
+      "order": 11,
+      "page_number": 2,
+      "bbox": [
+        189.5,
+        592.7432432432432,
+        1099.0135135135135,
+        640.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0012",
+      "type": "header_1",
+      "content": "2\nThreat Model and Design Goals",
+      "parent_id": "elem_0000",
+      "order": 12,
+      "page_number": 2,
+      "bbox": [
+        190.5,
+        684.7432432432432,
+        628.0135135135135,
+        711.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0013",
+      "type": "text",
+      "content": "Aegis assumes a powerful adversary based on an extension of the Dolev-Yao model, which grants the\nattacker full control over the communication network [7]. Our model enhances this with capabilities\nspecific to LLM-based agents: agent compromise, prompt injection, memory poisoning, and tool manip-\nulation [8]. This extended model reflects the expanded attack surface where not just the communication\nchannel, but the agent’s internal state and logic, are adversarial targets.",
+      "parent_id": "elem_0012",
+      "order": 13,
+      "page_number": 2,
+      "bbox": [
+        189.5,
+        739.7432432432432,
+        1099.0135135135135,
+        869.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0014",
+      "type": "image",
+      "content": "",
+      "parent_id": "elem_0015",
+      "order": 14,
+      "page_number": 2,
+      "bbox": [
+        299.5,
+        986.7432432432432,
+        971.0135135135135,
+        1267.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0015",
+      "type": "caption",
+      "content": "Figure 1: Adversary Model Comparison. A diagram contrasting the classical Dolev–Yao network ad-\nversary with the extended Aegis adversary model.",
+      "parent_id": "elem_0012",
+      "order": 15,
+      "page_number": 2,
+      "bbox": [
+        189.5,
+        1392.7432432432433,
+        1099.0135135135135,
+        1443.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0016",
+      "type": "text",
+      "content": "To structure our analysis, we adapt the STRIDE threat model [9]. The table below details these\nthreats in an agentic context, the mitigation provided by Aegis, and the residual risks that remain.",
+      "parent_id": "elem_0012",
+      "order": 16,
+      "page_number": 2,
+      "bbox": [
+        189.5,
+        1471.7432432432433,
+        1099.0135135135135,
+        1520.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0017",
+      "type": "caption",
+      "content": "Table 1: Adapted STRIDE threats, mitigations in Aegis, and potential residual risks.",
+      "parent_id": "elem_0012",
+      "order": 17,
+      "page_number": 3,
+      "bbox": [
+        274.5,
+        530.7432432432432,
+        1010.0135135135135,
+        553.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0018",
+      "type": "table",
+      "content": "<table><thead><tr><th>STRIDE Category</th><th>Description in Agentic Context</th><th>Aegis Mitigation</th><th>Residual Risks</th></tr></thead><tbody><tr><td>Spoofing</td><td>Impersonating agents via fake identities</td><td>DIDs with ML-DSA signatures</td><td>Key compromise if agent is breached.</td></tr><tr><td>Tampering</td><td>Altering messages or agent states in transit</td><td>PQC integrity checks (ML-DSA)</td><td>Side-channel attacks on the cryptographic implementation.</td></tr><tr><td>Repudiation</td><td>Denying actions performed in multi-agent interactions</td><td>Non-repudiable ML-DSA signatures</td><td>None assumed, as signatures are cryptographically binding.</td></tr><tr><td>Information Disclosure</td><td>Leaking private data, prompts, or internal policies</td><td>ML-KEM encryption & ZKPs</td><td>Metadata analysis (proof linkage); potential for model extraction attacks if not properly configured.</td></tr><tr><td>Denial of Service</td><td>Overloading agents with invalid traffic or expensive ZKP requests</td><td>Cryptographic verification filters</td><td>Scalability challenges in high-volume swarms; resource exhaustion from valid but frequent proof requests.</td></tr><tr><td>Elevation of Privilege (Excessive Agency)</td><td>Unauthorized escalation of agent privileges or capabilities</td><td>ZKP-enforced policy compliance</td><td>Circuit design flaws: An error in the arithmetic circuit could create a loophole (e.g., an overflow that grants unintended permissions).</td></tr><tr><td>Emergent Threats</td><td>Swarm collusion; Byzantine faults; unexpected group behaviors</td><td>None (Protocol-level)</td><td>Requires dedicated governance layers; potential for future ZKP-based attestations of agent behavior.</td></tr></tbody></table>",
+      "parent_id": "elem_0017",
+      "order": 18,
+      "page_number": 3,
+      "bbox": [
+        197.5,
+        558.7432432432432,
+        1090.0135135135135,
+        1311.0675675675675
+      ],
+      "metadata": {
+        "table_structure": {
+          "html": "<table><thead><tr><th>STRIDE Category</th><th>Description in Agentic Context</th><th>Aegis Mitigation</th><th>Residual Risks</th></tr></thead><tbody><tr><td>Spoofing</td><td>Impersonating agents via fake identities</td><td>DIDs with ML-DSA signatures</td><td>Key compromise if agent is breached.</td></tr><tr><td>Tampering</td><td>Altering messages or agent states in transit</td><td>PQC integrity checks (ML-DSA)</td><td>Side-channel attacks on the cryptographic implementation.</td></tr><tr><td>Repudiation</td><td>Denying actions performed in multi-agent interactions</td><td>Non-repudiable ML-DSA signatures</td><td>None assumed, as signatures are cryptographically binding.</td></tr><tr><td>Information Disclosure</td><td>Leaking private data, prompts, or internal policies</td><td>ML-KEM encryption & ZKPs</td><td>Metadata analysis (proof linkage); potential for model extraction attacks if not properly configured.</td></tr><tr><td>Denial of Service</td><td>Overloading agents with invalid traffic or expensive ZKP requests</td><td>Cryptographic verification filters</td><td>Scalability challenges in high-volume swarms; resource exhaustion from valid but frequent proof requests.</td></tr><tr><td>Elevation of Privilege (Excessive Agency)</td><td>Unauthorized escalation of agent privileges or capabilities</td><td>ZKP-enforced policy compliance</td><td>Circuit design flaws: An error in the arithmetic circuit could create a loophole (e.g., an overflow that grants unintended permissions).</td></tr><tr><td>Emergent Threats</td><td>Swarm collusion; Byzantine faults; unexpected group behaviors</td><td>None (Protocol-level)</td><td>Requires dedicated governance layers; potential for future ZKP-based attestations of agent behavior.</td></tr></tbody></table>",
+          "cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "STRIDE Category",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": "Description in Agentic Context",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "content": "Aegis Mitigation",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 3,
+              "content": "Residual Risks",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "content": "Spoofing",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "content": "Impersonating agents via fake identities",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 2,
+              "content": "DIDs with ML-DSA signatures",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 3,
+              "content": "Key compromise if agent is breached.",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "content": "Tampering",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "content": "Altering messages or agent states in transit",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 2,
+              "content": "PQC integrity checks (ML-DSA)",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 3,
+              "content": "Side-channel attacks on the cryptographic implementation.",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "content": "Repudiation",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 1,
+              "content": "Denying actions performed in multi-agent interactions",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 2,
+              "content": "Non-repudiable ML-DSA signatures",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 3,
+              "content": "None assumed, as signatures are cryptographically binding.",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 0,
+              "content": "Information Disclosure",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 1,
+              "content": "Leaking private data, prompts, or internal policies",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 2,
+              "content": "ML-KEM encryption & ZKPs",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 3,
+              "content": "Metadata analysis (proof linkage); potential for model extraction attacks if not properly configured.",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 0,
+              "content": "Denial of Service",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 1,
+              "content": "Overloading agents with invalid traffic or expensive ZKP requests",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 2,
+              "content": "Cryptographic verification filters",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 3,
+              "content": "Scalability challenges in high-volume swarms; resource exhaustion from valid but frequent proof requests.",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 0,
+              "content": "Elevation of Privilege (Excessive Agency)",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 1,
+              "content": "Unauthorized escalation of agent privileges or capabilities",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 2,
+              "content": "ZKP-enforced policy compliance",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 3,
+              "content": "Circuit design flaws: An error in the arithmetic circuit could create a loophole (e.g., an overflow that grants unintended permissions).",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 0,
+              "content": "Emergent Threats",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 1,
+              "content": "Swarm collusion; Byzantine faults; unexpected group behaviors",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 2,
+              "content": "None (Protocol-level)",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 3,
+              "content": "Requires dedicated governance layers; potential for future ZKP-based attestations of agent behavior.",
+              "rowspan": 1,
+              "colspan": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "elem_0019",
+      "type": "header_1",
+      "content": "3\nThe Aegis Protocol: Architecture and Mechanisms",
+      "parent_id": "elem_0000",
+      "order": 19,
+      "page_number": 4,
+      "bbox": [
+        190.5,
+        214.74324324324323,
+        858.0135135135135,
+        243.06756756756755
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0020",
+      "type": "text",
+      "content": "The Aegis Protocol is a layered security architecture where each layer builds upon the guarantees of the\none below it, creating a unified trust fabric.",
+      "parent_id": "elem_0019",
+      "order": 20,
+      "page_number": 4,
+      "bbox": [
+        190.5,
+        271.7432432432432,
+        1097.0135135135135,
+        318.06756756756755
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0021",
+      "type": "image",
+      "content": "",
+      "parent_id": "elem_0022",
+      "order": 21,
+      "page_number": 4,
+      "bbox": [
+        406.5,
+        340.7432432432432,
+        879.0135135135135,
+        712.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0022",
+      "type": "caption",
+      "content": "Figure 2: Aegis Protocol 3-Layer Architecture.",
+      "parent_id": "elem_0019",
+      "order": 22,
+      "page_number": 4,
+      "bbox": [
+        436.5,
+        742.7432432432432,
+        850.0135135135135,
+        763.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0023",
+      "type": "header_2",
+      "content": "3.1\nFoundational Layer: Decentralized Identity",
+      "parent_id": "elem_0019",
+      "order": 23,
+      "page_number": 4,
+      "bbox": [
+        190.5,
+        823.7432432432432,
+        694.0135135135135,
+        845.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0024",
+      "type": "text",
+      "content": "The root of trust is a decentralized public key infrastructure (DPKI). Each agent’s identity is a W3C\nDecentralized Identifier (DID) [10]. Unlike traditional certificate authorities, DIDs are self-sovereign,\nmeaning an agent can generate and control its own identity without reliance on a central registrar. Aegis\nspecifies the use of the Identity Overlay Network (ION), a DID method implemented on top of the\nBitcoin blockchain, for scalable and permissionless DID management [11].",
+      "parent_id": "elem_0023",
+      "order": 24,
+      "page_number": 4,
+      "bbox": [
+        190.5,
+        866.7432432432432,
+        1097.0135135135135,
+        995.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0025",
+      "type": "text",
+      "content": "An agent resolves a DID to retrieve its associated DID Document, which contains its public keys\nand service endpoints. This process is essential for establishing secure communication channels.",
+      "parent_id": "elem_0023",
+      "order": 25,
+      "page_number": 4,
+      "bbox": [
+        190.5,
+        1003.7432432432432,
+        1097.0135135135135,
+        1050.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0026",
+      "type": "text",
+      "content": "Pseudocode for DID Resolution:",
+      "parent_id": "elem_0023",
+      "order": 26,
+      "page_number": 4,
+      "bbox": [
+        224.5,
+        1057.7432432432433,
+        514.0135135135135,
+        1075.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0027",
+      "type": "code_block",
+      "content": "function resolveDID(did_string):\n// 1. Parse the DID to identify the method (e.g., ’ion’)\nmethod, identifier = parse(did_string)\n// 2. Access the Decentralized Ledger (e.g., ION network)\nledger = getLedger(method)\n// 3. Retrieve the DID Document from the ledger\ndid_document = ledger.fetch(identifier)\n// 4. Return the document containing public keys and metadata\nreturn did_document",
+      "parent_id": "elem_0023",
+      "order": 27,
+      "page_number": 4,
+      "bbox": [
+        192.5,
+        1105.7432432432433,
+        1020.0135135135135,
+        1340.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0028",
+      "type": "header_2",
+      "content": "3.2\nCommunication Layer: Post-Quantum Secure Channels",
+      "parent_id": "elem_0019",
+      "order": 28,
+      "page_number": 4,
+      "bbox": [
+        190.5,
+        1378.7432432432433,
+        821.0135135135135,
+        1400.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0029",
+      "type": "text",
+      "content": "To secure communications against both classical and quantum adversaries, Aegis mandates the use of\nNIST-standardized Post-Quantum Cryptography (PQC). The protocol uses:",
+      "parent_id": "elem_0028",
+      "order": 29,
+      "page_number": 4,
+      "bbox": [
+        190.5,
+        1423.7432432432433,
+        1097.0135135135135,
+        1469.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0030",
+      "type": "list_item",
+      "content": "",
+      "parent_id": "elem_0028",
+      "order": 30,
+      "page_number": 4,
+      "bbox": [
+        226.5,
+        1497.7432432432433,
+        1097.0135135135135,
+        1614.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0031",
+      "type": "text",
+      "content": "These algorithms were chosen due to their strong security foundations in lattice-based cryptography\nand their status as official NIST standards, ensuring long-term viability. The process for establishing a\nsecure channel is as follows:",
+      "parent_id": "elem_0028",
+      "order": 31,
+      "page_number": 5,
+      "bbox": [
+        190.5,
+        220.74324324324323,
+        1099.0135135135135,
+        292.06756756756755
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0032",
+      "type": "list_item",
+      "content": "",
+      "parent_id": "elem_0028",
+      "order": 32,
+      "page_number": 5,
+      "bbox": [
+        225.5,
+        302.7432432432432,
+        1099.0135135135135,
+        737.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0033",
+      "type": "text",
+      "content": "This combination ensures that messages are both confidential and authenticated, providing a secure\nfoundation for the verification layer.",
+      "parent_id": "elem_0028",
+      "order": 33,
+      "page_number": 5,
+      "bbox": [
+        190.5,
+        767.7432432432432,
+        1099.0135135135135,
+        815.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0034",
+      "type": "header_2",
+      "content": "3.3\nVerification Layer: Privacy-Preserving Policy Enforcement",
+      "parent_id": "elem_0019",
+      "order": 34,
+      "page_number": 5,
+      "bbox": [
+        190.5,
+        850.7432432432432,
+        852.0135135135135,
+        874.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0035",
+      "type": "text",
+      "content": "Aegis’s most novel contribution is its ability to enforce operational policies using Zero-Knowledge\nProofs (ZKPs). This allows an agent to prove that an action it is about to take complies with a set\nof rules without revealing the private data or internal logic that led to that action. We selected the Halo2\nproof system for its performance and, critically, for its use of a transparent setup (a \"PlonKish\" arith-\nmetization with a polynomial commitment scheme) that does not require a trusted setup ceremony, a\nsignificant advantage in decentralized environments [14].",
+      "parent_id": "elem_0034",
+      "order": 35,
+      "page_number": 5,
+      "bbox": [
+        190.5,
+        895.7432432432432,
+        1099.0135135135135,
+        1051.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0036",
+      "type": "text",
+      "content": "The process follows a clear pipeline: Policy →Arithmetic Circuit →Halo2 Proof Generation →\nVerification.",
+      "parent_id": "elem_0034",
+      "order": 36,
+      "page_number": 5,
+      "bbox": [
+        190.5,
+        1059.7432432432433,
+        1099.0135135135135,
+        1103.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0037",
+      "type": "text",
+      "content": "Verification.\nFor example, a policy stating an analyst agent can only log data classified as ‘unclassified’ or ’in-\nternal’ would be compiled into an arithmetic circuit. The agent would then generate a proof that its\nintended logging action satisfies this circuit.",
+      "parent_id": "elem_0034",
+      "order": 37,
+      "page_number": 5,
+      "bbox": [
+        190.5,
+        1111.7432432432433,
+        1099.0135135135135,
+        1186.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0038",
+      "type": "text",
+      "content": "Conceptual Circuit Example for a Data Access Policy (with public inputs:\nagent_clearance,\ndata_classification; private inputs (witness): agent_private_state):",
+      "parent_id": "elem_0034",
+      "order": 38,
+      "page_number": 5,
+      "bbox": [
+        190.5,
+        1194.7432432432433,
+        1099.0135135135135,
+        1241.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0039",
+      "type": "text",
+      "content": "The circuit enforces the following constraints:",
+      "parent_id": "elem_0034",
+      "order": 39,
+      "page_number": 5,
+      "bbox": [
+        225.5,
+        1249.7432432432433,
+        630.0135135135135,
+        1269.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0040",
+      "type": "list_item",
+      "content": "",
+      "parent_id": "elem_0034",
+      "order": 40,
+      "page_number": 5,
+      "bbox": [
+        225.5,
+        1298.7432432432433,
+        740.0135135135135,
+        1410.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0041",
+      "type": "text",
+      "content": "Recent Halo2 developments include enhanced security proofs, third-party audits [15], and\nblockchain integrations (e.g., Cardano, 2024), underscoring its maturity. While we focus on Halo2,\nother proof systems like zk-STARKs or Bulletproofs could be substituted, offering different trade-offs\nin proof size, verifier time, and post-quantum security. While Halo2 provides soundness and zero-\nknowledge properties under standard assumptions, formal circuit-specific proofs are beyond this work’s\nscope.",
+      "parent_id": "elem_0034",
+      "order": 41,
+      "page_number": 5,
+      "bbox": [
+        190.5,
+        1441.7432432432433,
+        1099.0135135135135,
+        1596.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0042",
+      "type": "header_1",
+      "content": "4\nSecurity Analysis",
+      "parent_id": "elem_0000",
+      "order": 42,
+      "page_number": 6,
+      "bbox": [
+        190.5,
+        213.74324324324323,
+        452.01351351351354,
+        242.06756756756755
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0043",
+      "type": "text",
+      "content": "The protocol’s layered design provides a robust defense-in-depth against STRIDE threats. For example,\na spoofing attack is defeated at Layer 1 by the cryptographic identity provided by DIDs and at Layer 2\nby ML-DSA signatures. An Elevation of Privilege (Excessive Agency) attack is addressed at Layer 3\nthrough ZKP-enforced policy compliance.",
+      "parent_id": "elem_0042",
+      "order": 43,
+      "page_number": 6,
+      "bbox": [
+        190.5,
+        271.7432432432432,
+        1098.0135135135135,
+        371.06756756756755
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0044",
+      "type": "text",
+      "content": "The security of this enforcement relies on the computational soundness of the Halo2 proof system.\nThis property ensures that it is computationally infeasible for a malicious agent (adversary) to generate a\nvalid-looking proof for a false statement (i.e., a policy-violating action). The soundness of Halo2 reduces\nto the hardness of well-established cryptographic assumptions, such as the discrete logarithm problem.\nTherefore, an adversary capable of forging a proof could be used to break the underlying cryptography,\nwhich is considered intractable. A more formal game-based definition and reduction sketch is provided\nin Appendix A.",
+      "parent_id": "elem_0042",
+      "order": 44,
+      "page_number": 6,
+      "bbox": [
+        190.5,
+        378.7432432432432,
+        1098.0135135135135,
+        562.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0045",
+      "type": "header_1",
+      "content": "5\nEvaluation",
+      "parent_id": "elem_0000",
+      "order": 45,
+      "page_number": 6,
+      "bbox": [
+        190.5,
+        605.7432432432432,
+        371.01351351351354,
+        630.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0046",
+      "type": "text",
+      "content": "We evaluated the protocol’s feasibility and performance using a discrete-event simulation. We initially\ntried integrating cryptographic libraries like liboqs directly but ran into build instability, which moti-\nvated our benchmark-based simulation approach. We modeled a decentralized cybersecurity threat anal-\nysis scenario with up to 1,000 agents, as implemented in simulate_network_aegis_v2.py. The code is\navailable at https://github.com/imsaitejareddy/aegis-prompt-simulation [16]\nfor reproducibility. This approach allows for scalable analysis but may not capture all real-world vari-\nances, such as hardware-specific timings or network dynamics.",
+      "parent_id": "elem_0045",
+      "order": 46,
+      "page_number": 6,
+      "bbox": [
+        190.5,
+        661.7432432432432,
+        1098.0135135135135,
+        842.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0047",
+      "type": "text",
+      "content": "Our performance analysis quantified the computational costs of Aegis. The costs were simulated\nusing a log-normal distribution (ln(X) ∼N(µ, σ2)) with parameters µ = 1.025 and σ = 0.145, cali-\nbrated to achieve a median of approximately 2.79 seconds against published benchmarks. We observed\na median proof generation time of 2.79 seconds (stddev: 0.41s) from our logs (detailed_results.csv),\nwhich establishes a critical performance baseline.",
+      "parent_id": "elem_0045",
+      "order": 47,
+      "page_number": 6,
+      "bbox": [
+        190.5,
+        850.7432432432432,
+        1098.0135135135135,
+        980.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0048",
+      "type": "text",
+      "content": "To test the stability of our findings, we perturbed the latency parameters. The results remained\nconsistent, with the median proof time staying within the 2.7s-2.9s range across variations of ±20% in\nthe calibrated latency distributions.",
+      "parent_id": "elem_0045",
+      "order": 48,
+      "page_number": 6,
+      "bbox": [
+        190.5,
+        988.7432432432432,
+        1098.0135135135135,
+        1060.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0049",
+      "type": "caption",
+      "content": "Table 2: Perturbed Simulation Results",
+      "parent_id": "elem_0045",
+      "order": 49,
+      "page_number": 6,
+      "bbox": [
+        475.5,
+        1103.7432432432433,
+        811.0135135135135,
+        1121.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0050",
+      "type": "table",
+      "content": "<table><thead><tr><td>Latency Perturbation</td><td>Median Proof Time (s)</td><td>Attack Success Rate</td></tr></thead><tbody><tr><td>-20%</td><td>2.71</td><td>0%</td></tr><tr><td>Baseline</td><td>2.79</td><td>0%</td></tr><tr><td>+20%</td><td>2.88</td><td>0%</td></tr></tbody></table>",
+      "parent_id": "elem_0049",
+      "order": 50,
+      "page_number": 6,
+      "bbox": [
+        325.5,
+        1125.7432432432433,
+        964.0135135135135,
+        1253.0675675675675
+      ],
+      "metadata": {
+        "table_structure": {
+          "html": "<table><thead><tr><td>Latency Perturbation</td><td>Median Proof Time (s)</td><td>Attack Success Rate</td></tr></thead><tbody><tr><td>-20%</td><td>2.71</td><td>0%</td></tr><tr><td>Baseline</td><td>2.79</td><td>0%</td></tr><tr><td>+20%</td><td>2.88</td><td>0%</td></tr></tbody></table>",
+          "cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "Latency Perturbation",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": "Median Proof Time (s)",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "content": "Attack Success Rate",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "content": "-20%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "content": "2.71",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 2,
+              "content": "0%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "content": "Baseline",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "content": "2.79",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 2,
+              "content": "0%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "content": "+20%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 1,
+              "content": "2.88",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 2,
+              "content": "0%",
+              "rowspan": 1,
+              "colspan": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "elem_0051",
+      "type": "text",
+      "content": "In our security effectiveness tests over 20,000 interactions (10,000 for each attack type), the Aegis\nProtocol demonstrated a 0% success rate for both Agent Spoofing and Policy Violation attacks. This\nresult was achieved under our simulation’s assumptions, which include non-adaptive adversaries that do\nnot alter their strategy based on protocol responses.",
+      "parent_id": "elem_0045",
+      "order": 51,
+      "page_number": 6,
+      "bbox": [
+        190.5,
+        1285.7432432432433,
+        1098.0135135135135,
+        1388.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0052",
+      "type": "header_1",
+      "content": "6\nRelated Work",
+      "parent_id": "elem_0000",
+      "order": 52,
+      "page_number": 6,
+      "bbox": [
+        190.5,
+        1431.7432432432433,
+        409.01351351351354,
+        1456.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0053",
+      "type": "text",
+      "content": "To contextualize Aegis, we compare it against representative works. While frameworks like AutoGen\nprovide excellent orchestration capabilities, they lack the foundational security primitives Aegis spec-\nifies. Google’s Secure AI Framework offers a conceptual overview but does not provide a concrete,\nverifiable protocol. Recent advancements, such as Google’s A2A protocol for agent interoperability\n(2025) [17], further highlight the need for foundational security layers like the one we propose.",
+      "parent_id": "elem_0052",
+      "order": 53,
+      "page_number": 6,
+      "bbox": [
+        190.5,
+        1485.7432432432433,
+        1098.0135135135135,
+        1615.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0054",
+      "type": "image",
+      "content": "",
+      "parent_id": "elem_0055",
+      "order": 54,
+      "page_number": 7,
+      "bbox": [
+        271.5,
+        320.7432432432432,
+        1012.0135135135135,
+        786.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0055",
+      "type": "caption",
+      "content": "Figure 3: ZKP Proof Generation Latency. This histogram, generated from our detailed_results.csv log,\nshows the distribution of simulated ZKP proof generation times, with a strong concentration around the\nmedian.",
+      "parent_id": "elem_0052",
+      "order": 55,
+      "page_number": 7,
+      "bbox": [
+        189.5,
+        822.7432432432432,
+        1098.0135135135135,
+        895.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0056",
+      "type": "caption",
+      "content": "Table 3: Comparison of Aegis with related agent security frameworks.",
+      "parent_id": "elem_0052",
+      "order": 56,
+      "page_number": 7,
+      "bbox": [
+        334.5,
+        1133.7432432432433,
+        953.0135135135135,
+        1154.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0057",
+      "type": "table",
+      "content": "<table><thead><tr><th>Framework</th><th>Identity Mechanism</th><th>Crypto Primitives</th><th>Verification Method</th><th>Evaluation Type</th></tr></thead><tbody><tr><td>Aegis (This Work)<br>Google's Secure AI Framework (2023, with 2024 updates) [18] [19]<br>AutoGen [6]</td><td>W3C DIDs (ION)<br>High-level PKI</td><td>ML-KEM/ML-DSA (PQC)<br>Not specified</td><td>Halo2 ZKPs<br>Audit-based</td><td>Simulation-based<br>Conceptual</td></tr><tr><td>Brundage et al. [3]</td><td>Implicit Trust<br>Verifiable Claims</td><td>None<br>Varied level)</td><td>None<br>Mechanisms overview</td><td>Orchestration-only<br>Survey-based</td></tr></tbody></table>",
+      "parent_id": "elem_0056",
+      "order": 57,
+      "page_number": 7,
+      "bbox": [
+        191.5,
+        1160.7432432432433,
+        1110.0135135135135,
+        1505.0675675675675
+      ],
+      "metadata": {
+        "table_structure": {
+          "html": "<table><thead><tr><th>Framework</th><th>Identity Mechanism</th><th>Crypto Primitives</th><th>Verification Method</th><th>Evaluation Type</th></tr></thead><tbody><tr><td>Aegis (This Work)<br>Google's Secure AI Framework (2023, with 2024 updates) [18] [19]<br>AutoGen [6]</td><td>W3C DIDs (ION)<br>High-level PKI</td><td>ML-KEM/ML-DSA (PQC)<br>Not specified</td><td>Halo2 ZKPs<br>Audit-based</td><td>Simulation-based<br>Conceptual</td></tr><tr><td>Brundage et al. [3]</td><td>Implicit Trust<br>Verifiable Claims</td><td>None<br>Varied level)</td><td>None<br>Mechanisms overview</td><td>Orchestration-only<br>Survey-based</td></tr></tbody></table>",
+          "cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "Framework",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": "Identity Mechanism",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "content": "Crypto Primitives",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 3,
+              "content": "Verification Method",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 4,
+              "content": "Evaluation Type",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "content": "Aegis (This Work)Google's Secure AI Framework (2023, with 2024 updates) [18] [19]AutoGen [6]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "content": "W3C DIDs (ION)High-level PKI",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 2,
+              "content": "ML-KEM/ML-DSA (PQC)Not specified",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 3,
+              "content": "Halo2 ZKPsAudit-based",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 4,
+              "content": "Simulation-basedConceptual",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "content": "Brundage et al. [3]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "content": "Implicit TrustVerifiable Claims",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 2,
+              "content": "NoneVaried level)",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 3,
+              "content": "NoneMechanisms overview",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 4,
+              "content": "Orchestration-onlySurvey-based",
+              "rowspan": 1,
+              "colspan": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "elem_0058",
+      "type": "header_1",
+      "content": "7\nDiscussion and Future Work",
+      "parent_id": "elem_0000",
+      "order": 58,
+      "page_number": 8,
+      "bbox": [
+        189.5,
+        214.74324324324323,
+        588.0135135135135,
+        241.06756756756755
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0059",
+      "type": "text",
+      "content": "This work establishes the feasibility and robustness of the Aegis Protocol in a simulated environment.\nThe primary performance bottleneck is ZKP generation. For scalability, while our simulation han-\ndles 1,000 agents, real-world ecosystems may require optimizations like proof batching or aggregation,\nwhich recent ZKP literature suggests could reduce amortized verification costs by over 50%. This would\nbe a crucial next step for practical deployment.",
+      "parent_id": "elem_0058",
+      "order": 59,
+      "page_number": 8,
+      "bbox": [
+        189.5,
+        268.7432432432432,
+        1098.0135135135135,
+        397.06756756756755
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0060",
+      "type": "text",
+      "content": "Ethically, while Aegis enhances security, dual-use risks exist. For example, ZKPs could enable\ncovert non-compliance if circuits are malformed, echoing concerns in the OWASP Top 10 for LLMs [4]\nlike LLM06: Sensitive Information Disclosure. We advocate for open auditing and formal verification\nof policy circuits to mitigate this, referencing frameworks for verifiable claims [3].",
+      "parent_id": "elem_0058",
+      "order": 60,
+      "page_number": 8,
+      "bbox": [
+        189.5,
+        405.7432432432432,
+        1098.0135135135135,
+        507.06756756756755
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0061",
+      "type": "text",
+      "content": "Our evaluation was a simulation. This trade-off allowed us to explore system-level behavior at scale\nwhile deferring low-level packet dynamics to future testbed studies. Future work will integrate real\nliboqs and Halo2 libraries to perform micro-benchmarks, scale the simulation to tens of thousands of\nagents, and explore formal security proofs for the protocol as a whole. Crucially, future simulations will\nmodel adaptive adversaries that adjust their attack vectors based on prior interaction outcomes, testing\nthe protocol’s resilience more dynamically and realistically.",
+      "parent_id": "elem_0058",
+      "order": 61,
+      "page_number": 8,
+      "bbox": [
+        189.5,
+        514.7432432432432,
+        1098.0135135135135,
+        669.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0062",
+      "type": "header_1",
+      "content": "8\nConclusion",
+      "parent_id": "elem_0000",
+      "order": 62,
+      "page_number": 8,
+      "bbox": [
+        189.5,
+        713.7432432432432,
+        374.01351351351354,
+        738.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0063",
+      "type": "text",
+      "content": "The shift towards autonomous, multi-agent AI systems necessitates a corresponding shift in security\nparadigms. This paper introduced the Aegis Protocol, a layered security framework that provides a\nformal, cryptographically-enforced foundation for trust. By integrating decentralized identity, post-\nquantum cryptography, and zero-knowledge proofs, Aegis offers a robust defense against a wide range\nof agentic threats. Our analysis and simulation results demonstrate that the protocol is both effective\nin mitigating critical threats and feasible to implement. As agentic AI continues to scale, we believe\nfoundational frameworks like Aegis will be essential for building a future where these powerful systems\ncan be deployed safely and at scale.",
+      "parent_id": "elem_0062",
+      "order": 63,
+      "page_number": 8,
+      "bbox": [
+        189.5,
+        768.7432432432432,
+        1098.0135135135135,
+        981.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0064",
+      "type": "header_1",
+      "content": "References",
+      "parent_id": "elem_0000",
+      "order": 64,
+      "page_number": 8,
+      "bbox": [
+        189.5,
+        1024.7432432432433,
+        327.01351351351354,
+        1048.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0065",
+      "type": "text",
+      "content": "[1] Z. Xi et al.\nThe rise and potential of large language model based agents:\nA survey.\narXiv:2309.07864, 2023.\n[2] S. Yao et al. React: Synergizing reasoning and acting in language models. arXiv:2210.03629,\n2022.\n[3] M. Brundage et al. Toward trustworthy ai development: Mechanisms for supporting verifiable\nclaims. arXiv:2004.07213, 2020.\n[4] OWASP. Owasp top 10 for large language model applications, 2023. updated 2024.\n[5] Gartner. Gartner predicts over 40% of agentic ai projects will be canceled by 2027, 2025. Specific\nURL for this prediction may vary; access via Gartner’s research portal.\n[6] L. Wang et al. A survey on large language model based autonomous agents. arXiv:2308.11432,\n2023.\n[7] D. Dolev and A. Yao. On the security of public key protocols. IEEE Transactions on Information\nTheory, 29(2):198–208, 1983.\n[8] K. Greshake et al. Not what you’ve signed up for: Compromising real-world llm-integrated appli-\ncations with indirect prompt injection. arXiv:2302.12173, 2023.",
+      "parent_id": "elem_0064",
+      "order": 65,
+      "page_number": 8,
+      "bbox": [
+        199.5,
+        1076.7432432432433,
+        1098.0135135135135,
+        1605.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0066",
+      "type": "text",
+      "content": "[9] A. Shostack. Threat Modeling: Designing for Security. Wiley, 2014.\n[10] W3C. Decentralized identifiers (dids) v1.0. Technical report, World Wide Web Consortium, 2022.\n[11] Microsoft. Ion: A public, permissionless, decentralized identifier network, 2020.\n[12] NIST. Fips 203: Module-lattice-based key-encapsulation mechanism standard. Technical report,\nNational Institute of Standards and Technology, 2024.\n[13] NIST. Fips 204: Module-lattice-based digital signature standard. Technical report, National Insti-\ntute of Standards and Technology, 2024.\n[14] S. Bowe, J. Grigg, and D. Hopwood. The Halo2 Book. Zcash Foundation, 2020.\n[15] Kudelski Security. On the security of halo2 proof system, 2024.\n[16] Sai Teja Reddy. Aegis prompt-based simulation. GitHub repository, 2025.\n[17] Google. Agent-to-agent (a2a) protocol announcement. Industry coverage, April 2025. Announced\nduring Google Cloud Next ’25; interoperable protocol for multi-agent systems; replace with pri-\nmary URL when available.\n[18] Google. Google’s secure ai framework (saif), 2023. Introduced June 2023; resource hub and\noverview.\n[19] Google. Saif risk assessment: A new tool to help secure ai systems across industry, October 2024.\nAnnounces SAIF.Google with interactive risk assessment tool.",
+      "parent_id": "elem_0064",
+      "order": 66,
+      "page_number": 9,
+      "bbox": [
+        186.5,
+        217.74324324324323,
+        1101.0135135135135,
+        815.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0067",
+      "type": "header_1",
+      "content": "A\nSecurity Game for Policy Compliance",
+      "parent_id": "elem_0000",
+      "order": 67,
+      "page_number": 9,
+      "bbox": [
+        190.5,
+        856.74,
+        705.01,
+        885.07
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0068",
+      "type": "text",
+      "content": "This appendix provides a more formal definition for the security guarantee against “Excessive Agency,”\nframed as a standard cryptographic game.",
+      "parent_id": "elem_0067",
+      "order": 68,
+      "page_number": 9,
+      "bbox": [
+        190.5,
+        912.7432432432432,
+        1099.0135135135135,
+        959.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0069",
+      "type": "text",
+      "content": "Security Game: Unforgeability of Policy Compliance\n\nThe game is played between a Challenger and a probabilistic polynomial-time (PPT) Adversary, A.",
+      "parent_id": "elem_0067",
+      "order": 69,
+      "page_number": 9,
+      "bbox": [
+        226.5,
+        967.7432432432432,
+        1099.0135135135135,
+        1013.0675675675676
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0070",
+      "type": "list_item",
+      "content": "",
+      "parent_id": "elem_0067",
+      "order": 70,
+      "page_number": 9,
+      "bbox": [
+        190.5,
+        1021.7432432432432,
+        1099.0135135135135,
+        1230.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0071",
+      "type": "text",
+      "content": "The Adversary A wins the game if both of the following conditions hold:",
+      "parent_id": "elem_0067",
+      "order": 71,
+      "page_number": 9,
+      "bbox": [
+        226.5,
+        1238.7432432432433,
+        867.0135135135135,
+        1257.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0072",
+      "type": "list_item",
+      "content": "",
+      "parent_id": "elem_0067",
+      "order": 72,
+      "page_number": 9,
+      "bbox": [
+        226.5,
+        1276.7432432432433,
+        923.0135135135135,
+        1337.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0073",
+      "type": "text",
+      "content": "The protocol is considered secure against excessive agency if the probability of any PPT adversary\nwinning this game is negligible in the security parameter λ:",
+      "parent_id": "elem_0067",
+      "order": 73,
+      "page_number": 9,
+      "bbox": [
+        190.5,
+        1357.7432432432433,
+        1099.0135135135135,
+        1405.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0074",
+      "type": "formula",
+      "content": "",
+      "parent_id": "elem_0067",
+      "order": 74,
+      "page_number": 9,
+      "bbox": [
+        542.5,
+        1422.7432432432433,
+        744.0135135135135,
+        1443.0675675675675
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0075",
+      "type": "text",
+      "content": "Reduction Sketch: The security of this game relies on the computational soundness property of the\nunderlying ZKP system. For Halo2, this property is based on the hardness of problems like the discrete\nlogarithm in the context of its polynomial commitment. A successful forgery by A would imply an\nability to break this underlying hard problem. Specifically, one could construct a reduction algorithm\nthat uses A as a subroutine to solve, for example, the discrete logarithm problem. Since no efficient\nalgorithm for this problem is known, we conclude that no such efficient adversary A can exist.",
+      "parent_id": "elem_0067",
+      "order": 75,
+      "page_number": 9,
+      "bbox": [
+        190.5,
+        1458.7432432432433,
+        1099.0135135135135,
+        1615.0675675675675
+      ],
+      "metadata": {}
+    }
+  ],
+  "statistics": {
+    "total_elements": 76,
+    "total_pages": 9,
+    "elements_by_type": {
+      "title": 1,
+      "text": 41,
+      "header_1": 11,
+      "list_item": 6,
+      "image": 3,
+      "caption": 6,
+      "table": 3,
+      "header_2": 3,
+      "code_block": 1,
+      "formula": 1
+    },
+    "table_count": 3,
+    "image_count": 3
+  }
+}

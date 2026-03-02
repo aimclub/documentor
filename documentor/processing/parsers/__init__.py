@@ -1,24 +1,11 @@
-"""Document parser system without LangChain dependencies."""
-
-from .txt_parser import TxtParser
-from .image_parser import ImageParser
-from .pdf_parser import PdfParser
-from .registry import ParserRegistry
-
-# Word parsers - optional imports
-try:
-    from .docx_parser import DocxParser
-    DOCX_AVAILABLE = True
-except ImportError:
-    DOCX_AVAILABLE = False
+from .base import BaseParser
+from .docx.docx_parser import DocxParser
+from .md.md_parser import MarkdownParser
+from .pdf.pdf_parser import PdfParser
 
 __all__ = [
-    "TxtParser",
-    "ImageParser", 
+    "BaseParser",
+    "DocxParser",
+    "MarkdownParser",
     "PdfParser",
-    "ParserRegistry",
 ]
-
-# Add Word parsers to exports if available
-if DOCX_AVAILABLE:
-    __all__.append("DocxParser")

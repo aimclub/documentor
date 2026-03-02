@@ -1,56 +1,102 @@
-[project]
-name = "documentor"
-version = "0.1.0"
-description = "Library for parsing and semantic data recovery from documents of various formats"
-authors = [{ name = "angrymuskrat", email = "mlhakov2011@gmail.com" }]
-readme = "README.md"
-license = { text = "BSD-3-Clause" }
-requires-python = ">=3.10"
-
-# Зависимости: заменяем ^ на PEP 440-диапазоны; убираем backport-пакеты для 3.10+
-dependencies = [
-    "pandas>=2.0.3,<3.0.0",
-    "openpyxl>=3.0.10,<4.0.0",
-    "scikit-learn>=1.3.2,<2.0.0",
-    "numpy>=1.25.2,<2.0.0",
-    "plotly>=5.17.0,<6.0.0",
-    "natasha>=1.6.0,<2.0.0",
-    "wikipedia2vec>=2.0.0,<3.0.0",
-    "nltk>=3.8.1,<4.0.0",
-    "torch>=2.4.0,<3.0.0",
-    "torchvision>=0.19.0,<0.20.0",
-    "matplotlib>=3.9.1,<4.0.0",
-    # OCR dependencies
-    "openai>=1.0.0,<2.0.0",
-    "pillow>=10.0.0,<11.0.0",
-    "pypdf2>=3.0.0,<4.0.0",
-    "langchain-core>=0.1.0,<1.0.0",
-    "overrides>=7.0.0,<8.0.0",
-    "pdf2image>=1.17.0,<2.0.0",
-    # Word document processing
-    "python-docx>=1.1.0,<2.0.0",
-    "docx2txt>=0.8,<1.0.0",
-    "textract (>=1.6.5,<2.0.0)",
-]
-
-[project.optional-dependencies]
-jupyter = [
-    "jupytext>=1.16.1,<2.0.0",
-    "jupyter>=1.0.0,<2.0.0",
-]
-
-[tool.poetry]
-requires-poetry = ">=2.0"
-
-[tool.poetry.group.dev.dependencies]
-jupytext = "^1.16.1"
-jupyter = "^1.0.0"
-pytest = "^8.0.1"
-sphinx-rtd-theme = "^2.0.0"
-sphinx = ">=5,<8"
-sphinx-markdown-builder = "^0.6.7"
-
 [build-system]
-requires = ["poetry-core>=2.0"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.poetry]
+name = "documentor"
+version = "0.1.0"
+description = "Структурирование документов для RAG с поддержкой LangChain"
+readme = "README.md"
+authors = ["angrymuskrat <mlhakov2011@gmail.com>"]
+license = "BSD-3-Clause"
+keywords = ["document", "parsing", "rag", "langchain", "nlp"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Text Processing :: Markup",
+]
+packages = [{include = "documentor"}]
+include = ["documentor/config/*.yaml"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+# LangChain for Document support
+langchain-core = ">=0.3.0"
+# YAML for configuration
+pyyaml = ">=6.0"
+# DOCX processing
+python-docx = ">=1.1.0"
+# PDF processing
+PyMuPDF = ">=1.23.0"
+# Image processing
+Pillow = ">=10.0.0"
+# Data processing
+pandas = ">=2.0.0"
+# Progress bars
+tqdm = ">=4.66.0"
+# HTTP requests
+requests = ">=2.31.0"
+# HTML parsing (for table parsing from OCR)
+beautifulsoup4 = ">=4.12.0"
+# OpenAI API (for Dots.OCR integration)
+openai = ">=1.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.0.0"
+pytest-cov = ">=4.1.0"
+
+[tool.poetry.urls]
+Homepage = "https://github.com/yourusername/documentor"
+Documentation = "https://github.com/yourusername/documentor#readme"
+Repository = "https://github.com/yourusername/documentor"
+Issues = "https://github.com/yourusername/documentor/issues"
+
+[tool.black]
+line-length = 100
+target-version = ['py310', 'py311', 'py312']
+include = '\.pyi?$'
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--cov=documentor",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+]

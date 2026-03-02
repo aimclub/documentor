@@ -1,0 +1,2793 @@
+{
+  "document_id": "2412.19495v2",
+  "source_file": "E:\\easy\\documentor\\documentor_langchain\\experiments\\metrics\\test_files_for_metrics\\2412.19495v2.docx",
+  "document_format": "docx",
+  "annotation_version": "2.0",
+  "annotator": "qt_visual",
+  "annotation_date": "2026-02-25T03:49:25.254879",
+  "elements": [
+    {
+      "id": "elem_0000",
+      "type": "title",
+      "content": "Disparate Model Performance and Stability in Machine Learning Clinical \nSupport for Diabetes and Heart Diseases",
+      "parent_id": null,
+      "order": 0,
+      "page_number": 1,
+      "bbox": [
+        139,
+        126,
+        1099,
+        199
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0001",
+      "type": "text",
+      "content": "Ioannis Bilionis, MSc1,2, Ricardo C. Berrios1, Luis Fernandez-Luque, PhD1,\n\nCarlos Castillo, PhD2,3\n\n1Adhera Health, Santa Cruz, USA; 2Universitat Pompeu Fabra, Barcelona, Spain; \n3ICREA, Catalonia, Spain",
+      "parent_id": "elem_0000",
+      "order": 1,
+      "page_number": 1,
+      "bbox": [
+        147,
+        223,
+        1074,
+        371
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0002",
+      "type": "header_1",
+      "content": "Abstract",
+      "parent_id": "elem_0000",
+      "order": 2,
+      "page_number": 1,
+      "bbox": [
+        139,
+        396,
+        222,
+        423
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0003",
+      "type": "text",
+      "content": "Machine Learning (ML) algorithms are vital for supporting clinical decision-making in biomedical informatics. \nHowever, their predictive performance can vary across demographic groups, often due to the underrepresentation \nof historically marginalized populations in training datasets. The investigation reveals widespread sex- and age-\nrelated inequities in chronic disease datasets and their derived ML models. Thus, a novel analytical framework is \nintroduced, combining systematic arbitrariness with traditional metrics like accuracy and data complexity. The \nanalysis of data from over 25,000 individuals with chronic diseases revealed mild sex-related disparities, favoring \npredictive accuracy for males, and significant age-related differences, with better accuracy for younger patients. \nNotably, older patients showed inconsistent predictive accuracy across seven datasets, linked to higher data \ncomplexity and lower model performance. This highlights that representativeness in training data alone does not \nguarantee equitable outcomes, and model arbitrariness must be addressed before deploying models in clinical \nsettings.",
+      "parent_id": "elem_0002",
+      "order": 3,
+      "page_number": 1,
+      "bbox": [
+        138,
+        447,
+        1082,
+        714
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0004",
+      "type": "header_1",
+      "content": "Introduction",
+      "parent_id": "elem_0000",
+      "order": 4,
+      "page_number": 1,
+      "bbox": [
+        139,
+        733,
+        259,
+        759
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0005",
+      "type": "text",
+      "content": "In the realm of biomedicine, Artificial Intelligence (AI) methodologies, particularly Machine Learning (ML) models, \nare used as clinical support tools to systematically discern patterns and interdependencies among factors and \noutcomes within large datasets. ML has the potential to enhance healthcare provision by complementing, rather \nthan supplanting, clinical judgment. It has demonstrated efficacy in the detection of skin cancer and diabetic \nretinopathy, among many other medical conditions [1, 2]. A paramount objective when deploying ML models is the \nassurance of health equity [3, 4]; thus, researchers and practitioners typically aim at attaining uniform model efficacy \nacross diverse patient demographics [5]. The academic literature recommends an array of analytical tools for \ndetecting biases, e.g., determining statistical dependencies between model outcomes, model errors, and specific \nsubgroups [6], particularly those experiencing both historical and ongoing discrimination. Disparities detected in \nmodel performance are frequently attributed to deficiencies within the training datasets, typically lack of sufficient \nsamples from those groups [7].",
+      "parent_id": "elem_0004",
+      "order": 5,
+      "page_number": 1,
+      "bbox": [
+        138,
+        783,
+        1082,
+        1061
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0006",
+      "type": "text",
+      "content": "Algorithmic fairness, as a research field, studies how and to which extent algorithmic decision support systems can \nbe free from discriminatory biases [8, 9]. Discrimination, in this context, means systematic disadvantages affecting \nsocially salient groups [10]. These disadvantages arise from a complex combination of design choices made at \ndifferent points in the construction of an ML processing pipeline. Discriminatory biases have been documented in \nbasically all applications of ML and AI [11], including recruitment [12], machine translation [13] and face recognition \n[14], just to name a few.",
+      "parent_id": "elem_0004",
+      "order": 6,
+      "page_number": 1,
+      "bbox": [
+        138,
+        1070,
+        1082,
+        1223
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0007",
+      "type": "text",
+      "content": "In healthcare applications, prior research has identified algorithmic bias as a factor contributing to health disparities, \nhighlighting the need for including Social Determinants of Health (SDoH) in ML to achieve health equity [15, 16]. For \ninstance, in computer vision applications for medical imaging, biased data has been found to be a source of disparities \nin algorithmic outcomes [17, 18]. Differences in mortality prediction and X-ray diagnosis have been identified across \nracial/ethnic groups [19, 20], including discrepancies in burn identification and diabetic retinopathy identification in \ndark-skinned versus lighter-skinned patients [21, 22], and in an opioid misuse classifier, with more errors (false \nnegatives) for dark-skinned patients [23]. In other cases, ML algorithms have predicted similar risk scores in both",
+      "parent_id": "elem_0004",
+      "order": 7,
+      "page_number": 1,
+      "bbox": [
+        138,
+        1233,
+        1082,
+        1412
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0008",
+      "type": "text",
+      "content": "light- and dark-skinned patients, even though the dark-skinned patients had higher risk [24, 25]. There are many \nother examples, as this is an active research topic that to some extent is in its early stages [26, 27, 28, 29].",
+      "parent_id": "elem_0004",
+      "order": 8,
+      "page_number": 2,
+      "bbox": [
+        136,
+        126,
+        1084,
+        179
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0009",
+      "type": "text",
+      "content": "An in-depth knowledge of an ML application and of its context should inform this analysis [30]. In healthcare, the \ngeneralizability of AI algorithms across subgroups is critically dependent on training datasets, including factors such \nas representativeness, missing data, and outliers [31]. This suggests that some biases can be traced to datasets that \nunderrepresent certain populations; using these unbalanced datasets as training data yields algorithmic models that \nexhibit systematically unbalanced errors [32]. In this context, the augmentation of the dataset with additional \nsamples from the underrepresented group, which frequently corresponds to groups that are socioeconomically \ndisadvantaged or medically underserved, has been empirically demonstrated to mitigate discrepancy in model \naccuracy. This is the case of the seminal “Gender Shades” study [7, 33]. Similar results have been observed in the \ntraining set of a popular face detection benchmark dataset [34].",
+      "parent_id": "elem_0004",
+      "order": 9,
+      "page_number": 2,
+      "bbox": [
+        136,
+        187,
+        1084,
+        416
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0010",
+      "type": "text",
+      "content": "Differences in algorithmic performance are not always due to lack of representativeness. Signs and symptoms of \nmany conditions vary between different populations [35, 36, 37, 38]. Crucially, the features included in a dataset \nmay be more or less useful for predicting different outcomes (e.g., being clinically diagnosed with a condition or not). \nThe analysis of a dataset under this perspective is known as data complexity analysis, and it encompasses multiple \naspects. A significant body of research has been dedicated to the formulation of various metrics that encapsulate \nthe multifaceted aspects of dataset complexity [39]. Beyond disparities in model accuracy and data complexity, \nrecent work highlights the importance of variance in model predictions. This variance is related to the extent to which \nmodel predictions can “flip” under minor changes in the training data, and it becomes an aspect of algorithmic \nfairness when high-variance predictions are concentrated in a demographic subgroup. This is called systematic \narbitrariness [40]",
+      "parent_id": "elem_0004",
+      "order": 10,
+      "page_number": 2,
+      "bbox": [
+        136,
+        425,
+        1084,
+        679
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0011",
+      "type": "text",
+      "content": "This paper describes a multifaceted analysis of training datasets pertinent to chronic diseases aimed at uncovering \npotential discrepancies that could lead to biases in the resulting ML models. Our research substantiates the premise \nthat demographic parity within datasets does not inherently ensure uniformity in algorithmic performance. That is \nto say, even datasets that are ostensibly equitable in terms of demographic attributes may still yield models with \nperformance discrepancies. Initiating our analysis with a common ML performance metric, the Area Under the \nReceiving Operating Characteristic curve (AUROC or AUC), we measure the predictive efficacy of the models. \nSubsequently, our examination extends to more profound dataset attributes impacting model behavior, particularly \ndata complexity and systematic arbitrariness. Our methodology provides a comprehensive and systematic \nframework for assessing training data from the perspective of algorithmic fairness, incorporating three key steps: (1) \nModel Performance Analysis, which evaluates disparities in predictive accuracy between demographic groups using \nrobust cross-validation and bootstrapping techniques; (2) Data Complexity Metrics, leveraging established metrics \nto explore the intrinsic challenges of the datasets, such as feature informativeness and class imbalance; and (3) \nSystematic Arbitrariness Examination, quantifying inconsistencies in model predictions and their concentration \nacross specific data subsets. To the best of our knowledge, this investigation is the first to test systematic model \narbitrariness in the healthcare domain.",
+      "parent_id": "elem_0004",
+      "order": 11,
+      "page_number": 2,
+      "bbox": [
+        136,
+        688,
+        1084,
+        1070
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0012",
+      "type": "header_1",
+      "content": "Methods",
+      "parent_id": "elem_0000",
+      "order": 12,
+      "page_number": 2,
+      "bbox": [
+        138,
+        1087,
+        226,
+        1115
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0013",
+      "type": "header_2",
+      "content": "Datasets",
+      "parent_id": "elem_0012",
+      "order": 13,
+      "page_number": 2,
+      "bbox": [
+        138,
+        1138,
+        218,
+        1164
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0014",
+      "type": "text",
+      "content": "We use a list of datasets identified and reported in a survey of publicly accessible datasets related to chronic diseases \n[41]. Within this selection, two datasets pertain to diabetes (D1,D2), while five are related to cardiac conditions (D3 \n...D7). Dataset sizes vary widely (see Table 1), and for the purpose of this study, we segmented two of the large \ndatasets into smaller subsets (D2a,D2b,D7a,D7b) by randomly selecting two samples, each sized 100 times larger than \nthe number of attributes. For the purpose of analysis, sex and age variables are binarized. In the case of age, the \nindividuals within the lowest two quintiles are categorized as “young”, and those within the highest two quintiles are \ncategorized as “old”, with the median quintile remaining unassigned. Dataset D1 does not include sex. Dataset D7{a,b} \nwas made available in 2020, but the specific year of data collection is not explicitly documented.",
+      "parent_id": "elem_0013",
+      "order": 14,
+      "page_number": 2,
+      "bbox": [
+        136,
+        1187,
+        1084,
+        1390
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0015",
+      "type": "header_2",
+      "content": "Model Performance",
+      "parent_id": "elem_0012",
+      "order": 15,
+      "page_number": 3,
+      "bbox": [
+        137,
+        125,
+        309,
+        151
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0016",
+      "type": "text",
+      "content": "For the evaluation of model performance, we used three gradient boosting algorithms (XGBoost [42], LGBoost [43], \nHGBoost [44]) that support missing values. We considered two sets of attributes: including the protected attributes \n(“aware model”), and excluding them (“unaware model”). The performance metrics were similar across both models, \nwhich means that the datasets contain proxy variables for the protected attributes. Model training was done using \na 3-fold cross validation schema, which involves partitioning the dataset into three subsets and cyclically using \ntwothirds for training and one-third for testing. This evaluation was further complemented by repeated \nbootstrapping, wherein each iteration involved a novel partitioning of the dataset. Hence, each reported Area Under \nROC Curve value (AUROC, or simply ROC) is the average of 66 models: 3 algorithms times 22 runs (19 random runs \nplus 3 cross-validation runs).",
+      "parent_id": "elem_0015",
+      "order": 16,
+      "page_number": 3,
+      "bbox": [
+        137,
+        175,
+        1084,
+        402
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0017",
+      "type": "caption",
+      "content": "Table 1: Characteristics of the datasets used in this research.",
+      "parent_id": "elem_0015",
+      "order": 17,
+      "page_number": 3,
+      "bbox": [
+        360,
+        403,
+        857,
+        427
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0018",
+      "type": "table",
+      "content": "<table><thead><tr><th>Dataset ID</th><th>Therapeutic Area</th><th>N</th><th>Year</th><th>Sex Ratio Female:Male</th><th>Younger Group Age Range</th><th>Elder Group Age Range</th></tr></thead><tbody><tr><td>D<sub>1</sub></td><td>Diabetes</td><td>768</td><td>1988</td><td>-</td><td>[21, 23]</td><td>[33, 81]</td></tr><tr><td>D<sub>2a</sub></td><td>Diabetes</td><td>4,400</td><td>2014</td><td>1.17</td><td>[5, 65]</td><td>[75, 95]</td></tr><tr><td>D<sub>2b</sub></td><td>Diabetes</td><td>4,400</td><td>2014</td><td>1.09</td><td>[5, 65]</td><td>[75, 95]</td></tr><tr><td>D<sub>3</sub></td><td>Heart Dis.</td><td>920</td><td>1989</td><td>0.29</td><td>[28, 52]</td><td>[57, 77]</td></tr><tr><td>D<sub>4</sub></td><td>Heart Dis.</td><td>452</td><td>1997</td><td>1.27</td><td>[0, 43]</td><td>[51, 83]</td></tr><tr><td>D<sub>5</sub></td><td>Heart Dis.</td><td>4,240</td><td>2010</td><td>1.33</td><td>[32, 46]</td><td>[52, 70]</td></tr><tr><td>D<sub>6</sub></td><td>Heart Dis.</td><td>10,000</td><td>2020</td><td>0.79</td><td>[4, 57]</td><td>[66, 98]</td></tr><tr><td>D<sub>7a</sub></td><td>Heart Dis.</td><td>1,300</td><td>ca.2020</td><td>1.86</td><td>[30, 52]</td><td>[56, 65]</td></tr><tr><td>D<sub>7b</sub></td><td>Heart Dis.</td><td>1,300</td><td>ca.2020</td><td>1.93</td><td>[30, 52]</td><td>[56, 65]</td></tr></tbody></table>",
+      "parent_id": "elem_0017",
+      "order": 18,
+      "page_number": 3,
+      "bbox": [
+        261,
+        427,
+        954,
+        739
+      ],
+      "metadata": {
+        "table_structure": {
+          "html": "<table><thead><tr><th>Dataset ID</th><th>Therapeutic Area</th><th>N</th><th>Year</th><th>Sex Ratio Female:Male</th><th>Younger Group Age Range</th><th>Elder Group Age Range</th></tr></thead><tbody><tr><td>D<sub>1</sub></td><td>Diabetes</td><td>768</td><td>1988</td><td>-</td><td>[21, 23]</td><td>[33, 81]</td></tr><tr><td>D<sub>2a</sub></td><td>Diabetes</td><td>4,400</td><td>2014</td><td>1.17</td><td>[5, 65]</td><td>[75, 95]</td></tr><tr><td>D<sub>2b</sub></td><td>Diabetes</td><td>4,400</td><td>2014</td><td>1.09</td><td>[5, 65]</td><td>[75, 95]</td></tr><tr><td>D<sub>3</sub></td><td>Heart Dis.</td><td>920</td><td>1989</td><td>0.29</td><td>[28, 52]</td><td>[57, 77]</td></tr><tr><td>D<sub>4</sub></td><td>Heart Dis.</td><td>452</td><td>1997</td><td>1.27</td><td>[0, 43]</td><td>[51, 83]</td></tr><tr><td>D<sub>5</sub></td><td>Heart Dis.</td><td>4,240</td><td>2010</td><td>1.33</td><td>[32, 46]</td><td>[52, 70]</td></tr><tr><td>D<sub>6</sub></td><td>Heart Dis.</td><td>10,000</td><td>2020</td><td>0.79</td><td>[4, 57]</td><td>[66, 98]</td></tr><tr><td>D<sub>7a</sub></td><td>Heart Dis.</td><td>1,300</td><td>ca.2020</td><td>1.86</td><td>[30, 52]</td><td>[56, 65]</td></tr><tr><td>D<sub>7b</sub></td><td>Heart Dis.</td><td>1,300</td><td>ca.2020</td><td>1.93</td><td>[30, 52]</td><td>[56, 65]</td></tr></tbody></table>",
+          "cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "Dataset ID",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": "Therapeutic Area",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "content": "N",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 3,
+              "content": "Year",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 4,
+              "content": "Sex Ratio Female:Male",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 5,
+              "content": "Younger Group Age Range",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 6,
+              "content": "Elder Group Age Range",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "content": "D1",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "content": "Diabetes",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 2,
+              "content": "768",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 3,
+              "content": "1988",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 4,
+              "content": "-",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 5,
+              "content": "[21, 23]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 6,
+              "content": "[33, 81]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "content": "D2a",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "content": "Diabetes",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 2,
+              "content": "4,400",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 3,
+              "content": "2014",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 4,
+              "content": "1.17",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 5,
+              "content": "[5, 65]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 6,
+              "content": "[75, 95]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "content": "D2b",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 1,
+              "content": "Diabetes",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 2,
+              "content": "4,400",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 3,
+              "content": "2014",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 4,
+              "content": "1.09",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 5,
+              "content": "[5, 65]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 6,
+              "content": "[75, 95]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 0,
+              "content": "D3",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 1,
+              "content": "Heart Dis.",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 2,
+              "content": "920",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 3,
+              "content": "1989",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 4,
+              "content": "0.29",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 5,
+              "content": "[28, 52]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 6,
+              "content": "[57, 77]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 0,
+              "content": "D4",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 1,
+              "content": "Heart Dis.",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 2,
+              "content": "452",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 3,
+              "content": "1997",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 4,
+              "content": "1.27",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 5,
+              "content": "[0, 43]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 6,
+              "content": "[51, 83]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 0,
+              "content": "D5",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 1,
+              "content": "Heart Dis.",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 2,
+              "content": "4,240",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 3,
+              "content": "2010",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 4,
+              "content": "1.33",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 5,
+              "content": "[32, 46]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 6,
+              "content": "[52, 70]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 0,
+              "content": "D6",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 1,
+              "content": "Heart Dis.",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 2,
+              "content": "10,000",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 3,
+              "content": "2020",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 4,
+              "content": "0.79",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 5,
+              "content": "[4, 57]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 6,
+              "content": "[66, 98]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 0,
+              "content": "D7a",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 1,
+              "content": "Heart Dis.",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 2,
+              "content": "1,300",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 3,
+              "content": "ca.2020",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 4,
+              "content": "1.86",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 5,
+              "content": "[30, 52]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 6,
+              "content": "[56, 65]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 0,
+              "content": "D7b",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 1,
+              "content": "Heart Dis.",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 2,
+              "content": "1,300",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 3,
+              "content": "ca.2020",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 4,
+              "content": "1.93",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 5,
+              "content": "[30, 52]",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 6,
+              "content": "[56, 65]",
+              "rowspan": 1,
+              "colspan": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "elem_0019",
+      "type": "image",
+      "content": "",
+      "parent_id": "elem_0020",
+      "order": 19,
+      "page_number": 3,
+      "bbox": [
+        142,
+        738,
+        1074,
+        1077
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0020",
+      "type": "caption",
+      "content": "Figure 1: Depiction of our methods regarding learning curves and self-consistency.",
+      "parent_id": "elem_0015",
+      "order": 20,
+      "page_number": 3,
+      "bbox": [
+        274,
+        1095,
+        947,
+        1121
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0021",
+      "type": "text",
+      "content": "Learning curves were obtained through an analogous process. We extrapolated learning curves to deduce an \nestimate of the number of additional data points that would enable the group with lower performance to attain the \nbenchmark set by the group with higher performance. Figure 1a illustrates our method. Let f(n) be the superior \nlearning curve, and g(n) be the inferior learning curve, with h(n) being an extrapolation of the learning curve. \nConservatively, if we assume the upper curve reaches a saturation point f(Np) = AUCp (which is not always the case, \nhence the conservative estimate), we attempt the following minimization:",
+      "parent_id": "elem_0015",
+      "order": 21,
+      "page_number": 3,
+      "bbox": [
+        138,
+        1144,
+        1082,
+        1298
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0022",
+      "type": "formula",
+      "content": "",
+      "parent_id": "elem_0015",
+      "order": 22,
+      "page_number": 3,
+      "bbox": [
+        481.0,
+        1317.0,
+        721.0,
+        1382.0
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0023",
+      "type": "text",
+      "content": "i.e., we calculate the minimal number of additional data points that would be required from the group with the lower \nAUC to match the AUC of the group with higher performance. We consider three different functions h1(·),h2(·),h3(·), \neach linearly constructed based on different segments of the concluding portion of the learning curve, choosing the \none that necessitates the smallest increase in data points (i.e., the most conservative scenario, to avoid exaggerating \nthe discrepancy). The greater the value of Nadd, the larger the performance disparity.",
+      "parent_id": "elem_0015",
+      "order": 23,
+      "page_number": 4,
+      "bbox": [
+        136,
+        127,
+        1084,
+        255
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0024",
+      "type": "header_2",
+      "content": "Data Complexity Metrics",
+      "parent_id": "elem_0012",
+      "order": 24,
+      "page_number": 4,
+      "bbox": [
+        138,
+        283,
+        350,
+        310
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0025",
+      "type": "text",
+      "content": "Data complexity analysis is a systematic effort to understand discrepancies in classification accuracy by relating them \nto intrinsic characteristics of a dataset. This is a large research topic, and the interested reader can consult any of \nvarious surveys about it [45, 46, 47]. We used a fairly standard categorization of data complexity metrics [39], and \npicked one popular complexity metric within each category, as shown in Table 2.",
+      "parent_id": "elem_0024",
+      "order": 25,
+      "page_number": 4,
+      "bbox": [
+        138,
+        333,
+        1084,
+        435
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0026",
+      "type": "caption",
+      "content": "Table 2: Data complexity: metrics categories and representative used; see [39] for details.",
+      "parent_id": "elem_0024",
+      "order": 26,
+      "page_number": 4,
+      "bbox": [
+        243,
+        435,
+        975,
+        460
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0027",
+      "type": "table",
+      "content": "<table><thead><tr><th>Family name</th><th>Object of analysis</th><th>Metric used</th></tr></thead><tbody><tr><td>Feature-based</td><td>Feature informativeness</td><td>Max. Fisher's discriminant ratio</td></tr><tr><td>Linearity</td><td>Linear separability</td><td>Sum of the error distance by linear programming</td></tr><tr><td>Neighborhood</td><td>Local class distribution</td><td>Error rate of nearest-neighbors classifier</td></tr><tr><td>Dimensionality</td><td>Data dimensionality/sparsity</td><td>Average number of features per point</td></tr><tr><td>Class imbalance</td><td>Ratio between class examples</td><td>Imbalance ratio</td></tr></tbody></table>",
+      "parent_id": "elem_0026",
+      "order": 27,
+      "page_number": 4,
+      "bbox": [
+        306,
+        460,
+        914,
+        811
+      ],
+      "metadata": {
+        "table_structure": {
+          "html": "<table><thead><tr><th>Family name</th><th>Object of analysis</th><th>Metric used</th></tr></thead><tbody><tr><td>Feature-based</td><td>Feature informativeness</td><td>Max. Fisher's discriminant ratio</td></tr><tr><td>Linearity</td><td>Linear separability</td><td>Sum of the error distance by linear programming</td></tr><tr><td>Neighborhood</td><td>Local class distribution</td><td>Error rate of nearest-neighbors classifier</td></tr><tr><td>Dimensionality</td><td>Data dimensionality/sparsity</td><td>Average number of features per point</td></tr><tr><td>Class imbalance</td><td>Ratio between class examples</td><td>Imbalance ratio</td></tr></tbody></table>",
+          "cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "Family name",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": "Object of analysis",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "content": "Metric used",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "content": "Feature-based",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "content": "Feature informativeness",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 2,
+              "content": "Max. Fisher's discriminant ratio",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "content": "Linearity",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "content": "Linear separability",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 2,
+              "content": "Sum of the error distance by linear programming",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "content": "Neighborhood",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 1,
+              "content": "Local class distribution",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 2,
+              "content": "Error rate of nearest-neighbors classifier",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 0,
+              "content": "Dimensionality",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 1,
+              "content": "Data dimensionality/sparsity",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 2,
+              "content": "Average number of features per point",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 0,
+              "content": "Class imbalance",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 1,
+              "content": "Ratio between class examples",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 2,
+              "content": "Imbalance ratio",
+              "rowspan": 1,
+              "colspan": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "elem_0028",
+      "type": "header_2",
+      "content": "Systematic Arbitrariness",
+      "parent_id": "elem_0012",
+      "order": 28,
+      "page_number": 4,
+      "bbox": [
+        138,
+        810,
+        347,
+        835
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0029",
+      "type": "text",
+      "content": "A family of models (e.g., various models built using the same learning scheme but different portions of the training \ndata) may exhibit arbitrariness. Model arbitrariness corresponds to discrepancies in the predicted label for some \nelements across models of the same family, and it tends to be systematic, i.e., concentrated on specific items.",
+      "parent_id": "elem_0028",
+      "order": 29,
+      "page_number": 4,
+      "bbox": [
+        138,
+        856,
+        1082,
+        935
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0030",
+      "type": "text",
+      "content": "A recent study introduces a metric of Self-Consistency (SC) [40], which is computed at the level of an item as the \nprobability that two models of the same family agree on the label for an item. For instance, an item with \nselfconsistency of 1.0 is an item for which any model of a family yields the same predicted label. In binary \nclassification, the minimum self-consistency is 0.5, indicating that half of the models yield one predicted label, and \nhalf of the models yield the opposite label. Note that self-consistency is independent of the “true” label of an \nelement.",
+      "parent_id": "elem_0028",
+      "order": 30,
+      "page_number": 4,
+      "bbox": [
+        138,
+        944,
+        1082,
+        1096
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0031",
+      "type": "text",
+      "content": "To compare self-consistency scores between groups, as recommended in [40] we use the Cumulative Distribution \nFunction (CDF) of self-consistency. Often, one curve is above another, similarly to what we see in Figure 1b. We \nmeasure the disparity by performing a statistical test of the difference between the two curves.",
+      "parent_id": "elem_0028",
+      "order": 31,
+      "page_number": 4,
+      "bbox": [
+        138,
+        1107,
+        1082,
+        1184
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0032",
+      "type": "header_1",
+      "content": "Results",
+      "parent_id": "elem_0000",
+      "order": 32,
+      "page_number": 4,
+      "bbox": [
+        138,
+        1201,
+        212,
+        1227
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0033",
+      "type": "header_2",
+      "content": "Variations in model performance",
+      "parent_id": "elem_0032",
+      "order": 33,
+      "page_number": 4,
+      "bbox": [
+        138,
+        1248,
+        417,
+        1273
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0034",
+      "type": "text",
+      "content": "Using datasets collected in prior research, which include patient demographic details such as sex and age [41], our \napproach leverages three distinct gradient boosting algorithms to infer ML models from the training data. The \nvalidation methodology used herein incorporates cross- validation complemented by iterative bootstrapping, \nthereby generating a multitude of models each informed by different subsets of the training data. By examining the \nArea Under the ROC Curve (AUC), we determine the model’s proficiency in distinguishing between patient cohorts",
+      "parent_id": "elem_0033",
+      "order": 34,
+      "page_number": 4,
+      "bbox": [
+        138,
+        1296,
+        1084,
+        1424
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0035",
+      "type": "text",
+      "content": "with different clinical outcomes. Table 3 presents a disaggregated view of AUC discrepancies across sex and age \ndemographics. These results account for models that incorporate age and sex as predictive attributes (“aware \nmodeling”). Similar results are observed when these variables are omitted (“unaware modeling”).",
+      "parent_id": "elem_0033",
+      "order": 35,
+      "page_number": 5,
+      "bbox": [
+        137,
+        124,
+        1084,
+        204
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0036",
+      "type": "text",
+      "content": "In our analysis, we observe disparities between sexes within several models, and across age groups in all but one \nmodel. Regarding sex-based disparities, approximately 10% of validation results reveal a higher AUC for males \ncompared to females, wheras a mere 1% of results show higher female AUC relative to male AUC. Regarding \nagerelated variances, these disparities exceed the sex-related ones with 32% of validation results demonstrating that \nthe AUC for younger patients exceeds that of older patients, and conversely, in 5% of the cases, the AUC is greater \nfor older patients compared to the younger patients.",
+      "parent_id": "elem_0033",
+      "order": 36,
+      "page_number": 5,
+      "bbox": [
+        137,
+        212,
+        1084,
+        367
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0037",
+      "type": "header_2",
+      "content": "Learning curves and the expected impact of additional data",
+      "parent_id": "elem_0032",
+      "order": 37,
+      "page_number": 5,
+      "bbox": [
+        137,
+        394,
+        639,
+        423
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0038",
+      "type": "text",
+      "content": "Learning curves are a standard tool for monitoring changes in model performance with the incremental addition of \ntraining data points. These curves graphically depict a performance metric, such as AUC, against the volume of \ntraining data utilized to build the model. Through this visual representation, one can appreciate trends like the",
+      "parent_id": "elem_0037",
+      "order": 38,
+      "page_number": 5,
+      "bbox": [
+        137,
+        443,
+        1084,
+        522
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0039",
+      "type": "caption",
+      "content": "Table 3: Model performance (AUC), with average and variance computed over 66 models for each cell in the table. \nDifferences along sex/age are expressed using p-values: < 0.01 (), < 0.001 (), < 0.0001 (). The highest AUC is \nin boldface when the difference is significant at p < 0.01.",
+      "parent_id": "elem_0037",
+      "order": 39,
+      "page_number": 5,
+      "bbox": [
+        137,
+        541,
+        1084,
+        619
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0040",
+      "type": "table",
+      "content": "",
+      "parent_id": "elem_0039",
+      "order": 40,
+      "page_number": 5,
+      "bbox": [
+        220,
+        623,
+        998,
+        937
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0041",
+      "type": "text",
+      "content": "plateauing of performance gains and extrapolate the requisite quantity of additional data points necessary to attain \na predefined AUC level in scenarios where the learning curve does not plateau.",
+      "parent_id": "elem_0037",
+      "order": 41,
+      "page_number": 5,
+      "bbox": [
+        137,
+        976,
+        1084,
+        1029
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0042",
+      "type": "text",
+      "content": "Consistently aligning with our previous results regarding the AUC obtained from the comprehensive training datasets \n(excluding the fraction set aside for testing during cross-validation), it is often observed that the learning curve for \none demographic group is above the learning curve for the other. This phenomenon suggests that even with balanced \ntraining sets, the resultant AUC may favor one group over another. Such a trend provides indirect evidence of \ndifferences in the predictability of outcomes between two groups when identical training data volumes and features \nare employed.",
+      "parent_id": "elem_0037",
+      "order": 42,
+      "page_number": 5,
+      "bbox": [
+        137,
+        1038,
+        1084,
+        1192
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0043",
+      "type": "text",
+      "content": "We have estimated the number of additional data points from the group exhibiting lower performance that would \nbe required to match the AUC of the group with superior performance, based on the extrapolation of the learning \ncurves to the point of anticipated AUC parity, given the current trajectory. Table 4 summarizes our results. The \nsymbol Infinity (∞) means that the learning curve for the group for which the model has lower performance appears \nto plateau at an AUC threshold, signifying no further enhancement with additional data points.",
+      "parent_id": "elem_0037",
+      "order": 43,
+      "page_number": 5,
+      "bbox": [
+        137,
+        1201,
+        1084,
+        1328
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0044",
+      "type": "text",
+      "content": "Our analysis reveals that there are often imbalances that, to be corrected, would require a substantive amount of \nadditional training instances. In half of the datasets, equating the AUC for sex would require the addition of 2% to \n57% additional data for females, while for the remainder, an increment of 3% and 48% would be required for males.",
+      "parent_id": "elem_0037",
+      "order": 44,
+      "page_number": 5,
+      "bbox": [
+        137,
+        1337,
+        1084,
+        1416
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0045",
+      "type": "text",
+      "content": "Regarding age, achieving parity would involve acquiring 2% and 46% more data for the younger patients in two \ndatasets, and a substantial 5% and 192% increase for the older patients in the other datasets.",
+      "parent_id": "elem_0037",
+      "order": 45,
+      "page_number": 6,
+      "bbox": [
+        137,
+        126,
+        1081,
+        179
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0046",
+      "type": "caption",
+      "content": "Table 4: Estimation, obtained by extrapolating learning curves, of the additional data points (Nadd) needed to achieve \nAUC parity.",
+      "parent_id": "elem_0037",
+      "order": 46,
+      "page_number": 6,
+      "bbox": [
+        137,
+        208,
+        1082,
+        262
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0047",
+      "type": "table",
+      "content": "<table><thead><tr><th>Dataset</th><th>Group</th><th>N<sub>add</sub>/N</th><th>Group</th><th>N<sub>add</sub>/N</th></tr></thead><tbody><tr><td>D<sub>1</sub></td><td>–</td><td>–</td><td>Old</td><td>192%</td></tr><tr><td>D<sub>2a</sub></td><td>Female</td><td>13%</td><td>Old</td><td>112%</td></tr><tr><td>D<sub>2b</sub></td><td>Female</td><td>2%</td><td>Old</td><td>129%</td></tr><tr><td>D<sub>3</sub></td><td>Female</td><td>66%</td><td>Old</td><td>∞</td></tr><tr><td>D<sub>4</sub></td><td>Male</td><td>3%</td><td>Young</td><td>2%</td></tr><tr><td>D<sub>5</sub></td><td>Female</td><td>57%</td><td>Young</td><td>46%</td></tr><tr><td>D<sub>6</sub></td><td>Male</td><td>48%</td><td>Old</td><td>8%</td></tr><tr><td>D<sub>7a</sub></td><td>Male</td><td>6%</td><td>Old</td><td>5%</td></tr><tr><td>D<sub>7b</sub></td><td>Male</td><td>4%</td><td>Old</td><td>33%</td></tr></tbody></table>",
+      "parent_id": "elem_0046",
+      "order": 47,
+      "page_number": 6,
+      "bbox": [
+        404,
+        260,
+        814,
+        539
+      ],
+      "metadata": {
+        "table_structure": {
+          "html": "<table><thead><tr><th>Dataset</th><th>Group</th><th>N<sub>add</sub>/N</th><th>Group</th><th>N<sub>add</sub>/N</th></tr></thead><tbody><tr><td>D<sub>1</sub></td><td>–</td><td>–</td><td>Old</td><td>192%</td></tr><tr><td>D<sub>2a</sub></td><td>Female</td><td>13%</td><td>Old</td><td>112%</td></tr><tr><td>D<sub>2b</sub></td><td>Female</td><td>2%</td><td>Old</td><td>129%</td></tr><tr><td>D<sub>3</sub></td><td>Female</td><td>66%</td><td>Old</td><td>∞</td></tr><tr><td>D<sub>4</sub></td><td>Male</td><td>3%</td><td>Young</td><td>2%</td></tr><tr><td>D<sub>5</sub></td><td>Female</td><td>57%</td><td>Young</td><td>46%</td></tr><tr><td>D<sub>6</sub></td><td>Male</td><td>48%</td><td>Old</td><td>8%</td></tr><tr><td>D<sub>7a</sub></td><td>Male</td><td>6%</td><td>Old</td><td>5%</td></tr><tr><td>D<sub>7b</sub></td><td>Male</td><td>4%</td><td>Old</td><td>33%</td></tr></tbody></table>",
+          "cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "Dataset",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": "Group",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "content": "Nadd/N",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 3,
+              "content": "Group",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 4,
+              "content": "Nadd/N",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "content": "D1",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "content": "–",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 2,
+              "content": "–",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 3,
+              "content": "Old",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 4,
+              "content": "192%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "content": "D2a",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "content": "Female",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 2,
+              "content": "13%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 3,
+              "content": "Old",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 4,
+              "content": "112%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "content": "D2b",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 1,
+              "content": "Female",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 2,
+              "content": "2%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 3,
+              "content": "Old",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 4,
+              "content": "129%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 0,
+              "content": "D3",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 1,
+              "content": "Female",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 2,
+              "content": "66%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 3,
+              "content": "Old",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 4,
+              "content": "∞",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 0,
+              "content": "D4",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 1,
+              "content": "Male",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 2,
+              "content": "3%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 3,
+              "content": "Young",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 4,
+              "content": "2%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 0,
+              "content": "D5",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 1,
+              "content": "Female",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 2,
+              "content": "57%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 3,
+              "content": "Young",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 4,
+              "content": "46%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 0,
+              "content": "D6",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 1,
+              "content": "Male",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 2,
+              "content": "48%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 3,
+              "content": "Old",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 4,
+              "content": "8%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 0,
+              "content": "D7a",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 1,
+              "content": "Male",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 2,
+              "content": "6%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 3,
+              "content": "Old",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 4,
+              "content": "5%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 0,
+              "content": "D7b",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 1,
+              "content": "Male",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 2,
+              "content": "4%",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 3,
+              "content": "Old",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 4,
+              "content": "33%",
+              "rowspan": 1,
+              "colspan": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "elem_0048",
+      "type": "text",
+      "content": "Focusing on datasets that would benefit from at least a 10% increase in data, in 3 out of the 8 datasets where sex \ndata is present, additional training data are required for females. In a similar vein, for age-related imbalances, 4 out \nof the 9 datasets would need additional data for the older patients group to achieve AUC parity.",
+      "parent_id": "elem_0037",
+      "order": 48,
+      "page_number": 6,
+      "bbox": [
+        137,
+        538,
+        1081,
+        615
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0049",
+      "type": "header_2",
+      "content": "Alignment of data complexity with some disparities",
+      "parent_id": "elem_0032",
+      "order": 49,
+      "page_number": 6,
+      "bbox": [
+        137,
+        639,
+        572,
+        666
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0050",
+      "type": "text",
+      "content": "We considered sixteen complexity metrics grouped into five categories, each corresponding to a unique conceptual \nframework, and computed the disparity of each metric between protected subgroups regarding sex and age. For \neach data set, AUC disparity divided by complexity metric disparity creates a ratio reflecting the consistency between \nmodel performance and data complexity as follows (where CM: Complexity Metric and A,B: Sub-groups A and B, i.e. \nFemale-Male and Old-Young):",
+      "parent_id": "elem_0049",
+      "order": 50,
+      "page_number": 6,
+      "bbox": [
+        137,
+        687,
+        1082,
+        815
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0051",
+      "type": "formula",
+      "content": "",
+      "parent_id": "elem_0049",
+      "order": 51,
+      "page_number": 6,
+      "bbox": [
+        396.0,
+        851.0,
+        822.0,
+        920.0
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0052",
+      "type": "text",
+      "content": "Figure 2 presents the results in a heatmap visualization highlighting with light color the cases in which higher \ncomplexity and lower AUC values are observed for a specific sub-group in comparison with the other, while dark \ncolor indicates inconsistent AUC and complexity patterns.",
+      "parent_id": "elem_0049",
+      "order": 52,
+      "page_number": 6,
+      "bbox": [
+        137,
+        950,
+        1082,
+        1029
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0053",
+      "type": "image",
+      "content": "",
+      "parent_id": "elem_0054",
+      "order": 53,
+      "page_number": 6,
+      "bbox": [
+        146,
+        1060,
+        1075,
+        1369
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0054",
+      "type": "caption",
+      "content": "Figure 2: Consistency of sex- and age-related disparities between AUC and complexity metrics. Light colors indicate \nthe cases in which auc and data complexity disparities are consistent, while dark colors inconsistent.",
+      "parent_id": "elem_0049",
+      "order": 54,
+      "page_number": 6,
+      "bbox": [
+        137,
+        1387,
+        1082,
+        1440
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0055",
+      "type": "text",
+      "content": "No obvious patterns can be observed across data in the results. Indeed, there are some situations of \ncomplementarity in which complexity metrics that are well aligned with AUC in some datasets are not aligned with \nAUC for another dataset and vice versa. Nevertheless, more complex data could potentially be linked to lower model \nperformance, as homogeneous behavior is observed for some categories of metrics (especially in feature, \ndimensionality and class imbalance) within datasets regarding age. In addition, several sets of databases (e.g. those \nrelated to diabetes D1,D2a,D2b) show consistent disparities between performance and i) feature-based and ii) \ndimensionality complexity metrics. However, these experiments suggest that complexity metrics cannot be relied \nupon as a predictor of AUC disparities in specific clinical conditions.",
+      "parent_id": "elem_0049",
+      "order": 55,
+      "page_number": 7,
+      "bbox": [
+        138,
+        125,
+        1084,
+        329
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0056",
+      "type": "header_2",
+      "content": "Systematic arbitrariness and model stability",
+      "parent_id": "elem_0032",
+      "order": 56,
+      "page_number": 7,
+      "bbox": [
+        138,
+        359,
+        510,
+        386
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0057",
+      "type": "text",
+      "content": "In analyzing a family of models, each trained on distinct yet equivalently-sized partitions of the training data, we \ndefine an individual’s self-consistency as the probability that two models within this family will yield the same label \n[40]. In our case, the minimum self-consistency is attained by subjects for which half of the models predict that they \nwill be diagnosed with a condition, while the other half predict that they will not. Evidently, this is a situation we \nwould like to avoid as much as possible. Hence, all other things equal, a model with higher self-consistency for most \nitems is preferable.",
+      "parent_id": "elem_0056",
+      "order": 57,
+      "page_number": 7,
+      "bbox": [
+        138,
+        407,
+        1082,
+        559
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0058",
+      "type": "text",
+      "content": "Systematic arbitrariness is observed when items with low self-consistency are concentrated within a particular group, \nand can be measured by comparing CDFs. To quantify disparities, we use the Kolmogorov-Smirnov (KS) statistical \ntest (Figure 1b), with the results shown in Table 5.",
+      "parent_id": "elem_0056",
+      "order": 58,
+      "page_number": 7,
+      "bbox": [
+        138,
+        570,
+        1082,
+        648
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0059",
+      "type": "caption",
+      "content": "Table 5: Sub-group arbitrariness: area under the CDF of self-consistency results for each sub-group and distance \nbetween them measured by Kolmogorov-Smirnov (KS) statistical test. The results of the significance test indicate p-\nvalue<0.01 (), <0.001 (*), and when significant the larger arbitrariness appears in boldface.",
+      "parent_id": "elem_0056",
+      "order": 59,
+      "page_number": 7,
+      "bbox": [
+        138,
+        673,
+        1084,
+        751
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0060",
+      "type": "table",
+      "content": "<table><thead><tr><th rowspan=\"2\">Dataset</th><th rowspan=\"2\">Overall</th><th colspan=\"3\">Sex</th><th colspan=\"3\">Age</th></tr><tr><th>Female</th><th>Male</th><th>KS-test</th><th>Elder</th><th>Younger</th><th>KS-test</th></tr></thead><tbody><tr><td>D<sub>1</sub></td><td>0.243</td><td>-</td><td>-</td><td>-</td><td>0.247</td><td>0.172</td><td>0.205</td><td>*</td></tr><tr><td>D<sub>2a</sub></td><td>0.323</td><td>0.308</td><td>0.312</td><td>0.019</td><td>0.295</td><td>0.294</td><td>0.045</td><td></td></tr><tr><td>D<sub>2b</sub></td><td>0.332</td><td>0.313</td><td>0.319</td><td>0.020</td><td>0.302</td><td>0.299</td><td>0.018</td><td></td></tr><tr><td>D<sub>3</sub></td><td>0.258</td><td>0.223</td><td>0.238</td><td>0.071</td><td>0.222</td><td>0.210</td><td>0.043</td><td></td></tr><tr><td>D<sub>4</sub></td><td>0.313</td><td>0.233</td><td>0.247</td><td>0.037</td><td>0.279</td><td>0.263</td><td>0.057</td><td></td></tr><tr><td>D<sub>5</sub></td><td>0.119</td><td>0.105</td><td>0.119</td><td>0.060</td><td>0.169</td><td>0.069</td><td>0.299</td><td>**</td></tr><tr><td>D<sub>6</sub></td><td>0.084</td><td>0.083</td><td>0.078</td><td>0.031</td><td>0.078</td><td>0.085</td><td>0.024</td><td></td></tr><tr><td>D<sub>7a</sub></td><td>0.266</td><td>0.244</td><td>0.233</td><td>0.053</td><td>0.263</td><td>0.233</td><td>0.082</td><td>*</td></tr><tr><td>D<sub>7b</sub></td><td>0.269</td><td>0.247</td><td>0.250</td><td>0.049</td><td>0.262</td><td>0.228</td><td>0.088</td><td>*</td></tr></tbody></table>",
+      "parent_id": "elem_0059",
+      "order": 60,
+      "page_number": 7,
+      "bbox": [
+        273,
+        749,
+        945,
+        1016
+      ],
+      "metadata": {
+        "table_structure": {
+          "html": "<table><thead><tr><th rowspan=\"2\">Dataset</th><th rowspan=\"2\">Overall</th><th colspan=\"3\">Sex</th><th colspan=\"3\">Age</th></tr><tr><th>Female</th><th>Male</th><th>KS-test</th><th>Elder</th><th>Younger</th><th>KS-test</th></tr></thead><tbody><tr><td>D<sub>1</sub></td><td>0.243</td><td>-</td><td>-</td><td>-</td><td>0.247</td><td>0.172</td><td>0.205</td><td>*</td></tr><tr><td>D<sub>2a</sub></td><td>0.323</td><td>0.308</td><td>0.312</td><td>0.019</td><td>0.295</td><td>0.294</td><td>0.045</td><td></td></tr><tr><td>D<sub>2b</sub></td><td>0.332</td><td>0.313</td><td>0.319</td><td>0.020</td><td>0.302</td><td>0.299</td><td>0.018</td><td></td></tr><tr><td>D<sub>3</sub></td><td>0.258</td><td>0.223</td><td>0.238</td><td>0.071</td><td>0.222</td><td>0.210</td><td>0.043</td><td></td></tr><tr><td>D<sub>4</sub></td><td>0.313</td><td>0.233</td><td>0.247</td><td>0.037</td><td>0.279</td><td>0.263</td><td>0.057</td><td></td></tr><tr><td>D<sub>5</sub></td><td>0.119</td><td>0.105</td><td>0.119</td><td>0.060</td><td>0.169</td><td>0.069</td><td>0.299</td><td>**</td></tr><tr><td>D<sub>6</sub></td><td>0.084</td><td>0.083</td><td>0.078</td><td>0.031</td><td>0.078</td><td>0.085</td><td>0.024</td><td></td></tr><tr><td>D<sub>7a</sub></td><td>0.266</td><td>0.244</td><td>0.233</td><td>0.053</td><td>0.263</td><td>0.233</td><td>0.082</td><td>*</td></tr><tr><td>D<sub>7b</sub></td><td>0.269</td><td>0.247</td><td>0.250</td><td>0.049</td><td>0.262</td><td>0.228</td><td>0.088</td><td>*</td></tr></tbody></table>",
+          "cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "Dataset",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": "Overall",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "content": "Sex",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 0,
+              "col": 3,
+              "content": "Age",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "content": "Female",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "content": "Male",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 2,
+              "content": "KS-test",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 3,
+              "content": "Elder",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 4,
+              "content": "Younger",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 1,
+              "col": 5,
+              "content": "KS-test",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "content": "D1",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "content": "0.243",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 2,
+              "content": "-",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 3,
+              "content": "-",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 4,
+              "content": "-",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 5,
+              "content": "0.247",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 6,
+              "content": "0.172",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 7,
+              "content": "0.205",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 2,
+              "col": 8,
+              "content": "*",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 0,
+              "content": "D2a",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 1,
+              "content": "0.323",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 2,
+              "content": "0.308",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 3,
+              "content": "0.312",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 4,
+              "content": "0.019",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 5,
+              "content": "0.295",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 6,
+              "content": "0.294",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 7,
+              "content": "0.045",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 3,
+              "col": 8,
+              "content": "",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 0,
+              "content": "D2b",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 1,
+              "content": "0.332",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 2,
+              "content": "0.313",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 3,
+              "content": "0.319",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 4,
+              "content": "0.020",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 5,
+              "content": "0.302",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 6,
+              "content": "0.299",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 7,
+              "content": "0.018",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 4,
+              "col": 8,
+              "content": "",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 0,
+              "content": "D3",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 1,
+              "content": "0.258",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 2,
+              "content": "0.223",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 3,
+              "content": "0.238",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 4,
+              "content": "0.071",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 5,
+              "content": "0.222",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 6,
+              "content": "0.210",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 7,
+              "content": "0.043",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 5,
+              "col": 8,
+              "content": "",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 0,
+              "content": "D4",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 1,
+              "content": "0.313",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 2,
+              "content": "0.233",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 3,
+              "content": "0.247",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 4,
+              "content": "0.037",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 5,
+              "content": "0.279",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 6,
+              "content": "0.263",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 7,
+              "content": "0.057",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 6,
+              "col": 8,
+              "content": "",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 0,
+              "content": "D5",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 1,
+              "content": "0.119",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 2,
+              "content": "0.105",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 3,
+              "content": "0.119",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 4,
+              "content": "0.060",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 5,
+              "content": "0.169",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 6,
+              "content": "0.069",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 7,
+              "content": "0.299",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 7,
+              "col": 8,
+              "content": "**",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 0,
+              "content": "D6",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 1,
+              "content": "0.084",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 2,
+              "content": "0.083",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 3,
+              "content": "0.078",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 4,
+              "content": "0.031",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 5,
+              "content": "0.078",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 6,
+              "content": "0.085",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 7,
+              "content": "0.024",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 8,
+              "col": 8,
+              "content": "",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 0,
+              "content": "D7a",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 1,
+              "content": "0.266",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 2,
+              "content": "0.244",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 3,
+              "content": "0.233",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 4,
+              "content": "0.053",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 5,
+              "content": "0.263",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 6,
+              "content": "0.233",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 7,
+              "content": "0.082",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 9,
+              "col": 8,
+              "content": "*",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 0,
+              "content": "D7b",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 1,
+              "content": "0.269",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 2,
+              "content": "0.247",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 3,
+              "content": "0.250",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 4,
+              "content": "0.049",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 5,
+              "content": "0.262",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 6,
+              "content": "0.228",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 7,
+              "content": "0.088",
+              "rowspan": 1,
+              "colspan": 1
+            },
+            {
+              "row": 10,
+              "col": 8,
+              "content": "*",
+              "rowspan": 1,
+              "colspan": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "elem_0061",
+      "type": "text",
+      "content": "Results show that ML predictions have no significant self-consistency disparities between male and female subjects. \nHowever, older individuals exhibit significantly more arbitrary predictions in 4 out of 9 datasets. These results are for \na model including protected characteristics (“unaware model”). Results for the aware model are similar, although \nwith lower self-consistency values in general and smaller differences by sex and age.",
+      "parent_id": "elem_0056",
+      "order": 61,
+      "page_number": 7,
+      "bbox": [
+        138,
+        1061,
+        1082,
+        1165
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0062",
+      "type": "header_1",
+      "content": "Discussion",
+      "parent_id": "elem_0000",
+      "order": 62,
+      "page_number": 7,
+      "bbox": [
+        138,
+        1183,
+        239,
+        1208
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0063",
+      "type": "text",
+      "content": "Our findings uncover sex- and age-related disparities in model performance as evidenced by the AUC of the models. \nIt is pertinent to recall that the representation of each group within the datasets is equal. This observation \nunderscores that mere demographic parity in training datasets does not mean model equity. The analysis of learning \ncurves provides insights into the potential benefits of data augmentation. Sex-related disparities are observed to \noccasionally favor males over females, with a marginal predominance for male patients as indicated by both AUC \nand the requisite additional data to attain performance parity. Regarding age differences, the findings are more \npronounced, with models generally predicting better for younger patients across most datasets (higher AUC), and \nrequiring a large volume of additional training data to potentially achieve performance parity.",
+      "parent_id": "elem_0062",
+      "order": 63,
+      "page_number": 7,
+      "bbox": [
+        138,
+        1232,
+        1082,
+        1436
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0064",
+      "type": "text",
+      "content": "Furthermore, upon examining disparities in data complexity and systematic arbitrariness, we observe that \npredictions for older patients tend to be less consistent than those for their younger counterparts in several datasets. \nThese disparities, to some extent, correlate with the model performance (AUC) and data complexity findings, \nsuggesting a linkage between increased data arbitrariness for older patients and heightened complexity, leading to \nlower model performance. These correlations suggest but do not determine model disparities, as there are \nexceptions within our observations, where greater arbitrariness is sometimes associated with comparable or \nsuperior AUC values. This highlights the necessity of a multifaceted metric consideration encompassing performance, \ncomplexity, and stability, rather than relying exclusively on performance metrics.",
+      "parent_id": "elem_0062",
+      "order": 64,
+      "page_number": 8,
+      "bbox": [
+        135,
+        128,
+        1083,
+        329
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0065",
+      "type": "text",
+      "content": "Within the healthcare domain, the legal and ethical dimensions of decision-making are of paramount importance \n[48]. The findings of this study highlight some characteristics of model performance that are not typically reported, \nbut that hold considerable potential to influence clinical practice. Specifically, systematic arbitrariness in model \noutputs could undermine clinician confidence in ML and diminish the acceptability of such models. In nearly half of \nthe datasets we studied, older patients with chronic diseases face the risk of health inequities [49, 50] due to data \nthat is suboptimal for modeling their health outcomes as compared to younger patients. To address these challenges, \ndatasets and models should undergo rigorous testing for systematic arbitrariness prior to deployment, incorporating \nself-consistency metrics to detect and mitigate prediction discrepancies across demographic groups. Model \ndevelopers must prioritize detailed fairness audits, including systematic arbitrariness and demographic-specific \nperformance metrics, as part of standard validation protocols. Healthcare practitioners are integral to the ethical \nimplementation of ML models by insisting on transparency from developers, carefully evaluating outputs for \npotential biases, and complementing ML recommendations with clinical expertise. They should actively promote \ninclusivity by pinpointing data deficiencies that disadvantage certain groups and collaborating with developers to \nmitigate these gaps, while encouraging continuous model evaluation to refine performance over time.",
+      "parent_id": "elem_0062",
+      "order": 65,
+      "page_number": 8,
+      "bbox": [
+        135,
+        339,
+        1083,
+        693
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0066",
+      "type": "text",
+      "content": "Hospital data, such as the one used in this study, may be indicative solely of the population with healthcare system \naccess, thus potentially engendering bias against certain subpopulations [51, 52, 53, 54]. Future efforts should aim \nto extend these analyses to include additional databases. To address situations where systematic arbitrariness is \ndetected, we must consider both technical and human factors [55]. This includes designing systems that minimize \npotential technology- induced disparities, taking into account the data and algorithmic literacy of the users of these \nsystems, i.e., clinicians. Arbitrariness is not a new concept in the health domain, as evidenced by the existence of \ncost-effective pharmacological treatments that exhibit suboptimal efficacy in particular patient subgroups. Systems \nare in place to educate and safeguard against potential patient harm, including rigorous and multiphase \npharmaceutical clinical studies and pharmacovigilance protocols. Data quality audits should scrutinize performance \ndifferentials impacting specific subgroups, whose data characteristics may differ from other populations with the \nsame condition. Future research could explore the creation of monitoring processes for ML models in healthcare, \nanalogous to those applied to pharmacological drugs.",
+      "parent_id": "elem_0062",
+      "order": 66,
+      "page_number": 8,
+      "bbox": [
+        135,
+        694,
+        1083,
+        999
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0067",
+      "type": "header_1",
+      "content": "Conclusion",
+      "parent_id": "elem_0000",
+      "order": 67,
+      "page_number": 8,
+      "bbox": [
+        137,
+        1016,
+        244,
+        1043
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0068",
+      "type": "text",
+      "content": "In this study, we identified significant age-related and mild sex-related disparities in the performance of ML models \nfor chronic disease prediction. Older patients, in particular, experienced inconsistent and arbitrary predictions \nacross several datasets due to increased data complexity and lower model performance, while sex-based \ndifferences slightly favored male predictions. These findings demonstrate that representativeness in training data \nalone is insufficient for ensuring equitable outcomes. Therefore, addressing model arbitrariness, especially for older\nindividuals, is essential before deploying ML models in clinical settings to ensure fairness and reliability.",
+      "parent_id": "elem_0067",
+      "order": 68,
+      "page_number": 8,
+      "bbox": [
+        137,
+        1066,
+        1083,
+        1218
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0069",
+      "type": "text",
+      "content": "Acknowledgments This work is funded by Spanish Ministry of Science and Innovation (REF:DIN2021-011865). In addition, \nit has been partially supported by the Department of Research and Universities of the Government of Catalonia (SGR \n00930), EU-funded project ”SoBigData++” (grant agreement 871042), and MCIN/AEI /10.13039/501100011033 under \nthe Maria de Maeztu Units of Excellence Programme (CEX2021-001195-M). None of the funders played any role in study \ndesign, data collection, analysis and interpretation of data, or the writing of this manuscript.",
+      "parent_id": "elem_0067",
+      "order": 69,
+      "page_number": 8,
+      "bbox": [
+        137,
+        1234,
+        1119,
+        1363
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0070",
+      "type": "text",
+      "content": "Ethics and Impact Statement This study did not involve new data collection; all accessed and processed data were \nanonymized in compliance with ethical standards and protecting participant privacy.",
+      "parent_id": "elem_0067",
+      "order": 70,
+      "page_number": 8,
+      "bbox": [
+        137,
+        1379,
+        1083,
+        1431
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0071",
+      "type": "text",
+      "content": "Data Availability A version of the datasets used during the current study that has been pre-processed for \nreproducibility is available in the following repository, including pointers to the original datasets: \nhttps://github.com/IoannisBil/health disparities Chronic Diseases/blob/main/README.md",
+      "parent_id": "elem_0067",
+      "order": 71,
+      "page_number": 9,
+      "bbox": [
+        136,
+        126,
+        1084,
+        205
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0072",
+      "type": "header_1",
+      "content": "References",
+      "parent_id": "elem_0000",
+      "order": 72,
+      "page_number": 9,
+      "bbox": [
+        138,
+        223,
+        247,
+        248
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0073",
+      "type": "text",
+      "content": "1. Fogel AL, Kvedar JC. Artificial intelligence powers digital medicine. NPJ digital medicine. 2018;1(1):5. \n2. Jusman Y, Firdiantika IM, Dharmawan DA, Purwanto K. Performance of multi layer perceptron and deep neural \nnetworks in skin cancer classification. In: 2021 IEEE 3rd global conference on life sciences and technologies \n(LifeTech). IEEE; 2021. p. 534-8. \n3. Lo B, Malina D, Pittman G, Morrissey S. Fundamentals of medical ethics—A new perspective series. Mass Medical \nSoc; 2023. \n4. Hamam H. Guest editorial achieving health equity through AI for diagnosis and treatment and patient \nmonitoring. IEEE Journal of Biomedical and Health Informatics. 2024;28(2):702-6. \n5. Liu M, Ning Y, Teixayavong S, Mertens M, Xu J, Ting DSW, et al. A translational perspective towards clinical AI \nfairness. NPJ Digital Medicine. 2023;6(1):172. \n6. Fletcher RR, Nakeshimana A, Olubeko O. Addressing fairness, bias, and appropriate use of artificial intelligence \nand machine learning in global health. Frontiers Media SA; 2021. \n7. Buolamwini J, Gebru T. Gender shades: Intersectional accuracy disparities in commercial gender classification. \nIn: Conference on fairness, accountability and transparency. PMLR; 2018. p. 77-91. \n8. Hajian S, Bonchi F, Castillo C. Algorithmic bias: From discrimination discovery to fairness-aware data mining. In: \nProceedings of the 22nd ACM SIGKDD international conference on knowledge discovery and data mining; 2016. \np. 2125-6. \n9. Raza S. Connecting fairness in machine learning with public health equity. In: 2023 IEEE 11th International \nConference on Healthcare Informatics (ICHI). IEEE; 2023. p. 704-8. \n10. Lippert-Rasmussen K. Born free and equal?: A philosophical inquiry into the nature of discrimination. Oxford \nUniversity Press; 2013. \n11. Feuerriegel S, Dolata M, Schwabe G. Fair AI: Challenges and opportunities. Business & information systems \nengineering. 2020;62:379-84. \n12. Dastin J. Amazon scraps secret AI recruiting tool that showed bias against women. In: Ethics of data and analytics. \nAuerbach Publications; 2022. p. 296-9. \n13. Caliskan A, Bryson JJ, Narayanan A. Semantics derived automatically from language corpora contain human-like \nbiases. Science. 2017;356(6334):183-6. \n14. Hardesty L. Study finds gender and skin-type bias in commercial artificial-intelligence systems. Retrieved April. \n2018;3:2019. \n15. Tsai TC, Arik S, Jacobson BH, Yoon J, Yoder N, Sava D, et al. Algorithmic fairness in pandemic forecasting: lessons \nfrom COVID-19. NPJ Digital Medicine. 2022;5(1):59. \n16. Halamka J, Bydon M, Cerrato P, Bhagra A. Addressing racial disparities in surgical care with machine learning. \nNPJ Digital Medicine. 2022;5(1):152. \n17. Drukker K, Chen W, Gichoya J, Gruszauskas N, Kalpathy-Cramer J, Koyejo S, et al. Toward fairness in artificial \nintelligence for medical image analysis: identification and mitigation of potential biases in the roadmap from \ndata collection to model deployment. Journal of Medical Imaging. 2023;10(6):061104-4. \n18. Larrazabal AJ, Nieto N, Peterson V, Milone DH, Ferrante E. Gender imbalance in medical imaging datasets \nproduces biased classifiers for computer-aided diagnosis. Proceedings of the National Academy of Sciences. \n2020;117(23):12592-4. \n19. Seyyed-Kalantari L, Liu G, McDermott M, Chen IY, Ghassemi M. CheXclusion: Fairness gaps in deep chest X-ray \nclassifiers. In: BIOCOMPUTING 2021: proceedings of the Pacific symposium. World Scientific; 2020. p. 232-43. \n20. Chen IY, Szolovits P, Ghassemi M. Can AI help reduce disparities in general medical and mental health care? AMA \njournal of ethics. 2019;21(2):167-79. \n21. Burlina P, Joshi N, Paul W, Pacheco KD, Bressler NM. Addressing artificial intelligence bias in retinal diagnostics. \nTranslational Vision Science & Technology. 2021;10(2):13-3.",
+      "parent_id": "elem_0072",
+      "order": 73,
+      "page_number": 9,
+      "bbox": [
+        138,
+        263,
+        1084,
+        1428
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0074",
+      "type": "text",
+      "content": "22. Abubakar A, Ugail H, Bukar AM. Assessment of human skin burns: a deep transfer learning approach. Journal of \nMedical and Biological Engineering. 2020;40:321-33. \n23. Thompson HM, Sharma B, Bhalla S, Boley R, McCluskey C, Dligach D, et al. Bias and fairness assessment of a \nnatural language processing opioid misuse classifier: detection and mitigation of electronic health record data \ndisadvantages across racial subgroups. Journal of the American Medical Informatics Association. \n2021;28(11):2393403. \n24. Obermeyer Z, Powers B, Vogeli C, Mullainathan S. Dissecting racial bias in an algorithm used to manage the \nhealth of populations. Science. 2019;366(6464):447-53. \n25. Park Y, Hu J, Singh M, Sylla I, Dankwa-Mullan I, Koski E, et al. Comparison of methods to reduce bias from clinical \nprediction models of postpartum depression. JAMA network open. 2021;4(4):e213909-9. \n26. Jobin A, Ienca M, Vayena E. The global landscape of AI ethics guidelines. Nature machine intelligence. \n2019;1(9):389-99. \n27. Marabelli M, Newell S, Handunge V. The lifecycle of algorithmic decision-making systems: Organizational choices \nand ethical challenges. The Journal of Strategic Information Systems. 2021;30(3):101683. \n28. Leavy S. Gender bias in artificial intelligence: The need for diversity and gender theory in machine learning. In: \nProceedings of the 1st international workshop on gender equality in software engineering; 2018. p. 14-6. \n29. Anderson JW, Shaikh N, Visweswaran S. Measuring and reducing racial bias in a pediatric urinary tract infection \nmodel. AMIA Summits on Translational Science Proceedings. 2024;2024:488. \n30. Suresh H, Guttag J. A framework for understanding sources of harm throughout the machine learning life cycle. \nIn: Equity and access in algorithms, mechanisms, and optimization; 2021. p. 1-9. \n31. Ahmad MA, Patel A, Eckert C, Kumar V, Teredesai A. Fairness in machine learning for healthcare. In: Proceedings \nof the 26th ACM SIGKDD international conference on knowledge discovery & data mining; 2020. p. 3529-30. \n32. Corbett-Davies S, Pierson E, Feller A, Goel S, Huq A. Algorithmic decision making and the cost of fairness. In: \nProceedings of the 23rd acm sigkdd international conference on knowledge discovery and data mining; 2017. p. \n797-806. \n33. Raji ID, Buolamwini J. Actionable auditing: Investigating the impact of publicly naming biased performance \nresults of commercial ai products. In: Proceedings of the 2019 AAAI/ACM Conference on AI, Ethics, and Society; \n2019. p. 429-35. \n34. Yang Y, Gupta A, Feng J, Singhal P, Yadav V, Wu Y, et al. Enhancing fairness in face detection in computer vision \nsystems by demographic bias mitigation. In: Proceedings of the 2022 AAAI/ACM Conference on AI, Ethics, and \nSociety; 2022. p. 813-22. \n35. Boehme AK, Siegler JE, Mullen MT, Albright KC, Lyerly MJ, Monlezun DJ, et al. Racial and gender differences in \nstroke severity, outcomes, and treatment in patients with acute ischemic stroke. Journal of Stroke and \nCerebrovascular Diseases. 2014;23(4):e255-61. \n36. Cirillo D, Catuara-Solarz S, Morey C, Guney E, Subirats L, Mellino S, et al. Sex and gender differences and biases \nin artificial intelligence for biomedicine and healthcare. NPJ digital medicine. 2020;3(1):81. \n37. Celeste C, Ming D, Broce J, Ojo DP, Drobina E, Louis-Jacques AF, et al. Ethnic disparity in diagnosing asymptomatic \nbacterial vaginosis using machine learning. NPJ Digital Medicine. 2023;6(1):211. \n38. Hou B, Mondragon A, Tarzanagh DA, Zhou Z, Saykin AJ, Moore JH, et al. PFERM: A fair empirical risk mini-´ \nmization approach with prior knowledge. AMIA Summits on Translational Science Proceedings. 2024;2024:211. \n39. Lorena AC, Garcia LP, Lehmann J, Souto MC, Ho TK. How complex is your classification problem? a survey on \nmeasuring classification complexity. ACM Computing Surveys (CSUR). 2019;52(5):1-34. \n40. Cooper AF, Lee K, Choksi MZ, Barocas S, De Sa C, Grimmelmann J, et al. Arbitrariness and social prediction: The \nconfounding role of variance in fair classification. In: Proceedings of the AAAI Conference on Artificial \nIntelligence. vol. 38; 2024. p. 22004-12. \n41. Bilionis I, Fernandez-Luque L, Castillo C. A survey on public data sets related to chronic diseases. In: 2023 IEEE \n36th International Symposium on Computer-Based Medical Systems (CBMS). IEEE; 2023. p. 917-20. \n42. Chen T, Guestrin C. Xgboost: A scalable tree boosting system. In: Proceedings of the 22nd acm sigkdd \ninternational conference on knowledge discovery and data mining; 2016. p. 785-94.",
+      "parent_id": "elem_0072",
+      "order": 74,
+      "page_number": 10,
+      "bbox": [
+        136,
+        124,
+        1086,
+        1395
+      ],
+      "metadata": {}
+    },
+    {
+      "id": "elem_0075",
+      "type": "text",
+      "content": "43. Ke G, Meng Q, Finley T, Wang T, Chen W, Ma W, et al. Lightgbm: A highly efficient gradient boosting decision \ntree. Advances in neural information processing systems. 2017;30. \n44. Guryanov A. Histogram-based algorithm for building gradient boosting ensembles of piecewise linear decision \ntrees. In: Analysis of Images, Social Networks and Texts: 8th International Conference, AIST 2019, Kazan, Russia, \nJuly 17–19, 2019, Revised Selected Papers 8. Springer; 2019. p. 39-50. \n45. Santos MS, Abreu PH, Japkowicz N, Fernandez A, Santos J. A unifying view of class overlap and imbalance:´ Key \nconcepts, multi-view panorama, and open avenues for research. Information Fusion. 2023;89:228-53. \n46. Rivolli A, Garcia LP, Soares C, Vanschoren J, de Carvalho AC. Meta-features for meta-learning. KnowledgeBased \nSystems. 2022;240:108101. \n47. Gupta N, Mujumdar S, Patel H, Masuda S, Panwar N, Bandyopadhyay S, et al. Data quality for machine learning \ntasks. In: Proceedings of the 27th ACM SIGKDD conference on knowledge discovery & data mining; 2021. p. \n4040-1. \n48. Peters D, Vold K, Robinson D, Calvo RA. Responsible AI—two frameworks for ethical design practice. IEEE \nTransactions on Technology and Society. 2020;1(1):34-47. \n49. Lorenc T, Petticrew M, Welch V, Tugwell P. What types of interventions generate inequalities? Evidence from \nsystematic reviews. J Epidemiol Community Health. 2012. \n50. Klang E, Soffer S, Nadkarni G, Glicksberg B, Freeman R, Horowitz C, et al. Sex differences in age and comorbidities \nfor COVID-19 mortality in urban New York City. SN comprehensive clinical medicine. 2020;2:1319-22. \n51. Chen D, Liu S, Kingsbury P, Sohn S, Storlie CB, Habermann EB, et al. Deep learning and alternative learning \nstrategies for retrospective real-world clinical data. NPJ digital medicine. 2019;2(1):43. \n52. Hyun KK, Redfern J, Patel A, Peiris D, Brieger D, Sullivan D, et al. Gender inequalities in cardiovascular risk factor \nassessment and management in primary healthcare. Heart. 2017;103(7):492-8. \n53. Gauci S, Cartledge S, Redfern J, Gallagher R, Huxley R, Lee CMY, et al. Biology, bias, or both? The contribution of \nsex and gender to the disparity in cardiovascular outcomes between women and men. Current Atherosclerosis \nReports. 2022;24(9):701-8. \n54. Veinot TC, Mitchell H, Ancker JS. Good intentions are not enough: how informatics interventions can worsen \ninequality. Journal of the American Medical Informatics Association. 2018;25(8):1080-8. \n55. Ferryman K, Mackintosh M, Ghassemi M. Considering biased data as informative artifacts in AI-assisted health \ncare. New England Journal of Medicine. 2023;389(9):833-8.",
+      "parent_id": "elem_0072",
+      "order": 75,
+      "page_number": 11,
+      "bbox": [
+        132,
+        123,
+        1087,
+        879
+      ],
+      "metadata": {}
+    }
+  ],
+  "statistics": {
+    "total_elements": 76,
+    "total_pages": 11,
+    "elements_by_type": {
+      "title": 1,
+      "text": 44,
+      "header_1": 7,
+      "header_2": 8,
+      "caption": 7,
+      "table": 5,
+      "image": 2,
+      "formula": 2
+    },
+    "table_count": 5,
+    "image_count": 2
+  }
+}

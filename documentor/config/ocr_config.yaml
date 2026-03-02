@@ -1,0 +1,169 @@
+# Configuration for OCR (Optical Character Recognition) services
+
+# Dots.OCR settings for layout detection
+dots_ocr:
+  # URL or path to Dots.OCR service
+  # If null - uses local service
+  endpoint: null
+  
+  # Model name
+  model: "/model"
+  
+  # Recognition parameters
+  recognition:
+    # Generation temperature (0.0 - 1.0)
+    temperature: 0.1
+    
+    # Maximum number of tokens
+    max_tokens: 32768
+    
+    # Request timeout in seconds
+    timeout: 120
+    
+    # Timeout for table reprocessing (can be longer for complex tables with HTML generation)
+    # If not specified, uses timeout * 2
+    table_reprocessing_timeout: 240
+  
+  # Prompts for Dots.OCR (strict prompts from official documentation)
+  prompts:
+    # Full layout extraction with text in JSON format
+    prompt_layout_all_en: |
+      Please output the layout information from the PDF image, including each layout element's bbox, its category, and the corresponding text content within the bbox.
+
+      1. Bbox format: [x1, y1, x2, y2]
+
+      2. Layout Categories: The possible categories are ['Caption', 'Footnote', 'Formula', 'List-item', 'Page-footer', 'Page-header', 'Picture', 'Section-header', 'Table', 'Text', 'Title'].
+
+      3. Text Extraction & Formatting Rules:
+          - Picture: For the 'Picture' category, the text field should be omitted.
+          - Formula: Format its text as LaTeX.
+          - Table: Format its text as HTML.
+          - All Others (Text, Title, etc.): Format their text as Markdown.
+
+      4. Constraints:
+          - The output text must be the original text from the image, with no translation.
+          - All layout elements must be sorted according to human reading order.
+
+      5. Final Output: The entire output must be a single JSON object.
+    
+    # Layout detection only without text
+    prompt_layout_only_en: |
+      Please output the layout information from this PDF image, including each layout's bbox and its category. The bbox should be in the format [x1, y1, x2, y2]. The layout categories for the PDF document include ['Caption', 'Footnote', 'Formula', 'List-item', 'Page-footer', 'Page-header', 'Picture', 'Section-header', 'Table', 'Text', 'Title']. Do not output the corresponding text. The layout result should be in JSON format.
+    
+    # Text extraction from image (except Page-header and Page-footer)
+    prompt_ocr: |
+      Extract the text content from this image.
+    
+    # Text extraction from given bounding box
+    prompt_grounding_ocr: |
+      Extract text from the given bounding box on the image (format: [x1, y1, x2, y2]).
+      Bounding Box:
+  
+  # Prompt mode (which prompt to use)
+  # Options: prompt_layout_all_en, prompt_layout_only_en, prompt_ocr, prompt_grounding_ocr
+  prompt_mode: "prompt_layout_all_en"
+  
+  # Layout detection parameters
+  layout:
+    # Minimum element size for detection (pixels)
+    min_element_size: 10
+    
+    # Detection confidence threshold (0.0 - 1.0)
+    confidence_threshold: 0.5
+    
+    # Element types to detect
+    element_types:
+      - Caption
+      - Footnote
+      - Formula
+      - List-item
+      - Page-footer
+      - Page-header
+      - Picture
+      - Section-header
+      - Table
+      - Text
+      - Title
+  
+  # Reading order building settings
+  reading_order:
+    # Reading order building method
+    # Options: "top-to-bottom", "left-to-right", "combined"
+    method: "combined"
+    
+    # Consider element grouping when building reading order
+    use_grouping: true
+
+
+# Image processing settings
+image_processing:
+  # Image format for OCR
+  # Options: "PNG", "JPEG"
+  format: "PNG"
+  
+  # Image quality for JPEG (1-100)
+  quality: 95
+  
+  # DPI for page rendering
+  dpi: 300
+  
+  # Image preprocessing
+  preprocessing:
+    # Contrast enhancement
+    enhance_contrast: false
+    
+    # Noise removal
+    denoise: false
+    
+    # Binarization (for scans)
+    binarize: false
+
+# Coordinate (bbox) settings
+coordinates:
+  # Coordinate precision (decimal places)
+  precision: 2
+  
+  # Coordinate normalization (relative to page or absolute)
+  normalize: false
+  
+  # Units of measurement
+  # Options: "pixels", "points", "mm"
+  units: "pixels"
+
+# Layout Type → ElementType mapping settings
+type_mapping:
+  # Dots.OCR type mapping to ElementType
+  layout_to_element:
+    "Section-header": "HEADER_N"  # level determined separately
+    "Title": "TITLE"
+    "Text": "TEXT"
+    "Picture": "IMAGE"
+    "Table": "TABLE"
+    "Caption": "CAPTION"
+    "Formula": "FORMULA"
+    "Footnote": "FOOTNOTE"
+    "List-item": "LIST_ITEM"
+    "Page-header": "PAGE_HEADER"
+    "Page-footer": "PAGE_FOOTER"
+  
+  # Rules for determining header level from Section-header
+  header_level:
+    # Use LLM for level determination
+    use_llm: true
+    
+    # Use heuristics (font size, position, etc.)
+    use_heuristics: true
+
+# Performance settings
+performance:
+  # Enable parallel page processing
+  parallel_processing: true
+  
+  # Number of threads for parallel processing
+  num_workers: 4
+  
+  # Cache layout detection results
+  cache_layout: true
+  
+  # Cache OCR results
+  cache_ocr: true

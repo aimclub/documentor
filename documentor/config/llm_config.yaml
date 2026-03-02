@@ -1,0 +1,103 @@
+# Configuration for LLM (Large Language Models) services
+
+# LLM provider settings
+providers:
+  openai:
+    # Optional OpenAI support
+    model: "gpt-4o"
+    # API URL (if null - uses default OpenAI endpoint)
+    base_url: null
+    # Generation temperature (0.0 - 1.0)
+    temperature: 0.1
+    # Maximum number of tokens
+    max_tokens: 4096
+    # Request timeout in seconds
+    timeout: 60
+
+# Text chunking settings
+chunking:
+  # Chunk size for LLM analysis (characters)
+  chunk_size: 3000
+  
+  # Overlap between chunks (paragraphs)
+  overlap: 1
+  
+  # Minimum chunk size (if smaller - merge with previous)
+  min_chunk_size: 100
+
+# Prompts for various tasks
+prompts:
+  # Header detection in text
+  header_detection: |
+    Analyze the following text and identify all headers with their levels.
+    
+    Rules:
+    - Headers should be distinguished from regular text
+    - Determine header level (1-6, where 1 is the top level)
+    - Consider existing hierarchy: {previous_headers}
+    - Check logic: a header of level N cannot contain a header of level < N
+    
+    Text:
+    {text}
+    
+    Return result in JSON format:
+    {{
+      "headers": [
+        {{"level": 1, "text": "Header", "position": 0}},
+        {{"level": 2, "text": "Subheader", "position": 150}}
+      ]
+    }}
+  
+  # Document element classification
+  structure_classification: |
+    Analyze the following text and classify document elements.
+    
+    Identify element types:
+    - Headers (with levels)
+    - Regular text (paragraphs)
+    - Image captions
+    - Table captions
+    - Lists
+    - Quotes
+    
+    Text:
+    {text}
+    
+    Return result in JSON format with elements and their types.
+  
+  # Visual document structure analysis
+  visual_structure_analysis: |
+    Analyze the document image and determine its structure.
+    
+    Find:
+    - Headers and their levels
+    - Paragraph text
+    - Images and their captions
+    - Tables
+    - Other structural elements
+    
+    Return result in structured format.
+
+# Header processing settings
+headers:
+  # Maximum header level (1-6)
+  max_level: 6
+  
+  # Minimum header level (1-6)
+  min_level: 1
+  
+  # Hierarchy validation (checking level logic)
+  validate_hierarchy: true
+
+# LLM response processing settings
+response_processing:
+  # Parse JSON response
+  parse_json: true
+  
+  # Handle parse errors gracefully
+  handle_parse_errors: true
+  
+  # Retry on errors
+  retry_on_error: true
+  # Maximum number of retries
+  max_retries: 3
