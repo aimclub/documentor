@@ -1,5 +1,5 @@
 """
-Интеграционные тесты.
+Integration tests.
 
-End-to-end тесты для проверки работы всей системы.
+End-to-end tests for the full system.
 """

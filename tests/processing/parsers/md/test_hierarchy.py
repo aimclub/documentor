@@ -1,6 +1,6 @@
 """
-Тесты для построения иерархии Markdown.
+Tests for Markdown hierarchy building.
 
-Тестируемый класс:
+Tested class:
 - MarkdownHierarchyBuilder
 """

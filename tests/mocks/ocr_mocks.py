@@ -1,5 +1,5 @@
 """
-Моки для OCR API.
+Mocks for OCR API.
 
-Используется для тестирования без реальных вызовов к OCR сервисам.
+Used for testing without real calls to OCR services.
 """

@@ -1,5 +1,5 @@
 """
-Тестовые данные и фикстуры.
+Test data and fixtures.
 
-Содержит примеры документов для тестирования.
+Contains sample documents for testing.
 """

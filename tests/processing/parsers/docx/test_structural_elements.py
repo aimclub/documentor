@@ -1,6 +1,6 @@
 """
-Тесты для извлечения структурных элементов DOCX.
+Tests for DOCX structural elements extraction.
 
-Тестируемый класс:
+Tested class:
 - DocxStructuralElementsExtractor
 """

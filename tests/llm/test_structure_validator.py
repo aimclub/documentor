@@ -1,6 +1,6 @@
 """
-Тесты для валидации структуры через LLM с XML.
+Tests for structure validation via LLM with XML.
 
-Тестируемый класс:
+Tested class:
 - StructureValidator
 """

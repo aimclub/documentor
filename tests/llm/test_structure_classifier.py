@@ -1,6 +1,6 @@
 """
-Тесты для классификации структуры через LLM.
+Tests for structure classification via LLM.
 
-Тестируемый класс:
+Tested class:
 - StructureClassifier
 """

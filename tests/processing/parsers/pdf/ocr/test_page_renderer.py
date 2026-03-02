@@ -1,7 +1,7 @@
 """
-Тесты для рендеринга страниц PDF.
+Tests for PDF page rendering.
 
-Тестируемый класс:
+Tested class:
 - PdfPageRenderer
 """
 
@@ -12,7 +12,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from PIL import Image
 
-# Добавляем корневую директорию проекта в PYTHONPATH
+# Add project root to PYTHONPATH
 _project_root = Path(__file__).parent.parent.parent.parent.parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
@@ -21,12 +21,12 @@ from documentor.processing.parsers.pdf.ocr.page_renderer import PdfPageRenderer
 
 
 # ============================================================================
-# Фикстуры
+# Fixtures
 # ============================================================================
 
 @pytest.fixture
 def sample_pdf_path(tmp_path):
-    """Создает временный PDF файл для тестов."""
+    """Creates temporary PDF file for tests."""
     pdf_path = tmp_path / "test.pdf"
     try:
         import fitz
@@ -37,18 +37,18 @@ def sample_pdf_path(tmp_path):
         doc.close()
         return pdf_path
     except ImportError:
-        pytest.skip("PyMuPDF (fitz) не установлен")
+        pytest.skip("PyMuPDF (fitz) not installed")
 
 
 # ============================================================================
-# Тесты инициализации
+# Initialization tests
 # ============================================================================
 
 class TestPdfPageRendererInitialization:
-    """Тесты инициализации PdfPageRenderer."""
+    """PdfPageRenderer initialization tests."""
 
     def test_default_initialization(self):
-        """Тест инициализации с параметрами по умолчанию."""
+        """Test initialization with default parameters."""
         renderer = PdfPageRenderer()
         assert renderer.render_scale == 2.0
         assert renderer.optimize_for_ocr is True
@@ -56,7 +56,7 @@ class TestPdfPageRendererInitialization:
         assert renderer.max_pixels is not None
 
     def test_custom_initialization(self):
-        """Тест инициализации с кастомными параметрами."""
+        """Test initialization with custom parameters."""
         renderer = PdfPageRenderer(
             render_scale=3.0,
             optimize_for_ocr=False,
@@ -69,22 +69,22 @@ class TestPdfPageRendererInitialization:
         assert renderer.max_pixels == 500000
 
     def test_initialization_with_default_pixels(self):
-        """Тест инициализации с дефолтными значениями пикселей."""
+        """Test initialization with default pixel values."""
         renderer = PdfPageRenderer()
-        # Проверяем, что значения установлены
+        # Check that values are set
         assert renderer.min_pixels > 0
         assert renderer.max_pixels > renderer.min_pixels
 
 
 # ============================================================================
-# Тесты render_page
+# render_page tests
 # ============================================================================
 
 class TestRenderPage:
-    """Тесты метода render_page."""
+    """Tests for render_page method."""
 
     def test_render_page_basic(self, sample_pdf_path):
-        """Тест базового рендеринга страницы."""
+        """Test basic page rendering."""
         renderer = PdfPageRenderer(optimize_for_ocr=False)
         image = renderer.render_page(sample_pdf_path, 0)
         
@@ -92,7 +92,7 @@ class TestRenderPage:
         assert image.mode == "RGB"
 
     def test_render_page_with_original(self, sample_pdf_path):
-        """Тест рендеринга страницы с возвратом оригинального изображения."""
+        """Test page rendering with original image returned."""
         renderer = PdfPageRenderer(optimize_for_ocr=False)
         original, optimized = renderer.render_page(sample_pdf_path, 0, return_original=True)
         
@@ -102,20 +102,20 @@ class TestRenderPage:
         assert optimized.mode == "RGB"
 
     def test_render_page_with_ocr_optimization(self, sample_pdf_path):
-        """Тест рендеринга страницы с оптимизацией для OCR."""
+        """Test page rendering with OCR optimization."""
         renderer = PdfPageRenderer(optimize_for_ocr=True)
         image = renderer.render_page(sample_pdf_path, 0)
         
         assert isinstance(image, Image.Image)
 
     def test_render_page_invalid_page_num(self, sample_pdf_path):
-        """Тест рендеринга несуществующей страницы."""
+        """Test rendering non-existent page."""
         renderer = PdfPageRenderer()
         with pytest.raises(Exception):
             renderer.render_page(sample_pdf_path, 999)
 
     def test_render_page_custom_scale(self, sample_pdf_path):
-        """Тест рендеринга страницы с кастомным масштабом."""
+        """Test page rendering with custom scale."""
         renderer = PdfPageRenderer(render_scale=1.5, optimize_for_ocr=False)
         image = renderer.render_page(sample_pdf_path, 0)
         
@@ -123,28 +123,28 @@ class TestRenderPage:
 
     @patch("documentor.processing.parsers.pdf.ocr.page_renderer.fetch_image")
     def test_render_page_with_fetch_image(self, mock_fetch, sample_pdf_path):
-        """Тест рендеринга страницы с использованием fetch_image."""
+        """Test page rendering using fetch_image."""
         mock_fetch.return_value = Image.new("RGB", (800, 600), color="white")
         
         renderer = PdfPageRenderer(optimize_for_ocr=True)
         image = renderer.render_page(sample_pdf_path, 0)
         
         assert isinstance(image, Image.Image)
-        # Проверяем, что fetch_image был вызван, если доступен
+        # Check that fetch_image was called if available
         if mock_fetch is not None:
-            # fetch_image может быть вызван или нет в зависимости от наличия модуля
+            # fetch_image may or may not be called depending on module availability
             pass
 
 
 # ============================================================================
-# Тесты render_pages
+# render_pages tests
 # ============================================================================
 
 class TestRenderPages:
-    """Тесты метода render_pages."""
+    """Tests for render_pages method."""
 
     def test_render_pages_all(self, sample_pdf_path):
-        """Тест рендеринга всех страниц."""
+        """Test rendering all pages."""
         renderer = PdfPageRenderer(optimize_for_ocr=False)
         images = renderer.render_pages(sample_pdf_path)
         
@@ -153,7 +153,7 @@ class TestRenderPages:
         assert all(isinstance(img, Image.Image) for img in images)
 
     def test_render_pages_specific(self, sample_pdf_path):
-        """Тест рендеринга конкретных страниц."""
+        """Test rendering specific pages."""
         renderer = PdfPageRenderer(optimize_for_ocr=False)
         images = renderer.render_pages(sample_pdf_path, page_nums=[0])
         
@@ -162,7 +162,7 @@ class TestRenderPages:
         assert isinstance(images[0], Image.Image)
 
     def test_render_pages_with_originals(self, sample_pdf_path):
-        """Тест рендеринга страниц с возвратом оригинальных изображений."""
+        """Test rendering pages with original images returned."""
         renderer = PdfPageRenderer(optimize_for_ocr=False)
         images = renderer.render_pages(sample_pdf_path, return_originals=True)
         
@@ -172,27 +172,27 @@ class TestRenderPages:
         assert all(isinstance(img[0], Image.Image) and isinstance(img[1], Image.Image) for img in images)
 
     def test_render_pages_invalid_page_num(self, sample_pdf_path):
-        """Тест рендеринга страниц с невалидным номером страницы."""
+        """Test rendering pages with invalid page number."""
         renderer = PdfPageRenderer()
         with pytest.raises(ValueError, match="Page number"):
             renderer.render_pages(sample_pdf_path, page_nums=[999])
 
     def test_render_pages_negative_page_num(self, sample_pdf_path):
-        """Тест рендеринга страниц с отрицательным номером страницы."""
+        """Test rendering pages with negative page number."""
         renderer = PdfPageRenderer()
         with pytest.raises(ValueError, match="Page number"):
             renderer.render_pages(sample_pdf_path, page_nums=[-1])
 
 
 # ============================================================================
-# Тесты get_page_count
+# get_page_count tests
 # ============================================================================
 
 class TestGetPageCount:
-    """Тесты метода get_page_count."""
+    """Tests for get_page_count method."""
 
     def test_get_page_count(self, sample_pdf_path):
-        """Тест получения количества страниц."""
+        """Test getting page count."""
         renderer = PdfPageRenderer()
         count = renderer.get_page_count(sample_pdf_path)
         
@@ -200,14 +200,14 @@ class TestGetPageCount:
         assert count >= 1
 
     def test_get_page_count_invalid_path(self):
-        """Тест получения количества страниц для несуществующего файла."""
+        """Test getting page count for non-existent file."""
         renderer = PdfPageRenderer()
         invalid_path = Path("/nonexistent/file.pdf")
         with pytest.raises(Exception):
             renderer.get_page_count(invalid_path)
 
     def test_get_page_count_multiple_pages(self, tmp_path):
-        """Тест получения количества страниц для многостраничного PDF."""
+        """Test getting page count for multi-page PDF."""
         pdf_path = tmp_path / "multi_page.pdf"
         try:
             import fitz
@@ -222,4 +222,4 @@ class TestGetPageCount:
             count = renderer.get_page_count(pdf_path)
             assert count == 3
         except ImportError:
-            pytest.skip("PyMuPDF (fitz) не установлен")
+            pytest.skip("PyMuPDF (fitz) not installed")

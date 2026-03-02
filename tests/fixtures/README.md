@@ -1,12 +1,12 @@
-# Тестовые данные
+# Test data
 
-Эта папка содержит тестовые документы для интеграционных тестов.
+This folder contains test documents for integration tests.
 
-## Структура
+## Structure
 
-- `sample_markdown.md` - пример Markdown документа
-- Другие тестовые файлы будут добавлены по мере необходимости
+- `sample_markdown.md` - sample Markdown document
+- Other test files will be added as needed
 
-## Использование
+## Usage
 
-Тестовые файлы используются в интеграционных тестах для проверки работы парсеров на реальных данных.
+Test files are used in integration tests to verify parsers on real data.

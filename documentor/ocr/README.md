@@ -30,7 +30,7 @@ Dots.OCR service integration (default implementation):
 - `client.py`: Direct API client functions
 - `prompts.py`: Prompt management
 - `html_table_parser.py`: HTML table parsing utilities
-- `utils.py`: Utility functions (e.g., markdown cleanup)
+- `markdown_formatting.py`: Markdown cleanup and formatting utilities
 - `types.py`: Type definitions (LayoutTypeDotsOCR enum)
 
 ### `manager.py`
@@ -98,7 +98,7 @@ All Dots OCR specific code is isolated in the `dots_ocr/` directory, making it e
 
 ## Docker Deployment
 
-If you're using Dots OCR as the default OCR service, you can deploy it using Docker Compose. See the [main README](../../README.md#docker-deployment-dots-ocr) for a complete example configuration.
+If you're using Dots OCR as the default OCR service, you can deploy it using Docker Compose. See the [project README](../../README.md#docker-deployment-dots-ocr) for a complete example configuration.
 
 **Configuration:**
 - Set `ocr_config.yaml` → `dots_ocr` → `endpoint` to your Docker service URL

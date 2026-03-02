@@ -1,3 +1,3 @@
 """
-Моки для внешних зависимостей (LLM API, OCR API).
+Mocks for external dependencies (LLM API, OCR API).
 """

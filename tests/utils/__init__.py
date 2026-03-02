@@ -1,3 +1,3 @@
 """
-Тесты для утилит.
+Tests for utilities.
 """

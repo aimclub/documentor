@@ -1,6 +1,6 @@
 """
-Тесты для детектирования заголовков через LLM.
+Tests for header detection via LLM.
 
-Тестируемый класс:
+Tested class:
 - HeaderDetector
 """

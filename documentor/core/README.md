@@ -5,17 +5,15 @@ Core utilities for environment management and initialization.
 ## Modules
 
 ### `load_env.py`
-Environment variable loading and parsing utilities.
+Environment variable loading from `.env` files.
 
-- Loads environment variables from `.env` files
-- Handles comments and multi-value variables
-- Validates and processes configuration values
+- `load_env_file(env_file=None)`: Loads environment variables from `.env`. If `env_file` is None, searches current directory and parents for `.env`.
 
 ## Usage
 
 ```python
-from documentor.core.load_env import load_env
+from documentor.core.load_env import load_env_file
 
-# Load environment variables
-load_env()
+# Load from .env in cwd or parent directories
+load_env_file()
 ```

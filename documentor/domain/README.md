@@ -43,7 +43,7 @@ Generates unique IDs for document elements.
 ## Usage
 
 ```python
-from documentor.domain import Element, ElementType, ParsedDocument
+from documentor.domain import DocumentFormat, Element, ElementIdGenerator, ElementType, ParsedDocument
 
 element = Element(
     id="elem_1",

@@ -1,6 +1,6 @@
 """
-Тесты для построения порядка чтения.
+Tests for reading order building.
 
-Тестируемый класс:
+Tested class:
 - ReadingOrderBuilder
 """

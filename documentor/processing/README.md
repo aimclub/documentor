@@ -4,29 +4,31 @@ Document processing pipeline and parsers.
 
 ## Structure
 
-- **hierarchy/**: Document hierarchy building and validation
-- **loader/**: Document loading and format detection
+- **loader/**: Document format detection and source resolution
 - **parsers/**: Format-specific parsers (PDF, DOCX, Markdown)
+- **hierarchy/**: Shared hierarchy utilities (hierarchy is built inside each parser)
+- **headers/**: Header-related constants and helpers
+- **image/**: Image processing utilities
+- **pdf/**: PDF text extraction utilities
 
 ## Modules
 
-### Hierarchy (`hierarchy/`)
-- `builder.py`: Builds document hierarchy from elements
-- `validator.py`: Validates document structure
-
 ### Loader (`loader/`)
-- `loader.py`: Document loading utilities and format detection
+- `loader.py`: `detect_document_format()`, `get_document_source()` for LangChain Document
 
 ### Parsers (`parsers/`)
 - `base.py`: Base parser class
-- `docx/`: DOCX parser implementation
-- `md/`: Markdown parser implementation
-- `pdf/`: PDF parser implementation
+- `pdf/`: PDF parser (layout-based, custom OCR components supported)
+- `docx/`: DOCX parser (OCR + XML + TOC)
+- `md/`: Markdown parser (regex-based)
+
+### Hierarchy (`hierarchy/`)
+Shared utilities; actual hierarchy building is done inside each parser (see parsers' hierarchy_builder or hierarchy modules).
 
 ## Usage
 
 ```python
-from documentor.processing.parsers.pdf.pdf_parser import PdfParser
+from documentor.processing.parsers.pdf import PdfParser
 from langchain_core.documents import Document
 
 parser = PdfParser()

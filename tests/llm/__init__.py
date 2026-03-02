@@ -1,3 +1,3 @@
 """
-Тесты для LLM модуля.
+Tests for LLM module.
 """

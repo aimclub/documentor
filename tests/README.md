@@ -50,10 +50,13 @@ pytest tests/ -k "test_load_env" -v
 ## Test Structure
 
 - `core/` - Tests for core utilities (load_env)
+- `config/` - Tests for configuration loading
 - `domain/` - Tests for domain models
-- `exceptions/` - Tests for exceptions (in root tests/)
-- `processing/` - Tests for processing modules
-- `utils/` - Tests for utility functions
+- `processing/` - Tests for processing modules (parsers, loader, hierarchy)
+- `utils/` - Tests for utility functions (used by ocr/processing)
 - `ocr/` - Tests for OCR modules
 - `llm/` - Tests for LLM modules
-- `integration/` - Integration tests
+- `integration/` - Integration tests (pipeline, docx, markdown)
+- Root: `test_exceptions.py`, `test_pipeline.py` - exceptions and pipeline tests
+- `files_for_tests/` - Test data files
+- `fixtures/` - Fixture files (e.g. sample markdown)

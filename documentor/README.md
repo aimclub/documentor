@@ -4,12 +4,11 @@ Main package for document parsing and processing.
 
 ## Structure
 
-- **config/**: Configuration files (YAML format)
-- **core/**: Core utilities and environment management
+- **config/**: Configuration files (YAML) and ConfigLoader
+- **core/**: Core utilities and environment loading (load_env_file)
 - **domain/**: Domain models and data structures
-- **ocr/**: OCR service integrations
-- **processing/**: Document processing pipeline
-- **utils/**: Utility functions and helpers
+- **ocr/**: OCR integrations (base classes, Dots.OCR, cleaning, image, layout)
+- **processing/**: Document processing (loader, parsers, hierarchy, headers, image, pdf)
 
 ## Key Modules
 
@@ -25,9 +24,12 @@ Core data structures:
 
 ### Exceptions (`exceptions.py`)
 Custom exceptions for error handling:
+- `DocumentorError`: Base exception for all library errors
 - `ParsingError`: Errors during document parsing
 - `ValidationError`: Input validation errors
 - `UnsupportedFormatError`: Unsupported document format
+- `OCRError`: OCR service errors
+- `LLMError`: LLM service errors
 
 ## Usage
 

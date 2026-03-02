@@ -87,7 +87,7 @@ See `documentor/config/config.yaml` (section `pdf_parser`) for configuration opt
 
 ### Default (Dots OCR)
 ```python
-from documentor.processing.parsers.pdf.pdf_parser import PdfParser
+from documentor.processing.parsers.pdf import PdfParser
 from langchain_core.documents import Document
 
 parser = PdfParser()
@@ -97,7 +97,7 @@ parsed = parser.parse(doc)
 
 ### Custom Components
 ```python
-from documentor.processing.parsers.pdf.pdf_parser import PdfParser
+from documentor.processing.parsers.pdf import PdfParser
 from documentor.ocr.base import BaseLayoutDetector, BaseTextExtractor
 from langchain_core.documents import Document
 

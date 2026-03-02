@@ -14,20 +14,14 @@ documentor/
 │
 ├── config/                  # Configuration
 │   ├── __init__.py
+│   ├── loader.py            # ConfigLoader for YAML configs
 │   ├── config.yaml          # General configuration (pdf_parser, docx_parser)
 │   ├── llm_config.yaml      # LLM configuration (YAML)
 │   └── ocr_config.yaml      # OCR configuration (YAML)
 │
 ├── core/                    # Core library
-│   └── __init__.py
-│
-├── utils/                   # Utilities
 │   ├── __init__.py
-│   ├── text_utils.py        # Text processing (chunks, cleaning)
-│   ├── ocr_image_utils.py   # Image processing for OCR
-│   ├── ocr_layout_utils.py  # Utilities for processing layout results
-│   ├── ocr_output_cleaner.py # Cleaning JSON responses from LLM
-│   └── ocr_consts.py        # OCR constants
+│   └── load_env.py         # Environment loading
 │
 ├── llm/                     # LLM integration
 │   ├── __init__.py
@@ -36,9 +30,19 @@ documentor/
 │
 ├── ocr/                     # OCR integration
 │   ├── __init__.py
-│   ├── base.py              # Base classes for OCR
-│   ├── dots_ocr.py         # Integration with Dots.OCR (layout detection)
-│   └── manager.py          # Manager for OCR task management (DotsOCRManager)
+│   ├── base.py              # Base classes (BaseLayoutDetector, BaseTextExtractor, etc.)
+│   ├── manager.py           # DotsOCRManager for OCR task management
+│   ├── constants.py         # OCR constants
+│   ├── dots_ocr/            # Dots.OCR integration
+│   │   ├── client.py        # Dots.OCR API client
+│   │   ├── layout_detector.py
+│   │   ├── text_extractor.py
+│   │   ├── table_parser.py
+│   │   ├── formula_extractor.py
+│   │   └── ...
+│   ├── cleaning/            # Output cleaning (LLM JSON responses)
+│   ├── image/               # Image utilities for OCR
+│   └── layout/              # Layout processing utilities
 │
 └── processing/              # Document processing
     ├── loader/              # Document format detection
@@ -51,9 +55,9 @@ documentor/
     │   │
     │   ├── md/              # Markdown parser
     │   │   ├── __init__.py
-    │   │   ├── md_parser.py # Main Markdown parser
-    │   │   ├── tokenizer.py # Markdown tokenization
-    │   │   └── hierarchy.py # Hierarchy building for Markdown
+    │   │   ├── md_parser.py # Main Markdown parser (block parse + hierarchy)
+    │   │   ├── tokenizer.py # Block parsing docs (logic in md_parser)
+    │   │   └── hierarchy.py # Hierarchy docs (logic in md_parser._build_elements)
     │   │
     │   ├── pdf/             # PDF parser
     │   │   ├── __init__.py
@@ -67,8 +71,7 @@ documentor/
     │   │       ├── __init__.py
     │   │       ├── layout_detector.py  # Layout detection via Dots.OCR
     │   │       ├── page_renderer.py    # Page rendering to images
-    │   │       ├── dots_ocr_client.py  # Direct Dots.OCR API client
-    │   │       └── html_table_parser.py # HTML table parsing from Dots OCR
+    │   │       └── dots_ocr_client.py  # Direct Dots.OCR API client (deprecated)
     │   │
     │   └── docx/            # DOCX parser
     │       ├── __init__.py
@@ -80,13 +83,14 @@ documentor/
     │       ├── header_processor.py    # Header processing and level determination
     │       ├── layout_detector.py     # Layout detection via Dots OCR
     │       ├── caption_finder.py      # Finding captions for tables and images
-    │       ├── hierarchy_builder.py   # Hierarchy building
-    │       └── ocr/                   # OCR components (for PDF conversion)
-    │           ├── __init__.py
-    │           └── layout_dots.py     # LayoutTypeDotsOCR enum (for PDF)
+    │       └── hierarchy_builder.py   # Hierarchy building
     │
-    └── hierarchy/           # Element hierarchy building (NOT USED)
-        └── __init__.py      # Hierarchy is built inside each parser
+    ├── hierarchy/           # Shared hierarchy utilities (optional use)
+    │   └── __init__.py
+    ├── headers/             # Header-related constants and helpers
+    ├── image/               # Image processing utilities
+    ├── pdf/                 # PDF text extraction utilities
+    └── table_merger.py      # Table merging logic
 ```
 
 ## Description of Main Modules
@@ -143,8 +147,8 @@ Parsers for various formats:
   - Table conversion from XML to DataFrame
 
 ### processing/hierarchy/
-Element hierarchy building (NOT USED):
-- Hierarchy is built inside each parser
+Shared hierarchy utilities (optional):
+- Hierarchy is built inside each parser (md, pdf, docx)
 - Each parser independently assigns parent_id based on headers
 
 ## Parser Logic

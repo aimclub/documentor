@@ -1,7 +1,7 @@
 """
-Тесты для утилит работы с файлами.
+Tests for file utilities.
 
-Тестируемые функции:
+Tested functions:
 - read_file()
 - write_file()
 """

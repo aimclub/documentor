@@ -1,6 +1,6 @@
 """
-Тесты для базовых классов OCR.
+Tests for OCR base classes.
 
-Тестируемые классы:
+Tested classes:
 - BaseOCRClient
 """

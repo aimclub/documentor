@@ -1,6 +1,6 @@
 """
-Тесты для построения иерархии элементов.
+Tests for element hierarchy building.
 
-Тестируемый класс:
+Tested class:
 - HierarchyBuilder
 """

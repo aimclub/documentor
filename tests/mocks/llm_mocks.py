@@ -1,5 +1,5 @@
 """
-Моки для LLM API.
+Mocks for LLM API.
 
-Используется для тестирования без реальных вызовов к LLM провайдерам.
+Used for testing without real calls to LLM providers.
 """

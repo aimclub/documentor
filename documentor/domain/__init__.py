@@ -1,3 +1,5 @@
+"""Domain models: DocumentFormat, Element, ElementType, ParsedDocument, ElementIdGenerator."""
+
 from .models import DocumentFormat, Element, ElementIdGenerator, ElementType, ParsedDocument
 
 __all__ = [

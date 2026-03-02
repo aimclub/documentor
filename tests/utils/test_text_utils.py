@@ -1,7 +1,7 @@
 """
-Тесты для утилит работы с текстом.
+Tests for text utilities.
 
-Тестируемые функции:
+Tested functions:
 - chunk_text()
 - clean_text()
 """

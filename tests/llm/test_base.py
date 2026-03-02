@@ -1,6 +1,6 @@
 """
-Тесты для базового класса LLM клиента.
+Tests for LLM client base class.
 
-Тестируемый класс:
+Tested class:
 - BaseLLMClient
 """

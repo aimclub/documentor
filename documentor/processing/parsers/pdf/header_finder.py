@@ -47,36 +47,36 @@ def _is_numbered_header(text: str) -> bool:
 
 def determine_level_by_numbering(text: str) -> Optional[int]:
     """
-    Определяет уровень заголовка на основе нумерации.
+    Determines header level from numbering.
     
-    Распознает различные типы нумерации:
-    - Цифровая: "1", "1.1", "1.1.1", "1.2.3.4"
-    - Буквенная: "A", "A.1", "B.2.1"
-    - Римские цифры: "I", "II", "III"
-    - Комбинированная: "A.1", "B.2"
+    Recognizes numbering types:
+    - Numeric: "1", "1.1", "1.1.1", "1.2.3.4"
+    - Alphabetic: "A", "A.1", "B.2.1"
+    - Roman: "I", "II", "III"
+    - Combined: "A.1", "B.2"
     
     Args:
-        text: Текст заголовка.
+        text: Header text.
     
     Returns:
-        Уровень заголовка (1-6) или None, если нумерация не распознана.
+        Header level (1-6) or None if numbering not recognized.
     """
     text_stripped = text.strip()
     
-    # Паттерны для определения уровня по глубине нумерации
+    # Patterns for level by numbering depth
     patterns = [
-        # Уровень 4: "1.2.3.4" или "A.1.2.3"
+        # Level 4: "1.2.3.4" or "A.1.2.3"
         (r'^[A-Z\d]+\.\d+\.\d+\.\d+', 4),
-        # Уровень 3: "1.2.3" или "A.1.2" или "1.1.1"
+        # Level 3: "1.2.3" or "A.1.2" or "1.1.1"
         (r'^[A-Z\d]+\.\d+\.\d+', 3),
-        # Уровень 2: "1.2" или "A.1" или "1.1"
+        # Level 2: "1.2" or "A.1" or "1.1"
         (r'^[A-Z\d]+\.\d+', 2),
-        # Уровень 1: "1." или "1 " или "I." или "A." или "A "
+        # Level 1: "1." or "1 " or "I." or "A." or "A "
         (r'^\d+\.', 1),
-        (r'^\d+\s+[А-ЯЁA-Z]', 1),  # "1 Заголовок"
+        (r'^\d+\s+[А-ЯЁA-Z]', 1),  # "1 Header" (Cyrillic/Latin)
         (r'^[IVX]+\.', 1),  # "I.", "II.", "III."
         (r'^[A-Z]\.', 1),  # "A.", "B."
-        (r'^[A-Z]\s+[А-ЯЁA-Z]', 1),  # "A Заголовок"
+        (r'^[A-Z]\s+[А-ЯЁA-Z]', 1),  # "A Header" (Cyrillic/Latin)
     ]
     
     for pattern in patterns:
@@ -85,9 +85,9 @@ def determine_level_by_numbering(text: str) -> Optional[int]:
             if re.match(regex, text_stripped, re.IGNORECASE):
                 return level
         else:
-            # Старые паттерны без уровня - определяем по количеству точек
+            # Legacy patterns without level - determine by dot count
             if re.match(pattern, text_stripped, re.IGNORECASE):
-                # Считаем количество точек для определения уровня
+                # Count dots to determine level
                 dot_count = text_stripped.split('.')[0].count('.') if '.' in text_stripped else 0
                 if dot_count == 0:
                     return 1
@@ -400,47 +400,47 @@ def determine_header_level_by_font_name(
     header_rules: Optional[Dict[str, Any]] = None
 ) -> Optional[int]:
     """
-    Определяет уровень заголовка на основе названия шрифта.
+    Determines header level from font name.
     
-    Логика (ПРИОРИТЕТНЫЙ метод):
-    1. Если font_name точно совпадает с font_name заголовков первого уровня - это HEADER_1
-    2. Если font_name совпадает с font_name заголовков первого уровня, но содержит "Ital" - это HEADER_2
-    3. Если font_name совпадает с font_name заголовков второго уровня - это HEADER_2
+    Logic (PRIORITY method):
+    1. If font_name exactly matches level-1 header font_name - HEADER_1
+    2. If font_name matches level-1 font but contains "Ital" - HEADER_2
+    3. If font_name matches level-2 header font_name - HEADER_2
     
     Args:
-        font_name: Название шрифта элемента.
-        header_rules: Правила заголовков, построенные из известных заголовков.
+        font_name: Element font name.
+        header_rules: Header rules built from known headers.
     
     Returns:
-        Уровень заголовка (1-6) или None, если не удалось определить.
+        Header level (1-6) or None if not determined.
     """
     if not font_name or not header_rules:
         return None
     
     rules_by_level = header_rules.get('by_level', {})
     
-    # Ищем font_name для уровня 1 (самый приоритетный)
+    # Find font_name for level 1 (highest priority)
     level_1_font = None
     for level_key, level_rules in rules_by_level.items():
         if level_key == '1' or (isinstance(level_key, str) and level_key.isdigit() and int(level_key) == 1):
             level_1_font = level_rules.get('font_name')
             break
     
-    # Ищем font_name для уровня 2
+    # Find font_name for level 2
     level_2_font = None
     for level_key, level_rules in rules_by_level.items():
         if level_key == '2' or (isinstance(level_key, str) and level_key.isdigit() and int(level_key) == 2):
             level_2_font = level_rules.get('font_name')
             break
     
-    # ПРИОРИТЕТ 1: Проверяем точное совпадение с уровнем 1
+    # PRIORITY 1: Exact match with level 1
     if level_1_font and font_name == level_1_font:
         return 1
     
-    # ПРИОРИТЕТ 2: Проверяем, если font_name содержит базовое имя уровня 1 + "Ital" - это уровень 2
+    # PRIORITY 2: If font_name contains level-1 base name + "Ital" - level 2
     if level_1_font:
-        # Убираем "Ital", "Italic", "Oblique" из font_name и сравниваем с level_1_font
-        # Например: "NimbusRomNo9L-MediItal" -> "NimbusRomNo9L-Medi"
+        # Strip "Ital", "Italic", "Oblique" from font_name and compare to level_1_font
+        # e.g. "NimbusRomNo9L-MediItal" -> "NimbusRomNo9L-Medi"
         font_base = font_name
         for suffix in ['Ital', 'Italic', 'Oblique', 'Obl']:
             if font_base.endswith(suffix):
@@ -453,15 +453,15 @@ def determine_header_level_by_font_name(
                 level_1_base = level_1_base[:-len(suffix)]
                 break
         
-        # Если базовые имена совпадают, но в font_name есть "Ital" - это уровень 2
+        # If base names match but font_name has "Ital" - level 2
         if font_base == level_1_base:
             font_lower = font_name.lower()
             if 'ital' in font_lower or 'oblique' in font_lower or 'obl' in font_lower:
                 return 2
-            # Если базовые имена совпадают и нет "Ital" - это тоже уровень 1
+            # If base names match and no "Ital" - also level 1
             return 1
     
-    # ПРИОРИТЕТ 3: Проверяем точное совпадение с уровнем 2
+    # PRIORITY 3: Exact match with level 2
     if level_2_font and font_name == level_2_font:
         return 2
     
@@ -636,9 +636,9 @@ def _is_header_by_properties(
         if not matches_any_rule:
             # Check numbered header with confirmation (bold)
             is_numbered_header_with_capital = any(re.match(p, text) for p in [
-                r'^\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1. Заголовок" or "1 Заголовок" (with separator)
-                r'^\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1. Заголовок" or "1.1 Заголовок"
-                r'^\d+\.\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1.1. Заголовок" or "1.1.1 Заголовок"
+                r'^\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1. Header" or "1 Header" (with separator)
+                r'^\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1. Header" or "1.1 Header"
+                r'^\d+\.\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1.1. Header" or "1.1.1 Header"
             ])
             if is_numbered_header_with_capital and properties.get('is_bold'):
                 return True
@@ -681,9 +681,9 @@ def _is_header_by_properties(
     # Fallback criteria: only use if NO header_rules are provided
     # Numbered pattern - require additional confirmation: bold
     is_numbered_header_with_capital = any(re.match(p, text) for p in [
-        r'^\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1. Заголовок" or "1 Заголовок" (with separator)
-        r'^\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1. Заголовок" or "1.1 Заголовок"
-        r'^\d+\.\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1.1. Заголовок" or "1.1.1 Заголовок"
+        r'^\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1. Header" or "1 Header" (with separator)
+        r'^\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1. Header" or "1.1 Header"
+        r'^\d+\.\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1.1. Header" or "1.1.1 Header"
     ])
     # Also check font name for bold/medium indicators
     is_bold_fallback_no_rules = properties.get('is_bold', False)
