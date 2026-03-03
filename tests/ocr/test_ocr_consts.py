@@ -18,7 +18,7 @@ if str(_project_root) not in sys.path:
 
 import pytest
 
-from documentor.utils.ocr_consts import (
+from documentor.ocr.constants import (
     IMAGE_FACTOR,
     MAX_PIXELS,
     MIN_PIXELS,

@@ -79,49 +79,6 @@ class TestPdfLayoutDetectorInitialization:
 
 
 # ============================================================================
-# detect_layout with direct API tests
-# ============================================================================
-
-class TestDetectLayoutDirectAPI:
-    """Tests for detect_layout with direct API."""
-
-    @patch("documentor.processing.parsers.pdf.ocr.layout_detector.process_layout_detection")
-    def test_detect_layout_success(self, mock_process, mock_image, mock_layout_result):
-        """Test successful layout detection via direct API."""
-        mock_process.return_value = (mock_layout_result, "raw_response", True)
-        
-        detector = PdfLayoutDetector(use_direct_api=True)
-        result = detector.detect_layout(mock_image)
-        
-        assert len(result) == len(mock_layout_result)
-        assert result[0]["category"] == "Section-header"
-        mock_process.assert_called_once()
-
-    @patch("documentor.processing.parsers.pdf.ocr.layout_detector.process_layout_detection")
-    def test_detect_layout_failure(self, mock_process, mock_image):
-        """Test layout detection error handling."""
-        mock_process.return_value = (None, "error_response", False)
-        
-        detector = PdfLayoutDetector(use_direct_api=True)
-        with pytest.raises(RuntimeError, match="Layout detection error"):
-            detector.detect_layout(mock_image)
-
-    @patch("documentor.processing.parsers.pdf.ocr.layout_detector.process_layout_detection")
-    def test_detect_layout_with_origin_image(self, mock_process, mock_image, mock_layout_result):
-        """Test layout detection with original image."""
-        mock_process.return_value = (mock_layout_result, "raw_response", True)
-        
-        detector = PdfLayoutDetector(use_direct_api=True)
-        origin_image = Image.new("RGB", (400, 300), color="white")
-        result = detector.detect_layout(mock_image, origin_image=origin_image)
-        
-        assert len(result) > 0
-        # Check that process_layout_detection was called with origin_image
-        call_args = mock_process.call_args
-        assert call_args[1]["origin_image"] is origin_image
-
-
-# ============================================================================
 # detect_layout with DotsOCRManager tests
 # ============================================================================
 

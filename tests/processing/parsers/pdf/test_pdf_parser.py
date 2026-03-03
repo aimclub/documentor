@@ -430,10 +430,8 @@ class TestParseTables:
     @patch("documentor.processing.parsers.pdf.table_parser.parse_table_from_html")
     def test_parse_tables_from_dots_ocr_html(self, mock_parse_html, pdf_parser, sample_pdf_path):
         """Test parsing tables from Dots OCR HTML."""
-        # Set up mock - parse_table_from_html returns (markdown, dataframe, success)
         mock_parse_html.return_value = (
-            None,  # markdown is None now
-            pd.DataFrame({"Col1": ["Val1"], "Col2": ["Val2"]}),
+            "<table><tr><td>Col1</td><td>Col2</td></tr></table>",
             True,
         )
         
@@ -449,15 +447,12 @@ class TestParseTables:
                 },
             ),
         ]
-        # use_dots_ocr_html=True means use HTML from Dots OCR
         parsed_elements = pdf_parser.table_parser.parse_tables(elements, sample_pdf_path, use_dots_ocr_html=True)
         assert len(parsed_elements) == len(elements)
-        # Check that HTML parser was called (if table_html in metadata)
         mock_parse_html.assert_called()
-        # Check that table was processed
         table_elem = next((e for e in parsed_elements if e.type == ElementType.TABLE), None)
         if table_elem:
-            assert "dataframe" in table_elem.metadata
+            assert "<table>" in table_elem.content or "table" in str(table_elem.metadata.get("content", ""))
 
 
     def test_parse_tables_no_tables(self, pdf_parser, sample_pdf_path):

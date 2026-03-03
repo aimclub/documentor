@@ -768,53 +768,6 @@ class TestElementIdGenerator:
 
 
 # ============================================================================
-# Tests for Element.dataframe property
-# ============================================================================
-
-class TestElementDataframe:
-    """Tests for Element.dataframe property."""
-
-    def test_dataframe_for_table_element(self):
-        """Test getting DataFrame for table element."""
-        import pandas as pd
-
-        df = pd.DataFrame({"Col1": ["A1", "A2"], "Col2": ["B1", "B2"]})
-        element = Element(
-            id="001",
-            type=ElementType.TABLE,
-            content="| Col1 | Col2 |\n|------|------|\n| A1   | B1   |",
-            metadata={"dataframe": df},
-        )
-
-        result_df = element.dataframe
-        assert result_df is not None
-        assert isinstance(result_df, pd.DataFrame)
-        assert len(result_df) == 2
-        assert list(result_df.columns) == ["Col1", "Col2"]
-
-    def test_dataframe_for_non_table_element(self):
-        """Test getting DataFrame for non-table element."""
-        element = Element(
-            id="001",
-            type=ElementType.TEXT,
-            content="Some text",
-        )
-
-        assert element.dataframe is None
-
-    def test_dataframe_for_table_without_dataframe(self):
-        """Test getting DataFrame for table without DataFrame in metadata."""
-        element = Element(
-            id="001",
-            type=ElementType.TABLE,
-            content="| Col1 | Col2 |",
-            metadata={},  # No dataframe
-        )
-
-        assert element.dataframe is None
-
-
-# ============================================================================
 # Tests for ParsedDocument.get_elements_by_type
 # ============================================================================
 
@@ -882,25 +835,20 @@ class TestParsedDocumentGetTables:
 
     def test_get_tables_with_tables(self):
         """Test getting tables from document with tables."""
-        import pandas as pd
-
-        df1 = pd.DataFrame({"A": [1, 2], "B": [3, 4]})
-        df2 = pd.DataFrame({"X": ["a", "b"], "Y": ["c", "d"]})
-
         elements = [
             Element(id="001", type=ElementType.TITLE, content="Title"),
             Element(
                 id="002",
                 type=ElementType.TABLE,
                 content="| A | B |\n| 1 | 3 |",
-                metadata={"dataframe": df1},
+                metadata={},
             ),
             Element(id="003", type=ElementType.TEXT, content="Text"),
             Element(
                 id="004",
                 type=ElementType.TABLE,
                 content="| X | Y |\n| a | c |",
-                metadata={"dataframe": df2},
+                metadata={},
             ),
         ]
 
@@ -914,8 +862,6 @@ class TestParsedDocumentGetTables:
         assert len(tables) == 2
         assert tables[0].id == "002"
         assert tables[1].id == "004"
-        assert tables[0].dataframe is not None
-        assert tables[1].dataframe is not None
 
     def test_get_tables_without_tables(self):
         """Test getting tables from document without tables."""
@@ -933,35 +879,6 @@ class TestParsedDocumentGetTables:
         tables = doc.get_tables()
         assert len(tables) == 0
         assert isinstance(tables, list)
-
-    def test_get_tables_dataframe_access(self):
-        """Test DataFrame access via get_tables()."""
-        import pandas as pd
-
-        df = pd.DataFrame({"Name": ["John", "Jane"], "Age": [25, 30]})
-        elements = [
-            Element(
-                id="001",
-                type=ElementType.TABLE,
-                content="| Name | Age |",
-                metadata={"dataframe": df},
-            ),
-        ]
-
-        doc = ParsedDocument(
-            source="test.md",
-            format=DocumentFormat.MARKDOWN,
-            elements=elements,
-        )
-
-        table = doc.get_tables()[0]
-        result_df = table.dataframe
-
-        assert result_df is not None
-        assert len(result_df) == 2
-        assert list(result_df.columns) == ["Name", "Age"]
-        assert result_df.iloc[0]["Name"] == "John"
-        assert result_df.iloc[1]["Age"] == 30
 
 
 # ============================================================================

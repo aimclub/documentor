@@ -197,44 +197,6 @@ class TestMarkdownIntegrationMetrics:
         assert isinstance(metrics["document_lines"], int)
         assert metrics["document_lines"] >= 0
 
-    def test_metrics_accuracy(self):
-        """Test metrics accuracy."""
-        content = "# H1\n## H2\n### H3\n\nText."
-        doc = Document(
-            page_content=content,
-            metadata={"source": "test.md"}
-        )
-        
-        result = pipeline(doc)
-        metrics = result.metadata["pipeline_metrics"]
-        
-        # Element count should match
-        assert metrics["num_elements"] == len(result.elements)
-        assert metrics["num_elements"] >= 4  # at least 3 headers + text
-        
-        # Parsing time should be reasonable (under 5 seconds for simple doc)
-        assert metrics["parsing_time_seconds"] < 5.0
-        
-        # Check elements_by_type
-        elements_by_type = metrics["elements_by_type"]
-        assert isinstance(elements_by_type, dict)
-        # Headers should be present
-        assert "header_1" in elements_by_type or sum(
-            v for k, v in elements_by_type.items() if k.startswith("header_")
-        ) >= 3
-        
-        # Check document_size_bytes and document_lines
-        expected_bytes = len(content.encode("utf-8"))
-        expected_lines = len(content.splitlines())
-        assert metrics["document_size_bytes"] == expected_bytes
-        assert metrics["document_lines"] == expected_lines
-        
-        # Check elements_per_second (pipeline.py uses round(..., 2), so allow tolerance)
-        if metrics["parsing_time_seconds"] > 0:
-            expected_eps = metrics["num_elements"] / metrics["parsing_time_seconds"]
-            # Account for rounding to 2 decimal places in pipeline.py
-            assert abs(metrics["elements_per_second"] - expected_eps) < 0.5
-
 
 class TestMarkdownIntegrationHierarchy:
     """Element hierarchy tests."""

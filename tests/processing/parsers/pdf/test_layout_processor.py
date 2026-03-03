@@ -97,30 +97,3 @@ class TestPdfLayoutProcessor:
         
         assert len(filtered) == 2
         assert all(e["category"] in ["Text", "Picture"] for e in filtered)
-
-    @patch("documentor.processing.parsers.pdf.layout_processor.PdfPageRenderer")
-    @patch("documentor.processing.parsers.pdf.ocr.dots_ocr_client.process_layout_detection")
-    def test_reprocess_tables_with_all_en(self, mock_process_layout, mock_renderer_class, layout_processor, sample_pdf_path, mock_image):
-        """Test reprocessing tables with all_en prompt."""
-        mock_renderer = MagicMock()
-        mock_renderer.render_page.return_value = (mock_image, mock_image)
-        mock_renderer_class.return_value = mock_renderer
-        
-        # Mock process_layout_detection to return tuple (layout, _, success)
-        mock_process_layout.return_value = (
-            [{"bbox": [0, 0, 100, 50], "category": "Table", "page_num": 0, "table_html": "<table></table>"}],
-            None,
-            True
-        )
-        
-        layout_processor.page_renderer = mock_renderer
-        
-        layout_elements = [
-            {"bbox": [0, 0, 100, 50], "category": "Table", "page_num": 0},
-        ]
-        
-        result = layout_processor.reprocess_tables_with_all_en(sample_pdf_path, layout_elements)
-        
-        # Should have reprocessed table with HTML
-        assert len(result) > 0
-        mock_process_layout.assert_called()

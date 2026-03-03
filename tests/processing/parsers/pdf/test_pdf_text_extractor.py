@@ -23,7 +23,7 @@ try:
 except ImportError:
     FITZ_AVAILABLE = False
 
-from documentor.utils.pdf_text_extractor import PdfTextExtractorUtil
+from documentor.processing.pdf.text_extractor_util import PdfTextExtractorUtil
 
 
 @pytest.fixture

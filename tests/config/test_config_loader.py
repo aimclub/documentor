@@ -8,8 +8,6 @@ Tests:
 
 import sys
 from pathlib import Path
-from unittest.mock import patch, mock_open
-
 import pytest
 import yaml
 
@@ -18,7 +16,7 @@ _project_root = Path(__file__).parent.parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
 
-from documentor.utils.config_loader import ConfigLoader
+from documentor.config.loader import ConfigLoader
 
 
 class TestConfigLoader:
@@ -43,9 +41,8 @@ class TestConfigLoader:
         with open(config_path, "w", encoding="utf-8") as f:
             yaml.dump(config_content, f)
 
-        with patch("documentor.utils.config_loader.ConfigLoader.get_config_path", return_value=config_path):
-            config = ConfigLoader.load_config("pdf_parser")
-            assert config["layout_detection"]["render_scale"] == 2.0
+        config = ConfigLoader.load_config("pdf_parser", config_path=config_path)
+        assert config["layout_detection"]["render_scale"] == 2.0
 
     def test_load_config_missing_section(self, tmp_path):
         """Test loading missing configuration section."""
@@ -61,15 +58,13 @@ class TestConfigLoader:
         with open(config_path, "w", encoding="utf-8") as f:
             yaml.dump(config_content, f)
 
-        with patch("documentor.utils.config_loader.ConfigLoader.get_config_path", return_value=config_path):
-            config = ConfigLoader.load_config("missing_section")
-            assert config == {}
+        config = ConfigLoader.load_config("missing_section", config_path=config_path)
+        assert config == {}
 
     def test_load_config_missing_file(self):
-        """Test loading configuration when file doesn't exist."""
-        with patch("documentor.utils.config_loader.ConfigLoader.get_config_path", return_value=Path("/nonexistent/config.yaml")):
-            config = ConfigLoader.load_config("pdf_parser")
-            assert config == {}
+        """When config file does not exist, loader falls back to default internal config."""
+        config = ConfigLoader.load_config("pdf_parser", config_path=Path("/nonexistent/config.yaml"))
+        assert isinstance(config, dict)
 
     def test_get_config_value_simple_key(self):
         """Test getting value with simple key."""
