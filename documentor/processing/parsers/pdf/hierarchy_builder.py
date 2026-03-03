@@ -143,7 +143,7 @@ class PdfHierarchyBuilder:
             previous_headers: List[Dict[str, Any]] = []  # {level, font_size, page_num}
             # Track if we've seen any headers yet (for TITLE detection)
             first_header_seen = False
-            # Font name для заголовков первого уровня (определяется из специальных заголовков: Abstract, Introduction)
+            # Font name for level-1 headers (derived from special headers: Abstract, Introduction)
             level_1_font_name: Optional[str] = None
             
             for element in layout_elements:
@@ -240,10 +240,10 @@ class PdfHierarchyBuilder:
                             cleaned_text_normalized = cleaned_text.strip().rstrip(':').strip().upper()
                             is_special_header = cleaned_text_normalized in SPECIAL_HEADER_1
                             
-                            # УМНАЯ ЛОГИКА: Сначала проверяем, пронумерован ли заголовок
+                            # Smart logic: first check if header is numbered
                             is_numbered = _is_numbered_header(cleaned_text)
                             
-                            # ПРИОРИТЕТ 1: Специальные заголовки (Abstract, Introduction) - всегда HEADER_1
+                            # PRIORITY 1: Special headers (Abstract, Introduction) - always HEADER_1
                             level = None
                             if is_special_header:
                                 level = 1
@@ -253,28 +253,28 @@ class PdfHierarchyBuilder:
                                         level_1_font_name = special_font_name
                                         logger.debug(f"Detected level 1 font name from special header '{cleaned_text}': {level_1_font_name}")
                             
-                            # ПРИОРИТЕТ 2: Если заголовок ПРОНУМЕРОВАН - определяем уровень по нумерации
+                            # PRIORITY 2: If header is numbered - determine level by numbering
                             elif is_numbered:
                                 level = determine_level_by_numbering(cleaned_text)
                                 if level is None:
-                                    # Fallback: используем стандартную логику
+                                    # Fallback: use standard logic
                                     level = self._determine_header_level(
                                         cleaned_text, element, page, rect, None, previous_headers, font_size, font_properties
                                     )
                                 logger.debug(f"Determined level {level} for numbered header '{cleaned_text[:50]}...' by numbering pattern")
                             
-                            # ПРИОРИТЕТ 3: Если заголовок НЕ пронумерован - определяем уровень по стилю (font_name)
+                            # PRIORITY 3: If header is not numbered - determine level by style (font_name)
                             else:
                                 if level_1_font_name and font_properties:
                                     element_font_name = font_properties.get("font_name")
                                     if element_font_name:
-                                        # Точное совпадение - это HEADER_1
+                                        # Exact match - this is HEADER_1
                                         if element_font_name == level_1_font_name:
                                             level = 1
                                             logger.debug(f"Determined level 1 for unnumbered header '{cleaned_text[:50]}...' by exact font_name match: {element_font_name}")
-                                        # Проверяем, является ли это базовым именем + "Ital" - это HEADER_2
+                                        # Check if this is base name + "Ital" - this is HEADER_2
                                         else:
-                                            # Убираем "Ital", "Italic", "Oblique" из font_name и сравниваем
+                                            # Strip "Ital", "Italic", "Oblique" from font_name and compare
                                             font_base = element_font_name
                                             for suffix in ['Ital', 'Italic', 'Oblique', 'Obl']:
                                                 if font_base.endswith(suffix):
@@ -296,14 +296,14 @@ class PdfHierarchyBuilder:
                                                     level = 1
                                                     logger.debug(f"Determined level 1 for unnumbered header '{cleaned_text[:50]}...' by font_name base match: {element_font_name}")
                                 
-                                # Если уровень все еще не определен, используем стандартную логику
+                                # If level still undetermined, use standard logic
                                 if level is None:
                                     level = self._determine_header_level(
                                         cleaned_text, element, page, rect, None, previous_headers, font_size, font_properties
                                     )
                             
                             # Save header info for comparison with subsequent headers
-                            # Сохраняем также is_bold для сравнения стилей
+                            # Also save is_bold for style comparison
                             header_info = {
                                 "level": level,
                                 "font_size": font_size,
@@ -324,7 +324,7 @@ class PdfHierarchyBuilder:
                             element["text"] = cleaned_text
                             element["level"] = level
                             element["element_type"] = element_type
-                            # Сохраняем font_properties в элементе для использования во втором проходе
+                            # Save font_properties in element for use in second pass
                             if font_properties:
                                 element["font_properties"] = font_properties
                             first_header_seen = True
@@ -356,8 +356,8 @@ class PdfHierarchyBuilder:
                 except Exception as e:
                     logger.warning(f"Failed to build header rules: {e}")
             
-            # Second pass: переопределяем уровни заголовков на основе font_name
-            # Это ПРИОРИТЕТНЫЙ метод: если font_name совпадает с известными заголовками - используем их уровень
+            # Second pass: override header levels based on font_name
+            # This is the PRIORITY method: if font_name matches known headers - use their level
             if header_rules:
                 for element in analyzed_elements:
                     category = element.get("category", "")
@@ -370,10 +370,10 @@ class PdfHierarchyBuilder:
                             element["category"] = "Text"
                             continue
                         
-                        # Получаем font_name элемента
+                        # Get element font_name
                         font_properties = element.get("font_properties")
                         if not font_properties:
-                            # Пытаемся извлечь font_properties, если их нет
+                            # Try to extract font_properties if not present
                             bbox = element.get("bbox", [])
                             page_num = element.get("page_num", 0)
                             if len(bbox) >= 4 and page_num < len(pdf_document):
@@ -394,10 +394,10 @@ class PdfHierarchyBuilder:
                         if font_properties:
                             font_name = font_properties.get("font_name")
                             if font_name:
-                                # Определяем уровень на основе font_name
+                                # Determine level based on font_name
                                 level_by_font = determine_header_level_by_font_name(font_name, header_rules)
                                 if level_by_font is not None:
-                                    # Переопределяем уровень заголовка на основе font_name
+                                    # Override header level based on font_name
                                     element["level"] = level_by_font
                                     element["element_type"] = getattr(ElementType, f"HEADER_{level_by_font}", ElementType.HEADER_1)
                                     logger.debug(f"Determined level {level_by_font} for '{text[:50]}...' by font_name '{font_name}'")
@@ -445,20 +445,20 @@ class PdfHierarchyBuilder:
         self, page: fitz.Page, rect: fitz.Rect
     ) -> Dict[str, Any]:
         """
-        Извлекает свойства шрифта из области текста (размер, жирный, курсив).
+        Extracts font properties from text region (size, bold, italic).
         
-        Аналогично функции в DOCX пайплайне и pdf_parser.py.
+        Same logic as in DOCX pipeline and pdf_parser.py.
         
         Args:
-            page: PDF страница.
-            rect: Прямоугольник области текста.
+            page: PDF page.
+            rect: Text region rectangle.
         
         Returns:
-            Словарь с ключами:
-            - font_size: средний размер шрифта (float или None)
-            - is_bold: True если ≥95% текста жирный (bool)
-            - is_italic: True если ≥95% текста курсив (bool)
-            - font_name: основное имя шрифта (str или None)
+            Dict with keys:
+            - font_size: average font size (float or None)
+            - is_bold: True if >=95% of text is bold (bool)
+            - is_italic: True if >=95% of text is italic (bool)
+            - font_name: main font name (str or None)
         """
         try:
             text_dict = page.get_text("dict", clip=rect)
@@ -484,7 +484,7 @@ class PdfHierarchyBuilder:
                             if font_name:
                                 font_names.append(font_name)
                             
-                            # Проверяем флаги форматирования
+                            # Check format flags
                             flags = span.get("flags", 0)
                             span_text = span.get("text", "")
                             span_length = len(span_text)
@@ -493,8 +493,8 @@ class PdfHierarchyBuilder:
                                 total_spans += 1
                                 total_text_length += span_length
                                 
-                                # Проверяем жирный через флаги (бит 19 = ForceBold)
-                                # Или через имя шрифта (содержит "Bold")
+                                # Check bold via flags (bit 19 = ForceBold)
+                                # Or via font name (contains "Bold")
                                 is_bold_span = False
                                 if flags & (1 << 18):  # Bit 19 (0-indexed = 18) = ForceBold
                                     is_bold_span = True
@@ -505,8 +505,8 @@ class PdfHierarchyBuilder:
                                     bold_spans += 1
                                     bold_text_length += span_length
                                 
-                                # Проверяем курсив через флаги (бит 7 = Italic)
-                                # Или через имя шрифта (содержит "Italic" или "Oblique")
+                                # Check italic via flags (bit 7 = Italic)
+                                # Or via font name (contains "Italic" or "Oblique")
                                 if flags & (1 << 6):  # Bit 7 (0-indexed = 6) = Italic
                                     italic_spans += 1
                                 elif font_name and ("italic" in font_name.lower() or "oblique" in font_name.lower()):
@@ -519,18 +519,18 @@ class PdfHierarchyBuilder:
                 "font_name": None
             }
             
-            # Определяем основное имя шрифта (самое частое)
+            # Determine main font name (most frequent)
             if font_names:
                 from collections import Counter
                 font_counter = Counter(font_names)
                 result["font_name"] = font_counter.most_common(1)[0][0]
             
-            # Проверяем жирный: ≥95% текста должен быть жирным (как в DOCX)
+            # Check bold: >=95% of text must be bold (as in DOCX)
             if total_text_length > 0:
                 bold_ratio = bold_text_length / total_text_length
                 result["is_bold"] = bold_ratio >= 0.95
             
-            # Проверяем курсив: ≥95% spans должны быть курсивом
+            # Check italic: >=95% of spans must be italic
             if total_spans > 0:
                 italic_ratio = italic_spans / total_spans
                 result["is_italic"] = italic_ratio >= 0.95
@@ -548,8 +548,8 @@ class PdfHierarchyBuilder:
         """
         Gets average font size from text in rectangle.
         
-        DEPRECATED: Используйте _get_font_properties для получения всех свойств шрифта.
-        Оставлено для обратной совместимости.
+        DEPRECATED: Use _get_font_properties to get all font properties.
+        Kept for backward compatibility.
         """
         font_props = self._get_font_properties(page, rect)
         return font_props.get("font_size")
@@ -622,7 +622,7 @@ class PdfHierarchyBuilder:
         
         # Headers like "1. ", "2. ", "3. " -> HEADER_1 (numbered sections)
         # Pattern: digit(s) + dot + (space or non-digit character)
-        # This should match "1. Общая характеристика...", "2. Экспериментальная часть..." etc.
+        # This should match "1. General description...", "2. Experimental part..." etc. (Cyrillic/Latin)
         # Does NOT match "1.1", "1.2" (those are handled below)
         if re.match(r'^\d+\.(?!\d)', text):
             return 1
@@ -686,11 +686,11 @@ class PdfHierarchyBuilder:
             # Default: if there was a numbered header, use level + 1
             return min(6, last_numbered_level + 1)
         
-        # Если font_properties не переданы, но есть page и rect, извлекаем их
+        # If font_properties not passed but page and rect are, extract them
         if font_properties is None and page is not None and rect is not None:
             font_properties = self._get_font_properties(page, rect)
         
-        # Используем font_size из font_properties, если он не передан отдельно
+        # Use font_size from font_properties if not passed separately
         if font_size is None and font_properties:
             font_size = font_properties.get("font_size")
         
@@ -706,7 +706,7 @@ class PdfHierarchyBuilder:
                     min_font_size_diff = self._get_config("header_analysis.min_font_size_diff", 2)
                     prev_is_bold = prev_header.get("is_bold", False)
                     
-                    # Получаем информацию о текущем заголовке
+                    # Get current header info
                     current_is_bold = False
                     if font_properties:
                         current_is_bold = font_properties.get("is_bold", False)
@@ -719,22 +719,22 @@ class PdfHierarchyBuilder:
                         return min(6, prev_header["level"] + 1)
                     else:
                         # Similar font size -> compare styles
-                        # Если текущий заголовок жирный, а предыдущий нет - более высокий уровень
+                        # If current header is bold and previous is not - higher level
                         if current_is_bold and not prev_is_bold:
                             return max(1, prev_header["level"] - 1)
-                        # Если текущий заголовок не жирный, а предыдущий жирный - более низкий уровень
+                        # If current header is not bold and previous is bold - lower level
                         elif not current_is_bold and prev_is_bold:
                             return min(6, prev_header["level"] + 1)
-                        # Если стили одинаковые - тот же уровень
+                        # If styles are the same - same level
                         else:
                             return prev_header["level"]
         
-        # Если нет информации о размере шрифта, но есть информация о стиле
-        # Используем жирный текст как индикатор заголовка (как в DOCX)
+        # If no font size info but style info is available
+        # Use bold text as header indicator (as in DOCX)
         if font_properties:
             current_is_bold = font_properties.get("is_bold", False)
             if current_is_bold and previous_headers:
-                # Если текущий заголовок жирный, а предыдущий нет - более высокий уровень
+                # If current header is bold and previous is not - higher level
                 last_header = previous_headers[-1] if previous_headers else None
                 if last_header:
                     last_is_bold = last_header.get("is_bold", False)
@@ -1067,76 +1067,76 @@ class PdfHierarchyBuilder:
                     )
                     elements.append(element)
         
-        # Пересвязываем caption, table и image по новой логике
+        # Re-link caption, table and image with new logic
         elements = self._link_caption_table_image(elements)
         
-        # Подвязываем элементы без родителя к TITLE, если есть TITLE и еще нет header
+        # Link elements without parent to TITLE if TITLE exists and no header yet
         elements = self._link_elements_to_title(elements)
         
         return elements
 
     def _link_caption_table_image(self, elements: List[Element]) -> List[Element]:
         """
-        Связывает caption, table и image элементы по новой логике:
-        - Если встретили caption, ищем ближайший table или image и связываем их
-        - Если встретили table или image, ищем ближайший caption и связываем их
-        - У table и image родитель всегда caption (если найден)
-        - У caption родитель всегда header
-        - К связанным элементам больше нельзя подвязывать другие элементы
+        Links caption, table and image elements with new logic:
+        - When we see a caption, find nearest table or image and link them
+        - When we see table or image, find nearest caption and link them
+        - Table and image parent is always caption (if found)
+        - Caption parent is always header
+        - Linked elements cannot get additional links
         
         Args:
-            elements: Список элементов
+            elements: List of elements
             
         Returns:
-            Список элементов с обновленными parent_id
+            List of elements with updated parent_id
         """
         from typing import Optional
         
-        # Находим все caption, table и image элементы
+        # Find all caption, table and image elements
         caption_elements = [e for e in elements if e.type == ElementType.CAPTION]
         table_elements = [e for e in elements if e.type == ElementType.TABLE]
         image_elements = [e for e in elements if e.type == ElementType.IMAGE]
         
-        # Множества для отслеживания уже связанных элементов
+        # Sets to track already linked elements
         linked_captions = set()
         linked_tables = set()
         linked_images = set()
         
-        # Создаем индекс элементов по позиции для быстрого поиска ближайших
+        # Build element index by position for fast nearest lookup
         element_positions = {}
         for i, elem in enumerate(elements):
             element_positions[elem.id] = i
         
         def find_nearest_table_or_image(caption_elem: Element, start_idx: int) -> Optional[Element]:
-            """Находит ближайший table или image для caption только среди соседних элементов."""
-            # Проверяем только соседние элементы (предыдущий и следующий)
-            # Предыдущий элемент
+            """Finds nearest table or image for caption among adjacent elements only."""
+            # Check only adjacent elements (previous and next)
+            # Previous element
             if start_idx > 0:
                 prev_elem = elements[start_idx - 1]
                 if prev_elem.type == ElementType.TABLE and prev_elem.id not in linked_tables:
-                    # Проверяем, что на той же странице
+                    # Same page check
                     caption_page = caption_elem.metadata.get('page_num', 0)
                     prev_page = prev_elem.metadata.get('page_num', 0)
                     if caption_page == prev_page:
                         return prev_elem
                 elif prev_elem.type == ElementType.IMAGE and prev_elem.id not in linked_images:
-                    # Проверяем, что на той же странице
+                    # Same page check
                     caption_page = caption_elem.metadata.get('page_num', 0)
                     prev_page = prev_elem.metadata.get('page_num', 0)
                     if caption_page == prev_page:
                         return prev_elem
             
-            # Следующий элемент
+            # Next element
             if start_idx < len(elements) - 1:
                 next_elem = elements[start_idx + 1]
                 if next_elem.type == ElementType.TABLE and next_elem.id not in linked_tables:
-                    # Проверяем, что на той же странице
+                    # Same page check
                     caption_page = caption_elem.metadata.get('page_num', 0)
                     next_page = next_elem.metadata.get('page_num', 0)
                     if caption_page == next_page:
                         return next_elem
                 elif next_elem.type == ElementType.IMAGE and next_elem.id not in linked_images:
-                    # Проверяем, что на той же странице
+                    # Same page check
                     caption_page = caption_elem.metadata.get('page_num', 0)
                     next_page = next_elem.metadata.get('page_num', 0)
                     if caption_page == next_page:
@@ -1145,23 +1145,23 @@ class PdfHierarchyBuilder:
             return None
         
         def find_nearest_caption(elem: Element, start_idx: int) -> Optional[Element]:
-            """Находит ближайший caption для table или image только среди соседних элементов."""
-            # Проверяем только соседние элементы (предыдущий и следующий)
-            # Предыдущий элемент
+            """Finds nearest caption for table or image among adjacent elements only."""
+            # Check only adjacent elements (previous and next)
+            # Previous element
             if start_idx > 0:
                 prev_elem = elements[start_idx - 1]
                 if prev_elem.type == ElementType.CAPTION:
-                    # Проверяем, что на той же странице
+                    # Same page check
                     elem_page = elem.metadata.get('page_num', 0)
                     prev_page = prev_elem.metadata.get('page_num', 0)
                     if elem_page == prev_page:
                         return prev_elem
             
-            # Следующий элемент
+            # Next element
             if start_idx < len(elements) - 1:
                 next_elem = elements[start_idx + 1]
                 if next_elem.type == ElementType.CAPTION:
-                    # Проверяем, что на той же странице
+                    # Same page check
                     elem_page = elem.metadata.get('page_num', 0)
                     next_page = next_elem.metadata.get('page_num', 0)
                     if elem_page == next_page:
@@ -1169,7 +1169,7 @@ class PdfHierarchyBuilder:
             
             return None
         
-        # Обрабатываем caption: ищем все соседние table или image элементы
+        # Process caption: find all adjacent table or image elements
         for caption_elem in caption_elements:
             if caption_elem.id in linked_captions:
                 continue
@@ -1178,10 +1178,10 @@ class PdfHierarchyBuilder:
             if caption_idx < 0:
                 continue
             
-            # Находим все соседние table или image элементы (может быть несколько подряд)
+            # Find all adjacent table or image elements (may be several in a row)
             linked_to_this_caption = []
             
-            # Проверяем предыдущий элемент
+            # Check previous element
             if caption_idx > 0:
                 prev_elem = elements[caption_idx - 1]
                 if prev_elem.type == ElementType.TABLE and prev_elem.id not in linked_tables:
@@ -1195,27 +1195,27 @@ class PdfHierarchyBuilder:
                     if caption_page == prev_page:
                         linked_to_this_caption.append(prev_elem)
             
-            # Проверяем следующие элементы подряд (может быть несколько таблиц/изображений)
+            # Check following elements in a row (may be several tables/images)
             current_idx = caption_idx + 1
             while current_idx < len(elements):
                 next_elem = elements[current_idx]
-                # Если это не table/image, прекращаем поиск
+                # If not table/image, stop search
                 if next_elem.type not in [ElementType.TABLE, ElementType.IMAGE]:
                     break
-                # Если элемент уже связан, прекращаем поиск
+                # If element already linked, stop search
                 if (next_elem.type == ElementType.TABLE and next_elem.id in linked_tables) or \
                    (next_elem.type == ElementType.IMAGE and next_elem.id in linked_images):
                     break
-                # Проверяем страницу
+                # Check page
                 caption_page = caption_elem.metadata.get('page_num', 0)
                 next_page = next_elem.metadata.get('page_num', 0)
                 if caption_page != next_page:
                     break
-                # Добавляем к связанным
+                # Add to linked
                 linked_to_this_caption.append(next_elem)
                 current_idx += 1
             
-            # Связываем все найденные элементы с caption
+            # Link all found elements to caption
             if linked_to_this_caption:
                 for elem in linked_to_this_caption:
                     elem.parent_id = caption_elem.id
@@ -1224,16 +1224,16 @@ class PdfHierarchyBuilder:
                     else:
                         linked_images.add(elem.id)
                 
-                # Находим header для caption (родитель должен быть header)
-                # Если у caption уже есть parent_id, проверяем, что это header
+                # Find header for caption (parent must be header)
+                # If caption already has parent_id, verify it is a header
                 current_parent_id = caption_elem.parent_id
                 if current_parent_id:
                     parent_elem = next((e for e in elements if e.id == current_parent_id), None)
                     if parent_elem and parent_elem.type not in [ElementType.HEADER_1, ElementType.HEADER_2, 
                                                                  ElementType.HEADER_3, ElementType.HEADER_4,
                                                                  ElementType.HEADER_5, ElementType.HEADER_6]:
-                        # Если родитель не header, ищем ближайший header
-                        # Ищем header перед caption
+                        # If parent is not header, find nearest header
+                        # Search for header before caption
                         best_header = None
                         for i in range(caption_idx - 1, -1, -1):
                             if i < len(elements):
@@ -1246,10 +1246,10 @@ class PdfHierarchyBuilder:
                         if best_header:
                             caption_elem.parent_id = best_header.id
                 
-                # Помечаем caption как связанный только после того, как связали все элементы
+                # Mark caption as linked only after linking all elements
                 linked_captions.add(caption_elem.id)
         
-        # Обрабатываем table: ищем ближайший caption
+        # Process table: find nearest caption
         for table_elem in table_elements:
             if table_elem.id in linked_tables:
                 continue
@@ -1258,20 +1258,20 @@ class PdfHierarchyBuilder:
             if table_idx < 0:
                 continue
             
-            # Находим ближайший caption
+            # Find nearest caption
             nearest_caption = find_nearest_caption(table_elem, table_idx)
             
             if nearest_caption:
-                # Связываем: table -> caption
+                # Link: table -> caption
                 table_elem.parent_id = nearest_caption.id
                 
-                # Убеждаемся, что у caption родитель - header
+                # Ensure caption parent is header
                 if nearest_caption.parent_id:
                     parent_elem = next((e for e in elements if e.id == nearest_caption.parent_id), None)
                     if parent_elem and parent_elem.type not in [ElementType.HEADER_1, ElementType.HEADER_2,
                                                                  ElementType.HEADER_3, ElementType.HEADER_4,
                                                                  ElementType.HEADER_5, ElementType.HEADER_6]:
-                        # Ищем ближайший header
+                        # Find nearest header
                         caption_idx = element_positions.get(nearest_caption.id, -1)
                         best_header = None
                         for i in range(caption_idx - 1, -1, -1):
@@ -1285,11 +1285,11 @@ class PdfHierarchyBuilder:
                         if best_header:
                             nearest_caption.parent_id = best_header.id
                 
-                # Помечаем как связанные
+                # Mark as linked
                 linked_tables.add(table_elem.id)
                 linked_captions.add(nearest_caption.id)
         
-        # Обрабатываем image: ищем ближайший caption
+        # Process image: find nearest caption
         for image_elem in image_elements:
             if image_elem.id in linked_images:
                 continue
@@ -1298,20 +1298,20 @@ class PdfHierarchyBuilder:
             if image_idx < 0:
                 continue
             
-            # Находим ближайший caption
+            # Find nearest caption
             nearest_caption = find_nearest_caption(image_elem, image_idx)
             
             if nearest_caption:
-                # Связываем: image -> caption
+                # Link: image -> caption
                 image_elem.parent_id = nearest_caption.id
                 
-                # Убеждаемся, что у caption родитель - header
+                # Ensure caption parent is header
                 if nearest_caption.parent_id:
                     parent_elem = next((e for e in elements if e.id == nearest_caption.parent_id), None)
                     if parent_elem and parent_elem.type not in [ElementType.HEADER_1, ElementType.HEADER_2,
                                                                  ElementType.HEADER_3, ElementType.HEADER_4,
                                                                  ElementType.HEADER_5, ElementType.HEADER_6]:
-                        # Ищем ближайший header
+                        # Find nearest header
                         caption_idx = element_positions.get(nearest_caption.id, -1)
                         best_header = None
                         for i in range(caption_idx - 1, -1, -1):
@@ -1325,7 +1325,7 @@ class PdfHierarchyBuilder:
                         if best_header:
                             nearest_caption.parent_id = best_header.id
                 
-                # Помечаем как связанные
+                # Mark as linked
                 linked_images.add(image_elem.id)
                 linked_captions.add(nearest_caption.id)
         
@@ -1333,21 +1333,21 @@ class PdfHierarchyBuilder:
 
     def _link_elements_to_title(self, elements: List[Element]) -> List[Element]:
         """
-        Подвязывает элементы без родителя к TITLE, если есть TITLE и еще нет header.
+        Links elements without parent to TITLE if TITLE exists and no header yet.
         
-        Логика:
-        - Если есть TITLE элемент
-        - И есть элементы без родителя (parent_id is None)
-        - И эти элементы идут до первого header в документе
-        - То подвязываем их к TITLE
+        Logic:
+        - If there is a TITLE element
+        - And there are elements without parent (parent_id is None)
+        - And these elements appear before the first header in the document
+        - Then link them to TITLE
         
         Args:
-            elements: Список элементов
+            elements: List of elements
             
         Returns:
-            Список элементов с обновленными parent_id
+            List of elements with updated parent_id
         """
-        # Находим первый TITLE элемент
+        # Find first TITLE element
         title_elem = None
         title_idx = -1
         for i, elem in enumerate(elements):
@@ -1356,11 +1356,11 @@ class PdfHierarchyBuilder:
                 title_idx = i
                 break
         
-        # Если нет TITLE, ничего не делаем
+        # If no TITLE, do nothing
         if not title_elem:
             return elements
         
-        # Находим первый header элемент после TITLE
+        # Find first header element after TITLE
         first_header_idx = -1
         for i in range(title_idx + 1, len(elements)):
             elem = elements[i]
@@ -1370,17 +1370,17 @@ class PdfHierarchyBuilder:
                 first_header_idx = i
                 break
         
-        # Подвязываем элементы без родителя к TITLE
-        # Только те, которые идут после TITLE и до первого header (или до конца, если header нет)
+        # Link elements without parent to TITLE
+        # Only those that appear after TITLE and before first header (or to end if no header)
         end_idx = first_header_idx if first_header_idx >= 0 else len(elements)
         
         for i in range(title_idx + 1, end_idx):
             elem = elements[i]
-            # Пропускаем сам TITLE и элементы, которые уже имеют родителя
+            # Skip TITLE itself and elements that already have a parent
             if elem.type == ElementType.TITLE or elem.parent_id is not None:
                 continue
             
-            # Подвязываем к TITLE
+            # Link to TITLE
             elem.parent_id = title_elem.id
         
         return elements

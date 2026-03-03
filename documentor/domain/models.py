@@ -1,3 +1,10 @@
+"""
+Domain models for document parsing.
+
+Defines DocumentFormat, ElementType, Element, ParsedDocument, and ElementIdGenerator
+used across the documentor pipeline.
+"""
+
 import json
 from dataclasses import dataclass, field
 from enum import Enum

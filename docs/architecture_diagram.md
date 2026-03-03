@@ -78,6 +78,7 @@ classDiagram
     
     class ElementType {
         <<enumeration>>
+        TITLE
         HEADER_1
         HEADER_2
         HEADER_3
@@ -85,12 +86,18 @@ classDiagram
         HEADER_5
         HEADER_6
         TEXT
-        TABLE
         IMAGE
+        TABLE
+        FORMULA
         LIST_ITEM
-        CODE_BLOCK
+        CAPTION
+        FOOTNOTE
+        PAGE_HEADER
+        PAGE_FOOTER
         LINK
+        CODE_BLOCK
     }
+    note for ElementType "Matches documentor.domain.models.ElementType. TITLE=document title; HEADER_1..6=section headers; TEXT, TABLE, IMAGE, FORMULA=content; LIST_ITEM, CAPTION, FOOTNOTE, PAGE_HEADER, PAGE_FOOTER, LINK, CODE_BLOCK=other."
     
     class DocumentFormat {
         <<enumeration>>

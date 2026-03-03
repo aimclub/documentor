@@ -4,12 +4,14 @@ Complete documentation for the DOCX parser implementation.
 
 ## Overview
 
-The DOCX parser uses a **combined approach** that combines:
-1. **Dots.OCR layout detection** for structural elements (headers, captions)
-2. **PyMuPDF text extraction** from PDF by bbox coordinates
-3. **XML parsing** for full content extraction (text, tables, images)
-4. **Table of Contents (TOC) parsing** for header validation
-5. **Automatic scanned document detection** with fallback to PdfParser
+The DOCX parser uses a **combined approach** (see `documentor/processing/parsers/docx/docx_parser.py`):
+
+1. **DOTS OCR** for detecting structural elements (headers, captions)
+2. **PyMuPDF** for extracting text from PDF by bbox (faster and more accurate for text PDFs)
+3. **XML parsing** for extracting full content (text, tables, images)
+4. **Table of Contents (TOC) parsing** for validation and improving results
+5. **Building complete document hierarchy**
+6. **Automatic detection of scanned documents** and processing via PdfParser with OCR
 
 ## Architecture
 
@@ -187,7 +189,7 @@ docx_parser:
 **Process**:
 1. **Try TOC Field**: Look for `{TOC}` field in XML (dynamic TOC)
 2. **Try TOC Styles**: Look for paragraphs with TOC1, TOC2, TOC3 styles
-3. **Try Static Text**: Find "Содержание" or "Оглавление" header, then parse following paragraphs:
+3. **Try Static Text**: Find "Contents" or "Table of contents" header (Russian Содержание/Оглавление also matched), then parse following paragraphs:
    - Look for numbered entries (1., 1.1., etc.)
    - Extract title and page number
    - Determine level from numbering depth
@@ -231,7 +233,7 @@ docx_parser:
    - Skip separator lines (unless heading style)
    - Skip list item patterns (unless heading style)
    - Skip document metadata (title page, author, etc.)
-   - Skip list headers ("Список включает", etc.)
+   - Skip list headers (e.g. "List includes", etc.)
 4. **Find Missing Headers by Rules**:
    - Build header rules from found headers (font size, bold, style, alignment, etc.)
    - Search XML for paragraphs matching these rules
@@ -280,12 +282,12 @@ docx_parser:
 **Process**:
 1. **Find Table Captions**:
    - Search OCR headers and captions near table position
-   - Look for patterns like "Таблица 1", "Table 1"
+   - Look for patterns like "Table 1", "Таблица 1"
    - Extract table number from caption
    - Match with table by bbox proximity
 2. **Find Image Captions**:
    - Search OCR headers and captions near image position
-   - Look for patterns like "Рисунок 1", "Figure 1"
+   - Look for patterns like "Figure 1", "Рисунок 1"
    - Extract image number from caption
    - Match with image by bbox proximity
 3. **Match Tables by Structure**:
@@ -326,7 +328,7 @@ docx_parser:
    - Assign `parent_id` to each element based on nearest header
    - Handle nested headers (HEADER_2 under HEADER_1, etc.)
    - Determine header levels using priority:
-     - Structural keywords (Глава, Chapter) → level 1
+     - Structural keywords (Chapter, Part; Russian equivalents supported) → level 1
      - Numbered patterns (1., 1.1., 1.1.1.) → levels 1, 2, 3
      - XML style properties (Heading 1-6)
      - TOC validation
@@ -567,5 +569,5 @@ Each `Element` contains:
 6. **Images from XML**: Images are extracted from XML relationships, not from OCR. However, captions are found via OCR.
 7. **Caption enrichment**: Table and image captions are found using OCR headers/captions and matched by position and pattern. The final table/image structure comes from XML (source of truth), but is enriched with OCR caption information.
 8. **Missing header detection**: Headers missed by OCR are found using rules based on found headers (font properties, style, alignment, etc.) with adaptive thresholds.
-9. **Numbered header support**: Supports numbered headers with or without spaces after numbers (e.g., "1Анализ", "1. Анализ", "1.1Актуальность").
+9. **Numbered header support**: Supports numbered headers with or without spaces after numbers (e.g. "1Analysis", "1. Analysis", "1.1Relevance"; Cyrillic supported).
 10. **List item handling**: Automatically identifies and splits numbered list items (1., 2., 3.) into `LIST_ITEM` elements, preventing false header detection.

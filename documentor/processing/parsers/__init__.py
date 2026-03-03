@@ -1,3 +1,5 @@
+"""Document parsers: BaseParser, DocxParser, MarkdownParser, PdfParser."""
+
 from .base import BaseParser
 from .docx.docx_parser import DocxParser
 from .md.md_parser import MarkdownParser

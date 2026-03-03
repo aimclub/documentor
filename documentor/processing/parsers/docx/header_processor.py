@@ -27,9 +27,9 @@ def _is_numbered_header(text: str) -> bool:
     """Check if header has explicit numbering."""
     text_stripped = text.strip()
     patterns = [
-        r'^\d+\.\d+',  # "1.2" or "1.2Актуальность"
-        r'^\d+\.',  # "1." or "1Анализ"
-        r'^\d+[А-ЯЁA-Z]',  # "1Анализ" (without dot and space)
+        r'^\d+\.\d+',  # "1.2" or "1.2Relevance" (Cyrillic supported)
+        r'^\d+\.',  # "1." or "1Analysis"
+        r'^\d+[А-ЯЁA-Z]',  # "1Analysis" (without dot and space, Cyrillic/Latin)
         r'^[IVX]+\.',  # "I.", "II."
         r'^[A-Z]\.\d+',  # "A.1"
         r'^[A-Z]\.',  # "A."
@@ -62,7 +62,7 @@ def _is_list_item_pattern(text: str) -> bool:
     
     Patterns:
     - Bullet lists: "* ", "- ", "• "
-    - Numbered lists: "1. текст", "2. текст" (but NOT "1. Заголовок" with capital letter)
+    - Numbered lists: "1. text", "2. text" (but NOT "1. Header" with capital letter)
     """
     text_stripped = text.strip()
     
@@ -70,7 +70,7 @@ def _is_list_item_pattern(text: str) -> bool:
     if text_stripped.startswith('* ') or text_stripped.startswith('- ') or text_stripped.startswith('• '):
         return True
     
-    # Numbered lists: "1. текст" (lowercase after number) vs "1. Заголовок" (uppercase = header)
+    # Numbered lists: "1. text" (lowercase after number) vs "1. Header" (uppercase = header)
     # Check pattern "number. space text" where text starts with lowercase letter
     numbered_list_match = re.match(r'^(\d+)\.\s+([а-яёa-z])', text_stripped)
     if numbered_list_match:
@@ -144,12 +144,12 @@ class DocxHeaderProcessor:
                 is_numbered_header = _is_numbered_header(text_stripped)
                 
                 # IMPORTANT: If this is a list item in XML (is_list_item = True),
-                # and it's NOT a numbered header (like "1. Заголовок" with capital letter),
+                # and it's NOT a numbered header (like "1. Header" with capital letter),
                 # and it's NOT a heading style - this is definitely a list item, not a header
                 if is_list_item:
                     # Check if this is a numbered header
-                    # Numbered header: "1. Заголовок" or "1Заголовок" (capital letter after number)
-                    # List item: "1. текст" or "1текст" (lowercase letter after number)
+                    # Numbered header: "1. Header" or "1Header" (capital letter after number)
+                    # List item: "1. text" or "1text" (lowercase letter after number)
                     is_numbered_header_with_capital = bool(re.match(r'^\d+(?:\.\s*)?[А-ЯЁA-Z]', text_stripped))
                     
                     # If it's NOT a numbered header with capital letter and NOT a heading style - skip
@@ -314,7 +314,7 @@ class DocxHeaderProcessor:
             return properties.get('level')
         
         # Priority 4: Check numbering pattern
-        # Support variants with and without space: "1Анализ", "1.1Актуальность", "1. Анализ", "1.1. Актуальность"
+        # Support variants with and without space: "1Analysis", "1.1Relevance", "1. Analysis", "1.1. Relevance" (Cyrillic supported)
         match = re.match(r'^(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:\.?\s*)?', text_stripped)
         if match:
             if match.group(3):

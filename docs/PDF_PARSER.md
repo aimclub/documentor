@@ -314,7 +314,7 @@ pdf_parser:
      - Store Markdown representation in `content`
      - Store table image in `metadata["table_image"]` (base64)
 2. **HTML Table Parsing**:
-   - Uses `html_table_parser.parse_table_from_html()` to parse HTML
+   - Uses `documentor.ocr.dots_ocr.html_table_parser.parse_table_from_html()` to parse HTML
    - Handles merged cells, headers, and complex structures
    - Converts to normalized DataFrame format
 3. **Fallback**: If HTML is not available, table is marked as failed
