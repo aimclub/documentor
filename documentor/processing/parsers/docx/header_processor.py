@@ -27,9 +27,9 @@ def _is_numbered_header(text: str) -> bool:
     """Check if header has explicit numbering."""
     text_stripped = text.strip()
     patterns = [
-        r'^\d+\.\d+',  # "1.2" or "1.2Актуальность"
-        r'^\d+\.',  # "1." or "1Анализ"
-        r'^\d+[А-ЯЁA-Z]',  # "1Анализ" (without dot and space)
+        r'^\d+\.\d+',  # "1.2" or "1.2Relevance" (Cyrillic supported)
+        r'^\d+\.',  # "1." or "1Analysis"
+        r'^\d+[А-ЯЁA-Z]',  # "1Analysis" (without dot and space, Cyrillic/Latin)
         r'^[IVX]+\.',  # "I.", "II."
         r'^[A-Z]\.\d+',  # "A.1"
         r'^[A-Z]\.',  # "A."
@@ -314,7 +314,7 @@ class DocxHeaderProcessor:
             return properties.get('level')
         
         # Priority 4: Check numbering pattern
-        # Support variants with and without space: "1Анализ", "1.1Актуальность", "1. Анализ", "1.1. Актуальность"
+        # Support variants with and without space: "1Analysis", "1.1Relevance", "1. Analysis", "1.1. Relevance" (Cyrillic supported)
         match = re.match(r'^(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:\.?\s*)?', text_stripped)
         if match:
             if match.group(3):

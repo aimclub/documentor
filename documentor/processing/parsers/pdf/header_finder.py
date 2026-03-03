@@ -30,10 +30,10 @@ def _is_numbered_header(text: str) -> bool:
     """
     text_stripped = text.strip()
     patterns = [
-        r'^\d+\.\d+',  # "1.2" or "1.2Актуальность"
-        r'^\d+\.',  # "1." or "1Анализ"
-        r'^\d+[А-ЯЁA-Z]',  # "1Анализ" (without dot and space)
-        r'^\d+\s+[А-ЯЁA-Z]',  # "1 Анализ" (with space)
+        r'^\d+\.\d+',  # "1.2" or "1.2Relevance" (Cyrillic supported)
+        r'^\d+\.',  # "1." or "1Analysis"
+        r'^\d+[А-ЯЁA-Z]',  # "1Analysis" (without dot and space, Cyrillic/Latin)
+        r'^\d+\s+[А-ЯЁA-Z]',  # "1 Analysis" (with space, Cyrillic/Latin)
         r'^[IVX]+\.',  # "I.", "II."
         r'^[A-Z]\.\d+',  # "A.1"
         r'^[A-Z]\.',  # "A."

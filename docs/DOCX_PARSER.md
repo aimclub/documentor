@@ -189,7 +189,7 @@ docx_parser:
 **Process**:
 1. **Try TOC Field**: Look for `{TOC}` field in XML (dynamic TOC)
 2. **Try TOC Styles**: Look for paragraphs with TOC1, TOC2, TOC3 styles
-3. **Try Static Text**: Find "Содержание" or "Оглавление" header (English "Contents"/"Table of contents" also supported), then parse following paragraphs:
+3. **Try Static Text**: Find "Contents" or "Table of contents" header (Russian Содержание/Оглавление also matched), then parse following paragraphs:
    - Look for numbered entries (1., 1.1., etc.)
    - Extract title and page number
    - Determine level from numbering depth
