@@ -21,7 +21,7 @@ _project_root = Path(__file__).parent.parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
 
-from documentor.utils.image_utils import ImageUtils
+from documentor.processing.image.image_utils import ImageUtils
 
 
 class TestImageUtils:
@@ -38,13 +38,13 @@ class TestImageUtils:
         img = Image.new("RGB", (2000, 1000), color="white")
         optimized = ImageUtils.optimize_image(img, max_dimension=1280)
         assert optimized.width == 1280
-        assert optimized.height == 640  # Maintains aspect ratio
+        assert optimized.height == 640
 
     def test_optimize_image_large_height(self):
         """Test optimizing large image (height > max_dimension)."""
         img = Image.new("RGB", (1000, 2000), color="white")
         optimized = ImageUtils.optimize_image(img, max_dimension=1280)
-        assert optimized.width == 640  # Maintains aspect ratio
+        assert optimized.width == 640
         assert optimized.height == 1280
 
     def test_encode_to_base64_jpeg(self):
@@ -66,8 +66,6 @@ class TestImageUtils:
         img = Image.new("RGB", (2000, 1000), color="green")
         base64_str = ImageUtils.process_and_encode_image(img, max_dimension=1280, quality=75)
         assert base64_str.startswith("data:image/jpeg;base64,")
-        
-        # Decode and verify size
         decoded = ImageUtils.decode_from_base64(base64_str)
         assert decoded is not None
         assert decoded.width <= 1280
@@ -77,7 +75,6 @@ class TestImageUtils:
         """Test decoding base64 string with data URI prefix."""
         img = Image.new("RGB", (100, 100), color="yellow")
         base64_str = ImageUtils.encode_to_base64(img, format="JPEG")
-        
         decoded = ImageUtils.decode_from_base64(base64_str)
         assert decoded is not None
         assert decoded.size == (100, 100)
@@ -86,9 +83,7 @@ class TestImageUtils:
         """Test decoding base64 string without data URI prefix."""
         img = Image.new("RGB", (100, 100), color="cyan")
         base64_str = ImageUtils.encode_to_base64(img, format="JPEG")
-        # Remove prefix
         base64_only = base64_str.split(",", 1)[1]
-        
         decoded = ImageUtils.decode_from_base64(base64_only)
         assert decoded is not None
         assert decoded.size == (100, 100)
@@ -101,10 +96,8 @@ class TestImageUtils:
     def test_process_and_encode_image_rgba(self):
         """Test processing RGBA image (converts to RGB for JPEG)."""
         img = Image.new("RGBA", (100, 100), color=(255, 0, 0, 128))
-        # ImageUtils should handle RGBA to RGB conversion automatically
         base64_str = ImageUtils.process_and_encode_image(img, format="JPEG")
         assert base64_str.startswith("data:image/jpeg;base64,")
-        
         decoded = ImageUtils.decode_from_base64(base64_str)
         assert decoded is not None
-        assert decoded.mode == "RGB"  # Should be converted to RGB
+        assert decoded.mode == "RGB"

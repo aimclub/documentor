@@ -1,14 +1,14 @@
 """
-Тесты для Markdown парсера.
+Tests for Markdown parser.
 
-Тестируемый класс:
+Tested class:
 - MarkdownParser
 """
 
 import sys
 from pathlib import Path
 
-# Добавляем корневую директорию проекта в PYTHONPATH для прямого запуска
+# Add project root to PYTHONPATH for direct run
 _project_root = Path(__file__).parent.parent.parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
@@ -22,16 +22,16 @@ from documentor.processing.parsers.md.md_parser import MarkdownParser
 
 
 class TestMarkdownParserInitialization:
-    """Тесты инициализации MarkdownParser."""
+    """MarkdownParser initialization tests."""
 
     def test_default_initialization(self):
-        """Тест инициализации с параметрами по умолчанию."""
+        """Test initialization with default parameters."""
         parser = MarkdownParser()
         assert parser.format == DocumentFormat.MARKDOWN
         assert isinstance(parser.id_generator, ElementIdGenerator)
 
     def test_custom_id_generator(self):
-        """Тест инициализации с кастомным генератором ID."""
+        """Test initialization with custom ID generator."""
         custom_generator = ElementIdGenerator(start=100, width=4)
         parser = MarkdownParser(id_generator=custom_generator)
         assert parser.id_generator is custom_generator
@@ -39,12 +39,12 @@ class TestMarkdownParserInitialization:
 
 
 class TestMarkdownParserBasicParsing:
-    """Тесты базового парсинга Markdown."""
+    """Basic Markdown parsing tests."""
 
     def test_parse_simple_text(self):
-        """Тест парсинга простого текста."""
+        """Test parsing simple text."""
         parser = MarkdownParser()
-        doc = Document(page_content="Простой текст", metadata={"source": "test.md"})
+        doc = Document(page_content="Plain text", metadata={"source": "test.md"})
         result = parser.parse(doc)
 
         assert isinstance(result, ParsedDocument)
@@ -52,10 +52,10 @@ class TestMarkdownParserBasicParsing:
         assert result.source == "test.md"
         assert len(result.elements) == 1
         assert result.elements[0].type == ElementType.TEXT
-        assert result.elements[0].content == "Простой текст"
+        assert result.elements[0].content == "Plain text"
 
     def test_parse_empty_document(self):
-        """Тест парсинга пустого документа."""
+        """Test parsing empty document."""
         parser = MarkdownParser()
         doc = Document(page_content="", metadata={"source": "empty.md"})
         result = parser.parse(doc)
@@ -65,35 +65,35 @@ class TestMarkdownParserBasicParsing:
         assert len(result.elements) == 0
 
     def test_parse_multiple_paragraphs(self):
-        """Тест парсинга нескольких параграфов."""
+        """Test parsing multiple paragraphs."""
         parser = MarkdownParser()
-        content = "Первый параграф.\n\nВторой параграф.\n\nТретий параграф."
+        content = "First paragraph.\n\nSecond paragraph.\n\nThird paragraph."
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
         assert len(result.elements) == 3
         assert all(elem.type == ElementType.TEXT for elem in result.elements)
-        assert result.elements[0].content == "Первый параграф."
-        assert result.elements[1].content == "Второй параграф."
-        assert result.elements[2].content == "Третий параграф."
+        assert result.elements[0].content == "First paragraph."
+        assert result.elements[1].content == "Second paragraph."
+        assert result.elements[2].content == "Third paragraph."
 
 
 class TestMarkdownParserHeadings:
-    """Тесты парсинга заголовков."""
+    """Heading parsing tests."""
 
     def test_parse_h1_heading(self):
-        """Тест парсинга заголовка H1."""
+        """Test parsing H1 heading."""
         parser = MarkdownParser()
-        doc = Document(page_content="# Заголовок 1", metadata={"source": "test.md"})
+        doc = Document(page_content="# Header 1", metadata={"source": "test.md"})
         result = parser.parse(doc)
 
         assert len(result.elements) == 1
         assert result.elements[0].type == ElementType.HEADER_1
-        assert result.elements[0].content == "Заголовок 1"
+        assert result.elements[0].content == "Header 1"
         assert result.elements[0].parent_id is None
 
     def test_parse_all_heading_levels(self):
-        """Тест парсинга всех уровней заголовков."""
+        """Test parsing all heading levels."""
         parser = MarkdownParser()
         content = "# H1\n## H2\n### H3\n#### H4\n##### H5\n###### H6"
         doc = Document(page_content=content, metadata={"source": "test.md"})
@@ -108,20 +108,20 @@ class TestMarkdownParserHeadings:
         assert result.elements[5].type == ElementType.HEADER_6
 
     def test_heading_hierarchy(self):
-        """Тест построения иерархии заголовков."""
+        """Test heading hierarchy building."""
         parser = MarkdownParser()
-        content = """# Заголовок 1
-Текст под H1
-## Заголовок 2
-Текст под H2
-### Заголовок 3
-Текст под H3
-## Заголовок 2 снова
-Текст под H2 снова"""
+        content = """# Header 1
+Text under H1
+## Header 2
+Text under H2
+### Header 3
+Text under H3
+## Header 2 again
+Text under H2 again"""
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
-        # Проверяем структуру
+        # Check structure
         h1 = result.elements[0]
         text1 = result.elements[1]
         h2_1 = result.elements[2]
@@ -150,123 +150,123 @@ class TestMarkdownParserHeadings:
         assert text3.parent_id == h3.id
 
         assert h2_2.type == ElementType.HEADER_2
-        assert h2_2.parent_id == h1.id  # Должен быть под H1, а не под H3
+        assert h2_2.parent_id == h1.id  # Should be under H1, not H3
 
         assert text4.type == ElementType.TEXT
         assert text4.parent_id == h2_2.id
 
 
 class TestMarkdownParserLists:
-    """Тесты парсинга списков."""
+    """List parsing tests."""
 
     def test_parse_unordered_list(self):
-        """Тест парсинга неупорядоченного списка."""
+        """Test parsing unordered list."""
         parser = MarkdownParser()
-        content = """- Элемент 1
-- Элемент 2
-- Элемент 3"""
+        content = """- Item 1
+- Item 2
+- Item 3"""
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
         assert len(result.elements) == 3
         assert all(elem.type == ElementType.LIST_ITEM for elem in result.elements)
-        assert result.elements[0].content == "Элемент 1"
-        assert result.elements[1].content == "Элемент 2"
-        assert result.elements[2].content == "Элемент 3"
+        assert result.elements[0].content == "Item 1"
+        assert result.elements[1].content == "Item 2"
+        assert result.elements[2].content == "Item 3"
 
     def test_parse_ordered_list(self):
-        """Тест парсинга упорядоченного списка."""
+        """Test parsing ordered list."""
         parser = MarkdownParser()
-        content = """1. Первый
-2. Второй
-3. Третий"""
+        content = """1. First
+2. Second
+3. Third"""
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
         assert len(result.elements) == 3
         assert all(elem.type == ElementType.LIST_ITEM for elem in result.elements)
-        assert "Первый" in result.elements[0].content
+        assert "First" in result.elements[0].content
         assert result.elements[0].metadata.get("list_type") == "ordered"
 
     def test_parse_nested_list(self):
-        """Тест парсинга вложенных списков."""
+        """Test parsing nested lists."""
         parser = MarkdownParser()
-        content = """- Элемент 1
-  - Вложенный 1
-  - Вложенный 2
-- Элемент 2
-  - Вложенный 3
-    - Глубоко вложенный"""
+        content = """- Item 1
+  - Nested 1
+  - Nested 2
+- Item 2
+  - Nested 3
+    - Deeply nested"""
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
         list_items = [e for e in result.elements if e.type == ElementType.LIST_ITEM]
         assert len(list_items) >= 6
         
-        # Проверяем уровни вложенности
+        # Check nesting levels
         first_level = [e for e in list_items if e.metadata.get("list_level", 0) == 0]
         second_level = [e for e in list_items if e.metadata.get("list_level", 0) == 1]
         third_level = [e for e in list_items if e.metadata.get("list_level", 0) == 2]
         
-        assert len(first_level) >= 2  # Элемент 1, Элемент 2
-        assert len(second_level) >= 3  # Вложенные элементы
-        assert len(third_level) >= 1  # Глубоко вложенный
+        assert len(first_level) >= 2  # Item 1, Item 2
+        assert len(second_level) >= 3  # Nested items
+        assert len(third_level) >= 1  # Deeply nested
 
     def test_nested_list_hierarchy(self):
-        """Тест иерархии вложенных списков."""
+        """Test nested list hierarchy."""
         parser = MarkdownParser()
-        content = """- Родитель 1
-  - Дочерний 1
-  - Дочерний 2
-- Родитель 2"""
+        content = """- Parent 1
+  - Child 1
+  - Child 2
+- Parent 2"""
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
         list_items = [e for e in result.elements if e.type == ElementType.LIST_ITEM]
         
-        # Находим элементы по содержимому
-        parent1 = next((e for e in list_items if "Родитель 1" in e.content), None)
-        child1 = next((e for e in list_items if "Дочерний 1" in e.content), None)
-        child2 = next((e for e in list_items if "Дочерний 2" in e.content), None)
+        # Find elements by content
+        parent1 = next((e for e in list_items if "Parent 1" in e.content), None)
+        child1 = next((e for e in list_items if "Child 1" in e.content), None)
+        child2 = next((e for e in list_items if "Child 2" in e.content), None)
         
         assert parent1 is not None
         assert child1 is not None
         assert child2 is not None
         
-        # Проверяем, что дочерние элементы ссылаются на родительский
+        # Check that children reference parent
         assert child1.parent_id == parent1.id
         assert child2.parent_id == parent1.id
         
-        # Проверяем содержимое элементов
-        assert "Дочерний 1" in child1.content
-        assert "Дочерний 2" in child2.content
-        assert "Родитель 1" in parent1.content
+        # Check element content
+        assert "Child 1" in child1.content
+        assert "Child 2" in child2.content
+        assert "Parent 1" in parent1.content
 
 
 class TestMarkdownParserTables:
-    """Тесты парсинга таблиц."""
+    """Table parsing tests."""
 
     def test_parse_simple_table(self):
-        """Тест парсинга простой таблицы."""
+        """Test parsing simple table."""
         parser = MarkdownParser()
-        content = """| Заголовок 1 | Заголовок 2 |
-|-------------|-------------|
-| Ячейка 1    | Ячейка 2    |
-| Ячейка 3    | Ячейка 4    |"""
+        content = """| Header 1 | Header 2 |
+|----------|----------|
+| Cell 1   | Cell 2   |
+| Cell 3   | Cell 4   |"""
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
         assert len(result.elements) == 1
         assert result.elements[0].type == ElementType.TABLE
-        assert "Заголовок 1" in result.elements[0].content
-        assert "Ячейка 1" in result.elements[0].content
+        assert "Header 1" in result.elements[0].content
+        assert "Cell 1" in result.elements[0].content
 
 
 class TestMarkdownParserCodeBlocks:
-    """Тесты парсинга блоков кода."""
+    """Code block parsing tests."""
 
     def test_parse_code_block(self):
-        """Тест парсинга блока кода."""
+        """Test parsing code block."""
         parser = MarkdownParser()
         content = """```python
 def hello():
@@ -281,56 +281,56 @@ def hello():
         assert result.elements[0].metadata.get("language") == "python"
 
     def test_parse_code_block_without_language(self):
-        """Тест парсинга блока кода без указания языка."""
+        """Test parsing code block without language specified."""
         parser = MarkdownParser()
         content = """```
-Простой код
+Simple code
 ```"""
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
         assert len(result.elements) == 1
         assert result.elements[0].type == ElementType.CODE_BLOCK
-        assert "Простой код" in result.elements[0].content
+        assert "Simple code" in result.elements[0].content
         assert result.elements[0].metadata.get("language") == "" or "language" not in result.elements[0].metadata
 
 
 class TestMarkdownParserLinks:
-    """Тесты парсинга ссылок."""
+    """Link parsing tests."""
 
     def test_parse_standalone_link(self):
-        """Тест парсинга отдельной ссылки."""
+        """Test parsing standalone link."""
         parser = MarkdownParser()
-        content = "[Текст ссылки](https://example.com)"
+        content = "[Link text](https://example.com)"
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
-        # Ссылка должна быть создана как отдельный элемент LINK
+        # Link should be created as separate LINK element
         link_elements = [e for e in result.elements if e.type == ElementType.LINK]
         assert len(link_elements) >= 1
-        assert link_elements[0].content == "Текст ссылки"
+        assert link_elements[0].content == "Link text"
         assert link_elements[0].metadata.get("href") == "https://example.com"
 
     def test_parse_link_in_text(self):
-        """Тест парсинга ссылки внутри текста."""
+        """Test parsing link inside text."""
         parser = MarkdownParser()
-        content = "Вот [ссылка на Google](https://www.google.com) в тексте."
+        content = "Here is [link to Google](https://www.google.com) in text."
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
-        # Должны быть созданы элементы: LINK и TEXT
+        # Should have LINK and TEXT elements
         link_elements = [e for e in result.elements if e.type == ElementType.LINK]
         text_elements = [e for e in result.elements if e.type == ElementType.TEXT]
         
         assert len(link_elements) >= 1
         assert link_elements[0].metadata.get("href") == "https://www.google.com"
-        # Текст должен быть обработан отдельно
+        # Text should be processed separately
         assert len(text_elements) >= 1
 
     def test_parse_multiple_links(self):
-        """Тест парсинга нескольких ссылок."""
+        """Test parsing multiple links."""
         parser = MarkdownParser()
-        content = "[Ссылка 1](https://example.com) и [Ссылка 2](https://github.com)"
+        content = "[Link 1](https://example.com) and [Link 2](https://github.com)"
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
@@ -341,40 +341,40 @@ class TestMarkdownParserLinks:
 
 
 class TestMarkdownParserImages:
-    """Тесты парсинга изображений."""
+    """Image parsing tests."""
 
     def test_parse_standalone_image(self):
-        """Тест парсинга отдельного изображения."""
+        """Test parsing standalone image."""
         parser = MarkdownParser()
-        content = "![Альт текст](image.jpg)"
+        content = "![Alt text](image.jpg)"
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
-        # Изображение должно быть создано как отдельный элемент IMAGE
+        # Image should be created as separate IMAGE element
         image_elements = [e for e in result.elements if e.type == ElementType.IMAGE]
         assert len(image_elements) >= 1
-        assert image_elements[0].metadata.get("alt") == "Альт текст"
+        assert image_elements[0].metadata.get("alt") == "Alt text"
         assert image_elements[0].metadata.get("src") == "image.jpg"
-        assert image_elements[0].content == "Альт текст"
+        assert image_elements[0].content == "Alt text"
 
     def test_parse_image_in_text(self):
-        """Тест парсинга изображения внутри текста."""
+        """Test parsing image inside text."""
         parser = MarkdownParser()
-        content = "Вот ![картинка](image.png) в тексте."
+        content = "Here is ![picture](image.png) in text."
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
-        # Должны быть созданы элементы: IMAGE и TEXT
+        # Should have IMAGE and TEXT elements
         image_elements = [e for e in result.elements if e.type == ElementType.IMAGE]
         text_elements = [e for e in result.elements if e.type == ElementType.TEXT]
         
         assert len(image_elements) >= 1
         assert image_elements[0].metadata.get("src") == "image.png"
-        # Текст должен быть обработан отдельно
+        # Text should be processed separately
         assert len(text_elements) >= 1
 
     def test_parse_image_without_alt(self):
-        """Тест парсинга изображения без альтернативного текста."""
+        """Test parsing image without alt text."""
         parser = MarkdownParser()
         content = "![](image.jpg)"
         doc = Document(page_content=content, metadata={"source": "test.md"})
@@ -383,51 +383,51 @@ class TestMarkdownParserImages:
         image_elements = [e for e in result.elements if e.type == ElementType.IMAGE]
         assert len(image_elements) >= 1
         assert image_elements[0].metadata.get("src") == "image.jpg"
-        assert image_elements[0].content == "image.jpg"  # Используется URL как content
+        assert image_elements[0].content == "image.jpg"  # URL used as content
 
 
 class TestMarkdownParserQuotes:
-    """Тесты парсинга цитат."""
+    """Blockquote parsing tests."""
 
     def test_parse_blockquote(self):
-        """Тест парсинга цитаты."""
+        """Test parsing blockquote."""
         parser = MarkdownParser()
-        content = "> Это цитата"
+        content = "> This is a quote"
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
         assert len(result.elements) == 1
         assert result.elements[0].type == ElementType.TEXT
-        assert "Это цитата" in result.elements[0].content
+        assert "This is a quote" in result.elements[0].content
         assert result.elements[0].metadata.get("quote") is True
 
 
 class TestMarkdownParserComplexDocument:
-    """Тесты парсинга сложных документов."""
+    """Complex document parsing tests."""
 
     def test_parse_complex_document(self):
-        """Тест парсинга документа с различными элементами."""
+        """Test parsing document with various elements."""
         parser = MarkdownParser()
-        content = """# Главный заголовок
+        content = """# Main header
 
-Это параграф с текстом.
+This is a paragraph.
 
-## Подзаголовок
+## Subheader
 
-- Элемент списка 1
-- Элемент списка 2
+- List item 1
+- List item 2
 
 ```python
 code = "example"
 ```
 
-| Таблица | Колонка |
-|---------|---------|
-| Данные  | Значение |
+| Table | Column |
+|-------|--------|
+| Data  | Value  |
 
-> Цитата
+> Quote
 
-[Ссылка](https://example.com)
+[Link](https://example.com)
 """
         doc = Document(page_content=content, metadata={"source": "complex.md"})
         result = parser.parse(doc)
@@ -436,7 +436,7 @@ code = "example"
         assert result.format == DocumentFormat.MARKDOWN
         assert len(result.elements) > 0
 
-        # Проверяем наличие различных типов элементов
+        # Check presence of various element types
         types = [elem.type for elem in result.elements]
         assert ElementType.HEADER_1 in types
         assert ElementType.HEADER_2 in types
@@ -446,9 +446,9 @@ code = "example"
         assert ElementType.TABLE in types
 
     def test_parse_real_file(self):
-        """Тест парсинга реального файла из tests/files_for_tests."""
+        """Test parsing a real file from tests/data."""
         parser = MarkdownParser()
-        test_file = Path(__file__).parent.parent.parent / "files_for_tests" / "md.md"
+        test_file = Path(__file__).parent.parent.parent / "data" / "md.md"
 
         if test_file.exists():
             content = test_file.read_text(encoding="utf-8")
@@ -461,57 +461,56 @@ code = "example"
 
 
 class TestMarkdownParserValidation:
-    """Тесты валидации входных данных."""
+    """Input validation tests."""
 
     def test_validate_input_none_document(self):
-        """Тест валидации None документа."""
+        """Test validation of None document."""
         parser = MarkdownParser()
         with pytest.raises(ValidationError):
             parser.parse(None)  # type: ignore
 
     def test_validate_input_wrong_format(self):
-        """Тест валидации документа неправильного формата."""
+        """Test validation of wrong format document."""
         parser = MarkdownParser()
         doc = Document(page_content="PDF content", metadata={"source": "test.pdf"})
         with pytest.raises(UnsupportedFormatError):
             parser.parse(doc)
 
     def test_validate_input_empty_content(self):
-        """Тест валидации документа с пустым контентом."""
+        """Test validation of document with empty content."""
         parser = MarkdownParser()
         doc = Document(page_content="", metadata={"source": "test.md"})
         result = parser.parse(doc)
-        # Пустой документ должен быть валидным, но без элементов
+        # Empty document should be valid but with no elements
         assert isinstance(result, ParsedDocument)
         assert len(result.elements) == 0
 
 
 class TestMarkdownParserErrorHandling:
-    """Тесты обработки ошибок."""
+    """Error handling tests."""
 
     def test_parsing_error_handling(self):
-        """Тест обработки ошибок парсинга."""
+        """Test parse error handling."""
         parser = MarkdownParser()
-        # Создаем документ, который может вызвать ошибку
-        # (хотя mistune обычно обрабатывает большинство случаев)
-        doc = Document(page_content="Нормальный текст", metadata={"source": "test.md"})
-        # Должен успешно обработаться
+        # Document that might cause error (mistune usually handles most cases)
+        doc = Document(page_content="Normal text", metadata={"source": "test.md"})
+        # Should parse successfully
         result = parser.parse(doc)
         assert isinstance(result, ParsedDocument)
 
 
 class TestMarkdownParserIntegration:
-    """Тесты интеграции с BaseParser."""
+    """BaseParser integration tests."""
 
     def test_inherits_from_base_parser(self):
-        """Тест наследования от BaseParser."""
+        """Test inheritance from BaseParser."""
         parser = MarkdownParser()
         assert hasattr(parser, "can_parse")
         assert hasattr(parser, "get_source")
         assert hasattr(parser, "parse")
 
     def test_can_parse_method(self):
-        """Тест метода can_parse."""
+        """Test can_parse method."""
         parser = MarkdownParser()
         doc_md = Document(page_content="# Test", metadata={"source": "test.md"})
         doc_pdf = Document(page_content="PDF", metadata={"source": "test.pdf"})
@@ -520,27 +519,27 @@ class TestMarkdownParserIntegration:
         assert parser.can_parse(doc_pdf) is False
 
     def test_get_source_method(self):
-        """Тест метода get_source."""
+        """Test get_source method."""
         parser = MarkdownParser()
         doc = Document(page_content="# Test", metadata={"source": "test.md"})
         assert parser.get_source(doc) == "test.md"
 
     def test_id_generation(self):
-        """Тест генерации ID элементов."""
+        """Test element ID generation."""
         parser = MarkdownParser()
         doc = Document(page_content="# H1\n## H2\n### H3", metadata={"source": "test.md"})
         result = parser.parse(doc)
 
         assert len(result.elements) == 3
-        # Проверяем, что ID уникальны
+        # Check that IDs are unique
         ids = [elem.id for elem in result.elements]
         assert len(ids) == len(set(ids))
-        # Проверяем формат ID (должны быть последовательными)
+        # Check ID format (should be sequential)
         assert result.elements[0].id == "00000001"
         assert result.elements[1].id == "00000002"
         assert result.elements[2].id == "00000003"
 
 
 class TestMarkdownParserFullDocument:
-    """Тесты парсинга полного документа со всеми элементами."""
+    """Full document parsing tests (all element types)."""
 

@@ -1,6 +1,6 @@
 """
-Тесты для Markdown токенизатора.
+Tests for Markdown tokenizer.
 
-Тестируемый класс:
+Class under test:
 - MarkdownTokenizer
 """

@@ -293,7 +293,7 @@ See [Architecture Diagram](architecture_diagram.md) for detailed system architec
 
 Test files are located in:
 - `tests/` - Unit and integration tests
-- `tests/files_for_tests/` - Test document files
+- `tests/data/` - Test document files
 - `experiments/pdf_text_extraction/test_files/` - Experimental test files
 
 Run tests:

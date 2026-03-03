@@ -1,3 +1,3 @@
 """
-Тесты для PDF парсера.
+Tests for PDF parser.
 """

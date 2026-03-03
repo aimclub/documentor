@@ -1,6 +1,6 @@
 """
-Тесты для корректора структуры DOCX.
+Tests for DOCX structure corrector.
 
-Тестируемый класс:
+Class under test:
 - DocxStructureCorrector
 """

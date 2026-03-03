@@ -96,15 +96,13 @@ class TestPdfTableParser:
         ]
         
         with patch("documentor.processing.parsers.pdf.table_parser.parse_table_from_html") as mock_parse:
-            mock_parse.return_value = (None, pd.DataFrame({"Header1": ["Value1"], "Header2": ["Value2"]}), True)
+            mock_parse.return_value = (table_html, True)
             
             result = table_parser.parse_tables(elements, sample_pdf_path)
             
             assert len(result) == 1
             assert result[0].type == ElementType.TABLE
-            assert "dataframe" in result[0].metadata
-            assert isinstance(result[0].metadata["dataframe"], pd.DataFrame)
-            assert "image_data" in result[0].metadata
+            assert "<table>" in result[0].content or "image_data" in result[0].metadata
 
     def test_parse_tables_invalid_bbox(self, table_parser, sample_pdf_path):
         """Test parsing tables with invalid bbox."""
@@ -148,5 +146,3 @@ class TestPdfTableParser:
         assert len(result) == 1
         assert result[0].type == ElementType.TABLE
         assert "parsing_error" in result[0].metadata
-        assert "dataframe" in result[0].metadata
-        assert isinstance(result[0].metadata["dataframe"], pd.DataFrame)

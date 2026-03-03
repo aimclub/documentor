@@ -1,6 +1,6 @@
 """
-Тесты для парсинга XML разметки DOCX.
+Tests for DOCX XML markup parsing.
 
-Тестируемый класс:
+Class under test:
 - DocxXmlParser
 """
