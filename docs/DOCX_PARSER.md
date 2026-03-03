@@ -4,12 +4,14 @@ Complete documentation for the DOCX parser implementation.
 
 ## Overview
 
-The DOCX parser uses a **combined approach** that combines:
-1. **Dots.OCR layout detection** for structural elements (headers, captions)
-2. **PyMuPDF text extraction** from PDF by bbox coordinates
-3. **XML parsing** for full content extraction (text, tables, images)
-4. **Table of Contents (TOC) parsing** for header validation
-5. **Automatic scanned document detection** with fallback to PdfParser
+The DOCX parser uses a **combined approach** (see `documentor/processing/parsers/docx/docx_parser.py`):
+
+1. **DOTS OCR** for detecting structural elements (headers, captions)
+2. **PyMuPDF** for extracting text from PDF by bbox (faster and more accurate for text PDFs)
+3. **XML parsing** for extracting full content (text, tables, images)
+4. **Table of Contents (TOC) parsing** for validation and improving results
+5. **Building complete document hierarchy**
+6. **Automatic detection of scanned documents** and processing via PdfParser with OCR
 
 ## Architecture
 
@@ -187,7 +189,7 @@ docx_parser:
 **Process**:
 1. **Try TOC Field**: Look for `{TOC}` field in XML (dynamic TOC)
 2. **Try TOC Styles**: Look for paragraphs with TOC1, TOC2, TOC3 styles
-3. **Try Static Text**: Find "Contents" or "Table of contents" header (Russian "Содержание"/"Оглавление" also supported), then parse following paragraphs:
+3. **Try Static Text**: Find "Содержание" or "Оглавление" header (English "Contents"/"Table of contents" also supported), then parse following paragraphs:
    - Look for numbered entries (1., 1.1., etc.)
    - Extract title and page number
    - Determine level from numbering depth

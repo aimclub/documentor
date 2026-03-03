@@ -540,9 +540,13 @@ def _determine_header_level(
 ) -> int:
     """
     Determines header level with clear priorities.
-    
+
+    - Handle nested headers (HEADER_2 under HEADER_1, etc.).
+    - Skip list item patterns (unless heading style); skip list headers (e.g. "List includes", etc.).
+    - Determine header levels using priority:
+
     Priority order:
-    1. Structural keywords (e.g. Introduction, Conclusion) = ALWAYS level 1
+    1. Structural keywords (Chapter, Part, Introduction, Conclusion; Russian equivalents supported) = ALWAYS level 1
     2. Chapter patterns (e.g. "Chapter X", "Part X") = ALWAYS level 1
     3. Numbered headers level 1 ("1", "2", "3" without sublevels) = ALWAYS level 1
     4. Style = number ("1", "2", "3")

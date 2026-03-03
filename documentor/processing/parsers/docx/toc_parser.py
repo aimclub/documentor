@@ -205,7 +205,8 @@ def _parse_toc_from_paragraphs(
     toc_header_xml_pos: int,
     next_header_xml_pos: int
 ) -> List[Dict[str, Any]]:
-    """Parses table of contents from paragraphs between 'CONTENTS' header and next header."""
+    """Parses table of contents from paragraphs between 'Содержание' or 'Оглавление'
+    header (English 'Contents'/'Table of contents' also supported) and next header."""
     toc_entries = []
     
     for elem in all_elements:
@@ -262,11 +263,17 @@ def _parse_toc_from_paragraphs(
 def parse_toc_from_docx(docx_path: Path, all_xml_elements: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
     Parses table of contents from DOCX file.
-    
+
+    Strategy (in order):
+    1. Try TOC Field: Look for {TOC} field in XML (dynamic TOC).
+    2. Try TOC Styles: Look for paragraphs with TOC1, TOC2, TOC3 styles.
+    3. Try Static Text: Find "Содержание" or "Оглавление" header (English
+       "Contents"/"Table of contents" also supported), then parse following paragraphs.
+
     Args:
         docx_path: Path to DOCX file
         all_xml_elements: All XML document elements
-        
+
     Returns:
         List of headers from table of contents
     """
