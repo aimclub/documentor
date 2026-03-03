@@ -1,3 +1,5 @@
+"""Document loader utilities: format detection, validation, metadata."""
+
 from .loader import (
     detect_document_format,
     get_document_source,

@@ -210,7 +210,7 @@ def _is_header_by_properties(
         
         # Check if element matches any level rules
         matches_any_rule = False
-        matched_level = None  # Сохраняем уровень, для которого элемент соответствует правилам
+        matched_level = None  # Level for which element matches the rules
         
         for level, level_rules in rules_by_level.items():
             matches = 0
@@ -308,7 +308,7 @@ def _is_header_by_properties(
                 # IMPORTANT: Require at least 80% match for other properties (increased from 70%)
                 if score >= 0.8:  # At least 80% match
                     matches_any_rule = True
-                    matched_level = level  # Сохраняем уровень, для которого элемент соответствует правилам
+                    matched_level = level  # Level for which element matches the rules
                     break
         
         # Check common_header if no level match
@@ -426,14 +426,14 @@ def _is_header_by_properties(
         # (unless it has explicit heading style or numbered pattern with confirmation)
         if not matches_any_rule:
             # Allow ONLY if it's a numbered header with confirmation (bold OR heading style)
-            # AND it matches the pattern properly (e.g., "1. Заголовок", not "1Adhera")
+            # AND it matches the pattern properly (e.g. "1. Header", not "1Adhera")
             # IMPORTANT: Must have separator (space or dot+space) between number and letter
             # AND must NOT be a list item
             if not properties.get('is_list_item'):
                 is_numbered_header = any(re.match(p, text) for p in [
-                    r'^\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1. Заголовок" or "1 Заголовок" (with separator)
-                    r'^\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1. Заголовок" or "1.1 Заголовок"
-                    r'^\d+\.\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1.1. Заголовок" or "1.1.1 Заголовок"
+                    r'^\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1. Header" or "1 Header" (with separator)
+                    r'^\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1. Header" or "1.1 Header"
+                    r'^\d+\.\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1.1. Header" or "1.1.1 Header"
                 ])
                 # IMPORTANT: Must be numbered header pattern AND have confirmation (bold OR heading style)
                 if is_numbered_header and (properties.get('is_bold') or has_heading_style):
@@ -488,9 +488,9 @@ def _is_header_by_properties(
             if matches_level_1 and not _is_structural_keyword(text) and not has_heading_style:
                 # Check if element is numbered
                 is_numbered_header = any(re.match(p, text) for p in [
-                    r'^\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1. Заголовок" or "1 Заголовок"
-                    r'^\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1. Заголовок" or "1.1 Заголовок"
-                    r'^\d+\.\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1.1. Заголовок" or "1.1.1 Заголовок"
+                    r'^\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1. Header" or "1 Header"
+                    r'^\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1. Header" or "1.1 Header"
+                    r'^\d+\.\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1.1. Header" or "1.1.1 Header"
                 ])
                 if not is_numbered_header:
                     # Element matches level 1 rules but is not numbered - NOT a header
@@ -500,18 +500,18 @@ def _is_header_by_properties(
         return True
     
     # Fallback criteria: only use if NO header_rules are provided
-    # IMPORTANT: For HEADER_1, we require numbered pattern (e.g., "1. Заголовок")
+    # IMPORTANT: For HEADER_1, we require numbered pattern (e.g. "1. Header")
     # when there's no explicit heading style or structural keyword
     # This prevents marking regular text as headers based on bold or caps lock alone
     
     # Numbered pattern - require additional confirmation: bold OR heading style OR caps
-    # Support variants: "1. Заголовок", "1 Заголовок" (with separator), NOT "1Заголовок" (no separator)
+    # Support variants: "1. Header", "1 Header" (with separator), NOT "1Header" (no separator)
     # IMPORTANT: Must have separator (space or dot+space) between number and letter to avoid matching "1Adhera"
     if not properties.get('is_list_item'):
         is_numbered_header = any(re.match(p, text) for p in [
-            r'^\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1. Заголовок" or "1 Заголовок" (with separator)
-            r'^\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1. Заголовок" or "1.1 Заголовок"
-            r'^\d+\.\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1.1. Заголовок" or "1.1.1 Заголовок"
+            r'^\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1. Header" or "1 Header" (with separator)
+            r'^\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1. Header" or "1.1 Header"
+            r'^\d+\.\d+\.\d+(?:\.\s+|\s+)[А-ЯЁA-Z]',  # "1.1.1. Header" or "1.1.1 Header"
         ])
         if is_numbered_header:
             # Check for confirmation: bold OR heading style OR caps lock
@@ -540,10 +540,14 @@ def _determine_header_level(
 ) -> int:
     """
     Determines header level with clear priorities.
-    
+
+    - Handle nested headers (HEADER_2 under HEADER_1, etc.).
+    - Skip list item patterns (unless heading style); skip list headers (e.g. "List includes", etc.).
+    - Determine header levels using priority:
+
     Priority order:
-    1. Structural keywords (Введение, Заключение) = ALWAYS level 1
-    2. Chapter patterns ("Глава X", "Часть X") = ALWAYS level 1
+    1. Structural keywords (Chapter, Part, Introduction, Conclusion; Russian equivalents supported) = ALWAYS level 1
+    2. Chapter patterns (e.g. "Chapter X", "Part X") = ALWAYS level 1
     3. Numbered headers level 1 ("1", "2", "3" without sublevels) = ALWAYS level 1
     4. Style = number ("1", "2", "3")
     5. Heading style
@@ -568,8 +572,8 @@ def _determine_header_level(
             return 1
     
     # Priority 3: Numbered headers level 1 (just "1", "2", "3" without sublevels) = ALWAYS level 1
-    # Support variants with and without space: "1Анализ", "1. Анализ", "1"
-    # IMPORTANT: "1.1Актуальность" should be level 2, not 1
+    # Support variants with and without space: "1Analysis", "1. Analysis", "1" (Cyrillic/Latin)
+    # IMPORTANT: "1.1Relevance" should be level 2, not 1
     full_match = re.match(r'^(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:\.?\s*)?', text.strip())
     if full_match:
         # If there are sublevels (1.1, 1.1.1) - process below
@@ -590,7 +594,7 @@ def _determine_header_level(
         return properties['level']
     
     # Priority 6: From numbering
-    # Support variants with and without space: "1Анализ", "1.1Актуальность", "1. Анализ", "1.1. Актуальность"
+    # Support variants with and without space: "1Analysis", "1.1Relevance", "1. Analysis", "1.1. Relevance"
     numbered_level = None
     # First try pattern with dot and optional space
     match = re.match(r'^(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:\.?\s*)?', text.strip())
@@ -1089,8 +1093,8 @@ def build_hierarchy(
                 # even if OCR identified it as a header
                 if props.get('is_list_item'):
                     # Check if this is a numbered header
-                    # Numbered header: "1. Заголовок" or "1 Заголовок" (with separator, capital letter after number)
-                    # List item: "1. текст" or "1 текст" (lowercase letter after number)
+                    # Numbered header: "1. Header" or "1 Header" (with separator, capital after number)
+                    # List item: "1. text" or "1 text" (lowercase after number)
                     # IMPORTANT: Must have separator to avoid matching "1Adhera"
                     is_numbered_header_with_capital = bool(re.match(r'^\d+(?:\.\s+|\s+)[А-ЯЁA-Z]', header_text))
                     
@@ -1173,8 +1177,8 @@ def build_hierarchy(
             # even if they look like headers (bold, large, etc.)
             if props.get('is_list_item'):
                 # Check if this is a numbered header
-                # Numbered header: "1. Заголовок" or "1Заголовок" (capital letter after number)
-                # List item: "1. текст" or "1текст" (lowercase letter after number)
+                # Numbered header: "1. Header" or "1Header" (capital after number)
+                # List item: "1. text" or "1text" (lowercase after number)
                 is_numbered_header_with_capital = bool(re.match(r'^\d+(?:\.\s*)?[А-ЯЁA-Z]', text_stripped))
                 
                 # If it's NOT a numbered header with capital letter and NOT a heading style - skip

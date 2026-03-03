@@ -97,7 +97,6 @@ LLM (Large Language Models) service configuration.
   - `openai`: OpenAI provider settings (optional)
     - `text`: Text analysis model settings
     - `visual`: Visual analysis (OCR) model settings
-  - `openai`: OpenAI provider settings (optional)
 - `chunking`: Text chunking settings
   - `chunk_size`: Chunk size for LLM analysis (characters)
   - `overlap`: Overlap between chunks (paragraphs)
@@ -132,7 +131,7 @@ parsed = pipeline.parse(doc)
 
 ## Docker Deployment
 
-If you're using Dots OCR, you can deploy it using Docker Compose. See the [main README](../../README.md#docker-deployment-dots-ocr) for a complete example configuration.
+If you're using Dots OCR, you can deploy it using Docker Compose. See the [project README](../../README.md#docker-deployment-dots-ocr) for a complete example configuration.
 
 **Key Configuration Points:**
 - Set `ocr_config.yaml` → `dots_ocr` → `endpoint` to your Docker service URL (e.g., `http://localhost:8000`)

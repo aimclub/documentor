@@ -34,10 +34,9 @@ ROADMAP.md
 md_output_test.txt
 test_md_output.py
 /documentor.egg-info/
-/experiments1
-/evaluation_scripts
+/experiments1/
 /htmlcov
-TODO.md
+/documentor/test_parser.py
 /.hypothesis
 /.deepeval
 /Plan.txt
@@ -47,6 +46,7 @@ TODO.md
 /documentor/test_docx_parser.py
 /documentor/ELEMENT_METADATA_STANDARD.md
 1234.txt
+TODO.md
 documentor/**/__pycache__/
 /docs/План_работы.txt
 /docs/План_работы_16_01.txt

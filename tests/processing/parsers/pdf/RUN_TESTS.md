@@ -1,31 +1,31 @@
-# Команды для запуска тестов PDF парсера
+# Commands for running PDF parser tests
 
-## Запуск всех тестов PDF парсера
+## Run all PDF parser tests
 
 ```bash
 python -m pytest tests/processing/parsers/pdf/ -v
 ```
 
-## Запуск отдельных файлов тестов
+## Run individual test files
 
-### Тесты основного PDF парсера
+### Main PDF parser tests
 ```bash
 python -m pytest tests/processing/parsers/pdf/test_pdf_parser.py -v
 ```
 
-### Тесты layout detector
+### Layout detector tests
 ```bash
 python -m pytest tests/processing/parsers/pdf/ocr/test_layout_detector.py -v
 ```
 
-### Тесты page renderer
+### Page renderer tests
 ```bash
 python -m pytest tests/processing/parsers/pdf/ocr/test_page_renderer.py -v
 ```
 
-## Запуск отдельных тестовых классов
+## Run individual test classes
 
-### PDF Parser - Инициализация
+### PDF Parser - Initialization
 ```bash
 python -m pytest tests/processing/parsers/pdf/test_pdf_parser.py::TestPdfParserInitialization -v
 ```
@@ -105,7 +105,7 @@ python -m pytest tests/processing/parsers/pdf/test_pdf_parser.py::TestGetConfig 
 python -m pytest tests/processing/parsers/pdf/test_pdf_parser.py::TestCreateElementsFromHierarchy -v
 ```
 
-### Layout Detector - Инициализация
+### Layout Detector - Initialization
 ```bash
 python -m pytest tests/processing/parsers/pdf/ocr/test_layout_detector.py::TestPdfLayoutDetectorInitialization -v
 ```
@@ -125,7 +125,7 @@ python -m pytest tests/processing/parsers/pdf/ocr/test_layout_detector.py::TestD
 python -m pytest tests/processing/parsers/pdf/ocr/test_layout_detector.py::TestContextManager -v
 ```
 
-### Page Renderer - Инициализация
+### Page Renderer - Initialization
 ```bash
 python -m pytest tests/processing/parsers/pdf/ocr/test_page_renderer.py::TestPdfPageRendererInitialization -v
 ```
@@ -145,67 +145,67 @@ python -m pytest tests/processing/parsers/pdf/ocr/test_page_renderer.py::TestRen
 python -m pytest tests/processing/parsers/pdf/ocr/test_page_renderer.py::TestGetPageCount -v
 ```
 
-## Запуск отдельных тестовых методов
+## Run individual test methods
 
-### Пример: тест инициализации парсера
+### Example: parser initialization test
 ```bash
 python -m pytest tests/processing/parsers/pdf/test_pdf_parser.py::TestPdfParserInitialization::test_default_initialization -v
 ```
 
-### Пример: тест can_parse для PDF
+### Example: can_parse test for PDF
 ```bash
 python -m pytest tests/processing/parsers/pdf/test_pdf_parser.py::TestCanParse::test_can_parse_pdf -v
 ```
 
-### Пример: тест фильтрации элементов
+### Example: element filtering test
 ```bash
 python -m pytest tests/processing/parsers/pdf/test_pdf_parser.py::TestFilterLayoutElements::test_filter_page_headers -v
 ```
 
-## Дополнительные опции
+## Additional options
 
-### Запуск с выводом print statements
+### Run with print statements
 ```bash
 python -m pytest tests/processing/parsers/pdf/ -v -s
 ```
 
-### Запуск с остановкой на первой ошибке
+### Stop on first failure
 ```bash
 python -m pytest tests/processing/parsers/pdf/ -v -x
 ```
 
-### Запуск с подробным выводом ошибок
+### Run with verbose error output
 ```bash
 python -m pytest tests/processing/parsers/pdf/ -v --tb=long
 ```
 
-### Запуск с покрытием кода
+### Run with code coverage
 ```bash
 python -m pytest tests/processing/parsers/pdf/ -v --cov=documentor.processing.parsers.pdf --cov-report=html
 ```
 
-### Запуск только быстрых тестов (без реальных API вызовов)
+### Run only fast tests (no real API calls)
 ```bash
 python -m pytest tests/processing/parsers/pdf/ -v -m "not slow"
 ```
 
-### Запуск с маркером (если добавлены маркеры)
+### Run with marker (if markers are added)
 ```bash
 python -m pytest tests/processing/parsers/pdf/ -v -m "unit"
 ```
 
-## Пропуск тестов, требующих внешние зависимости
+## Skipping tests that require external dependencies
 
-Если тесты требуют PyMuPDF (fitz), но он не установлен, они автоматически пропускаются через `pytest.skip()`.
+If tests require PyMuPDF (fitz) but it is not installed, they are automatically skipped via `pytest.skip()`.
 
-## Отладка тестов
+## Debugging tests
 
-### Запуск с отладчиком (pdb)
+### Run with debugger (pdb)
 ```bash
 python -m pytest tests/processing/parsers/pdf/ -v --pdb
 ```
 
-### Запуск конкретного теста с отладчиком
+### Run specific test with debugger
 ```bash
 python -m pytest tests/processing/parsers/pdf/test_pdf_parser.py::TestPdfParserInitialization::test_default_initialization -v --pdb
 ```

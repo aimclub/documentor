@@ -82,10 +82,7 @@ DOCX to PDF conversion using:
 - docx2pdf
 - LibreOffice
 
-### OCR Modules (`ocr/`)
-- **`layout_dots.py`**: Dots.OCR integration enum (deprecated, use `documentor.ocr.dots_ocr.types`)
-
-**Note**: Dots OCR specific code has been moved to `documentor/ocr/dots_ocr/`. The `ocr/` directory in DOCX parser contains wrappers for backward compatibility.
+Layout detection for DOCX uses `documentor.ocr.dots_ocr.layout_detector.DotsOCRLayoutDetector` (see `documentor/ocr/dots_ocr/`). The main layout processor is `layout_detector.py` in this directory.
 
 ## Features
 
@@ -95,7 +92,7 @@ DOCX to PDF conversion using:
 - **Caption Finding**: Automatically finds captions for tables and images from OCR
 - **Table Structure Matching**: Validates tables by comparing OCR and XML structures
 - **TOC Validation**: Uses table of contents to validate and improve header detection
-- **Numbered Header Support**: Supports headers with/without spaces after numbers (e.g., "1Анализ", "1. Анализ")
+- **Numbered Header Support**: Supports headers with/without spaces after numbers (e.g. "1Analysis", "1. Analysis"; Cyrillic supported)
 - **List Item Detection**: Automatically identifies and splits numbered list items
 - **Table Extraction**: Converts XML tables to HTML format (stored in element.content)
 - **Image Handling**: Extracts images and links them with captions
@@ -108,7 +105,7 @@ See `documentor/config/config.yaml` (section `docx_parser`) for configuration op
 ## Usage
 
 ```python
-from documentor.processing.parsers.docx.docx_parser import DocxParser
+from documentor.processing.parsers.docx import DocxParser
 from langchain_core.documents import Document
 
 parser = DocxParser()

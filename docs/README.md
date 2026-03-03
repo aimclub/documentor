@@ -8,13 +8,11 @@ Documentor is an open-source library for preprocessing documents before RAG (Ret
 
 ## Quick Links
 
-- [Main Pipeline Description](Полное%20описание%20нового%20пайплайна%20с%20langchain.md) - General overview of the pipeline
 - [PDF Parser](PDF_PARSER.md) - Complete PDF parser documentation
 - [DOCX Parser](DOCX_PARSER.md) - Complete DOCX parser documentation
 - [Markdown Parser](MARKDOWN_PARSER.md) - Complete Markdown parser documentation
 - [Project Structure](STRUCTURE.md) - Project structure and module descriptions
 - [Architecture Diagram](architecture_diagram.md) - System architecture and data flow
-- [Documentation Status](DOCUMENTATION_STATUS.md) - Status of all documentation files
 
 ## Parser Documentation
 
@@ -101,12 +99,11 @@ Each `Element` contains:
 
 ## Configuration
 
-All configuration is in `documentor/config/config.yaml`:
+Configuration is in `documentor/config/`:
 
-- `pdf_parser`: PDF parser settings
-- `docx_parser`: DOCX parser settings
-- `ocr_config.yaml`: OCR service configuration
-- `llm_config.yaml`: LLM service configuration
+- `config.yaml` - General settings (pdf_parser, docx_parser)
+- `ocr_config.yaml` - OCR service (e.g. Dots.OCR)
+- `llm_config.yaml` - LLM service for header detection
 
 ## Usage Example
 
@@ -131,10 +128,4 @@ for element in parsed_doc.elements:
     print(f"{element.type}: {element.content[:100]}")
 ```
 
-## Historical Documents
-
-The following documents are kept for historical reference but are outdated:
-- `План_работы_16_01.md` - Historical planning document
-- `План_работы.txt` - Historical planning document
-
-For current implementation details, see the parser-specific documentation files.
+For implementation details, see the parser-specific documentation files above.

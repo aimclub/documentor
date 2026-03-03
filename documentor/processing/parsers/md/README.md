@@ -14,13 +14,13 @@ The Markdown parser uses regex-based parsing:
 ## Modules
 
 ### `md_parser.py`
-Main Markdown parser class. Handles complete Markdown parsing.
+Main Markdown parser class. Handles complete Markdown parsing: block parsing in `_parse_markdown()`, hierarchy and parent_id in `_build_elements()`.
 
 ### `tokenizer.py`
-Markdown tokenization utilities.
+Documents where block parsing lives (md_parser._parse_markdown). No separate tokenizer class; logic is in the parser.
 
 ### `hierarchy.py`
-Hierarchy building for Markdown documents.
+Documents hierarchy approach (header_stack, list_stack, parent_id). Implementation is in md_parser._build_elements().
 
 ## Features
 
@@ -34,7 +34,7 @@ Hierarchy building for Markdown documents.
 ## Usage
 
 ```python
-from documentor.processing.parsers.md.md_parser import MarkdownParser
+from documentor.processing.parsers.md import MarkdownParser
 from langchain_core.documents import Document
 
 parser = MarkdownParser()

@@ -239,7 +239,7 @@ def _is_document_metadata(text: str) -> bool:
 
 
 def _is_list_header(text: str) -> bool:
-    """Checks if text is a list header (not a real header).
+    """Checks if text is a list header (not a real header), e.g. "List includes", etc.
     
     Examples:
     - "На этапе 1 выполнены следующие работы."
@@ -566,14 +566,14 @@ def find_missing_headers_by_rules(
                 min_font_size = max(10, min(font_sizes) - 2)
         
         # Check numbered header
-        # Support variants with and without space: "1Анализ", "1.1Актуальность", "1. Анализ", "1.1. Актуальность"
+        # Support variants with and without space: "1Analysis", "1.1Relevance", "1. Analysis", "1.1. Relevance" (Cyrillic supported)
         is_list_item = properties.get('is_list_item', False)
         is_numbered_header = False
         if not is_list_item or is_heading_style:
             is_numbered_header = any(re.match(pattern, text.strip()) for pattern in [
-                r'^\d+(?:\.\s*)?[А-ЯЁA-Z]',  # "1Заголовок" or "1. Заголовок"
-                r'^\d+\.\d+(?:\.\s*)?[А-ЯЁA-Z]',  # "1.1Заголовок" or "1.1. Заголовок"
-                r'^\d+\.\d+\.\d+(?:\.\s*)?[А-ЯЁA-Z]',  # "1.1.1Заголовок" or "1.1.1. Заголовок"
+                r'^\d+(?:\.\s*)?[А-ЯЁA-Z]',  # "1Header" or "1. Header"
+                r'^\d+\.\d+(?:\.\s*)?[А-ЯЁA-Z]',  # "1.1Header" or "1.1. Header"
+                r'^\d+\.\d+\.\d+(?:\.\s*)?[А-ЯЁA-Z]',  # "1.1.1Header" or "1.1.1. Header"
             ])
         
         bold_text_threshold = max(short_text_threshold, 100)
@@ -586,7 +586,7 @@ def find_missing_headers_by_rules(
         detected_level = None
         if heading_level_from_style:
             detected_level = heading_level_from_style
-        # Support variants with and without space: "1Анализ", "1.1Актуальность"
+        # Support variants with and without space: "1Analysis", "1.1Relevance" (Cyrillic supported)
         match = re.match(r'^(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:\.?\s*)?', text.strip())
         if match:
             if match.group(3):
@@ -840,11 +840,11 @@ def find_missing_headers_by_rules(
         # Final filtering
         if best_match and best_match['score'] >= 0.5:
             text_stripped = text.strip()
-            # Support variants with and without space: "1Анализ", "1.1Актуальность"
+            # Support variants with and without space: "1Analysis", "1.1Relevance" (Cyrillic supported)
             numbered_patterns = [
-                r'^\d+(?:\.\s*)?[А-ЯЁA-Z]',  # "1Заголовок" or "1. Заголовок"
-                r'^\d+\.\d+(?:\.\s*)?[А-ЯЁA-Z]',  # "1.1Заголовок" or "1.1. Заголовок"
-                r'^\d+\.\d+\.\d+(?:\.\s*)?[А-ЯЁA-Z]',  # "1.1.1Заголовок" or "1.1.1. Заголовок"
+                r'^\d+(?:\.\s*)?[А-ЯЁA-Z]',  # "1Header" or "1. Header"
+                r'^\d+\.\d+(?:\.\s*)?[А-ЯЁA-Z]',  # "1.1Header" or "1.1. Header"
+                r'^\d+\.\d+\.\d+(?:\.\s*)?[А-ЯЁA-Z]',  # "1.1.1Header" or "1.1.1. Header"
             ]
             is_numbered_header_check = any(re.match(pattern, text_stripped) for pattern in numbered_patterns)
             

@@ -79,9 +79,8 @@ Combined approach parser for DOCX documents.
 - `xml_parser.py`: XML structure parsing
 - `toc_parser.py`: Table of Contents parsing
 - `converter_wrapper.py`: DOCX to PDF conversion
-- `ocr/`: OCR-related modules for DOCX (wrappers for backward compatibility)
 
-**Note**: Dots OCR specific code has been moved to `documentor/ocr/dots_ocr/`. The `ocr/` directory in DOCX parser contains wrappers for backward compatibility.
+Layout detection for DOCX uses `documentor.ocr.dots_ocr.layout_detector.DotsOCRLayoutDetector`; the main processor is `layout_detector.py` in this directory.
 
 ### Markdown Parser (`md/`)
 Regex-based Markdown parser.
@@ -93,22 +92,19 @@ Regex-based Markdown parser.
 - Hierarchy building
 
 **Modules:**
-- `md_parser.py`: Main Markdown parser
-- `tokenizer.py`: Markdown tokenization
-- `hierarchy.py`: Hierarchy building for Markdown
+- `md_parser.py`: Main Markdown parser (block parsing in `_parse_markdown()`, hierarchy in `_build_elements()`)
+- `tokenizer.py`: Documents block parsing; implementation is in md_parser
+- `hierarchy.py`: Documents hierarchy approach; implementation is in md_parser._build_elements()
 
 ## Usage
 
 ```python
-from documentor.processing.parsers.pdf.pdf_parser import PdfParser
-from documentor.processing.parsers.docx.docx_parser import DocxParser
-from documentor.processing.parsers.md.md_parser import MarkdownParser
-
-# Initialize parser
-parser = PdfParser()  # or DocxParser(), MarkdownParser()
-
-# Parse document
+from documentor.processing.parsers.pdf import PdfParser
+from documentor.processing.parsers.docx import DocxParser
+from documentor.processing.parsers.md import MarkdownParser
 from langchain_core.documents import Document
+
+parser = PdfParser()  # or DocxParser(), MarkdownParser()
 doc = Document(page_content="", metadata={"source": "document.pdf"})
 parsed = parser.parse(doc)
 ```
