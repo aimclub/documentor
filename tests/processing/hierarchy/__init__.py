@@ -1,3 +1,3 @@
 """
-Тесты для построения иерархии.
+Tests for hierarchy building.
 """

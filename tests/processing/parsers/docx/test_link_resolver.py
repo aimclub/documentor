@@ -1,6 +1,6 @@
 """
-Тесты для разрешения ссылок в DOCX.
+Tests for DOCX link resolution.
 
-Тестируемый класс:
+Class under test:
 - DocxLinkResolver
 """

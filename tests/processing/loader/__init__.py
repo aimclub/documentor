@@ -1,3 +1,3 @@
 """
-Тесты для document loader.
+Tests for document loader.
 """

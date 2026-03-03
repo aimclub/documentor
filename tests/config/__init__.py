@@ -1,3 +1,3 @@
 """
-Тесты для конфигурации.
+Tests for configuration.
 """

@@ -1,5 +1,5 @@
 """
-Интеграционные тесты для DOCX парсера.
+Integration tests for DOCX parser.
 
-Тестирует парсинг реальных DOCX документов.
+Tests parsing of real DOCX documents.
 """

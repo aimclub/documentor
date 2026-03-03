@@ -1,21 +1,21 @@
 """
-Тесты для базового парсера.
+Tests for base parser.
 
-Тестируемые классы и методы:
-- BaseParser (абстрактный класс)
+Tested classes and methods:
+- BaseParser (abstract class)
 - can_parse()
 - get_source()
 - _validate_input()
 - _create_element()
 - _validate_parsed_document()
 - _log_parsing_start() / _log_parsing_end()
-- Обработка ошибок
+- Error handling
 """
 
 import sys
 from pathlib import Path
 
-# Добавляем корневую директорию проекта в PYTHONPATH для прямого запуска
+# Add project root to PYTHONPATH for direct run
 _project_root = Path(__file__).parent.parent.parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
@@ -31,19 +31,19 @@ from documentor.exceptions import ParsingError, UnsupportedFormatError, Validati
 from documentor.processing.parsers.base import BaseParser
 
 
-# Конкретная реализация BaseParser для тестирования
+# Concrete BaseParser implementation for testing
 class MockParser(BaseParser):
-    """Конкретная реализация BaseParser для тестирования."""
+    """Concrete BaseParser implementation for testing."""
 
     format = DocumentFormat.MARKDOWN
 
     def parse(self, document: Document) -> ParsedDocument:
-        """Простая реализация parse для тестирования."""
+        """Simple parse implementation for testing."""
         self._validate_input(document)
         source = self.get_source(document)
         self._log_parsing_start(source)
 
-        # Создаем простой элемент
+        # Create simple element
         element = self._create_element(ElementType.TEXT, document.page_content or "")
 
         parsed_doc = ParsedDocument(
@@ -59,125 +59,125 @@ class MockParser(BaseParser):
 
 
 # ============================================================================
-# Тесты инициализации
+# Initialization tests
 # ============================================================================
 
 class TestBaseParserInitialization:
-    """Тесты инициализации BaseParser."""
+    """BaseParser initialization tests."""
 
     def test_default_initialization(self):
-        """Тест инициализации с параметрами по умолчанию."""
+        """Test initialization with default parameters."""
         parser = MockParser()
         assert isinstance(parser.id_generator, ElementIdGenerator)
         assert parser.format == DocumentFormat.MARKDOWN
 
     def test_custom_id_generator(self):
-        """Тест инициализации с кастомным генератором ID."""
+        """Test initialization with custom ID generator."""
         custom_generator = ElementIdGenerator(start=100, width=4)
         parser = MockParser(id_generator=custom_generator)
         assert parser.id_generator is custom_generator
         assert parser.id_generator._counter == 100
 
     def test_id_generator_property(self):
-        """Тест свойства id_generator."""
+        """Test id_generator property."""
         parser = MockParser()
         generator = parser.id_generator
         assert isinstance(generator, ElementIdGenerator)
-        # Проверяем, что это тот же объект
+        # Check it is the same object
         assert parser.id_generator is generator
 
 
 # ============================================================================
-# Тесты can_parse
+# can_parse tests
 # ============================================================================
 
 class TestCanParse:
-    """Тесты метода can_parse."""
+    """Tests for can_parse method."""
 
     def test_can_parse_matching_format(self):
-        """Тест can_parse для подходящего формата."""
+        """Test can_parse for matching format."""
         parser = MockParser()
         doc = Document(page_content="# Title", metadata={"source": "test.md"})
         assert parser.can_parse(doc) is True
 
     def test_can_parse_non_matching_format(self):
-        """Тест can_parse для неподходящего формата."""
+        """Test can_parse for non-matching format."""
         parser = MockParser()
         doc = Document(page_content="PDF content", metadata={"source": "test.pdf"})
         assert parser.can_parse(doc) is False
 
     def test_can_parse_handles_errors(self):
-        """Тест can_parse обрабатывает ошибки gracefully."""
+        """Test can_parse handles errors gracefully."""
         parser = MockParser()
-        # Документ без source и без page_content
+        # Document without source and without page_content
         doc = Document(page_content="", metadata={})
-        # Не должно вызывать исключение, а вернуть False
+        # Should not raise, return False
         result = parser.can_parse(doc)
         assert isinstance(result, bool)
 
 
 # ============================================================================
-# Тесты get_source
+# get_source tests
 # ============================================================================
 
 class TestGetSource:
-    """Тесты метода get_source."""
+    """Tests for get_source method."""
 
     def test_get_source_from_metadata(self):
-        """Тест получения source из метаданных."""
+        """Test getting source from metadata."""
         parser = MockParser()
         doc = Document(page_content="test", metadata={"source": "/path/to/file.md"})
         assert parser.get_source(doc) == "/path/to/file.md"
 
     def test_get_source_unknown(self):
-        """Тест получения source когда его нет."""
+        """Test getting source when missing."""
         parser = MockParser()
         doc = Document(page_content="test", metadata={})
         assert parser.get_source(doc) == "unknown"
 
     def test_get_source_from_different_keys(self):
-        """Тест получения source из разных ключей метаданных."""
+        """Test getting source from different metadata keys."""
         parser = MockParser()
-        # Проверяем file_path
+        # Check file_path
         doc = Document(page_content="test", metadata={"file_path": "/path/to/file.md"})
         assert parser.get_source(doc) == "/path/to/file.md"
 
 
 # ============================================================================
-# Тесты _validate_input
+# _validate_input tests
 # ============================================================================
 
 class TestValidateInput:
-    """Тесты метода _validate_input."""
+    """Tests for _validate_input method."""
 
     def test_validate_input_valid_document(self):
-        """Тест валидации валидного документа."""
+        """Test validation of valid document."""
         parser = MockParser()
         doc = Document(page_content="# Title", metadata={"source": "test.md"})
-        # Не должно вызывать исключение
+        # Should not raise
         parser._validate_input(doc)
 
     def test_validate_input_none_document(self):
-        """Тест валидации None документа."""
+        """Test validation of None document."""
         parser = MockParser()
         with pytest.raises(ValidationError, match="Document cannot be None"):
             parser._validate_input(None)  # type: ignore
 
     def test_validate_input_non_document_type(self):
-        """Тест валидации не-Document объекта."""
+        """Test validation of non-Document object."""
         parser = MockParser()
         with pytest.raises(ValidationError, match="Expected Document"):
             parser._validate_input("not a document")  # type: ignore
 
     def test_validate_input_invalid_document_no_content(self):
-        """Тест валидации документа без контента и source."""
+        """Test validation of document without content and source."""
         parser = MockParser()
         doc = Document(page_content="", metadata={})
         with pytest.raises(ValidationError, match="Document is invalid"):
             parser._validate_input(doc)
 
     def test_validate_input_wrong_format(self):
-        """Тест валидации документа с неподходящим форматом."""
+        """Test validation of document with wrong format."""
         parser = MockParser()
         doc = Document(page_content="PDF content", metadata={"source": "test.pdf"})
         with pytest.raises(UnsupportedFormatError, match="cannot handle format"):
@@ -185,38 +185,38 @@ class TestValidateInput:
 
 
 # ============================================================================
-# Тесты _create_element
+# _create_element tests
 # ============================================================================
 
 class TestCreateElement:
-    """Тесты метода _create_element."""
+    """Tests for _create_element method."""
 
     def test_create_element_basic(self):
-        """Тест создания базового элемента."""
+        """Test creating basic element."""
         parser = MockParser()
         element = parser._create_element(ElementType.TEXT, "Test content")
         assert isinstance(element, Element)
         assert element.type == ElementType.TEXT
         assert element.content == "Test content"
-        assert element.id == "00000001"  # Первый ID
+        assert element.id == "00000001"  # First ID
         assert element.parent_id is None
         assert element.metadata == {}
 
     def test_create_element_with_parent(self):
-        """Тест создания элемента с parent_id."""
+        """Test creating element with parent_id."""
         parser = MockParser()
         element = parser._create_element(ElementType.HEADER_1, "Header", parent_id="00000001")
         assert element.parent_id == "00000001"
 
     def test_create_element_with_metadata(self):
-        """Тест создания элемента с метаданными."""
+        """Test creating element with metadata."""
         parser = MockParser()
         metadata = {"page": 1, "position": {"x": 10}}
         element = parser._create_element(ElementType.TEXT, "Content", metadata=metadata)
         assert element.metadata == metadata
 
     def test_create_element_sequential_ids(self):
-        """Тест последовательной генерации ID."""
+        """Test sequential ID generation."""
         parser = MockParser()
         elem1 = parser._create_element(ElementType.TEXT, "Content 1")
         elem2 = parser._create_element(ElementType.TEXT, "Content 2")
@@ -227,52 +227,48 @@ class TestCreateElement:
 
 
 # ============================================================================
-# Тесты _validate_parsed_document
+# _validate_parsed_document tests
 # ============================================================================
 
 class TestValidateParsedDocument:
-    """Тесты метода _validate_parsed_document."""
+    """Tests for _validate_parsed_document method."""
 
     def test_validate_parsed_document_valid(self):
-        """Тест валидации валидного ParsedDocument."""
+        """Test validation of valid ParsedDocument."""
         parser = MockParser()
         elements = [Element(id="001", type=ElementType.TITLE, content="Title")]
         doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=elements)
-        # Не должно вызывать исключение
+        # Should not raise
         parser._validate_parsed_document(doc)
 
     def test_validate_parsed_document_invalid(self):
-        """Тест валидации невалидного ParsedDocument."""
+        """Test validation of invalid ParsedDocument."""
         parser = MockParser()
-        # Создаем валидный документ, затем модифицируем его для теста
         elements = [Element(id="001", type=ElementType.TITLE, content="Title")]
         doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=elements)
-        # Модифицируем elements на пустой список, обходя валидацию
-        # Пустой список элементов теперь валиден (комментарий в коде говорит "Allow empty documents")
-        # Поэтому этот тест должен просто проверить, что валидация проходит
+        # Empty elements list is now valid (code allows empty documents)
         parser._validate_parsed_document(doc)
 
     def test_validate_parsed_document_duplicate_ids(self):
-        """Тест валидации ParsedDocument с дублирующимися ID."""
+        """Test validation of ParsedDocument with duplicate IDs."""
         parser = MockParser()
-        # Создаем валидный документ, затем модифицируем его для теста
         elements = [Element(id="001", type=ElementType.TEXT, content="Text 1")]
         doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=elements)
-        # Добавляем дубликат ID, обходя валидацию при создании
+        # Add duplicate ID
         doc.elements.append(Element(id="001", type=ElementType.TEXT, content="Text 2"))
         with pytest.raises(ValidationError, match="Parsing result is invalid"):
             parser._validate_parsed_document(doc)
 
 
 # ============================================================================
-# Тесты логирования
+# Logging tests
 # ============================================================================
 
 class TestLogging:
-    """Тесты методов логирования."""
+    """Tests for logging methods."""
 
     def test_log_parsing_start(self, caplog):
-        """Тест логирования начала парсинга."""
+        """Test logging of parse start."""
         with caplog.at_level(logging.INFO):
             parser = MockParser()
             parser._log_parsing_start("test.md")
@@ -281,7 +277,7 @@ class TestLogging:
             assert "markdown" in caplog.text
 
     def test_log_parsing_end(self, caplog):
-        """Тест логирования завершения парсинга."""
+        """Test logging of parse completion."""
         with caplog.at_level(logging.INFO):
             parser = MockParser()
             parser._log_parsing_end("test.md", 5)
@@ -291,14 +287,14 @@ class TestLogging:
 
 
 # ============================================================================
-# Тесты полного цикла parse
+# Full parse cycle tests
 # ============================================================================
 
 class TestParseFullCycle:
-    """Тесты полного цикла парсинга."""
+    """Full parsing cycle tests."""
 
     def test_parse_valid_document(self):
-        """Тест парсинга валидного документа."""
+        """Test parsing valid document."""
         parser = MockParser()
         doc = Document(page_content="# Title", metadata={"source": "test.md"})
         result = parser.parse(doc)
@@ -309,21 +305,21 @@ class TestParseFullCycle:
         assert result.elements[0].content == "# Title"
 
     def test_parse_invalid_document_raises_error(self):
-        """Тест парсинга невалидного документа вызывает ошибку."""
+        """Test that parsing invalid document raises error."""
         parser = MockParser()
-        doc = Document(page_content="", metadata={})  # Нет source и контента
+        doc = Document(page_content="", metadata={})  # No source and content
         with pytest.raises(ValidationError):
             parser.parse(doc)
 
     def test_parse_wrong_format_raises_error(self):
-        """Тест парсинга документа с неподходящим форматом."""
+        """Test parsing document with wrong format."""
         parser = MockParser()
         doc = Document(page_content="PDF", metadata={"source": "test.pdf"})
         with pytest.raises(UnsupportedFormatError):
             parser.parse(doc)
 
     def test_parse_logs_start_and_end(self, caplog):
-        """Тест что parse логирует начало и конец."""
+        """Test that parse logs start and end."""
         with caplog.at_level(logging.INFO):
             parser = MockParser()
             doc = Document(page_content="Content", metadata={"source": "test.md"})
@@ -333,52 +329,50 @@ class TestParseFullCycle:
 
 
 # ============================================================================
-# Тесты обработки ошибок
+# Error handling tests
 # ============================================================================
 
 class TestErrorHandling:
-    """Тесты обработки ошибок."""
+    """Error handling tests."""
 
     def test_parse_handles_internal_errors(self):
-        """Тест что parse обрабатывает внутренние ошибки."""
+        """Test that parse handles internal errors."""
         parser = MockParser()
 
-        # Создаем документ, который вызовет ошибку при парсинге
-        # Мокаем _create_element чтобы вызвать ошибку
+        # Mock _create_element to raise error
         with patch.object(parser, "_create_element", side_effect=Exception("Internal error")):
             doc = Document(page_content="test", metadata={"source": "test.md"})
             with pytest.raises(Exception, match="Internal error"):
                 parser.parse(doc)
 
     def test_validate_input_preserves_original_error(self):
-        """Тест что _validate_input сохраняет исходную ошибку."""
+        """Test that _validate_input preserves original error."""
         parser = MockParser()
         doc = Document(page_content="", metadata={})
         try:
             parser._validate_input(doc)
         except ValidationError as e:
-            # Проверяем, что исходная ошибка сохранена
             assert "Document is invalid" in str(e)
 
 
 # ============================================================================
-# Тесты абстрактного класса
+# Abstract class tests
 # ============================================================================
 
 class TestAbstractClass:
-    """Тесты абстрактного класса BaseParser."""
+    """Tests for BaseParser abstract class."""
 
     def test_cannot_instantiate_base_parser(self):
-        """Тест что нельзя создать экземпляр BaseParser напрямую."""
+        """Test that BaseParser cannot be instantiated directly."""
         with pytest.raises(TypeError):
             BaseParser()  # type: ignore
 
     def test_must_implement_parse(self):
-        """Тест что дочерний класс должен реализовать parse."""
+        """Test that subclass must implement parse."""
 
         class IncompleteParser(BaseParser):
             format = DocumentFormat.MARKDOWN
-            # Не реализован метод parse
+            # parse method not implemented
 
         with pytest.raises(TypeError):
             IncompleteParser()  # type: ignore

@@ -12,8 +12,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-# Add project root to path
-_project_root = Path(__file__).parent.parent.parent
+# Add project root to path (tests/processing/parsers/pdf/)
+_project_root = Path(__file__).parent.parent.parent.parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
 
@@ -23,7 +23,7 @@ try:
 except ImportError:
     FITZ_AVAILABLE = False
 
-from documentor.utils.pdf_text_extractor import PdfTextExtractorUtil
+from documentor.processing.pdf.text_extractor_util import PdfTextExtractorUtil
 
 
 @pytest.fixture
@@ -31,7 +31,7 @@ def sample_pdf_path(tmp_path):
     """Create a temporary PDF file for tests."""
     if not FITZ_AVAILABLE:
         pytest.skip("PyMuPDF (fitz) not installed")
-    
+
     pdf_path = tmp_path / "test.pdf"
     doc = fitz.open()
     page = doc.new_page()
@@ -70,8 +70,7 @@ class TestPdfTextExtractorUtil:
     def test_extract_text_by_bbox_empty_result(self, mock_page):
         """Test extracting text when get_textbox returns empty."""
         mock_page.get_textbox.return_value = ""
-        # Mock get_text("dict") for fallback method
-        # Need to mock get_text to return dict when called with "dict"
+
         def mock_get_text(mode="text", clip=None):
             if mode == "dict":
                 return {
@@ -88,12 +87,11 @@ class TestPdfTextExtractorUtil:
                     ]
                 }
             return "Fallback text"
-        
+
         mock_page.get_text.side_effect = mock_get_text
-        
+
         bbox = [50, 50, 200, 100]
         text = PdfTextExtractorUtil.extract_text_by_bbox(mock_page, bbox, render_scale=2.0)
-        # Should try fallback method
         assert text == "Fallback text"
 
     def test_extract_text_by_bbox_exception(self, mock_page):
@@ -107,30 +105,19 @@ class TestPdfTextExtractorUtil:
         """Test extracting text for multiple elements."""
         if not FITZ_AVAILABLE:
             pytest.skip("PyMuPDF (fitz) not installed")
-        
+
         doc = fitz.open(sample_pdf_path)
         try:
             elements = [
-                {
-                    "category": "Text",
-                    "bbox": [40, 40, 300, 60],
-                    "page_num": 0,
-                },
-                {
-                    "category": "Picture",
-                    "bbox": [0, 0, 100, 100],
-                    "page_num": 0,
-                },
+                {"category": "Text", "bbox": [40, 40, 300, 60], "page_num": 0},
+                {"category": "Picture", "bbox": [0, 0, 100, 100], "page_num": 0},
             ]
-            
             results = PdfTextExtractorUtil.extract_text_for_elements(
                 elements, doc, render_scale=1.0
             )
-            
             assert len(results) == 2
             assert "text" in results[0]
             assert results[0]["category"] == "Text"
-            # Picture should be skipped but still in results
             assert results[1]["category"] == "Picture"
         finally:
             doc.close()
@@ -139,21 +126,13 @@ class TestPdfTextExtractorUtil:
         """Test extracting text for elements with invalid bbox."""
         if not FITZ_AVAILABLE:
             pytest.skip("PyMuPDF (fitz) not installed")
-        
+
         doc = fitz.open(sample_pdf_path)
         try:
-            elements = [
-                {
-                    "category": "Text",
-                    "bbox": [],  # Invalid bbox
-                    "page_num": 0,
-                },
-            ]
-            
+            elements = [{"category": "Text", "bbox": [], "page_num": 0}]
             results = PdfTextExtractorUtil.extract_text_for_elements(
                 elements, doc, render_scale=1.0
             )
-            
             assert len(results) == 1
             assert results[0]["text"] == ""
         finally:
@@ -163,21 +142,13 @@ class TestPdfTextExtractorUtil:
         """Test extracting text for elements with invalid page number."""
         if not FITZ_AVAILABLE:
             pytest.skip("PyMuPDF (fitz) not installed")
-        
+
         doc = fitz.open(sample_pdf_path)
         try:
-            elements = [
-                {
-                    "category": "Text",
-                    "bbox": [50, 50, 200, 100],
-                    "page_num": 999,  # Invalid page
-                },
-            ]
-            
+            elements = [{"category": "Text", "bbox": [50, 50, 200, 100], "page_num": 999}]
             results = PdfTextExtractorUtil.extract_text_for_elements(
                 elements, doc, render_scale=1.0
             )
-            
             assert len(results) == 1
             assert results[0]["text"] == ""
         finally:
@@ -187,37 +158,20 @@ class TestPdfTextExtractorUtil:
         """Test extracting text with filtered categories."""
         if not FITZ_AVAILABLE:
             pytest.skip("PyMuPDF (fitz) not installed")
-        
+
         doc = fitz.open(sample_pdf_path)
         try:
             elements = [
-                {
-                    "category": "Text",
-                    "bbox": [40, 40, 300, 60],
-                    "page_num": 0,
-                },
-                {
-                    "category": "Section-header",
-                    "bbox": [40, 100, 300, 120],
-                    "page_num": 0,
-                },
-                {
-                    "category": "Picture",
-                    "bbox": [0, 0, 100, 100],
-                    "page_num": 0,
-                },
+                {"category": "Text", "bbox": [40, 40, 300, 60], "page_num": 0},
+                {"category": "Section-header", "bbox": [40, 100, 300, 120], "page_num": 0},
+                {"category": "Picture", "bbox": [0, 0, 100, 100], "page_num": 0},
             ]
-            
             results = PdfTextExtractorUtil.extract_text_for_elements(
                 elements, doc, render_scale=1.0, allowed_categories=["Text"]
             )
-            
             assert len(results) == 3
-            # Only Text should have extracted text
             assert "text" in results[0]
-            # Section-header should not have text (filtered out)
             assert results[1]["category"] == "Section-header"
-            # Picture should not have text
             assert results[2]["category"] == "Picture"
         finally:
             doc.close()

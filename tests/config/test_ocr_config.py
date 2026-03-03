@@ -1,7 +1,7 @@
 """
-Тесты для загрузки и валидации OCR конфигурации.
+Tests for loading and validating OCR configuration.
 
-Тестируемые функции:
+Functions under test:
 - load_ocr_config()
 - validate_ocr_config()
 """

@@ -1,3 +1,3 @@
 """
-Тесты для OCR компонентов PDF парсера.
+Tests for PDF parser OCR components.
 """
