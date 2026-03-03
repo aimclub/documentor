@@ -1,6 +1,6 @@
 """
-Тесты для валидации иерархии элементов.
+Tests for element hierarchy validation.
 
-Тестируемый класс:
+Class under test:
 - HierarchyValidator
 """

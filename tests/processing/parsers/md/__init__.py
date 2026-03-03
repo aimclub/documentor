@@ -1,3 +1,3 @@
 """
-Тесты для Markdown парсера.
+Tests for Markdown parser.
 """

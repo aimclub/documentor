@@ -1,6 +1,6 @@
 """
-Тесты для DOCX парсера.
+Tests for DOCX parser.
 
-Тестируемый класс:
+Class under test:
 - DocxParser
 """

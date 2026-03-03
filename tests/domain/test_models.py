@@ -1,7 +1,7 @@
 """
-Тесты для доменных моделей.
+Tests for domain models.
 
-Тестируемые классы:
+Classes under test:
 - DocumentFormat (Enum)
 - ElementType (Enum)
 - Element (dataclass)
@@ -13,7 +13,7 @@ import json
 import sys
 from pathlib import Path
 
-# Добавляем корневую директорию проекта в PYTHONPATH для прямого запуска
+# Add project root to PYTHONPATH for direct run
 _project_root = Path(__file__).parent.parent.parent
 if str(_project_root) not in sys.path:
     sys.path.insert(0, str(_project_root))
@@ -30,47 +30,47 @@ from documentor.domain.models import (
 
 
 # ============================================================================
-# Тесты для DocumentFormat
+# Tests for DocumentFormat
 # ============================================================================
 
 class TestDocumentFormat:
-    """Тесты для DocumentFormat enum."""
+    """Tests for DocumentFormat enum."""
 
     def test_all_formats_exist(self):
-        """Тест наличия всех ожидаемых форматов."""
+        """Test that all expected formats exist."""
         expected_formats = {"markdown", "pdf", "docx", "unknown"}
         actual_formats = {fmt.value for fmt in DocumentFormat}
         assert actual_formats == expected_formats
 
     def test_format_values(self):
-        """Тест значений форматов."""
+        """Test format values."""
         assert DocumentFormat.MARKDOWN.value == "markdown"
         assert DocumentFormat.PDF.value == "pdf"
         assert DocumentFormat.DOCX.value == "docx"
         assert DocumentFormat.UNKNOWN.value == "unknown"
 
     def test_format_from_value(self):
-        """Тест создания формата из значения."""
+        """Test creating format from value."""
         assert DocumentFormat("markdown") == DocumentFormat.MARKDOWN
         assert DocumentFormat("pdf") == DocumentFormat.PDF
         assert DocumentFormat("docx") == DocumentFormat.DOCX
         assert DocumentFormat("unknown") == DocumentFormat.UNKNOWN
 
     def test_invalid_format_raises_error(self):
-        """Тест ошибки при невалидном формате."""
+        """Test error on invalid format."""
         with pytest.raises(ValueError):
             DocumentFormat("invalid_format")
 
 
 # ============================================================================
-# Тесты для ElementType
+# Tests for ElementType
 # ============================================================================
 
 class TestElementType:
-    """Тесты для ElementType enum."""
+    """Tests for ElementType enum."""
 
     def test_all_types_exist(self):
-        """Тест наличия всех ожидаемых типов элементов."""
+        """Test that all expected element types exist."""
         expected_types = {
             "title",
             "header_1",
@@ -95,7 +95,7 @@ class TestElementType:
         assert actual_types == expected_types
 
     def test_header_levels(self):
-        """Тест заголовков по уровням."""
+        """Test headers by level."""
         assert ElementType.HEADER_1.value == "header_1"
         assert ElementType.HEADER_2.value == "header_2"
         assert ElementType.HEADER_3.value == "header_3"
@@ -104,26 +104,26 @@ class TestElementType:
         assert ElementType.HEADER_6.value == "header_6"
 
     def test_type_from_value(self):
-        """Тест создания типа из значения."""
+        """Test creating type from value."""
         assert ElementType("title") == ElementType.TITLE
         assert ElementType("header_1") == ElementType.HEADER_1
         assert ElementType("text") == ElementType.TEXT
 
     def test_invalid_type_raises_error(self):
-        """Тест ошибки при невалидном типе."""
+        """Test error on invalid type."""
         with pytest.raises(ValueError):
             ElementType("invalid_type")
 
 
 # ============================================================================
-# Тесты для Element
+# Tests for Element
 # ============================================================================
 
 class TestElement:
-    """Тесты для Element dataclass."""
+    """Tests for Element dataclass."""
 
     def test_create_valid_element(self):
-        """Тест создания валидного элемента."""
+        """Test creating valid element."""
         element = Element(
             id="001",
             type=ElementType.TITLE,
@@ -136,7 +136,7 @@ class TestElement:
         assert element.metadata == {}
 
     def test_create_element_with_parent(self):
-        """Тест создания элемента с parent_id."""
+        """Test creating element with parent_id."""
         element = Element(
             id="002",
             type=ElementType.HEADER_1,
@@ -146,7 +146,7 @@ class TestElement:
         assert element.parent_id == "001"
 
     def test_create_element_with_metadata(self):
-        """Тест создания элемента с метаданными."""
+        """Test creating element with metadata."""
         metadata = {"page": 1, "position": {"x": 10, "y": 20}}
         element = Element(
             id="003",
@@ -157,47 +157,47 @@ class TestElement:
         assert element.metadata == metadata
 
     def test_validate_empty_id_raises_error(self):
-        """Тест валидации: пустой id вызывает ошибку."""
+        """Test validation: empty id raises error."""
         with pytest.raises(ValueError, match="id must be a non-empty string"):
             Element(id="", type=ElementType.TEXT, content="test")
 
     def test_validate_whitespace_id_raises_error(self):
-        """Тест валидации: id из пробелов вызывает ошибку."""
+        """Test validation: whitespace-only id raises error."""
         with pytest.raises(ValueError, match="id must be a non-empty string"):
             Element(id="   ", type=ElementType.TEXT, content="test")
 
     def test_validate_invalid_type_raises_error(self):
-        """Тест валидации: невалидный type вызывает ошибку."""
+        """Test validation: invalid type raises error."""
         with pytest.raises(ValueError, match="type must be ElementType"):
             Element(id="001", type="invalid", content="test")  # type: ignore
 
     def test_validate_none_content_raises_error(self):
-        """Тест валидации: None content вызывает ошибку."""
+        """Test validation: None content raises error."""
         with pytest.raises(ValueError, match="content cannot be None"):
             Element(id="001", type=ElementType.TEXT, content=None)  # type: ignore
 
     def test_validate_non_string_content_raises_error(self):
-        """Тест валидации: не-строка content вызывает ошибку."""
+        """Test validation: non-string content raises error."""
         with pytest.raises(ValueError, match="content must be a string"):
             Element(id="001", type=ElementType.TEXT, content=123)  # type: ignore
 
     def test_validate_invalid_metadata_raises_error(self):
-        """Тест валидации: невалидный metadata вызывает ошибку."""
+        """Test validation: invalid metadata raises error."""
         with pytest.raises(ValueError, match="metadata must be a dict"):
             Element(id="001", type=ElementType.TEXT, content="test", metadata="invalid")  # type: ignore
 
     def test_validate_empty_parent_id_raises_error(self):
-        """Тест валидации: пустой parent_id вызывает ошибку."""
+        """Test validation: empty parent_id raises error."""
         with pytest.raises(ValueError, match="parent_id must be a non-empty string or None"):
             Element(id="001", type=ElementType.TEXT, content="test", parent_id="")
 
     def test_validate_whitespace_parent_id_raises_error(self):
-        """Тест валидации: parent_id из пробелов вызывает ошибку."""
+        """Test validation: whitespace-only parent_id raises error."""
         with pytest.raises(ValueError, match="parent_id must be a non-empty string or None"):
             Element(id="001", type=ElementType.TEXT, content="test", parent_id="   ")
 
     def test_repr(self):
-        """Тест __repr__ метода."""
+        """Test __repr__ method."""
         element = Element(
             id="001",
             type=ElementType.TITLE,
@@ -210,15 +210,15 @@ class TestElement:
         assert "Test Title" in repr_str
 
     def test_repr_with_long_content(self):
-        """Тест __repr__ с длинным контентом (обрезается)."""
+        """Test __repr__ with long content (truncated)."""
         long_content = "A" * 100
         element = Element(id="001", type=ElementType.TEXT, content=long_content)
         repr_str = repr(element)
-        assert len(repr_str) < len(long_content) + 50  # Должно быть обрезано
+        assert len(repr_str) < len(long_content) + 50  # Should be truncated
         assert "..." in repr_str
 
     def test_str(self):
-        """Тест __str__ метода."""
+        """Test __str__ method."""
         element = Element(
             id="001",
             type=ElementType.TITLE,
@@ -229,7 +229,7 @@ class TestElement:
         assert "Test Title" in str_repr
 
     def test_str_with_parent(self):
-        """Тест __str__ с parent_id."""
+        """Test __str__ с parent_id."""
         element = Element(
             id="002",
             type=ElementType.HEADER_1,
@@ -240,7 +240,7 @@ class TestElement:
         assert "parent: 001" in str_repr
 
     def test_to_dict_minimal(self):
-        """Тест to_dict для минимального элемента."""
+        """Test to_dict for minimal element."""
         element = Element(id="001", type=ElementType.TEXT, content="test")
         result = element.to_dict()
         assert result == {
@@ -250,7 +250,7 @@ class TestElement:
         }
 
     def test_to_dict_with_parent(self):
-        """Тест to_dict с parent_id."""
+        """Test to_dict с parent_id."""
         element = Element(
             id="002",
             type=ElementType.HEADER_1,
@@ -261,7 +261,7 @@ class TestElement:
         assert result["parent_id"] == "001"
 
     def test_to_dict_with_metadata(self):
-        """Тест to_dict с метаданными."""
+        """Test to_dict with metadata."""
         metadata = {"page": 1, "key": "value"}
         element = Element(
             id="003",
@@ -273,7 +273,7 @@ class TestElement:
         assert result["metadata"] == metadata
 
     def test_from_dict_minimal(self):
-        """Тест from_dict для минимального элемента."""
+        """Test from_dict for minimal element."""
         data = {
             "id": "001",
             "type": "text",
@@ -287,7 +287,7 @@ class TestElement:
         assert element.metadata == {}
 
     def test_from_dict_with_parent(self):
-        """Тест from_dict с parent_id."""
+        """Test from_dict with parent_id."""
         data = {
             "id": "002",
             "type": "header_1",
@@ -298,7 +298,7 @@ class TestElement:
         assert element.parent_id == "001"
 
     def test_from_dict_with_metadata(self):
-        """Тест from_dict с метаданными."""
+        """Test from_dict with metadata."""
         data = {
             "id": "003",
             "type": "text",
@@ -309,13 +309,13 @@ class TestElement:
         assert element.metadata == {"page": 1}
 
     def test_from_dict_missing_required_field(self):
-        """Тест from_dict с отсутствующим обязательным полем."""
-        data = {"id": "001", "type": "text"}  # Нет content
+        """Test from_dict with missing required field."""
+        data = {"id": "001", "type": "text"}  # No content
         with pytest.raises(ValueError, match="Missing required fields"):
             Element.from_dict(data)
 
     def test_from_dict_invalid_type(self):
-        """Тест from_dict с невалидным типом."""
+        """Test from_dict with invalid type."""
         data = {
             "id": "001",
             "type": "invalid_type",
@@ -325,12 +325,12 @@ class TestElement:
             Element.from_dict(data)
 
     def test_from_dict_not_dict(self):
-        """Тест from_dict с не-словарем."""
+        """Test from_dict with non-dict."""
         with pytest.raises(ValueError, match="Expected dict"):
             Element.from_dict("not a dict")  # type: ignore
 
     def test_to_json(self):
-        """Тест to_json метода."""
+        """Test to_json method."""
         element = Element(id="001", type=ElementType.TEXT, content="test")
         json_str = element.to_json()
         assert isinstance(json_str, str)
@@ -340,7 +340,7 @@ class TestElement:
         assert data["content"] == "test"
 
     def test_from_json(self):
-        """Тест from_json метода."""
+        """Test from_json method."""
         json_str = '{"id": "001", "type": "text", "content": "test"}'
         element = Element.from_json(json_str)
         assert element.id == "001"
@@ -348,17 +348,17 @@ class TestElement:
         assert element.content == "test"
 
     def test_from_json_invalid_json(self):
-        """Тест from_json с невалидным JSON."""
+        """Test from_json with invalid JSON."""
         with pytest.raises(ValueError, match="Invalid JSON"):
             Element.from_json("not a json")
 
     def test_from_json_not_string(self):
-        """Тест from_json с не-строкой."""
+        """Test from_json with non-string."""
         with pytest.raises(ValueError, match="Expected str"):
             Element.from_json({"id": "001"})  # type: ignore
 
     def test_round_trip_dict(self):
-        """Тест полного цикла: to_dict -> from_dict."""
+        """Test round-trip: to_dict -> from_dict."""
         original = Element(
             id="001",
             type=ElementType.HEADER_1,
@@ -374,7 +374,7 @@ class TestElement:
         assert restored.metadata == original.metadata
 
     def test_round_trip_json(self):
-        """Тест полного цикла: to_json -> from_json."""
+        """Test round-trip: to_json -> from_json."""
         original = Element(
             id="001",
             type=ElementType.TEXT,
@@ -391,15 +391,15 @@ class TestElement:
 
 
 # ============================================================================
-# Тесты для ParsedDocument
+# Tests for ParsedDocument
 # ============================================================================
 
 class TestParsedDocument:
-    """Тесты для ParsedDocument dataclass."""
+    """Tests for ParsedDocument dataclass."""
 
     @pytest.fixture
     def sample_elements(self):
-        """Фикстура с примерными элементами."""
+        """Fixture with sample elements."""
         return [
             Element(id="001", type=ElementType.TITLE, content="Title"),
             Element(id="002", type=ElementType.HEADER_1, content="Header 1", parent_id="001"),
@@ -407,7 +407,7 @@ class TestParsedDocument:
         ]
 
     def test_create_valid_document(self, sample_elements):
-        """Тест создания валидного документа."""
+        """Test creating valid document."""
         doc = ParsedDocument(
             source="test.md",
             format=DocumentFormat.MARKDOWN,
@@ -419,7 +419,7 @@ class TestParsedDocument:
         assert doc.metadata == {}
 
     def test_create_document_with_metadata(self, sample_elements):
-        """Тест создания документа с метаданными."""
+        """Test creating document with metadata."""
         metadata = {"author": "Test", "version": "1.0"}
         doc = ParsedDocument(
             source="test.md",
@@ -430,29 +430,29 @@ class TestParsedDocument:
         assert doc.metadata == metadata
 
     def test_validate_empty_source_raises_error(self, sample_elements):
-        """Тест валидации: пустой source вызывает ошибку."""
+        """Test validation: empty source raises error."""
         with pytest.raises(ValueError, match="source must be a non-empty string"):
             ParsedDocument(source="", format=DocumentFormat.MARKDOWN, elements=sample_elements)
 
     def test_validate_invalid_format_raises_error(self, sample_elements):
-        """Тест валидации: невалидный format вызывает ошибку."""
+        """Test validation: invalid format raises error."""
         with pytest.raises(ValueError, match="format must be DocumentFormat"):
             ParsedDocument(source="test.md", format="invalid", elements=sample_elements)  # type: ignore
 
     def test_validate_empty_elements_allowed(self):
-        """Тест валидации: пустой список elements разрешен."""
-        # Пустые документы разрешены
+        """Test validation: empty elements list allowed."""
+        # Empty documents allowed
         doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=[])
         assert doc.elements == []
         assert len(doc.elements) == 0
 
     def test_validate_non_list_elements_raises_error(self):
-        """Тест валидации: elements не список вызывает ошибку."""
+        """Test validation: elements not a list raises error."""
         with pytest.raises(ValueError, match="elements must be a list"):
             ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements="not a list")  # type: ignore
 
     def test_validate_non_element_in_list_raises_error(self):
-        """Тест валидации: элемент не Element вызывает ошибку."""
+        """Test validation: non-Element item raises error."""
         with pytest.raises(ValueError, match="must be Element instances"):
             ParsedDocument(
                 source="test.md",
@@ -461,75 +461,75 @@ class TestParsedDocument:
             )
 
     def test_validate_duplicate_ids_raises_error(self):
-        """Тест валидации: дублирующиеся id вызывают ошибку."""
+        """Test validation: duplicate ids raise error."""
         elements = [
             Element(id="001", type=ElementType.TEXT, content="Text 1"),
-            Element(id="001", type=ElementType.TEXT, content="Text 2"),  # Дубликат
+            Element(id="001", type=ElementType.TEXT, content="Text 2"),  # Duplicate
         ]
         with pytest.raises(ValueError, match="Duplicate element ids"):
             ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=elements)
 
     def test_validate_hierarchy_nonexistent_parent(self):
-        """Тест валидации иерархии: несуществующий parent_id."""
+        """Test hierarchy validation: non-existent parent_id."""
         elements = [
-            Element(id="001", type=ElementType.TEXT, content="Text", parent_id="999"),  # Несуществующий родитель
+            Element(id="001", type=ElementType.TEXT, content="Text", parent_id="999"),  # Non-existent parent
         ]
         with pytest.raises(ValueError, match="references non-existent parent_id"):
             ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=elements)
 
     def test_validate_hierarchy_self_parent(self):
-        """Тест валидации иерархии: элемент не может быть своим родителем."""
+        """Test hierarchy validation: element cannot be its own parent."""
         elements = [
-            Element(id="001", type=ElementType.TEXT, content="Text", parent_id="001"),  # Сам себе родитель
+            Element(id="001", type=ElementType.TEXT, content="Text", parent_id="001"),  # Own parent
         ]
         with pytest.raises(ValueError, match="cannot be its own parent"):
             ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=elements)
 
     def test_validate_hierarchy_cycle_direct(self):
-        """Тест валидации иерархии: прямой цикл."""
+        """Test hierarchy validation: direct cycle."""
         elements = [
             Element(id="001", type=ElementType.TEXT, content="Text 1", parent_id="002"),
-            Element(id="002", type=ElementType.TEXT, content="Text 2", parent_id="001"),  # Цикл
+            Element(id="002", type=ElementType.TEXT, content="Text 2", parent_id="001"),  # Cycle
         ]
         with pytest.raises(ValueError, match="Cycle detected"):
             ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=elements)
 
     def test_validate_hierarchy_cycle_indirect(self):
-        """Тест валидации иерархии: непрямой цикл (A -> B -> C -> A)."""
+        """Test hierarchy validation: indirect cycle (A -> B -> C -> A)."""
         elements = [
             Element(id="001", type=ElementType.TEXT, content="Text 1", parent_id="003"),
             Element(id="002", type=ElementType.TEXT, content="Text 2", parent_id="001"),
-            Element(id="003", type=ElementType.TEXT, content="Text 3", parent_id="002"),  # Цикл
+            Element(id="003", type=ElementType.TEXT, content="Text 3", parent_id="002"),  # Cycle
         ]
         with pytest.raises(ValueError, match="Cycle detected"):
             ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=elements)
 
     def test_validate_hierarchy_valid_tree(self):
-        """Тест валидации иерархии: валидное дерево."""
+        """Test hierarchy validation: valid tree."""
         elements = [
             Element(id="001", type=ElementType.TITLE, content="Title"),
             Element(id="002", type=ElementType.HEADER_1, content="H1", parent_id="001"),
             Element(id="003", type=ElementType.HEADER_2, content="H2", parent_id="002"),
             Element(id="004", type=ElementType.TEXT, content="Text", parent_id="003"),
         ]
-        # Не должно вызывать ошибку
+        # Should not raise
         doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=elements)
         assert len(doc.elements) == 4
 
     def test_validate_hierarchy_header_reset_allowed(self):
-        """Тест валидации иерархии: разрешен сброс иерархии заголовков."""
-        # HEADER_1 после HEADER_2 без родителя - разрешено
+        """Test hierarchy validation: header hierarchy reset allowed."""
+        # HEADER_1 after HEADER_2 without parent - allowed
         elements = [
             Element(id="001", type=ElementType.HEADER_1, content="H1"),
             Element(id="002", type=ElementType.HEADER_2, content="H2", parent_id="001"),
-            Element(id="003", type=ElementType.HEADER_1, content="H1 again"),  # Сброс иерархии
+            Element(id="003", type=ElementType.HEADER_1, content="H1 again"),  # Hierarchy reset
         ]
-        # Не должно вызывать ошибку
+        # Should not raise
         doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=elements)
         assert len(doc.elements) == 3
 
     def test_repr(self, sample_elements):
-        """Тест __repr__ метода."""
+        """Test __repr__ method."""
         doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=sample_elements)
         repr_str = repr(doc)
         assert "ParsedDocument" in repr_str
@@ -538,7 +538,7 @@ class TestParsedDocument:
         assert "elements=3" in repr_str
 
     def test_str(self, sample_elements):
-        """Тест __str__ метода."""
+        """Test __str__ method."""
         doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=sample_elements)
         str_repr = str(doc)
         assert "ParsedDocument" in str_repr
@@ -547,13 +547,13 @@ class TestParsedDocument:
         assert "3 elements" in str_repr
 
     def test_str_with_path(self, sample_elements):
-        """Тест __str__ с путем к файлу."""
+        """Test __str__ with file path."""
         doc = ParsedDocument(source="/path/to/test.md", format=DocumentFormat.MARKDOWN, elements=sample_elements)
         str_repr = str(doc)
         assert "test.md" in str_repr
 
     def test_to_dicts(self, sample_elements):
-        """Тест to_dicts метода."""
+        """Test to_dicts method."""
         doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=sample_elements)
         dicts = doc.to_dicts()
         assert len(dicts) == 3
@@ -561,16 +561,16 @@ class TestParsedDocument:
         assert dicts[0]["id"] == "001"
 
     def test_to_dict(self, sample_elements):
-        """Тест to_dict метода."""
+        """Test to_dict method."""
         doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=sample_elements)
         result = doc.to_dict()
         assert result["source"] == "test.md"
         assert result["format"] == "markdown"
         assert len(result["elements"]) == 3
-        assert "metadata" not in result  # Пустые metadata не включаются
+        assert "metadata" not in result  # Empty metadata not included
 
     def test_to_dict_with_metadata(self, sample_elements):
-        """Тест to_dict с метаданными."""
+        """Test to_dict with metadata."""
         metadata = {"author": "Test"}
         doc = ParsedDocument(
             source="test.md",
@@ -582,7 +582,7 @@ class TestParsedDocument:
         assert result["metadata"] == metadata
 
     def test_from_dict(self, sample_elements):
-        """Тест from_dict метода."""
+        """Test from_dict method."""
         data = {
             "source": "test.md",
             "format": "markdown",
@@ -594,7 +594,7 @@ class TestParsedDocument:
         assert len(doc.elements) == 3
 
     def test_from_dict_with_metadata(self, sample_elements):
-        """Тест from_dict с метаданными."""
+        """Test from_dict with metadata."""
         data = {
             "source": "test.md",
             "format": "markdown",
@@ -605,13 +605,13 @@ class TestParsedDocument:
         assert doc.metadata == {"author": "Test"}
 
     def test_from_dict_missing_required_field(self):
-        """Тест from_dict с отсутствующим обязательным полем."""
-        data = {"source": "test.md", "format": "markdown"}  # Нет elements
+        """Test from_dict with missing required field."""
+        data = {"source": "test.md", "format": "markdown"}  # No elements
         with pytest.raises(ValueError, match="Missing required fields"):
             ParsedDocument.from_dict(data)
 
     def test_from_dict_invalid_format(self, sample_elements):
-        """Тест from_dict с невалидным форматом."""
+        """Test from_dict with invalid format."""
         data = {
             "source": "test.md",
             "format": "invalid_format",
@@ -621,12 +621,12 @@ class TestParsedDocument:
             ParsedDocument.from_dict(data)
 
     def test_from_dict_not_dict(self):
-        """Тест from_dict с не-словарем."""
+        """Test from_dict with non-dict."""
         with pytest.raises(ValueError, match="Expected dict"):
             ParsedDocument.from_dict("not a dict")  # type: ignore
 
     def test_to_json(self, sample_elements):
-        """Тест to_json метода."""
+        """Test to_json method."""
         doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=sample_elements)
         json_str = doc.to_json()
         assert isinstance(json_str, str)
@@ -635,7 +635,7 @@ class TestParsedDocument:
         assert data["format"] == "markdown"
 
     def test_from_json(self, sample_elements):
-        """Тест from_json метода."""
+        """Test from_json method."""
         doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=sample_elements)
         json_str = doc.to_json()
         restored = ParsedDocument.from_json(json_str)
@@ -644,17 +644,17 @@ class TestParsedDocument:
         assert len(restored.elements) == len(doc.elements)
 
     def test_from_json_invalid_json(self):
-        """Тест from_json с невалидным JSON."""
+        """Test from_json with invalid JSON."""
         with pytest.raises(ValueError, match="Invalid JSON"):
             ParsedDocument.from_json("not a json")
 
     def test_from_json_not_string(self):
-        """Тест from_json с не-строкой."""
+        """Test from_json with non-string."""
         with pytest.raises(ValueError, match="Expected str"):
             ParsedDocument.from_json({"source": "test.md"})  # type: ignore
 
     def test_round_trip_dict(self, sample_elements):
-        """Тест полного цикла: to_dict -> from_dict."""
+        """Test round-trip: to_dict -> from_dict."""
         original = ParsedDocument(
             source="test.md",
             format=DocumentFormat.MARKDOWN,
@@ -668,7 +668,7 @@ class TestParsedDocument:
         assert restored.metadata == original.metadata
 
     def test_round_trip_json(self, sample_elements):
-        """Тест полного цикла: to_json -> from_json."""
+        """Test round-trip: to_json -> from_json."""
         original = ParsedDocument(
             source="test.md",
             format=DocumentFormat.PDF,
@@ -683,45 +683,45 @@ class TestParsedDocument:
 
 
 # ============================================================================
-# Тесты для ElementIdGenerator
+# Tests for ElementIdGenerator
 # ============================================================================
 
 class TestElementIdGenerator:
-    """Тесты для ElementIdGenerator."""
+    """Tests for ElementIdGenerator."""
 
     def test_default_initialization(self):
-        """Тест инициализации с параметрами по умолчанию."""
+        """Test initialization with default parameters."""
         generator = ElementIdGenerator()
         assert generator._counter == 1
         assert generator._width == 8
 
     def test_custom_initialization(self):
-        """Тест инициализации с кастомными параметрами."""
+        """Test initialization with custom parameters."""
         generator = ElementIdGenerator(start=10, width=4)
         assert generator._counter == 10
         assert generator._width == 4
 
     def test_next_id_default(self):
-        """Тест генерации ID с параметрами по умолчанию."""
+        """Test ID generation with default parameters."""
         generator = ElementIdGenerator()
         assert generator.next_id() == "00000001"
         assert generator.next_id() == "00000002"
         assert generator.next_id() == "00000003"
 
     def test_next_id_custom_width(self):
-        """Тест генерации ID с кастомной шириной."""
+        """Test ID generation with custom width."""
         generator = ElementIdGenerator(start=1, width=4)
         assert generator.next_id() == "0001"
         assert generator.next_id() == "0002"
 
     def test_next_id_custom_start(self):
-        """Тест генерации ID с кастомным стартом."""
+        """Test ID generation with custom start."""
         generator = ElementIdGenerator(start=100, width=6)
         assert generator.next_id() == "000100"
         assert generator.next_id() == "000101"
 
     def test_reset_to_default(self):
-        """Тест сброса к значению по умолчанию."""
+        """Test reset to default value."""
         generator = ElementIdGenerator()
         generator.next_id()
         generator.next_id()
@@ -729,7 +729,7 @@ class TestElementIdGenerator:
         assert generator.next_id() == "00000001"
 
     def test_reset_to_custom(self):
-        """Тест сброса к кастомному значению."""
+        """Test reset to custom value."""
         generator = ElementIdGenerator()
         generator.next_id()
         generator.next_id()
@@ -737,7 +737,7 @@ class TestElementIdGenerator:
         assert generator.next_id() == "00000050"
 
     def test_repr(self):
-        """Тест __repr__ метода."""
+        """Test __repr__ method."""
         generator = ElementIdGenerator(start=5, width=4)
         repr_str = repr(generator)
         assert "ElementIdGenerator" in repr_str
@@ -746,7 +746,7 @@ class TestElementIdGenerator:
         assert "next_id='0005'" in repr_str
 
     def test_str(self):
-        """Тест __str__ метода."""
+        """Test __str__ method."""
         generator = ElementIdGenerator(start=10, width=6)
         str_repr = str(generator)
         assert "ElementIdGenerator" in str_repr
@@ -754,13 +754,13 @@ class TestElementIdGenerator:
         assert "next_id=000010" in str_repr
 
     def test_sequential_ids(self):
-        """Тест последовательной генерации ID."""
+        """Test sequential ID generation."""
         generator = ElementIdGenerator(start=1, width=3)
         ids = [generator.next_id() for _ in range(5)]
         assert ids == ["001", "002", "003", "004", "005"]
 
     def test_large_numbers(self):
-        """Тест генерации больших чисел."""
+        """Test large number generation."""
         generator = ElementIdGenerator(start=999, width=4)
         assert generator.next_id() == "0999"
         assert generator.next_id() == "1000"
@@ -768,62 +768,15 @@ class TestElementIdGenerator:
 
 
 # ============================================================================
-# Тесты для Element.dataframe property
-# ============================================================================
-
-class TestElementDataframe:
-    """Тесты для свойства Element.dataframe."""
-
-    def test_dataframe_for_table_element(self):
-        """Тест получения DataFrame для элемента-таблицы."""
-        import pandas as pd
-
-        df = pd.DataFrame({"Col1": ["A1", "A2"], "Col2": ["B1", "B2"]})
-        element = Element(
-            id="001",
-            type=ElementType.TABLE,
-            content="| Col1 | Col2 |\n|------|------|\n| A1   | B1   |",
-            metadata={"dataframe": df},
-        )
-
-        result_df = element.dataframe
-        assert result_df is not None
-        assert isinstance(result_df, pd.DataFrame)
-        assert len(result_df) == 2
-        assert list(result_df.columns) == ["Col1", "Col2"]
-
-    def test_dataframe_for_non_table_element(self):
-        """Тест получения DataFrame для элемента, не являющегося таблицей."""
-        element = Element(
-            id="001",
-            type=ElementType.TEXT,
-            content="Some text",
-        )
-
-        assert element.dataframe is None
-
-    def test_dataframe_for_table_without_dataframe(self):
-        """Тест получения DataFrame для таблицы без DataFrame в metadata."""
-        element = Element(
-            id="001",
-            type=ElementType.TABLE,
-            content="| Col1 | Col2 |",
-            metadata={},  # Нет dataframe
-        )
-
-        assert element.dataframe is None
-
-
-# ============================================================================
-# Тесты для ParsedDocument.get_elements_by_type
+# Tests for ParsedDocument.get_elements_by_type
 # ============================================================================
 
 class TestParsedDocumentGetElementsByType:
-    """Тесты для метода ParsedDocument.get_elements_by_type."""
+    """Tests for ParsedDocument.get_elements_by_type method."""
 
     @pytest.fixture
     def mixed_elements(self):
-        """Фикстура с элементами разных типов."""
+        """Fixture with elements of different types."""
         return [
             Element(id="001", type=ElementType.TITLE, content="Title"),
             Element(id="002", type=ElementType.HEADER_1, content="Header 1"),
@@ -834,7 +787,7 @@ class TestParsedDocumentGetElementsByType:
         ]
 
     def test_get_elements_by_type_text(self, mixed_elements):
-        """Тест получения элементов типа TEXT."""
+        """Test getting elements of type TEXT."""
         doc = ParsedDocument(
             source="test.md",
             format=DocumentFormat.MARKDOWN,
@@ -848,7 +801,7 @@ class TestParsedDocumentGetElementsByType:
         assert text_elements[1].id == "005"
 
     def test_get_elements_by_type_header(self, mixed_elements):
-        """Тест получения элементов типа HEADER_1."""
+        """Test getting elements of type HEADER_1."""
         doc = ParsedDocument(
             source="test.md",
             format=DocumentFormat.MARKDOWN,
@@ -861,7 +814,7 @@ class TestParsedDocumentGetElementsByType:
         assert header_elements[0].content == "Header 1"
 
     def test_get_elements_by_type_nonexistent(self, mixed_elements):
-        """Тест получения элементов несуществующего типа."""
+        """Test getting elements of non-existent type."""
         doc = ParsedDocument(
             source="test.md",
             format=DocumentFormat.MARKDOWN,
@@ -874,33 +827,28 @@ class TestParsedDocumentGetElementsByType:
 
 
 # ============================================================================
-# Тесты для ParsedDocument.get_tables
+# Tests for ParsedDocument.get_tables
 # ============================================================================
 
 class TestParsedDocumentGetTables:
-    """Тесты для метода ParsedDocument.get_tables."""
+    """Tests for ParsedDocument.get_tables method."""
 
     def test_get_tables_with_tables(self):
-        """Тест получения таблиц из документа с таблицами."""
-        import pandas as pd
-
-        df1 = pd.DataFrame({"A": [1, 2], "B": [3, 4]})
-        df2 = pd.DataFrame({"X": ["a", "b"], "Y": ["c", "d"]})
-
+        """Test getting tables from document with tables."""
         elements = [
             Element(id="001", type=ElementType.TITLE, content="Title"),
             Element(
                 id="002",
                 type=ElementType.TABLE,
                 content="| A | B |\n| 1 | 3 |",
-                metadata={"dataframe": df1},
+                metadata={},
             ),
             Element(id="003", type=ElementType.TEXT, content="Text"),
             Element(
                 id="004",
                 type=ElementType.TABLE,
                 content="| X | Y |\n| a | c |",
-                metadata={"dataframe": df2},
+                metadata={},
             ),
         ]
 
@@ -914,11 +862,9 @@ class TestParsedDocumentGetTables:
         assert len(tables) == 2
         assert tables[0].id == "002"
         assert tables[1].id == "004"
-        assert tables[0].dataframe is not None
-        assert tables[1].dataframe is not None
 
     def test_get_tables_without_tables(self):
-        """Тест получения таблиц из документа без таблиц."""
+        """Test getting tables from document without tables."""
         elements = [
             Element(id="001", type=ElementType.TITLE, content="Title"),
             Element(id="002", type=ElementType.TEXT, content="Text"),
@@ -934,46 +880,17 @@ class TestParsedDocumentGetTables:
         assert len(tables) == 0
         assert isinstance(tables, list)
 
-    def test_get_tables_dataframe_access(self):
-        """Тест доступа к DataFrame через get_tables()."""
-        import pandas as pd
-
-        df = pd.DataFrame({"Name": ["John", "Jane"], "Age": [25, 30]})
-        elements = [
-            Element(
-                id="001",
-                type=ElementType.TABLE,
-                content="| Name | Age |",
-                metadata={"dataframe": df},
-            ),
-        ]
-
-        doc = ParsedDocument(
-            source="test.md",
-            format=DocumentFormat.MARKDOWN,
-            elements=elements,
-        )
-
-        table = doc.get_tables()[0]
-        result_df = table.dataframe
-
-        assert result_df is not None
-        assert len(result_df) == 2
-        assert list(result_df.columns) == ["Name", "Age"]
-        assert result_df.iloc[0]["Name"] == "John"
-        assert result_df.iloc[1]["Age"] == 30
-
 
 # ============================================================================
-# Тесты для ParsedDocument.get_headers
+# Tests for ParsedDocument.get_headers
 # ============================================================================
 
 class TestParsedDocumentGetHeaders:
-    """Тесты для метода ParsedDocument.get_headers."""
+    """Tests for ParsedDocument.get_headers method."""
 
     @pytest.fixture
     def header_elements(self):
-        """Фикстура с элементами-заголовками разных уровней."""
+        """Fixture with header elements of different levels."""
         return [
             Element(id="001", type=ElementType.TITLE, content="Title"),
             Element(id="002", type=ElementType.HEADER_1, content="H1-1"),
@@ -985,7 +902,7 @@ class TestParsedDocumentGetHeaders:
         ]
 
     def test_get_headers_all(self, header_elements):
-        """Тест получения всех заголовков."""
+        """Test getting all headers."""
         doc = ParsedDocument(
             source="test.md",
             format=DocumentFormat.MARKDOWN,
@@ -1013,7 +930,7 @@ class TestParsedDocumentGetHeaders:
         assert headers[4].id == "006"  # H2-2
 
     def test_get_headers_level_1(self, header_elements):
-        """Тест получения заголовков уровня 1."""
+        """Test getting level 1 headers."""
         doc = ParsedDocument(
             source="test.md",
             format=DocumentFormat.MARKDOWN,
@@ -1027,7 +944,7 @@ class TestParsedDocumentGetHeaders:
         assert h1_headers[1].id == "005"
 
     def test_get_headers_level_2(self, header_elements):
-        """Тест получения заголовков уровня 2."""
+        """Test getting level 2 headers."""
         doc = ParsedDocument(
             source="test.md",
             format=DocumentFormat.MARKDOWN,
@@ -1041,7 +958,7 @@ class TestParsedDocumentGetHeaders:
         assert h2_headers[1].id == "006"
 
     def test_get_headers_level_3(self, header_elements):
-        """Тест получения заголовков уровня 3."""
+        """Test getting level 3 headers."""
         doc = ParsedDocument(
             source="test.md",
             format=DocumentFormat.MARKDOWN,
@@ -1054,7 +971,7 @@ class TestParsedDocumentGetHeaders:
         assert h3_headers[0].id == "004"
 
     def test_get_headers_level_nonexistent(self, header_elements):
-        """Тест получения заголовков несуществующего уровня."""
+        """Test getting headers of non-existent level."""
         doc = ParsedDocument(
             source="test.md",
             format=DocumentFormat.MARKDOWN,
@@ -1066,7 +983,7 @@ class TestParsedDocumentGetHeaders:
         assert isinstance(h4_headers, list)
 
     def test_get_headers_invalid_level(self, header_elements):
-        """Тест получения заголовков с невалидным уровнем."""
+        """Test getting headers with invalid level."""
         doc = ParsedDocument(
             source="test.md",
             format=DocumentFormat.MARKDOWN,
@@ -1080,7 +997,7 @@ class TestParsedDocumentGetHeaders:
             doc.get_headers(level=7)
 
     def test_get_headers_without_headers(self):
-        """Тест получения заголовков из документа без заголовков."""
+        """Test getting headers from document without headers."""
         elements = [
             Element(id="001", type=ElementType.TEXT, content="Text 1"),
             Element(id="002", type=ElementType.TEXT, content="Text 2"),

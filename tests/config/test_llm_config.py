@@ -1,7 +1,7 @@
 """
-Тесты для загрузки и валидации LLM конфигурации.
+Tests for loading and validating LLM configuration.
 
-Тестируемые функции:
+Functions under test:
 - load_llm_config()
 - validate_llm_config()
 """
