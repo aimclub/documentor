@@ -36,8 +36,8 @@ from documentor.processing.loader.loader import (
 # Fixtures for test files
 @pytest.fixture
 def test_files_dir() -> Path:
-    """Returns path to directory with test files."""
-    return Path(__file__).parent.parent.parent / "files_for_tests"
+    """Return path to the directory with test files."""
+    return Path(__file__).parent.parent.parent / "data"
 
 
 @pytest.fixture
@@ -159,7 +159,7 @@ class TestDetectFormatByExtension:
         assert _detect_format_by_extension("/path/to/file.docx") == DocumentFormat.DOCX
 
     def test_case_insensitive_extension(self):
-        """Test case-insensitive extension."""
+        """Test extension case insensitivity."""
         assert _detect_format_by_extension("/path/to/FILE.PDF") == DocumentFormat.PDF
         assert _detect_format_by_extension("/path/to/FILE.DOCX") == DocumentFormat.DOCX
 
@@ -225,7 +225,7 @@ class TestDetectFormatByMagicBytes:
         assert _detect_format_by_magic_bytes(str(pdf_file)) == DocumentFormat.PDF
 
     def test_detect_pdf_image_by_magic_bytes(self, image_pdf_file: Path):
-        """Test detecting PDF with images by magic bytes."""
+        """Test detecting image PDF by magic bytes."""
         assert _detect_format_by_magic_bytes(str(image_pdf_file)) == DocumentFormat.PDF
 
     def test_detect_docx_by_magic_bytes(self, docx_file: Path):
@@ -233,7 +233,7 @@ class TestDetectFormatByMagicBytes:
         assert _detect_format_by_magic_bytes(str(docx_file)) == DocumentFormat.DOCX
 
     def test_nonexistent_file_returns_none(self):
-        """Test returning None for non-existent file."""
+        """Test returning None for nonexistent file."""
         assert _detect_format_by_magic_bytes("/nonexistent/file.pdf") is None
 
     def test_directory_returns_none(self, test_files_dir: Path):
@@ -242,9 +242,9 @@ class TestDetectFormatByMagicBytes:
 
     def test_markdown_returns_none(self, markdown_file: Path):
         """Test returning None for Markdown (no magic bytes for text files)."""
-        # Markdown is text file, magic bytes not defined
+        # Markdown is a text file, magic bytes are not detected
         result = _detect_format_by_magic_bytes(str(markdown_file))
-        # May be None or determined differently
+        # May be None or detected differently
         assert result is None or result == DocumentFormat.UNKNOWN
 
 
@@ -287,9 +287,9 @@ class TestDetectDocumentFormat:
         assert detect_document_format(doc) == DocumentFormat.PDF
 
     def test_detect_by_magic_bytes_when_no_extension_or_mime(self, pdf_file: Path):
-        """Test detecting format by magic bytes when no extension and MIME type."""
-        # Use real file path but without extension in metadata
-        # Create temp file without extension, copying PDF content
+        """Test detecting format by magic bytes when no extension or MIME type."""
+        # Use real file path but no extension in metadata
+        # Create temp file without extension, copy PDF content
         tmp_dir = tempfile.gettempdir()
         tmp_path = Path(tmp_dir) / f"test_pdf_{tempfile.gettempprefix()}"
         try:
@@ -344,7 +344,7 @@ class TestDetectDocumentFormat:
             detect_document_format(doc)
 
     def test_works_with_only_source_no_content(self, markdown_file: Path):
-        """Test when only source, no page_content."""
+        """Test when only source is present, no page_content."""
         doc = Document(
             page_content="",
             metadata={"source": str(markdown_file)}
@@ -352,12 +352,12 @@ class TestDetectDocumentFormat:
         assert detect_document_format(doc) == DocumentFormat.MARKDOWN
 
     def test_works_with_only_content_no_source(self):
-        """Test when only page_content, no source."""
+        """Test when only page_content is present, no source."""
         doc = Document(
             page_content="# Markdown content",
             metadata={}
         )
-        # Should return UNKNOWN as no way to determine format
+        # Should return UNKNOWN as there is no way to detect format
         assert detect_document_format(doc) == DocumentFormat.UNKNOWN
 
 
@@ -403,15 +403,15 @@ class TestValidateDocument:
             validate_document(doc)
 
     def test_raises_error_when_content_not_string(self):
-        """Test raising error when page_content is not string."""
-        # LangChain Document does not allow non-string for page_content
+        """Test raising error when page_content is not a string."""
+        # LangChain Document does not allow non-string page_content
         # Check that Document is not created
         with pytest.raises(Exception):  # Pydantic ValidationError
             Document(page_content=123, metadata={})
 
     def test_raises_error_when_metadata_not_dict(self):
-        """Test raising error when metadata is not dict."""
-        # LangChain Document does not allow non-dict for metadata
+        """Test raising error when metadata is not a dict."""
+        # LangChain Document does not allow non-dict metadata
         # Check that Document is not created
         with pytest.raises(Exception):  # Pydantic ValidationError
             Document(page_content="test", metadata="not a dict")
@@ -490,13 +490,13 @@ class TestNormalizeMetadata:
         assert "source" not in normalized or normalized.get("source") == "unknown"
 
     def test_handles_unknown_format_gracefully(self):
-        """Test correct handling when format cannot be determined."""
+        """Test correct handling when format cannot be detected."""
         doc = Document(
             page_content="test",
             metadata={"source": "/path/to/unknown.xyz"}
         )
         normalized = normalize_metadata(doc)
-        # format may be "unknown" or absent
+        # format may be "unknown" or missing
         assert "format" not in normalized or normalized["format"] in ("unknown", "xyz")
 
     def test_creates_new_dict(self):
@@ -507,9 +507,9 @@ class TestNormalizeMetadata:
         )
         original_metadata = doc.metadata.copy()
         normalized = normalize_metadata(doc)
-        # Original metadata should not change
+        # Original metadata must not change
         assert doc.metadata == original_metadata
-        # Normalized should be new dict
+        # Normalized must be a new dict
         assert normalized is not doc.metadata
 
     def test_handles_none_metadata(self, markdown_file: Path):

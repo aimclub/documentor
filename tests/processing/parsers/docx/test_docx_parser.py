@@ -1,6 +1,6 @@
 """
 Tests for DOCX parser.
 
-Tested class:
+Class under test:
 - DocxParser
 """

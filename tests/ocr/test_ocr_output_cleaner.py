@@ -17,7 +17,7 @@ if str(_project_root) not in sys.path:
 
 import pytest
 
-from documentor.utils.ocr_output_cleaner import CleanedData, OutputCleaner
+from documentor.ocr.cleaning.output_cleaner import CleanedData, OutputCleaner
 
 
 class TestCleanedData:

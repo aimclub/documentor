@@ -1,6 +1,6 @@
 """
 Tests for element hierarchy validation.
 
-Tested class:
+Class under test:
 - HierarchyValidator
 """

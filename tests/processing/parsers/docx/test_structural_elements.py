@@ -1,6 +1,6 @@
 """
 Tests for DOCX structural elements extraction.
 
-Tested class:
+Class under test:
 - DocxStructuralElementsExtractor
 """

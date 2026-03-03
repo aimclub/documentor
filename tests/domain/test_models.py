@@ -1,7 +1,7 @@
 """
 Tests for domain models.
 
-Tested classes:
+Classes under test:
 - DocumentFormat (Enum)
 - ElementType (Enum)
 - Element (dataclass)
@@ -37,7 +37,7 @@ class TestDocumentFormat:
     """Tests for DocumentFormat enum."""
 
     def test_all_formats_exist(self):
-        """Test that all expected formats are present."""
+        """Test that all expected formats exist."""
         expected_formats = {"markdown", "pdf", "docx", "unknown"}
         actual_formats = {fmt.value for fmt in DocumentFormat}
         assert actual_formats == expected_formats
@@ -70,7 +70,7 @@ class TestElementType:
     """Tests for ElementType enum."""
 
     def test_all_types_exist(self):
-        """Test that all expected element types are present."""
+        """Test that all expected element types exist."""
         expected_types = {
             "title",
             "header_1",
@@ -229,7 +229,7 @@ class TestElement:
         assert "Test Title" in str_repr
 
     def test_str_with_parent(self):
-        """Test __str__ with parent_id."""
+        """Test __str__ с parent_id."""
         element = Element(
             id="002",
             type=ElementType.HEADER_1,
@@ -250,7 +250,7 @@ class TestElement:
         }
 
     def test_to_dict_with_parent(self):
-        """Test to_dict with parent_id."""
+        """Test to_dict с parent_id."""
         element = Element(
             id="002",
             type=ElementType.HEADER_1,
@@ -358,7 +358,7 @@ class TestElement:
             Element.from_json({"id": "001"})  # type: ignore
 
     def test_round_trip_dict(self):
-        """Test full cycle: to_dict -> from_dict."""
+        """Test round-trip: to_dict -> from_dict."""
         original = Element(
             id="001",
             type=ElementType.HEADER_1,
@@ -374,7 +374,7 @@ class TestElement:
         assert restored.metadata == original.metadata
 
     def test_round_trip_json(self):
-        """Test full cycle: to_json -> from_json."""
+        """Test round-trip: to_json -> from_json."""
         original = Element(
             id="001",
             type=ElementType.TEXT,
@@ -440,7 +440,7 @@ class TestParsedDocument:
             ParsedDocument(source="test.md", format="invalid", elements=sample_elements)  # type: ignore
 
     def test_validate_empty_elements_allowed(self):
-        """Test validation: empty elements list is allowed."""
+        """Test validation: empty elements list allowed."""
         # Empty documents allowed
         doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=[])
         assert doc.elements == []
@@ -452,7 +452,7 @@ class TestParsedDocument:
             ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements="not a list")  # type: ignore
 
     def test_validate_non_element_in_list_raises_error(self):
-        """Test validation: element not Element raises error."""
+        """Test validation: non-Element item raises error."""
         with pytest.raises(ValueError, match="must be Element instances"):
             ParsedDocument(
                 source="test.md",
@@ -461,7 +461,7 @@ class TestParsedDocument:
             )
 
     def test_validate_duplicate_ids_raises_error(self):
-        """Test validation: duplicate id raises error."""
+        """Test validation: duplicate ids raise error."""
         elements = [
             Element(id="001", type=ElementType.TEXT, content="Text 1"),
             Element(id="001", type=ElementType.TEXT, content="Text 2"),  # Duplicate
@@ -480,7 +480,7 @@ class TestParsedDocument:
     def test_validate_hierarchy_self_parent(self):
         """Test hierarchy validation: element cannot be its own parent."""
         elements = [
-            Element(id="001", type=ElementType.TEXT, content="Text", parent_id="001"),  # Self as parent
+            Element(id="001", type=ElementType.TEXT, content="Text", parent_id="001"),  # Own parent
         ]
         with pytest.raises(ValueError, match="cannot be its own parent"):
             ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=elements)
@@ -654,7 +654,7 @@ class TestParsedDocument:
             ParsedDocument.from_json({"source": "test.md"})  # type: ignore
 
     def test_round_trip_dict(self, sample_elements):
-        """Test full cycle: to_dict -> from_dict."""
+        """Test round-trip: to_dict -> from_dict."""
         original = ParsedDocument(
             source="test.md",
             format=DocumentFormat.MARKDOWN,
@@ -668,7 +668,7 @@ class TestParsedDocument:
         assert restored.metadata == original.metadata
 
     def test_round_trip_json(self, sample_elements):
-        """Test full cycle: to_json -> from_json."""
+        """Test round-trip: to_json -> from_json."""
         original = ParsedDocument(
             source="test.md",
             format=DocumentFormat.PDF,
@@ -690,19 +690,19 @@ class TestElementIdGenerator:
     """Tests for ElementIdGenerator."""
 
     def test_default_initialization(self):
-        """Test init with default params."""
+        """Test initialization with default parameters."""
         generator = ElementIdGenerator()
         assert generator._counter == 1
         assert generator._width == 8
 
     def test_custom_initialization(self):
-        """Test init with custom params."""
+        """Test initialization with custom parameters."""
         generator = ElementIdGenerator(start=10, width=4)
         assert generator._counter == 10
         assert generator._width == 4
 
     def test_next_id_default(self):
-        """Test ID generation with default params."""
+        """Test ID generation with default parameters."""
         generator = ElementIdGenerator()
         assert generator.next_id() == "00000001"
         assert generator.next_id() == "00000002"
@@ -760,7 +760,7 @@ class TestElementIdGenerator:
         assert ids == ["001", "002", "003", "004", "005"]
 
     def test_large_numbers(self):
-        """Test generation of large numbers."""
+        """Test large number generation."""
         generator = ElementIdGenerator(start=999, width=4)
         assert generator.next_id() == "0999"
         assert generator.next_id() == "1000"
@@ -768,58 +768,11 @@ class TestElementIdGenerator:
 
 
 # ============================================================================
-# Tests for Element.dataframe property
-# ============================================================================
-
-class TestElementDataframe:
-    """Tests for Element.dataframe property."""
-
-    def test_dataframe_for_table_element(self):
-        """Test getting DataFrame for table element."""
-        import pandas as pd
-
-        df = pd.DataFrame({"Col1": ["A1", "A2"], "Col2": ["B1", "B2"]})
-        element = Element(
-            id="001",
-            type=ElementType.TABLE,
-            content="| Col1 | Col2 |\n|------|------|\n| A1   | B1   |",
-            metadata={"dataframe": df},
-        )
-
-        result_df = element.dataframe
-        assert result_df is not None
-        assert isinstance(result_df, pd.DataFrame)
-        assert len(result_df) == 2
-        assert list(result_df.columns) == ["Col1", "Col2"]
-
-    def test_dataframe_for_non_table_element(self):
-        """Test getting DataFrame for non-table element."""
-        element = Element(
-            id="001",
-            type=ElementType.TEXT,
-            content="Some text",
-        )
-
-        assert element.dataframe is None
-
-    def test_dataframe_for_table_without_dataframe(self):
-        """Test getting DataFrame for table without dataframe in metadata."""
-        element = Element(
-            id="001",
-            type=ElementType.TABLE,
-            content="| Col1 | Col2 |",
-            metadata={},  # No dataframe
-        )
-
-        assert element.dataframe is None
-
-
-# ============================================================================
 # Tests for ParsedDocument.get_elements_by_type
 # ============================================================================
 
 class TestParsedDocumentGetElementsByType:
-    """Tests for ParsedDocument.get_elements_by_type."""
+    """Tests for ParsedDocument.get_elements_by_type method."""
 
     @pytest.fixture
     def mixed_elements(self):
@@ -878,29 +831,24 @@ class TestParsedDocumentGetElementsByType:
 # ============================================================================
 
 class TestParsedDocumentGetTables:
-    """Tests for ParsedDocument.get_tables."""
+    """Tests for ParsedDocument.get_tables method."""
 
     def test_get_tables_with_tables(self):
         """Test getting tables from document with tables."""
-        import pandas as pd
-
-        df1 = pd.DataFrame({"A": [1, 2], "B": [3, 4]})
-        df2 = pd.DataFrame({"X": ["a", "b"], "Y": ["c", "d"]})
-
         elements = [
             Element(id="001", type=ElementType.TITLE, content="Title"),
             Element(
                 id="002",
                 type=ElementType.TABLE,
                 content="| A | B |\n| 1 | 3 |",
-                metadata={"dataframe": df1},
+                metadata={},
             ),
             Element(id="003", type=ElementType.TEXT, content="Text"),
             Element(
                 id="004",
                 type=ElementType.TABLE,
                 content="| X | Y |\n| a | c |",
-                metadata={"dataframe": df2},
+                metadata={},
             ),
         ]
 
@@ -914,8 +862,6 @@ class TestParsedDocumentGetTables:
         assert len(tables) == 2
         assert tables[0].id == "002"
         assert tables[1].id == "004"
-        assert tables[0].dataframe is not None
-        assert tables[1].dataframe is not None
 
     def test_get_tables_without_tables(self):
         """Test getting tables from document without tables."""
@@ -934,42 +880,13 @@ class TestParsedDocumentGetTables:
         assert len(tables) == 0
         assert isinstance(tables, list)
 
-    def test_get_tables_dataframe_access(self):
-        """Test DataFrame access via get_tables()."""
-        import pandas as pd
-
-        df = pd.DataFrame({"Name": ["John", "Jane"], "Age": [25, 30]})
-        elements = [
-            Element(
-                id="001",
-                type=ElementType.TABLE,
-                content="| Name | Age |",
-                metadata={"dataframe": df},
-            ),
-        ]
-
-        doc = ParsedDocument(
-            source="test.md",
-            format=DocumentFormat.MARKDOWN,
-            elements=elements,
-        )
-
-        table = doc.get_tables()[0]
-        result_df = table.dataframe
-
-        assert result_df is not None
-        assert len(result_df) == 2
-        assert list(result_df.columns) == ["Name", "Age"]
-        assert result_df.iloc[0]["Name"] == "John"
-        assert result_df.iloc[1]["Age"] == 30
-
 
 # ============================================================================
 # Tests for ParsedDocument.get_headers
 # ============================================================================
 
 class TestParsedDocumentGetHeaders:
-    """Tests for ParsedDocument.get_headers."""
+    """Tests for ParsedDocument.get_headers method."""
 
     @pytest.fixture
     def header_elements(self):

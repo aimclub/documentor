@@ -31,7 +31,7 @@ from documentor.processing.parsers.pdf.pdf_parser import PdfParser
 
 @pytest.fixture
 def sample_pdf_path(tmp_path):
-    """Creates temporary PDF file for tests."""
+    """Create temporary PDF file for tests."""
     pdf_path = tmp_path / "test.pdf"
     try:
         import fitz
@@ -47,7 +47,7 @@ def sample_pdf_path(tmp_path):
 
 @pytest.fixture
 def scanned_pdf_path(tmp_path):
-    """Creates temporary scanned PDF file (no text layer)."""
+    """Create temporary scanned PDF file (no text layer)."""
     pdf_path = tmp_path / "scanned_test.pdf"
     try:
         import fitz
@@ -75,7 +75,7 @@ def scanned_pdf_path(tmp_path):
 
 @pytest.fixture
 def mock_layout_elements():
-    """Returns mock layout elements from Dots OCR."""
+    """Return mock layout elements from Dots OCR."""
     return [
         {
             "bbox": [100, 50, 500, 100],
@@ -111,13 +111,13 @@ def mock_layout_elements():
 
 @pytest.fixture
 def mock_image():
-    """Creates test image."""
+    """Create test image."""
     return Image.new("RGB", (800, 600), color="white")
 
 
 @pytest.fixture
 def pdf_parser():
-    """Creates PdfParser instance for tests."""
+    """Create PdfParser instance for tests."""
     return PdfParser()
 
 
@@ -183,22 +183,19 @@ class TestIsTextExtractable:
     """Tests for _is_text_extractable method."""
 
     def test_is_text_extractable_with_text(self, sample_pdf_path):
-        """Test extractable text check for PDF with text."""
+        """Test extractable text check in PDF with text."""
         parser = PdfParser()
         result = parser._is_text_extractable(sample_pdf_path)
         assert isinstance(result, bool)
-        # PDF with text may return True or False depending on text amount
-        # Just check the method runs
 
     def test_is_text_extractable_scanned_pdf(self, scanned_pdf_path):
-        """Test extractable text check for scanned PDF."""
+        """Test extractable text check in scanned PDF."""
         parser = PdfParser()
         result = parser._is_text_extractable(scanned_pdf_path)
-        # Scanned PDF should return False
         assert result is False
 
     def test_is_text_extractable_invalid_path(self):
-        """Test extractable text check for non-existent file."""
+        """Test extractable text check for nonexistent file."""
         parser = PdfParser()
         result = parser._is_text_extractable("/nonexistent/file.pdf")
         assert result is False
@@ -225,7 +222,7 @@ class TestGetPageCount:
         assert count >= 1
 
     def test_get_page_count_invalid_path(self):
-        """Test getting page count for non-existent file."""
+        """Test getting page count for nonexistent file."""
         parser = PdfParser()
         with pytest.raises(Exception):
             parser._get_page_count("/nonexistent/file.pdf")
@@ -293,7 +290,7 @@ class TestDetectLayoutForAllPages:
         layout_elements = pdf_parser._detect_layout_for_all_pages(sample_pdf_path, use_text_extraction=False)
         assert len(layout_elements) > 0
         assert all("page_num" in elem for elem in layout_elements)
-        # For PDF with text should use prompt_layout_only_en
+        # For PDF with text, prompt_layout_only_en should be used
         mock_processor.detect_layout_for_all_pages.assert_called()
 
     @patch("documentor.processing.parsers.pdf.pdf_parser.PdfLayoutProcessor")
@@ -348,7 +345,7 @@ class TestAnalyzeHeaderLevels:
             assert "level" in header
 
     def test_analyze_header_levels_no_headers(self, pdf_parser, sample_pdf_path):
-        """Test level analysis when there are no headers."""
+        """Test level analysis when no headers."""
         elements = [
             {"category": "Text", "bbox": [0, 0, 100, 50], "page_num": 0},
             {"category": "Picture", "bbox": [0, 100, 100, 150], "page_num": 0},
@@ -402,7 +399,7 @@ class TestExtractTextByBboxes:
         assert all("text" in elem for elem in text_elements)
 
     def test_extract_text_by_bboxes_no_text_elements(self, pdf_parser, sample_pdf_path):
-        """Test text extraction when there are no text elements."""
+        """Test text extraction when no text elements."""
         elements = [
             {"category": "Picture", "bbox": [0, 0, 100, 50], "page_num": 0},
         ]
@@ -419,7 +416,7 @@ class TestExtractTextByBboxes:
         # use_ocr=True means text is already in elements
         text_elements = pdf_parser.text_extractor.extract_text_by_bboxes(scanned_pdf_path, elements, use_ocr=True)
         assert len(text_elements) == len(elements)
-        # Text should already be in elements (possibly markdown stripped)
+        # Text should already be in elements (possibly markdown-cleaned)
         assert "Extracted by OCR" in text_elements[0].get("text", "") or text_elements[0].get("text", "") == "Extracted by OCR"
 
 
@@ -433,10 +430,8 @@ class TestParseTables:
     @patch("documentor.processing.parsers.pdf.table_parser.parse_table_from_html")
     def test_parse_tables_from_dots_ocr_html(self, mock_parse_html, pdf_parser, sample_pdf_path):
         """Test parsing tables from Dots OCR HTML."""
-        # Setup mock - parse_table_from_html returns (markdown, dataframe, success)
         mock_parse_html.return_value = (
-            None,  # markdown is None now
-            pd.DataFrame({"Col1": ["Val1"], "Col2": ["Val2"]}),
+            "<table><tr><td>Col1</td><td>Col2</td></tr></table>",
             True,
         )
         
@@ -452,19 +447,16 @@ class TestParseTables:
                 },
             ),
         ]
-        # use_dots_ocr_html=True means use HTML from Dots OCR
         parsed_elements = pdf_parser.table_parser.parse_tables(elements, sample_pdf_path, use_dots_ocr_html=True)
         assert len(parsed_elements) == len(elements)
-        # Check that HTML parser was called (if table_html in metadata)
         mock_parse_html.assert_called()
-        # Check that table was processed
         table_elem = next((e for e in parsed_elements if e.type == ElementType.TABLE), None)
         if table_elem:
-            assert "dataframe" in table_elem.metadata
+            assert "<table>" in table_elem.content or "table" in str(table_elem.metadata.get("content", ""))
 
 
     def test_parse_tables_no_tables(self, pdf_parser, sample_pdf_path):
-        """Test parsing when there are no tables."""
+        """Test parsing tables when there are none."""
         elements = [
             Element(
                 id="00000001",
@@ -535,7 +527,7 @@ class TestParseFullCycle:
         mock_layout_elements,
     ):
         """Test full parse cycle for PDF with text."""
-        # Setup mocks
+        # Set up mocks
         mock_processor = MagicMock()
         mock_processor.detect_layout_for_all_pages.return_value = mock_layout_elements
         mock_processor.reprocess_tables_with_all_en.return_value = mock_layout_elements
@@ -568,7 +560,7 @@ class TestParseFullCycle:
             for elem in mock_layout_elements
         ]
         
-        # Setup mocks
+        # Set up mocks
         mock_processor = MagicMock()
         mock_processor.detect_layout_for_all_pages.return_value = mock_layout_elements_with_text
         mock_processor.filter_layout_elements.return_value = mock_layout_elements_with_text

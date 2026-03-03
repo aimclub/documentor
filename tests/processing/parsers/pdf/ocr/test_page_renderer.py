@@ -1,7 +1,7 @@
 """
 Tests for PDF page rendering.
 
-Tested class:
+Class under test:
 - PdfPageRenderer
 """
 
@@ -26,7 +26,7 @@ from documentor.processing.parsers.pdf.ocr.page_renderer import PdfPageRenderer
 
 @pytest.fixture
 def sample_pdf_path(tmp_path):
-    """Creates temporary PDF file for tests."""
+    """Create temporary PDF file for tests."""
     pdf_path = tmp_path / "test.pdf"
     try:
         import fitz
@@ -37,7 +37,7 @@ def sample_pdf_path(tmp_path):
         doc.close()
         return pdf_path
     except ImportError:
-        pytest.skip("PyMuPDF (fitz) not installed")
+        pytest.skip("PyMuPDF (fitz) is not installed")
 
 
 # ============================================================================
@@ -92,7 +92,7 @@ class TestRenderPage:
         assert image.mode == "RGB"
 
     def test_render_page_with_original(self, sample_pdf_path):
-        """Test page rendering with original image returned."""
+        """Test page rendering with original image return."""
         renderer = PdfPageRenderer(optimize_for_ocr=False)
         original, optimized = renderer.render_page(sample_pdf_path, 0, return_original=True)
         
@@ -162,7 +162,7 @@ class TestRenderPages:
         assert isinstance(images[0], Image.Image)
 
     def test_render_pages_with_originals(self, sample_pdf_path):
-        """Test rendering pages with original images returned."""
+        """Test rendering pages with original images return."""
         renderer = PdfPageRenderer(optimize_for_ocr=False)
         images = renderer.render_pages(sample_pdf_path, return_originals=True)
         
@@ -222,4 +222,4 @@ class TestGetPageCount:
             count = renderer.get_page_count(pdf_path)
             assert count == 3
         except ImportError:
-            pytest.skip("PyMuPDF (fitz) not installed")
+            pytest.skip("PyMuPDF (fitz) is not installed")

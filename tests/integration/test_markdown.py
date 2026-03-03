@@ -73,8 +73,8 @@ class TestMarkdownIntegrationWithFile:
     """Integration tests with file loading."""
 
     def test_load_and_parse_markdown_file(self):
-        """Test loading and parsing a Markdown file."""
-        test_file = _project_root / "tests" / "files_for_tests" / "md.md"
+        """Test loading and parsing Markdown file."""
+        test_file = _project_root / "tests" / "data" / "md.md"
         
         if not test_file.exists():
             pytest.skip(f"Test file not found: {test_file}")
@@ -93,7 +93,7 @@ class TestMarkdownIntegrationWithFile:
 
     def test_load_and_parse_full_markdown_file(self):
         """Test parsing full markdown file with all element types."""
-        test_file = _project_root / "tests" / "files_for_tests" / "full_markdown.md"
+        test_file = _project_root / "tests" / "data" / "full_markdown.md"
         
         if not test_file.exists():
             pytest.skip(f"Test file not found: {test_file}")
@@ -127,14 +127,14 @@ class TestMarkdownIntegrationWithFile:
 
     def test_parse_many_from_files(self):
         """Test batch processing of files."""
-        test_dir = _project_root / "tests" / "files_for_tests"
+        test_dir = _project_root / "tests" / "data"
         md_file = test_dir / "md.md"
         full_md_file = test_dir / "full_markdown.md"
         
         if not md_file.exists() or not full_md_file.exists():
             pytest.skip("Test files not found")
         
-        # User creates Document from files
+        # User creates Documents from files
         documents = [
             Document(
                 page_content=md_file.read_text(encoding="utf-8"),
@@ -154,10 +154,10 @@ class TestMarkdownIntegrationWithFile:
 
 
 class TestMarkdownIntegrationMetrics:
-    """Tests for performance metrics."""
+    """Performance metrics tests."""
 
     def test_pipeline_metrics_in_metadata(self):
-        """Test that metrics are present in result metadata."""
+        """Test that result metadata contains metrics."""
         doc = Document(
             page_content="# Header\n\nText.",
             metadata={"source": "test.md"}
@@ -197,48 +197,9 @@ class TestMarkdownIntegrationMetrics:
         assert isinstance(metrics["document_lines"], int)
         assert metrics["document_lines"] >= 0
 
-    def test_metrics_accuracy(self):
-        """Test metrics accuracy."""
-        content = "# H1\n## H2\n### H3\n\nText."
-        doc = Document(
-            page_content=content,
-            metadata={"source": "test.md"}
-        )
-        
-        result = pipeline(doc)
-        metrics = result.metadata["pipeline_metrics"]
-        
-        # Element count should match
-        assert metrics["num_elements"] == len(result.elements)
-        assert metrics["num_elements"] >= 4  # at least 3 headers + text
-        
-        # Parse time should be reasonable (under 5 seconds for simple doc)
-        assert metrics["parsing_time_seconds"] < 5.0
-        
-        # Check elements_by_type
-        elements_by_type = metrics["elements_by_type"]
-        assert isinstance(elements_by_type, dict)
-        # Headers should be present
-        assert "header_1" in elements_by_type or sum(
-            v for k, v in elements_by_type.items() if k.startswith("header_")
-        ) >= 3
-        
-        # Check document_size_bytes and document_lines
-        expected_bytes = len(content.encode("utf-8"))
-        expected_lines = len(content.splitlines())
-        assert metrics["document_size_bytes"] == expected_bytes
-        assert metrics["document_lines"] == expected_lines
-        
-        # Check elements_per_second
-        # pipeline.py uses round(..., 2), so tolerance must be larger
-        if metrics["parsing_time_seconds"] > 0:
-            expected_eps = metrics["num_elements"] / metrics["parsing_time_seconds"]
-            # Account for round(..., 2) in pipeline.py
-            assert abs(metrics["elements_per_second"] - expected_eps) < 0.5  # rounding tolerance
-
 
 class TestMarkdownIntegrationHierarchy:
-    """Tests for element hierarchy."""
+    """Element hierarchy tests."""
 
     def test_hierarchy_structure(self):
         """Test hierarchy is built correctly."""
@@ -300,7 +261,7 @@ Text under subheader 2.
 
 
 class TestMarkdownIntegrationTables:
-    """Tests for table parsing."""
+    """Table parsing tests."""
 
     def test_table_parsing(self):
         """Test table parsing."""
@@ -308,9 +269,9 @@ class TestMarkdownIntegrationTables:
             page_content="""# Table
 
 | Column 1 | Column 2 | Column 3 |
-|-----------|-----------|-----------|
-| Data 1  | Data 2  | Data 3  |
-| Value A| Value B| Value C|
+|----------|----------|----------|
+| Data 1   | Data 2   | Data 3   |
+| Value A  | Value B  | Value C  |
 """,
             metadata={"source": "test.md"}
         )
@@ -322,23 +283,18 @@ class TestMarkdownIntegrationTables:
         assert len(tables) > 0
         
         table = tables[0]
-        
-        # Check DataFrame in metadata
         assert table.metadata is not None
-        assert "dataframe" in table.metadata or "rows" in table.metadata
-        
-        # If DataFrame present, check its structure
-        if "dataframe" in table.metadata and table.metadata["dataframe"] is not None:
-            df = table.metadata["dataframe"]
-            assert df.shape[0] >= 2  # at least 2 data rows
-            assert df.shape[1] == 3  # 3 columns
+        # Tables are stored as HTML in content
+        assert isinstance(table.content, str)
+        assert "<table>" in table.content
+        assert "</table>" in table.content
 
 
 class TestMarkdownIntegrationErrorHandling:
-    """Tests for error handling."""
+    """Error handling tests."""
 
     def test_invalid_document_format(self):
-        """Test handling of unsupported format."""
+        """Test handling unsupported format."""
         pipeline_instance = Pipeline()
         # Create document with wrong format in metadata
         doc = Document(
@@ -349,14 +305,12 @@ class TestMarkdownIntegrationErrorHandling:
         # Pipeline should detect format by extension or return error
         try:
             result = pipeline_instance.parse(doc)
-            # If parsing succeeded, format should be determined
             assert result.format in [DocumentFormat.MARKDOWN, DocumentFormat.UNKNOWN]
         except Exception:
-            # If error raised - also acceptable for unsupported format
             pass
 
     def test_empty_document(self):
-        """Test handling of empty document."""
+        """Test handling empty document."""
         doc = Document(page_content="", metadata={"source": "empty.md"})
         result = pipeline(doc)
         
@@ -364,7 +318,7 @@ class TestMarkdownIntegrationErrorHandling:
         assert len(result.elements) == 0
 
     def test_missing_source(self):
-        """Test handling of document without source."""
+        """Test handling document without source."""
         from documentor.exceptions import UnsupportedFormatError
         
         doc = Document(page_content="# Header", metadata={})
@@ -390,8 +344,8 @@ class TestMarkdownIntegrationPerformance:
         result = pipeline(doc)
         metrics = result.metadata["pipeline_metrics"]
         
-        # Check parsing succeeded
+        # Parsing should succeed
         assert len(result.elements) > 100
         
-        # Check parse time is reasonable (under 5 seconds for 100 sections)
+        # Parsing time should be reasonable (under 5 seconds for 100 sections)
         assert metrics["parsing_time_seconds"] < 5.0

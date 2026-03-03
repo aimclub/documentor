@@ -1,6 +1,6 @@
 """
-Tests for link resolution in DOCX.
+Tests for DOCX link resolution.
 
-Tested class:
+Class under test:
 - DocxLinkResolver
 """

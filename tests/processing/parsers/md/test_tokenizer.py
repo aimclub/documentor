@@ -1,6 +1,6 @@
 """
 Tests for Markdown tokenizer.
 
-Tested class:
+Class under test:
 - MarkdownTokenizer
 """

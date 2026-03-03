@@ -1,5 +1,5 @@
 """
 Integration tests.
 
-End-to-end tests for the full system.
+End-to-end tests for full system verification.
 """

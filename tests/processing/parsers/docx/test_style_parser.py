@@ -1,6 +1,6 @@
 """
 Tests for DOCX style parsing.
 
-Tested class:
+Class under test:
 - DocxStyleParser
 """

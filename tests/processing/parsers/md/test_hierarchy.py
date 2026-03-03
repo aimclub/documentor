@@ -1,6 +1,6 @@
 """
 Tests for Markdown hierarchy building.
 
-Tested class:
+Class under test:
 - MarkdownHierarchyBuilder
 """

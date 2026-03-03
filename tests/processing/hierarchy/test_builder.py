@@ -1,6 +1,6 @@
 """
 Tests for element hierarchy building.
 
-Tested class:
+Class under test:
 - HierarchyBuilder
 """

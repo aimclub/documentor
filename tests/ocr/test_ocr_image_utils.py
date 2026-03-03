@@ -23,7 +23,7 @@ if str(_project_root) not in sys.path:
 import pytest
 from PIL import Image
 
-from documentor.utils.ocr_image_utils import (
+from documentor.ocr.image import (
     base64_to_image,
     ceil_by_factor,
     fetch_image,

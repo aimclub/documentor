@@ -44,7 +44,7 @@ class TestMarkdownParserBasicParsing:
     def test_parse_simple_text(self):
         """Test parsing simple text."""
         parser = MarkdownParser()
-        doc = Document(page_content="Simple text", metadata={"source": "test.md"})
+        doc = Document(page_content="Plain text", metadata={"source": "test.md"})
         result = parser.parse(doc)
 
         assert isinstance(result, ParsedDocument)
@@ -52,7 +52,7 @@ class TestMarkdownParserBasicParsing:
         assert result.source == "test.md"
         assert len(result.elements) == 1
         assert result.elements[0].type == ElementType.TEXT
-        assert result.elements[0].content == "Simple text"
+        assert result.elements[0].content == "Plain text"
 
     def test_parse_empty_document(self):
         """Test parsing empty document."""
@@ -79,10 +79,10 @@ class TestMarkdownParserBasicParsing:
 
 
 class TestMarkdownParserHeadings:
-    """Header parsing tests."""
+    """Heading parsing tests."""
 
     def test_parse_h1_heading(self):
-        """Test parsing H1 header."""
+        """Test parsing H1 heading."""
         parser = MarkdownParser()
         doc = Document(page_content="# Header 1", metadata={"source": "test.md"})
         result = parser.parse(doc)
@@ -93,7 +93,7 @@ class TestMarkdownParserHeadings:
         assert result.elements[0].parent_id is None
 
     def test_parse_all_heading_levels(self):
-        """Test parsing all header levels."""
+        """Test parsing all heading levels."""
         parser = MarkdownParser()
         content = "# H1\n## H2\n### H3\n#### H4\n##### H5\n###### H6"
         doc = Document(page_content=content, metadata={"source": "test.md"})
@@ -108,7 +108,7 @@ class TestMarkdownParserHeadings:
         assert result.elements[5].type == ElementType.HEADER_6
 
     def test_heading_hierarchy(self):
-        """Test building header hierarchy."""
+        """Test heading hierarchy building."""
         parser = MarkdownParser()
         content = """# Header 1
 Text under H1
@@ -233,7 +233,7 @@ class TestMarkdownParserLists:
         assert child1 is not None
         assert child2 is not None
         
-        # Check that child elements reference parent
+        # Check that children reference parent
         assert child1.parent_id == parent1.id
         assert child2.parent_id == parent1.id
         
@@ -250,9 +250,9 @@ class TestMarkdownParserTables:
         """Test parsing simple table."""
         parser = MarkdownParser()
         content = """| Header 1 | Header 2 |
-|-------------|-------------|
-| Cell 1    | Cell 2    |
-| Cell 3    | Cell 4    |"""
+|----------|----------|
+| Cell 1   | Cell 2   |
+| Cell 3   | Cell 4   |"""
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
@@ -318,7 +318,7 @@ class TestMarkdownParserLinks:
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
-        # LINK and TEXT elements should be created
+        # Should have LINK and TEXT elements
         link_elements = [e for e in result.elements if e.type == ElementType.LINK]
         text_elements = [e for e in result.elements if e.type == ElementType.TEXT]
         
@@ -360,11 +360,11 @@ class TestMarkdownParserImages:
     def test_parse_image_in_text(self):
         """Test parsing image inside text."""
         parser = MarkdownParser()
-        content = "Here is ![image](image.png) in text."
+        content = "Here is ![picture](image.png) in text."
         doc = Document(page_content=content, metadata={"source": "test.md"})
         result = parser.parse(doc)
 
-        # IMAGE and TEXT elements should be created
+        # Should have IMAGE and TEXT elements
         image_elements = [e for e in result.elements if e.type == ElementType.IMAGE]
         text_elements = [e for e in result.elements if e.type == ElementType.TEXT]
         
@@ -387,10 +387,10 @@ class TestMarkdownParserImages:
 
 
 class TestMarkdownParserQuotes:
-    """Quote parsing tests."""
+    """Blockquote parsing tests."""
 
     def test_parse_blockquote(self):
-        """Test parsing quote."""
+        """Test parsing blockquote."""
         parser = MarkdownParser()
         content = "> This is a quote"
         doc = Document(page_content=content, metadata={"source": "test.md"})
@@ -410,7 +410,7 @@ class TestMarkdownParserComplexDocument:
         parser = MarkdownParser()
         content = """# Main header
 
-This is a paragraph with text.
+This is a paragraph.
 
 ## Subheader
 
@@ -422,8 +422,8 @@ code = "example"
 ```
 
 | Table | Column |
-|---------|---------|
-| Data  | Value |
+|-------|--------|
+| Data  | Value  |
 
 > Quote
 
@@ -446,9 +446,9 @@ code = "example"
         assert ElementType.TABLE in types
 
     def test_parse_real_file(self):
-        """Test parsing real file from tests/files_for_tests."""
+        """Test parsing a real file from tests/data."""
         parser = MarkdownParser()
-        test_file = Path(__file__).parent.parent.parent / "files_for_tests" / "md.md"
+        test_file = Path(__file__).parent.parent.parent / "data" / "md.md"
 
         if test_file.exists():
             content = test_file.read_text(encoding="utf-8")
@@ -470,7 +470,7 @@ class TestMarkdownParserValidation:
             parser.parse(None)  # type: ignore
 
     def test_validate_input_wrong_format(self):
-        """Test validation of document with wrong format."""
+        """Test validation of wrong format document."""
         parser = MarkdownParser()
         doc = Document(page_content="PDF content", metadata={"source": "test.pdf"})
         with pytest.raises(UnsupportedFormatError):
@@ -490,11 +490,11 @@ class TestMarkdownParserErrorHandling:
     """Error handling tests."""
 
     def test_parsing_error_handling(self):
-        """Test parsing error handling."""
+        """Test parse error handling."""
         parser = MarkdownParser()
         # Document that might cause error (mistune usually handles most cases)
         doc = Document(page_content="Normal text", metadata={"source": "test.md"})
-        # Should process successfully
+        # Should parse successfully
         result = parser.parse(doc)
         assert isinstance(result, ParsedDocument)
 
@@ -541,5 +541,5 @@ class TestMarkdownParserIntegration:
 
 
 class TestMarkdownParserFullDocument:
-    """Full document parsing tests with all element types."""
+    """Full document parsing tests (all element types)."""
 

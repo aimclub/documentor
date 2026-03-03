@@ -83,7 +83,7 @@ class TestBaseParserInitialization:
         parser = MockParser()
         generator = parser.id_generator
         assert isinstance(generator, ElementIdGenerator)
-        # Same object
+        # Check it is the same object
         assert parser.id_generator is generator
 
 
@@ -109,7 +109,7 @@ class TestCanParse:
     def test_can_parse_handles_errors(self):
         """Test can_parse handles errors gracefully."""
         parser = MockParser()
-        # Document without source and page_content
+        # Document without source and without page_content
         doc = Document(page_content="", metadata={})
         # Should not raise, return False
         result = parser.can_parse(doc)
@@ -244,20 +244,17 @@ class TestValidateParsedDocument:
     def test_validate_parsed_document_invalid(self):
         """Test validation of invalid ParsedDocument."""
         parser = MockParser()
-        # Create valid document then modify for test
         elements = [Element(id="001", type=ElementType.TITLE, content="Title")]
         doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=elements)
         # Empty elements list is now valid (code allows empty documents)
-        # This test just ensures validation passes
         parser._validate_parsed_document(doc)
 
     def test_validate_parsed_document_duplicate_ids(self):
         """Test validation of ParsedDocument with duplicate IDs."""
         parser = MockParser()
-        # Create valid document then modify for test
         elements = [Element(id="001", type=ElementType.TEXT, content="Text 1")]
         doc = ParsedDocument(source="test.md", format=DocumentFormat.MARKDOWN, elements=elements)
-        # Add duplicate ID, bypassing creation validation
+        # Add duplicate ID
         doc.elements.append(Element(id="001", type=ElementType.TEXT, content="Text 2"))
         with pytest.raises(ValidationError, match="Parsing result is invalid"):
             parser._validate_parsed_document(doc)
@@ -271,7 +268,7 @@ class TestLogging:
     """Tests for logging methods."""
 
     def test_log_parsing_start(self, caplog):
-        """Test logging of parsing start."""
+        """Test logging of parse start."""
         with caplog.at_level(logging.INFO):
             parser = MockParser()
             parser._log_parsing_start("test.md")
@@ -280,7 +277,7 @@ class TestLogging:
             assert "markdown" in caplog.text
 
     def test_log_parsing_end(self, caplog):
-        """Test logging of parsing completion."""
+        """Test logging of parse completion."""
         with caplog.at_level(logging.INFO):
             parser = MockParser()
             parser._log_parsing_end("test.md", 5)
@@ -308,7 +305,7 @@ class TestParseFullCycle:
         assert result.elements[0].content == "# Title"
 
     def test_parse_invalid_document_raises_error(self):
-        """Test parsing invalid document raises error."""
+        """Test that parsing invalid document raises error."""
         parser = MockParser()
         doc = Document(page_content="", metadata={})  # No source and content
         with pytest.raises(ValidationError):
@@ -342,8 +339,7 @@ class TestErrorHandling:
         """Test that parse handles internal errors."""
         parser = MockParser()
 
-        # Document that will cause error when parsing
-        # Mock _create_element to trigger error
+        # Mock _create_element to raise error
         with patch.object(parser, "_create_element", side_effect=Exception("Internal error")):
             doc = Document(page_content="test", metadata={"source": "test.md"})
             with pytest.raises(Exception, match="Internal error"):
@@ -356,7 +352,6 @@ class TestErrorHandling:
         try:
             parser._validate_input(doc)
         except ValidationError as e:
-            # Original error preserved
             assert "Document is invalid" in str(e)
 
 

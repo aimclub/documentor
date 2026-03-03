@@ -1,62 +1,62 @@
 # Tests
 
-This directory contains tests for the `documentor` package.
+Tests for the `documentor` package. Pytest is used; configuration is in `pyproject.toml` (`[tool.pytest.ini_options]`).
 
-## Running Tests
+## Running tests
 
-### Run all tests
+**All tests:**
 ```bash
 pytest tests/
-```
-
-### Run tests with verbose output
-```bash
 pytest tests/ -v
 ```
 
-### Run specific test file
-```bash
-# Core module tests
-pytest tests/core/test_load_env.py -v
-
-# Exceptions tests
-pytest tests/test_exceptions.py -v
-
-# Pipeline tests
-pytest tests/test_pipeline.py -v
-
-# Utils tests
-pytest tests/utils/test_ocr_image_utils.py -v
-pytest tests/utils/test_ocr_layout_utils.py -v
-pytest tests/utils/test_ocr_output_cleaner.py -v
-pytest tests/utils/test_ocr_consts.py -v
-```
-
-### Run tests with coverage
+**With coverage:**
 ```bash
 pytest tests/ --cov=documentor --cov-report=html
 ```
 
-### Run tests and show print statements
+**By directory (examples):**
 ```bash
-pytest tests/ -v -s
+pytest tests/config/ -v
+pytest tests/domain/ -v
+pytest tests/processing/ -v
+pytest tests/ocr/ -v
+pytest tests/integration/ -v
 ```
 
-### Run tests matching a pattern
+**Root-level test modules:**
+```bash
+pytest tests/core/test_load_env.py -v
+pytest tests/test_exceptions.py -v
+pytest tests/test_pipeline.py -v
+```
+
+**Integration metadata tests (images, tables as HTML, links):**  
+On Windows the shell does not expand globs; pass files explicitly:
+```bash
+pytest tests/integration/test_integration_images_base64.py tests/integration/test_integration_tables_html.py tests/integration/test_integration_links_metadata.py tests/integration/test_integration_metadata_combined.py -v
+```
+
+**By keyword:**
 ```bash
 pytest tests/ -k "test_load_env" -v
 ```
 
-## Test Structure
+**Show print output:**
+```bash
+pytest tests/ -v -s
+```
 
-- `core/` - Tests for core utilities (load_env)
-- `config/` - Tests for configuration loading
-- `domain/` - Tests for domain models
-- `processing/` - Tests for processing modules (parsers, loader, hierarchy)
-- `utils/` - Tests for utility functions (used by ocr/processing)
-- `ocr/` - Tests for OCR modules
-- `llm/` - Tests for LLM modules
-- `integration/` - Integration tests (pipeline, docx, markdown)
-- Root: `test_exceptions.py`, `test_pipeline.py` - exceptions and pipeline tests
-- `files_for_tests/` - Test data files
-- `fixtures/` - Fixture files (e.g. sample markdown)
+## Structure
+
+| Directory | Contents |
+|-----------|----------|
+| `config/` | ConfigLoader, OCR config, LLM config |
+| `core/` | Core utilities (e.g. load_env) |
+| `domain/` | Domain models (DocumentFormat, ElementType, Element, ParsedDocument, ElementIdGenerator) |
+| `processing/` | Loader, text_utils, file_utils; `parsers/` (base, md, docx, pdf incl. ocr); `hierarchy/` |
+| `ocr/` | OCR base, Dots OCR, reading order; OCR utils (ocr_image_utils, ocr_consts, ocr_output_cleaner, ocr_layout_utils, image_utils) |
+| `integration/` | Pipeline, Markdown, DOCX; metadata tests (images base64, tables HTML, links) |
+| `data/` | Test assets (PDF, DOCX, MD, images) |
+
+Root-level test files: `test_exceptions.py`, `test_pipeline.py`.

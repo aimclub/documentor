@@ -16,7 +16,7 @@ if str(_project_root) not in sys.path:
 import pytest
 from PIL import Image
 
-from documentor.utils.ocr_layout_utils import post_process_cells
+from documentor.ocr.layout.layout_utils import post_process_cells
 
 
 class TestPostProcessCells:

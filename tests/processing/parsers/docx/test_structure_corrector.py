@@ -1,6 +1,6 @@
 """
 Tests for DOCX structure corrector.
 
-Tested class:
+Class under test:
 - DocxStructureCorrector
 """
