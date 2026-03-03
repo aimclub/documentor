@@ -76,8 +76,8 @@ graph TB
    - Number of text paragraphs
    - Number of images
 3. Determine if scanned:
-   - No text (length < min_text_length)
-   - OR (images > 0 AND text < min_text_for_non_scanned AND images > text_paragraphs * ratio)
+   - Documents with tables are never considered scanned (tables contain structured text).
+   - Otherwise: no text (length < min_text_length) OR (images > 0 AND text < min_text_for_non_scanned AND images > text_paragraphs * ratio)
 
 **Configuration**:
 ```yaml
@@ -94,7 +94,7 @@ docx_parser:
 
 ### Step 2: DOCX to PDF Conversion
 
-**Method**: `convert_docx_to_pdf(docx_path: Path, pdf_path: Path)`
+**Method**: `DocxConverter.convert_to_pdf(docx_path: Path, pdf_path: Path)` (used as `self.converter.convert_to_pdf()`)
 
 **Process**:
 1. Try conversion methods in order:
@@ -107,17 +107,16 @@ docx_parser:
 
 ### Step 3: Layout Detection
 
-**Method**: Uses `process_layout_detection()` from Dots.OCR
+**Method**: `DocxLayoutDetector.detect_layout_for_all_pages(pdf_path: Path) -> Tuple[List[Dict], Dict]`
 
 **Process**:
-1. **Page Rendering**: Render all PDF pages as images with 2x scale
-   - Uses `PdfPageRenderer` with `render_scale=2.0`
-2. **Layout Detection**: For each page, call Dots.OCR layout detection
+1. **Page Rendering**: Render all PDF pages as images (scale from config: `layout_detection.render_scale`, default 2.0)
+   - Uses `PdfPageRenderer` from `documentor.processing.parsers.pdf.ocr.page_renderer`
+2. **Layout Detection**: For each page, call Dots OCR layout detector (`DotsOCRLayoutDetector.detect_layout()`)
    - Gets layout elements with categories and bbox coordinates
-3. **Filter Elements**: Only keep `Section-header` and `Caption` elements
-   - Other elements (Text, Table, Picture) are extracted from XML
+3. **Filter Elements**: Only `Section-header` and `Caption` are used for text extraction; other elements (Text, Table, Picture) are taken from XML
 
-**Result**: List of layout elements:
+**Result**: List of layout elements and page images dict:
 ```python
 [
     {
@@ -136,7 +135,7 @@ docx_parser:
 
 ### Step 4: Text Extraction from PDF
 
-**Method**: `_extract_text_from_pdf_by_bbox(ocr_elements: List[Dict], pdf_doc: fitz.Document, render_scale: float) -> List[Dict]`
+**Method**: `DocxLayoutDetector.extract_text_from_pdf_by_bbox(elements: List[Dict], pdf_doc: fitz.Document, render_scale: float) -> List[Dict]` (called via `self.layout_detector.extract_text_from_pdf_by_bbox()`)
 
 **Process**:
 1. For each Section-header and Caption element:
@@ -381,24 +380,20 @@ sequenceDiagram
     ContentCheck-->>DocxParser: is_scanned = true/false
     
     alt Scanned Document
-        DocxParser->>Converter: convert_docx_to_pdf()
+        DocxParser->>Converter: convert_to_pdf(docx_path, temp_pdf_path)
         Converter-->>DocxParser: temp_pdf_path
         DocxParser->>DocxParser: Use PdfParser with OCR
         DocxParser-->>Pipeline: ParsedDocument
     else Normal Document
-        DocxParser->>Converter: convert_docx_to_pdf()
+        DocxParser->>Converter: convert_to_pdf(docx_path, temp_pdf_path)
         Converter-->>DocxParser: temp_pdf_path
         
-        DocxParser->>Renderer: render_pages(pdf_path)
-        Renderer-->>DocxParser: page_images[]
+        DocxParser->>Renderer: LayoutDetector.detect_layout_for_all_pages(pdf_path)
+        Note over Renderer: Renders pages, then Dots OCR per page
+        Renderer-->>DocxParser: ocr_elements[], page_images
         
-        loop For each page
-            DocxParser->>DotsOCR: detect_layout(page_image)
-            DotsOCR-->>DocxParser: layout_elements[]
-        end
-        
-        DocxParser->>PyMuPDF: extract_text_by_bbox(Section-header, Caption)
-        PyMuPDF-->>DocxParser: headers_with_text, captions_with_text
+        DocxParser->>DocxParser: layout_detector.extract_text_from_pdf_by_bbox(Section-header, Caption)
+        Note over DocxParser: headers_with_text, captions_with_text (PyMuPDF by bbox)
         
         DocxParser->>XmlParser: extract_all_elements()
         XmlParser-->>DocxParser: all_xml_elements[]
@@ -482,9 +477,9 @@ Main entry point. Orchestrates the complete parsing pipeline.
 
 Checks if document is scanned (image-based) or has text content.
 
-### `_extract_text_from_pdf_by_bbox(ocr_elements: List[Dict], pdf_doc: fitz.Document, render_scale: float) -> List[Dict]`
+### `DocxLayoutDetector.extract_text_from_pdf_by_bbox(elements, pdf_doc, render_scale) -> List[Dict]`
 
-Extracts text from PDF by bbox coordinates for Section-header and Caption elements.
+Extracts text from PDF by bbox coordinates for Section-header and Caption elements (called via `self.layout_detector.extract_text_from_pdf_by_bbox()`).
 
 ### `DocxXmlParser.extract_all_elements() -> List[Dict]`
 
