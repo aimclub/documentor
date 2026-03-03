@@ -34,9 +34,10 @@ ROADMAP.md
 md_output_test.txt
 test_md_output.py
 /documentor.egg-info/
-/experiments/
+/experiments1
+/evaluation_scripts
 /htmlcov
-
+TODO.md
 /.hypothesis
 /.deepeval
 /Plan.txt
