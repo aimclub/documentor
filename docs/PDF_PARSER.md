@@ -432,9 +432,8 @@ pdf_parser:
   
   # Table Parsing
   table_parsing:
-    method: "markdown"
-    # Table parsing uses HTML from Dots OCR, no separate model needed
     detect_merged_tables: true
+    reprocess_tables: true  # Re-process pages with tables using prompt_layout_all_en for HTML
   
   # Header Analysis
   header_analysis:

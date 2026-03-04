@@ -103,13 +103,10 @@ graph TB
    - Find first row with `|`
    - Skip delimiter row (`|---|`)
    - Collect all data rows
-2. **Parse to DataFrame**:
-   - Split rows by `|`
-   - First row = headers
-   - Remaining rows = data
-   - Normalize column counts
-   - Create DataFrame
-3. Create `TABLE` element with DataFrame in metadata
+2. **Convert to HTML**:
+   - Use `_markdown_table_to_html(table_lines, delimiter_line)` to build HTML table
+   - Split rows by `|`, first row = headers, remaining = data
+3. Create `MarkdownBlock` with `type=TABLE`, `content=table_html` (HTML string), `metadata={"source": "markdown"}`. DataFrame is not added in the pipeline; `_parse_table_to_dataframe()` exists for standalone use.
 
 #### 2.5 Quotes
 
@@ -216,10 +213,7 @@ sequenceDiagram
     
     RegexEngine-->>MarkdownParser: blocks[]
     
-    alt Table Block
-        MarkdownParser->>TableParser: _parse_table_to_dataframe()
-        TableParser-->>MarkdownParser: DataFrame
-    end
+    Note over MarkdownParser: Table blocks have content=HTML from _markdown_table_to_html()
     
     MarkdownParser->>HierarchyBuilder: _build_elements(blocks)
     
@@ -298,15 +292,11 @@ Element(
 ```python
 Element(
     type=ElementType.TABLE,
-    content="| Header 1 | Header 2 |\n|----------|----------|\n| Data 1   | Data 2   |",
-    metadata={
-        "source": "markdown",
-        "dataframe": <pandas.DataFrame>,
-        "rows_count": 1,
-        "cols_count": 2
-    }
+    content="<table>...</table>",  # HTML from _markdown_table_to_html()
+    metadata={"source": "markdown"}
 )
 ```
+Tables are stored with HTML in `content`. For a DataFrame, use `MarkdownParser._parse_table_to_dataframe(table_lines, delimiter_line)` separately.
 
 ### Code Blocks (CODE_BLOCK)
 
@@ -458,13 +448,15 @@ Text after list   → parent_id: header_2_id
 
 **Method**: `_parse_table_to_dataframe(table_lines: List[str], delimiter_line: Optional[str]) -> pd.DataFrame`
 
+Used for standalone table parsing; the main pipeline stores tables as HTML in `content` via `_markdown_table_to_html()`.
+
 **Process**:
 1. **Parse Rows**: Split each row by `|`, remove leading/trailing spaces
 2. **Extract Headers**: First row = column headers
 3. **Normalize Columns**: Ensure all rows have same column count (pad with empty strings)
 4. **Create DataFrame**: Convert to pandas DataFrame with headers as column names
 
-**Result**: DataFrame stored in `metadata["dataframe"]`.
+**Result**: DataFrame (not written to element metadata in the default pipeline).
 
 ## Configuration
 
