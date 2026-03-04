@@ -1,19 +1,23 @@
 # Documentor Architecture
 
+Pipeline creates DotsOCRManager from `.env` on init and passes it to PdfParser (for layout detection, table parsing, scanned PDFs). DOCX and PDF parsers support optional config via `config_path` / `config_dict`.
+
 ## System Overview
 
 ```mermaid
 graph TB
-    Start([LangChain Document]) --> Pipeline[Pipeline]
+    Start([LangChain Document]) --> Pipeline[Pipeline<br/>DotsOCRManager from .env]
     
-    Pipeline --> Loader[DocumentLoader<br/>detect_document_format]
+    Pipeline --> Loader[Loader module<br/>detect_document_format]
     
     Loader -->|Format Detection| FormatCheck{Document Format}
     
     FormatCheck -->|MARKDOWN| MarkdownParser[MarkdownParser<br/>Regex-based]
     FormatCheck -->|DOCX| DocxParser[DocxParser<br/>Combined: OCR + XML + TOC]
-    FormatCheck -->|PDF| PdfParser[PdfParser<br/>Layout-based]
+    FormatCheck -->|PDF| PdfParser[PdfParser<br/>Layout-based<br/>ocr_manager]
     FormatCheck -->|UNKNOWN| Error[Error:<br/>Unsupported Format]
+    
+    Pipeline -.->|passes ocr_manager| PdfParser
     
     MarkdownParser -->|Inherits| BaseParser[BaseParser<br/>Abstract Class]
     DocxParser -->|Inherits| BaseParser
@@ -129,6 +133,7 @@ classDiagram
         -_check_docx_text_content(Path) Dict
         -_extract_text_from_pdf_by_bbox(List~Dict~, Document, float) List~Dict~
     }
+    note for DocxParser "Uses: DocxLayoutDetector, DocxHeaderProcessor, build_hierarchy, toc_parser, caption_finder. Config: config_path / config_dict."
     
     class PdfParser {
         +parse(Document) ParsedDocument
@@ -329,7 +334,7 @@ graph TB
 flowchart TD
     Start([User: Document]) --> Validate1{Document is None?}
     Validate1 -->|Yes| Error1[ValidationError]
-    Validate1 -->|No| Detect[Format Detection<br/>detect_document_format]
+    Validate1 -->|No| Detect[Format Detection<br/>detect_document_format<br/>loader module]
     
     Detect --> Format{Format?}
     Format -->|MARKDOWN| SelectMD[Select MarkdownParser]
