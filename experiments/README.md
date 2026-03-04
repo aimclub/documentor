@@ -1,10 +1,10 @@
 # Metrics Calculation Scripts
 
-This folder contains three standalone scripts for calculating document parsing quality metrics:
+This folder contains standalone scripts for calculating document parsing quality metrics:
 
-1. **calculate_dedoc_metrics.py** - metrics calculation for Dedoc
-2. **calculate_marker_metrics.py** - metrics calculation for Marker
-3. **calculate_documentor_metrics.py** - metrics calculation for DocuMentor
+1. **calculate_dedoc_metrics.py** - metrics calculation for Dedoc (PDF, PDF scanned, DOCX)
+2. **calculate_marker_metrics.py** - metrics calculation for Marker (PDF)
+3. **calculate_documentor_metrics.py** - metrics calculation for DocuMentor (PDF and DOCX; one script, one output)
 
 All scripts work with documents from the `test_files/` folder in the project root.
 
@@ -34,23 +34,31 @@ Before running any script, you need to:
 
 ### 1. Dedoc Metrics Calculation
 
-#### Step 1: Create Virtual Environment
+#### Step 1: Clone Dedoc Repository
 
 ```bash
-# Navigate to project root
-cd /path/to/documentor_langchain
+# Navigate to experiments folder
+cd experiments
 
+# Clone Dedoc repository (https://github.com/ispras/dedoc)
+git clone https://github.com/ispras/dedoc
+
+```
+
+#### Step 2: Create Virtual Environment
+
+```bash
 # Create virtual environment for Dedoc
-python -m venv evaluation_scripts/venv_dedoc
+python -m venv venv_dedoc
 
 # Activate virtual environment
 # On Windows:
-evaluation_scripts\venv_dedoc\Scripts\activate
+venv_dedoc\Scripts\activate
 # On Linux/Mac:
-source evaluation_scripts/venv_dedoc/bin/activate
+source venv_dedoc/bin/activate
 ```
 
-#### Step 2: Install Dependencies
+#### Step 3: Install Dependencies
 
 ```bash
 # Upgrade pip
@@ -60,30 +68,30 @@ python -m pip install --upgrade pip
 pip install requests
 ```
 
-#### Step 3: Deploy Dedoc Docker Container
+#### Step 4: Deploy Dedoc Docker Container
 
 ```bash
-# Pull and run Dedoc Docker container
-docker run -d -p 1231:1231 --name dedoc dedocproject/dedoc
+# From project root
+cd dedoc
 
-# Verify container is running
+# Build and run (Dedoc on port 1231; may start Grobid on 8070)
+docker compose up --build -d dedoc
+
+# Check
 docker ps --filter name=dedoc
-
-# If container already exists but is stopped, start it:
-docker start dedoc
 ```
 
-#### Step 4: Run the Script
+#### Step 5: Run the Script
 
 ```bash
-# Make sure virtual environment is activated
-# On Windows:
-evaluation_scripts\venv_dedoc\Scripts\python.exe evaluation_scripts\calculate_dedoc_metrics.py
-# On Linux/Mac:
-evaluation_scripts/venv_dedoc/bin/python evaluation_scripts/calculate_dedoc_metrics.py
+# From experiments folder
+# Windows:
+venv_dedoc\Scripts\python.exe calculate_dedoc_metrics.py
+# Linux/Mac:
+venv_dedoc/bin/python calculate_dedoc_metrics.py
 ```
 
-**Result:** File `evaluation_scripts/dedoc_metrics.json` with metrics for each document and summary statistics.
+**Result:** File `dedoc_metrics.json` (in experiments/) with per-document metrics and per-type summaries (`_summary`, `_summary_pdf`, `_summary_pdf_scanned`, `_summary_docx`) for fair comparison with DocuMentor.
 
 **Note:** The script will check if Dedoc API is available at `http://localhost:1231/` before processing documents.
 
@@ -94,30 +102,25 @@ evaluation_scripts/venv_dedoc/bin/python evaluation_scripts/calculate_dedoc_metr
 #### Step 1: Clone Marker Repository
 
 ```bash
-# Navigate to evaluation_scripts folder
-cd evaluation_scripts
+# Navigate to experiments folder
+cd experiments
 
 # Clone Marker repository
 git clone https://github.com/VikParuchuri/marker.git
 
-# Verify Marker repository is cloned
-ls marker/
 ```
 
 #### Step 2: Create Virtual Environment
 
 ```bash
-# Navigate to project root
-cd /path/to/documentor_langchain
-
 # Create virtual environment for Marker
-python -m venv evaluation_scripts/venv_marker
+python -m venv venv_marker
 
 # Activate virtual environment
 # On Windows:
-evaluation_scripts\venv_marker\Scripts\activate
+venv_marker\Scripts\activate
 # On Linux/Mac:
-source evaluation_scripts/venv_marker/bin/activate
+source venv_marker/bin/activate
 ```
 
 #### Step 3: Install Marker
@@ -127,31 +130,30 @@ source evaluation_scripts/venv_marker/bin/activate
 python -m pip install --upgrade pip
 
 # Navigate to Marker directory
-cd evaluation_scripts/marker
+cd marker
 
 # Install Marker in editable mode (this will install all dependencies)
 pip install -e .
 
 # Return to project root
-cd ../..
+cd ../
 ```
 
-**Note:** Marker installation will automatically download required models on first use. The installation may take some time as it includes PyTorch and other ML dependencies.
-
-#### Step 4: Run the Script
+#### Step 4: Run the metrics script
 
 ```bash
-# Make sure virtual environment is activated
-# On Windows:
-evaluation_scripts\venv_marker\Scripts\python.exe evaluation_scripts\calculate_marker_metrics.py
-# On Linux/Mac:
-evaluation_scripts/venv_marker/bin/python evaluation_scripts/calculate_marker_metrics.py
+# From experiments folder
+# Windows:
+venv_marker\Scripts\python.exe calculate_marker_metrics.py
+# Linux/Mac:
+venv_marker/bin/python calculate_marker_metrics.py
 ```
 
-**Result:** File `evaluation_scripts/marker_metrics.json` with metrics for each document and summary statistics.
+**Result:** File `marker_metrics.json` (in experiments/) with per-document metrics (same keys as DocuMentor: `{stem}_pdf`, `{stem}_scanned`), `_summary`, `_summary_pdf`, `_summary_pdf_scanned`.
 
-**Note:** 
-- The script will automatically find MD files in document folders (if they exist) or process PDF through Marker if MD files are missing
+**Note:**
+- Marker processes **all PDFs** in test_files/ (regular and scanned); DOCX is not supported
+- If an MD file with the same stem exists next to the PDF, it is used instead of running Marker (faster)
 - First run may take longer as Marker downloads required models
 - Marker requires significant disk space for models (several GB)
 
@@ -200,12 +202,12 @@ python -c "from documentor import Pipeline; print('DocuMentor is available')"
 
 ```bash
 # Make sure virtual environment with project dependencies is activated
-python evaluation_scripts/calculate_documentor_metrics.py
+python experiments/calculate_documentor_metrics.py
 ```
 
-**Result:** File `evaluation_scripts/documentor_metrics.json` with metrics for each document and summary statistics.
+**Result:** File `experiments/documentor_metrics.json` with metrics for each document and summary statistics.
 
-**Note:** The script requires DocuMentor to be properly installed and configured. Make sure all project dependencies are installed.
+**Note:** The script requires DocuMentor to be properly installed and configured. Make sure all project dependencies are installed. The same script processes both PDF and DOCX from `test_files/`; for DOCX it uses many-to-one matching and lenient hierarchy. Each result entry includes `document_type` ("pdf" or "docx"). Use `_summary` and per-document entries to fill `metrics.md`.
 
 ## Calculated Metrics
 
@@ -249,27 +251,23 @@ Results are saved to JSON files with the following structure:
 
 ## Directory Structure
 
-After setup, your `evaluation_scripts/` folder should look like this:
+All in `experiments/`:
 
 ```
-evaluation_scripts/
-├── calculate_dedoc_metrics.py
-├── calculate_marker_metrics.py
-├── calculate_documentor_metrics.py
-├── README.md
-├── venv_dedoc/              # Virtual environment for Dedoc (created during setup)
-│   ├── Scripts/             # Windows
-│   └── bin/                  # Linux/Mac
-├── venv_marker/             # Virtual environment for Marker (created during setup)
-│   ├── Scripts/             # Windows
-│   └── bin/                  # Linux/Mac
-├── marker/                   # Marker repository (cloned during setup)
-│   ├── marker/
-│   ├── pyproject.toml
-│   └── ...
-├── dedoc_metrics.json        # Results file (generated after running)
-├── marker_metrics.json        # Results file (generated after running)
-└── documentor_metrics.json   # Results file (generated after running)
+documentor_langchain/
+├── experiments/
+│   ├── calculate_dedoc_metrics.py
+│   ├── calculate_marker_metrics.py
+│   ├── calculate_documentor_metrics.py
+│   ├── test_marker_output.py   # Optional: see Marker output on one PDF
+│   ├── README.md
+│   ├── venv_dedoc/             # Virtual environment for Dedoc
+│   ├── venv_marker/            # Virtual environment for Marker
+│   ├── marker/                  # Marker repository (git clone)
+│   ├── dedoc_metrics.json      # Generated after running
+│   ├── marker_metrics.json     # Generated after running
+│   └── documentor_metrics.json # Generated after running
+└── test_files/
 ```
 
 **Note:** Virtual environment folders (`venv_dedoc/`, `venv_marker/`) and Marker repository (`marker/`) should be added to `.gitignore` if they are not already there.
@@ -284,7 +282,7 @@ evaluation_scripts/
 
 ### Marker Issues
 
-- **Import errors:** Make sure you installed Marker in editable mode: `pip install -e .` from `evaluation_scripts/marker/` directory
+- **Import errors:** Make sure you installed Marker in editable mode: `pip install -e .` from `marker/` directory (being in experiments/)
 - **Model download failures:** Check internet connection and disk space (models require several GB)
 - **CUDA/GPU errors:** Marker will fall back to CPU if GPU is not available, but processing will be slower
 

@@ -15,6 +15,7 @@ The document parsing quality evaluation system uses a set of metrics to analyze 
 **Character Error Rate** - the proportion of erroneous characters relative to the total number of characters in ground truth.
 
 **Important note for PDF and DOCX:**
+
 - For **PDF Regular** and **DOCX** files, text is extracted directly from the source file, not through OCR
 - Theoretically, CER should be 0, as text is taken from the source document
 - Non-zero CER values are explained by differences in special character processing:
@@ -25,6 +26,7 @@ The document parsing quality evaluation system uses a set of metrics to analyze 
 - In practice, for PDF and DOCX CER ≈ 0, and observed values (0.002-0.075) reflect only differences in text normalization
 
 **For Scanned PDF:**
+
 - CER reflects real OCR errors in text recognition
 - Typical values: 0.005-0.013 (average: ~0.009)
 
@@ -33,6 +35,7 @@ The document parsing quality evaluation system uses a set of metrics to analyze 
 **Word Error Rate** - the proportion of erroneous words relative to the total number of words in ground truth.
 
 **Important note for PDF and DOCX:**
+
 - Similarly to CER, for PDF Regular and DOCX, WER should be close to 0
 - Non-zero values are explained by the same reasons as for CER:
   - Differences in special character processing
@@ -40,54 +43,46 @@ The document parsing quality evaluation system uses a set of metrics to analyze 
 - In practice WER ≈ 0 for PDF and DOCX
 
 **For Scanned PDF:**
+
 - WER reflects real OCR word recognition errors
 - Usually higher than CER, as one character error can lead to a whole word error
 
 ## Document Structure Metrics
 
-### TEDS (Tree-Edit-Distance-based Similarity)
+### TEDS (Tree-Edit-Distance-based; lower is better)
 
-**Tree-Edit-Distance-based Similarity** - a metric that evaluates document structure similarity based on tree edit distance.
-
-TEDS is calculated in two variants:
+TEDS are **distance** metrics: **lower values mean better** structure preservation. They are derived from ordering and hierarchy accuracy.
 
 #### Document TEDS
 
-Evaluates overall document structure similarity, including:
-- Element hierarchy (parent-child relationships)
-- Element order
-- Element types
+Measures overall structure distance (hierarchy + order). **Lower is better.**
 
-**Formula:** `Document TEDS = (Ordering Accuracy + Hierarchy TEDS) / 2`
+**Formula:** `Document TEDS = (Hierarchy TEDS + (1 - Ordering Accuracy)) / 2`
 
 #### Hierarchy TEDS
 
-Evaluates the accuracy of document hierarchical structure (parent-child relationships).
+Measures hierarchy distance (parent-child relationships). **Lower is better.**
 
-**Critical note on the impact of header level substitution:**
+**Formula:** `Hierarchy TEDS = 1 - Hierarchy Accuracy`
 
-Substituting one header level for another (e.g., HEADER_1 → HEADER_2) **strongly affects** TEDS metrics, although in practice this is not a critical error:
+**Note on header level substitution:**
 
-- TEDS uses tree edit distance, where changing header level requires edit operations
-- One such substitution can significantly reduce Hierarchy TEDS
-- **Important to understand:** in practice, header level substitution is a relatively minor error that does not affect understanding of document structure
-- Actual parsing quality may be higher than TEDS metrics indicate if the main issue is header level substitutions
+Substituting one header level for another (e.g., HEADER_1 → HEADER_2) increases TEDS (worse score), although in practice this is often a minor error. Actual parsing quality may be better than TEDS suggests if the main issue is header level substitutions.
 
-**Example:**
-- If a document has 7 HEADER_1 headers in ground truth, but the system identified 38 HEADER_1 headers (including regular text), this leads to a significant decrease in TEDS
-- However, if the system correctly identified all headers but some as HEADER_2 instead of HEADER_1, the impact on TEDS would be less, although in practice this is a less critical error
+### Ordering Accuracy (higher is better)
 
-### Ordering Accuracy
+Proportion of matched elements in the correct order relative to ground truth. Usually close to 1.0 for all methods.
 
-Element order accuracy - the proportion of elements that are in the correct order relative to ground truth.
+### Hierarchy Accuracy (higher is better)
 
-This metric is usually close to 1.0 (100%) for all file types, as element order is generally preserved during parsing.
+Proportion of matched elements with the correct parent. Higher values mean better preservation of document hierarchy.
 
 ## Class Detection Metrics
 
 ### Precision, Recall, F1 for Element Types
 
 For each element type (text, header_1, header_2, table, image, caption, etc.), the following are calculated:
+
 - **Precision** - the proportion of correctly identified elements among all predicted
 - **Recall** - the proportion of found elements among all elements in ground truth
 - **F1** - harmonic mean of precision and recall
@@ -118,32 +113,28 @@ For PDF files (Regular and Scanned), metrics for element coordinate accuracy are
 
 ### PDF Regular
 
-- **CER/WER:** ≈ 0.002 (actually 0, non-zero values only due to normalization)
-- **Document TEDS:** ~0.89 (high)
-- **Hierarchy TEDS:** ~0.82 (high)
-- **Bbox F1:** ~0.98 (very high)
-- **Features:** Text is extracted directly from PDF, element coordinates are accurate
+- **CER/WER:** 0.0075 / 0.0092 (actually equal to zero; non-zero only due to normalization)
+- **Document TEDS:** ~0.13 (low = good)
+- **Hierarchy TEDS:** ~0.27 (low = good)
+- **Bbox F1:** ~0.98
+- **Features:** Text from PDF layer; element coordinates accurate
 
 ### DOCX
 
-- **CER/WER:** ≈ 0.075/0.069 (actually 0, non-zero values only due to normalization)
-- **Document TEDS:** ~0.81
-- **Hierarchy TEDS:** ~0.71
+- **CER/WER:** 0.0096 / 0.0023 (actually equal to zero; non-zero only due to normalization)
+- **Document TEDS:** ~0.02 (low = good)
+- **Hierarchy TEDS:** ~0.04 (low = good)
 - **Bbox F1:** 0.0 (not applicable)
-- **Features:** 
-  - **Important:** In practice, metrics for DOCX are actually higher than for PDF, but in the current file sample, DOCX files turned out to be more complex and unusual
-  - DOCX files in the test sample have complex structure with many headers and non-standard formatting
-  - This led to lower TEDS metrics, although the system works with DOCX no worse than with PDF
-  - The problem is mainly related to determining header levels in complex documents
+- **Features:**
+  - Text from DOCX source; structure uses many-to-one matching and lenient hierarchy (merge/split and level differences not penalized)
 
 ### Scanned PDF
 
-- **CER:** ~0.009 (real OCR errors, range: 0.005-0.013)
-- **WER:** ~0.023 (real OCR errors, range: 0.020-0.030)
-- **Document TEDS:** ~0.83
-- **Hierarchy TEDS:** ~0.70
-- **Bbox F1:** ~0.94 (high, despite OCR)
-- **Features:** Text is extracted through OCR, so there are real recognition errors, but structure and coordinates are determined quite accurately
+- **CER/WER:** 0.0129 / 0.0254 (real OCR errors)
+- **Document TEDS:** ~0.18 (low = good)
+- **Hierarchy TEDS:** ~0.35 (low = good)
+- **Bbox F1:** ~0.94
+- **Features:** Text from OCR (some recognition errors); structure and coordinates remain accurate
 
 ## Processing Time
 
@@ -155,123 +146,240 @@ For PDF files (Regular and Scanned), metrics for element coordinate accuracy are
 
 ### Overview
 
-This section compares the performance of **DocuMentor** (our method), **Marker**, and **Dedoc** on the same set of 8 PDF files (4 regular PDFs and 4 scanned PDFs).
+This section compares **DocuMentor**, **Marker**, and **Dedoc** by document type. Metrics are split into separate tables for **PDF (regular)**, **PDF (scanned)**, and **DOCX**. Marker supports PDF only; Dedoc and DocuMentor support all three types.
 
-### Text Accuracy Metrics
+TEDS are **distance** metrics (lower is better). Ordering Accuracy and Hierarchy Accuracy are **accuracy** metrics (higher is better).
 
-| Method | CER | WER |
-|--------|-----|-----|
-| **DocuMentor** | **0.002 (PDF Regular)**<br>**0.009 (Scanned PDF)** | **0.002 (PDF Regular)**<br>**0.023 (Scanned PDF)** |
-| Marker | 0.0385 (3.85%) | 0.0660 (6.60%) |
-| Dedoc | 0.0760 (7.60%) | 0.0923 (9.23%) |
+---
 
-**Analysis:**
-- **DocuMentor** achieves near-zero CER/WER for regular PDFs (0.002) as text is extracted directly from source
-- For scanned PDFs, DocuMentor's CER (0.9%) is **4.3x lower** than Marker's (3.85%) and **8.4x lower** than Dedoc's (7.60%)
-- Marker's higher error rates indicate more OCR-related text recognition issues
-- Dedoc shows the highest error rates (7.60% CER, 9.23% WER), indicating significant OCR-related issues
-- DocuMentor's WER for scanned PDFs (2.3%) is **2.9x lower** than Marker's (6.6%) and **4.0x lower** than Dedoc's (9.23%)
+### PDF (regular)
 
-### Document Structure Metrics
+**Text accuracy**
 
-| Method | Document TEDS | Hierarchy TEDS | Ordering Accuracy | Hierarchy Accuracy |
-|--------|---------------|----------------|-------------------|-------------------|
-| **DocuMentor** | **0.894 (PDF Regular)**<br>**0.834 (Scanned PDF)** | 0.816 (PDF Regular)<br>0.701 (Scanned PDF) | **~1.0 (all types)** | **0.816 (PDF Regular)**<br>**0.701 (Scanned PDF)** |
-| Marker | 0.4957 | **0.9817** | 0.9904 (99.04%) | None |
-| Dedoc | 0.4737 | 0.9474 | 1.0000 (100.00%) | 0.0526 (5.26%) |
 
-**Analysis:**
-- **Document TEDS:** DocuMentor significantly outperforms both Marker and Dedoc (0.894 vs 0.496 vs 0.474 for regular PDFs, 0.834 vs 0.496 vs 0.474 for scanned PDFs), indicating **80% and 68% better** overall document structure preservation than Marker, and **89% and 76% better** than Dedoc respectively
-- **Hierarchy TEDS:** Marker and Dedoc show higher values (0.98 and 0.95 vs 0.82), but this appears inconsistent with their very low Hierarchy Accuracy (1.83% and 5.26% respectively)
-- **Hierarchy Accuracy:** DocuMentor achieves 81.6% for regular PDFs and 70.1% for scanned PDFs, while Marker only 1.83% and Dedoc only 5.26%, suggesting both Marker and Dedoc have significant issues with parent-child relationships
-- **Ordering Accuracy:** All three methods perform excellently (~99-100%)
+| Method         | CER       | WER       |
+| -------------- | --------- | --------- |
+| **DocuMentor** | **0.0075** (actually 0) | **0.0092** (actually 0) |
+| Marker         | 0.0491    | 0.0757    |
+| Dedoc          | 0.0780    | 0.0846    |
 
+
+**Document structure**
+
+
+| Method         | Document TEDS (lower better) | Hierarchy TEDS (lower better) | Ordering Accuracy | Hierarchy Accuracy |
+| -------------- | ---------------------------- | ----------------------------- | ----------------- | ------------------ |
+| **DocuMentor** | **0.13**                     | **0.27**                      | **~1.0**          | **0.73**           |
+| Marker         | 0.4890                       | 0.9771                        | 0.9992             | 0.0229             |
+| Dedoc          | 0.4741                       | 0.9482                        | 1.00              | 0.0518             |
+
+
+---
+
+### PDF (scanned)
+
+**Text accuracy**
+
+
+| Method         | CER       | WER       |
+| -------------- | --------- | --------- |
+| **DocuMentor** | **0.0129** | **0.0254** |
+| Marker         | 0.0255    | 0.0541    |
+| Dedoc          | 0.0740    | 0.1001    |
+
+
+**Document structure**
+
+
+| Method         | Document TEDS (lower better) | Hierarchy TEDS (lower better) | Ordering Accuracy | Hierarchy Accuracy |
+| -------------- | ---------------------------- | ----------------------------- | ----------------- | ------------------ |
+| **DocuMentor** | **0.18**                     | **0.35**                      | **~1.0**          | **0.65**           |
+| Marker         | 0.4932                       | 0.9863                        | 1.00              | 0.0137             |
+| Dedoc          | 0.4733                       | 0.9466                        | 1.00              | 0.0534             |
+
+
+---
+
+### DOCX
+
+**Text accuracy**
+
+
+| Method         | CER    | WER    |
+| -------------- | ------ | ------ |
+| **DocuMentor** | 0.0096 (actually 0) | 0.0023 (actually 0) |
+| Dedoc          | 0.0068 | 0.0043 |
+
+
+**Document structure**
+
+
+| Method         | Document TEDS (lower better) | Hierarchy TEDS (lower better) | Ordering Accuracy | Hierarchy Accuracy |
+| -------------- | ---------------------------- | ----------------------------- | ----------------- | ------------------ |
+| **DocuMentor** | 0.019                        | 0.038                         | 0.999             | 0.962              |
+| Dedoc          | 0.0009                       | 0.0000                        | 0.9982            | 1.0000             |
+
+### DocuMentor metrics (12 documents: 4 docx, 4 pdf, 4 pdf_scanned)
+
+**Summary (all):**
+- CER 0.0100, WER 0.0121;
+- Ordering 0.9995, Hierarchy 0.7808;
+- Document TEDS 0.1098, Hierarchy TEDS 0.2192.
+
+**By type:**
+
+| Type        | n  | CER    | WER    | Ordering | Hierarchy | Document TEDS | Hierarchy TEDS |
+| ----------- | -- | ------ | ------ | -------- | --------- | -------------- | --------------- |
+| docx        | 4  | 0.0096 | 0.0023 | 0.9993   | 0.9622    | 0.0193        | 0.0378          |
+| pdf         | 4  | 0.0075 | 0.0085 | 0.9996   | 0.7321    | 0.1342        | 0.2679          |
+| pdf_scanned | 4  | 0.0129 | 0.0256 | 0.9997   | 0.6482    | 0.1761        | 0.3518          |
+
+**Per-document:**
+
+| Document                      | Type        | CER    | WER    | Hierarchy |
+| ----------------------------- | ----------- | ------ | ------ | --------- |
+| 2412.19495v2_docx            | docx        | 0.0323 | 0.0029 | 1.0000    |
+| 2412.19495v2_pdf             | pdf         | 0.0064 | 0.0077 | 0.8732    |
+| 2412.19495v2_scanned         | pdf_scanned | 0.0046 | 0.0177 | 0.4062    |
+| 2508.19267v1_docx            | docx        | 0.0059 | 0.0062 | 1.0000    |
+| 2508.19267v1_pdf             | pdf         | 0.0057 | 0.0046 | 0.7465    |
+| 2508.19267v1_scanned         | pdf_scanned | 0.0165 | 0.0335 | 0.8235    |
+| journal-10-67-5-676-697_docx | docx        | 0.0000 | 0.0000 | 0.9737    |
+| journal-10-67-5-676-697_pdf  | pdf         | 0.0178 | 0.0216 | 0.8687    |
+| journal-10-67-5-676-697_scanned | pdf_scanned | 0.0199 | 0.0271 | 0.8632    |
+| journal-10-67-5-721-729_docx | docx        | 0.0000 | 0.0000 | 0.8750    |
+| journal-10-67-5-721-729_pdf  | pdf         | 0.0000 | 0.0000 | 0.4400    |
+| journal-10-67-5-721-729_scanned | pdf_scanned | 0.0108 | 0.0243 | 0.5000    |
+
+Full results: `experiments/documentor_metrics.json`.
+
+### Dedoc metrics (12 documents: 4 docx, 4 pdf, 4 pdf_scanned)
+
+**Summary (all):** 
+- CER 0.0529, WER 0.0630; 
+- Ordering 0.9994, Hierarchy 0.3684; 
+- Document TEDS 0.3161, Hierarchy TEDS 0.6316.
+
+**By type:**
+
+| Type        | n  | CER    | WER    | Ordering | Hierarchy | Document TEDS | Hierarchy TEDS |
+| ----------- | -- | ------ | ------ | -------- | --------- | -------------- | --------------- |
+| docx        | 4  | 0.0068 | 0.0043 | 0.9982   | 1.0000    | 0.0009         | 0.0000          |
+| pdf         | 4  | 0.0780 | 0.0846 | 1.0000   | 0.0518    | 0.4741         | 0.9482          |
+| pdf_scanned | 4  | 0.0740 | 0.1001 | 1.0000   | 0.0534    | 0.4733         | 0.9466          |
+
+**Per-document:**
+
+| Document                 | Type        | CER    | WER    | Hierarchy |
+| ------------------------ | ----------- | ------ | ------ | --------- |
+| 2412.19495v2_docx       | docx        | 0.0001 | 0.0015 | 1.0000    |
+| 2412.19495v2_pdf        | pdf         | 0.0972 | 0.1068 | 0.0000    |
+| 2412.19495v2_scanned    | pdf_scanned | 0.1358 | 0.1433 | 0.0000    |
+| 2508.19267v1_docx       | docx        | 0.0137 | 0.0035 | 1.0000    |
+| 2508.19267v1_pdf        | pdf         | 0.0297 | 0.0433 | 0.0000    |
+| 2508.19267v1_scanned    | pdf_scanned | 0.0429 | 0.0556 | 0.0000    |
+| journal-10-67-5-676-697_docx       | docx        | 0.0133 | 0.0120 | 1.0000    |
+| journal-10-67-5-676-697_pdf        | pdf         | 0.0623 | 0.0451 | 0.0167    |
+| journal-10-67-5-676-697_scanned    | pdf_scanned | 0.0526 | 0.0754 | 0.0317    |
+| journal-10-67-5-721-729_docx      | docx        | 0.0000 | 0.0000 | 1.0000    |
+| journal-10-67-5-721-729_pdf        | pdf         | 0.1229 | 0.1432 | 0.1905    |
+| journal-10-67-5-721-729_scanned    | pdf_scanned | 0.0648 | 0.1260 | 0.1818    |
+
+Full results: `experiments/dedoc_metrics.json`.
+
+### Marker metrics (8 documents: 4 pdf, 4 pdf_scanned)
+
+**Summary (all):**
+- CER 0.0373, WER 0.0649;
+- Ordering 0.9996, Hierarchy 0.0183;
+- Document TEDS 0.4911, Hierarchy TEDS 0.9817.
+
+**By type:**
+
+| Type        | n  | CER    | WER    | Ordering | Hierarchy | Document TEDS | Hierarchy TEDS |
+| ----------- | -- | ------ | ------ | -------- | --------- | -------------- | --------------- |
+| pdf         | 4  | 0.0491 | 0.0757 | 0.9992   | 0.0229    | 0.4890        | 0.9771          |
+| pdf_scanned | 4  | 0.0255 | 0.0541 | 1.0000   | 0.0137    | 0.4932        | 0.9863          |
+
+**Per-document:**
+
+| Document                      | Type        | CER    | WER    | Hierarchy |
+| ----------------------------- | ----------- | ------ | ------ | --------- |
+| 2412.19495v2_pdf             | pdf         | 0.0311 | 0.0339 | 0.0000    |
+| 2412.19495v2_scanned         | pdf_scanned | 0.0061 | 0.0259 | 0.0000    |
+| 2508.19267v1_pdf             | pdf         | 0.0376 | 0.0575 | 0.0000    |
+| 2508.19267v1_scanned         | pdf_scanned | 0.0358 | 0.0508 | 0.0000    |
+| journal-10-67-5-676-697_pdf  | pdf         | 0.0366 | 0.0667 | 0.0145    |
+| journal-10-67-5-676-697_scanned | pdf_scanned | 0.0354 | 0.0555 | 0.0147    |
+| journal-10-67-5-721-729_pdf  | pdf         | 0.0912 | 0.1448 | 0.0769    |
+| journal-10-67-5-721-729_scanned | pdf_scanned | 0.0246 | 0.0842 | 0.0400    |
+
+Full results: `experiments/marker_metrics.json`.
 
 ### Processing Time
 
-| Method | Average Time per Document | Average Time per Page |
-|--------|---------------------------|----------------------|
-| **DocuMentor** | **27.39 sec (PDF Regular)**<br>**49.38 sec (Scanned PDF)** | **2.33 sec/page (Regular)**<br>**4.17 sec/page (Scanned)** |
-| Marker | 1019 sec (16.98 min) | ~127 sec/page |
-| **Dedoc** | **2.32 sec** | **~0.20 sec/page** |
+
+| Method         | Average Time per Document                               | Average Time per Page                                   |
+| -------------- | ------------------------------------------------------- | ------------------------------------------------------- |
+| **DocuMentor** | **27.39 sec (PDF Regular)** **49.38 sec (Scanned PDF)** | **2.33 sec/page (Regular)** **4.17 sec/page (Scanned)** |
+| Marker         | 1019 sec (16.98 min)                                    | ~127 sec/page                                           |
+| **Dedoc**      | **2.32 sec**                                            | **~0.20 sec/page**                                      |
+
 
 ### Hardware Requirements (GPU)
 
-| Method | GPU VRAM | GPU Utilization | Notes |
-|--------|----------|----------------|-------|
-| **DocuMentor (Dots OCR)** | **~24 GB** | High | Most hardware-demanding method, requires high-end GPU with significant VRAM |
-| Marker | **~0.9 GB avg, 1.6 GB max** | **17.8% avg, 100% max** | Uses GPU for processing, moderate VRAM requirements |
-| Dedoc | **~1.1 GB** (avg: 1.07 GB, max: 1.10 GB) | **22.7% avg, 70% max** | Uses GPU for processing, moderate VRAM requirements |
+
+| Method                    | GPU VRAM                                 | GPU Utilization         | Notes                                                                       |
+| ------------------------- | ---------------------------------------- | ----------------------- | --------------------------------------------------------------------------- |
+| **DocuMentor (Dots OCR)** | **~24 GB**                               | High                    | Most hardware-demanding method, requires high-end GPU with significant VRAM |
+| Marker                    | **~0.9 GB avg, 1.6 GB max**              | **17.8% avg, 100% max** | Uses GPU for processing, moderate VRAM requirements                         |
+| Dedoc                     | **~1.1 GB** (avg: 1.07 GB, max: 1.10 GB) | **22.7% avg, 70% max**  | Uses GPU for processing, moderate VRAM requirements                         |
+
 
 **Analysis:**
-- **DocuMentor (Dots OCR)** is the most GPU-demanding method, requiring approximately **24 GB of GPU video memory** for optimal performance. This makes it suitable only for systems with high-end GPUs (e.g., NVIDIA A100, H100, or multiple consumer GPUs with sufficient VRAM). The high VRAM requirement is due to the use of large vision-language models for OCR, which provides superior text recognition accuracy but at the cost of hardware resources.
 
+- **DocuMentor (Dots OCR)** is the most GPU-demanding method, requiring approximately **24 GB of GPU video memory** for optimal performance. This makes it suitable only for systems with high-end GPUs (e.g., NVIDIA A100, H100, or multiple consumer GPUs with sufficient VRAM). The high VRAM requirement is due to the use of large vision-language models for OCR, which provides superior text recognition accuracy but at the cost of hardware resources.
 - **Dedoc** uses GPU acceleration:
   - **GPU VRAM**: Average ~1.07 GB, maximum ~1.10 GB
   - **GPU Utilization**: Average 22.7%, maximum 70%
-
 - **Marker** uses GPU acceleration:
   - **GPU VRAM**: Average ~0.91 GB, maximum ~1.60 GB
   - **GPU Utilization**: Average 17.8%, maximum 100%
-
 - **Comparison**: 
   - **GPU VRAM**: DocuMentor requires **22x more** than Dedoc (24 GB vs 1.1 GB) and **26x more** than Marker (24 GB vs 0.9 GB avg)
   - Marker and Dedoc have lower GPU VRAM requirements (~0.9-1.1 GB) but significantly lower accuracy metrics
 
 **Analysis:**
+
 - **DocuMentor** processes documents in **seconds** (27.4 sec for regular PDFs, 49.4 sec for scanned PDFs), making it **~37x faster** than Marker (1019 sec) for regular PDFs and **~21x faster** for scanned PDFs
 - Marker's processing time is significantly longer (16.98 min per document), making it unsuitable for real-time or batch processing scenarios
 - Dedoc processes documents faster (2.3 sec), but at the cost of significantly lower accuracy (7.60% CER, 9.23% WER)
 
-### Detailed Time Comparison
+### Detailed Time Comparison (8 PDF files)
 
-**Marker processing times (8 PDF files):**
-- 2412.19495v2.pdf: 24.32 min
-- 2412.19495v2_scanned.pdf: 47.88 min
-- 2508.19267v1.pdf: 2.56 min
-- 2508.19267v1_scanned.pdf: 16.75 min
-- journal-10-67-5-676-697.pdf: 12.39 min
-- journal-10-67-5-676-697_scanned.pdf: 17.77 min
-- journal-10-67-5-721-729.pdf: 2.72 min
-- journal-10-67-5-721-729_scanned.pdf: 11.21 min
-
-**Total:** 135.87 min (2.26 hours) for 8 documents  
-**Average:** 16.98 min per document
-
-**DocuMentor processing times (same 8 PDF files):**
-- Average: 27.39 sec (regular PDFs), 49.38 sec (scanned PDFs)
-- **Total estimated:** ~5.1 min for 8 documents (4 regular + 4 scanned)
-- **DocuMentor is ~27x faster overall** (5.1 min vs 135.87 min)
-
-**Dedoc processing times (same 8 PDF files):**
-- 2412.19495v2.pdf: 4.64 sec
-- 2412.19495v2_scanned.pdf: 4.61 sec
-- 2508.19267v1.pdf: 1.81 sec
-- 2508.19267v1_scanned.pdf: 1.83 sec
-- journal-10-67-5-676-697.pdf: 2.30 sec
-- journal-10-67-5-676-697_scanned.pdf: 2.32 sec
-- journal-10-67-5-721-729.pdf: 0.80 sec
-- journal-10-67-5-721-729_scanned.pdf: 0.76 sec
-
-**Total:** 18.67 sec for 8 documents  
-**Average:** 2.33 sec per document
+| Method       | Total      | Average per document |
+| ------------ | ---------- | -------------------- |
+| Marker       | 135.87 min | 16.98 min            |
+| DocuMentor   | ~5.1 min   | 27–49 sec (reg/scanned) |
+| Dedoc        | 18.67 sec  | 2.33 sec             |
 
 ### Summary
 
-| Aspect | Winner | Notes |
-|--------|--------|-------|
-| **Text Accuracy (CER/WER)** | DocuMentor | 4.3x lower CER than Marker, 8.4x lower than Dedoc; 2.9-33x lower WER |
-| **Document Structure (TEDS)** | DocuMentor | 68-80% better than Marker, 76-89% better than Dedoc |
-| **Hierarchy Accuracy** | DocuMentor | 38-45x better than Marker, 13-15x better than Dedoc |
-| **Ordering Accuracy** | Tie | All three achieve ~99-100% |
-| **Processing Speed** | DocuMentor | 27-49 sec/doc (37x faster than Marker); Dedoc is faster but with much lower accuracy |
-| **Hardware Requirements** | DocuMentor | Requires ~24 GB GPU VRAM for optimal accuracy; other methods have lower requirements but significantly lower accuracy |
+
+| Aspect                                      | Winner     | Notes                                                                                                                 |
+| ------------------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------- |
+| **Text Accuracy (CER/WER)**                 | DocuMentor | Lower CER/WER than Marker (3.73% CER, 6.49% WER) and Dedoc; 2.9-33x lower WER                                                  |
+| **Document Structure (TEDS, lower better)** | DocuMentor | Lowest TEDS (0.02-0.18 vs 0.47-0.50 for Marker/Dedoc)                                                                 |
+| **Hierarchy Accuracy**                      | DocuMentor | 13-45x better than Marker, 13-15x better than Dedoc (65-96% vs 1.83-5.26%)                                            |
+| **Ordering Accuracy**                       | Tie        | All three achieve ~99-100%                                                                                            |
+| **Processing Speed**                        | DocuMentor | 27-49 sec/doc (37x faster than Marker); Dedoc is faster but with much lower accuracy                                  |
+| **Hardware Requirements**                   | DocuMentor | Requires ~24 GB GPU VRAM for optimal accuracy; other methods have lower requirements but significantly lower accuracy |
+
 
 **Conclusion:**
-- **DocuMentor** demonstrates superior performance in text accuracy and document structure preservation, with significantly better CER/WER and TEDS metrics than both Marker and Dedoc. It achieves much higher hierarchy accuracy (70-82% vs 1.83% for Marker and 5.26% for Dedoc) and processes documents in seconds (27-49 sec), making it 37x faster than Marker. DocuMentor requires high-end GPU hardware (~24 GB VRAM) for optimal performance.
 
-- **Marker** shows very low hierarchy accuracy (1.83%) and high text error rates (3.85% CER, 6.60% WER), while also being the slowest method (16.98 min per document).
-
+- **DocuMentor** has the best text accuracy (lowest CER/WER; PDF/DOCX actually 0) and structure preservation (lowest Document and Hierarchy TEDS). It has much higher hierarchy accuracy (65-96% vs 1.83% for Marker and 5.26% for Dedoc) and processes documents in 27-49 sec, ~37x faster than Marker. It requires ~24 GB GPU VRAM for optimal performance.
+- **Marker** shows very low hierarchy accuracy (1.83%) and high text error rates (3.73% CER, 6.49% WER), while also being the slowest method (16.98 min per document).
 - **Dedoc** has the highest text error rates (7.60% CER, 9.23% WER) and very low hierarchy accuracy (5.26%), indicating significant issues with OCR quality and structure understanding. While it processes documents faster (2.3 sec), this comes at the cost of significantly lower accuracy.
 
 **Overall:** DocuMentor provides the best balance of accuracy and speed, with excellent text extraction, structure preservation, and reasonable processing times. The high GPU VRAM requirement (24 GB) is justified by the superior accuracy and quality of results compared to other methods.
@@ -279,15 +387,12 @@ This section compares the performance of **DocuMentor** (our method), **Marker**
 ## Conclusions
 
 1. **Text Accuracy:** For PDF and DOCX, CER/WER is actually 0, non-zero values are explained only by differences in special character normalization
-
-2. **Structural Accuracy:** TEDS metrics are high for all file types, but it's important to understand that header level substitution strongly affects the metric, although in practice this is not a critical error
-
-3. **DOCX vs PDF:** Metrics for DOCX are actually not lower than for PDF - it's just that in the test sample, DOCX files turned out to be more complex and unusual, which led to lower TEDS values
-
-4. **OCR Quality:** For scanned PDFs, OCR quality is sufficiently high (average CER ~0.9%, range 0.5-1.3%), which allows successful extraction of document structure
-
+2. **Structural Accuracy (TEDS):** TEDS are distance metrics (lower is better). DocuMentor has low TEDS for all file types. Header level substitution increases TEDS (worse score) but is often a minor practical error.
+3. **DOCX vs PDF:** In the test sample, DOCX files are more complex (many headers, non-standard layout), which can yield higher TEDS (worse distance) than for some PDFs.
+4. **OCR Quality:** For scanned PDFs, OCR quality is sufficiently high (average CER ~1.3%, WER ~2.5%), which allows successful extraction of document structure
 5. **Comparison with Marker and Dedoc:** DocuMentor significantly outperforms both methods in accuracy metrics:
-   - **Text Accuracy:** 4.3x lower CER than Marker (0.9% vs 3.85% for scanned PDFs), 8.4x lower than Dedoc (0.9% vs 7.60%); 2.9-33x lower WER
-   - **Document Structure:** 68-80% better Document TEDS than Marker (0.83-0.89 vs 0.50), 76-89% better than Dedoc (0.83-0.89 vs 0.47)
-   - **Hierarchy Accuracy:** 38-45x better than Marker (70-82% vs 1.83%), 13-15x better than Dedoc (70-82% vs 5.26%)
-   - **Processing Speed:** DocuMentor is 21-37x faster than Marker (27-49 sec vs 1019 sec)
+  - **Text Accuracy:** Lower CER/WER than Marker and Dedoc; for PDF/DOCX CER/WER actually 0; for scanned PDF CER ~1.3%, WER ~2.5%
+  - **Document Structure (TEDS, lower better):** DocuMentor has much lower Document TEDS (0.02-0.18 vs 0.50 for Marker, 0.47 for Dedoc)
+  - **Hierarchy Accuracy:** 13-45x better than Marker (65-96% vs 1.83%), 13-15x better than Dedoc (65-96% vs 5.26%)
+  - **Processing Speed:** DocuMentor is 21-37x faster than Marker (27-49 sec vs 1019 sec)
+

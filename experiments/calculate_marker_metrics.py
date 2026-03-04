@@ -1,9 +1,11 @@
 """
-Standalone script for calculating Marker metrics.
+Standalone script for calculating Marker metrics (PDF only).
 
-Processes PDF files from test_files/ through Marker and compares
-results with annotations from test_files/{document}/annotations/.
-Or uses existing MD files if available.
+Processes all PDFs from test_files/ (regular and scanned) through Marker,
+compares with annotations. Output format aligned with DocuMentor: per-document
+entries with document_type, _summary, _summary_pdf, _summary_pdf_scanned.
+Uses existing MD files if present, else runs Marker on PDF.
+See experiments/README.md for Marker installation.
 """
 
 import json
@@ -350,8 +352,8 @@ def process_pdf_with_marker(pdf_path: Path) -> str:
     try:
         import sys
         project_root = Path(__file__).parent.parent
-        marker_path = project_root / "evaluation_scripts" / "marker"
-        venv_marker = project_root / "evaluation_scripts" / "venv_marker"
+        marker_path = project_root / "experiments" / "marker"
+        venv_marker = project_root / "experiments" / "venv_marker"
         
         if marker_path.exists() and str(marker_path) not in sys.path:
             sys.path.insert(0, str(marker_path))
@@ -409,10 +411,11 @@ def process_markdown_file(
     avg_cer = total_cer / matched_pairs if matched_pairs > 0 else 1.0
     avg_wer = total_wer / matched_pairs if matched_pairs > 0 else 1.0
     
+    # Structure metrics: TEDS are distance (lower is better)
     ordering_accuracy = calculate_ordering_accuracy_simple(predicted, gt_elements, matches)
     hierarchy_accuracy = calculate_hierarchy_accuracy_simple(predicted, gt_elements, matches)
-    hierarchy_teds = 1.0 - hierarchy_accuracy
-    document_teds = (hierarchy_teds + (1.0 - ordering_accuracy)) / 2.0
+    hierarchy_teds = 1.0 - hierarchy_accuracy  # distance, lower is better
+    document_teds = (hierarchy_teds + (1.0 - ordering_accuracy)) / 2.0  # distance, lower is better
     
     processing_time = time.time() - start_time
     
@@ -431,105 +434,119 @@ def process_markdown_file(
     )
 
 def main():
-    """Main function."""
+    """Main function. Processes all PDFs (regular + scanned), same task layout as DocuMentor."""
     project_root = Path(__file__).parent.parent
     test_files_dir = project_root / "test_files"
-    output_file = project_root / "evaluation_scripts" / "marker_metrics.json"
-    
+    output_file = project_root / "experiments" / "marker_metrics.json"
+
     if not test_files_dir.exists():
         print(f"[ERROR] Folder {test_files_dir} not found")
         sys.exit(1)
-    
+
     document_dirs = [d for d in test_files_dir.iterdir() if d.is_dir()]
-    
     if not document_dirs:
         print(f"[ERROR] No document folders found in {test_files_dir}")
         sys.exit(1)
-    
-    print(f"Found {len(document_dirs)} documents")
-    print("=" * 80)
-    
-    results = {}
-    all_metrics = []
-    
-    for i, doc_dir in enumerate(sorted(document_dirs), 1):
-        doc_name = doc_dir.name
-        print(f"\n[{i}/{len(document_dirs)}] Processing: {doc_name}")
-        
-        # Find MD file or PDF for processing
-        md_file = next(doc_dir.glob("*.md"), None)
-        pdf_file = next((f for f in doc_dir.glob("*.pdf") if "_scanned" not in f.name), None)
-        
-        if not md_file and not pdf_file:
-            print(f"  [SKIP] MD or PDF file not found")
-            continue
-        
+
+    tasks = []
+    for doc_dir in sorted(document_dirs):
         annotations_dir = doc_dir / "annotations"
         if not annotations_dir.exists():
-            print(f"  [SKIP] annotations folder not found")
             continue
-        
-        annotation_path = annotations_dir / f"{doc_name}.pdf_annotation.json"
-        if not annotation_path.exists():
-            annotation_path = annotations_dir / f"{doc_name}_pdf_annotation.json"
-        
-        if not annotation_path.exists():
-            print(f"  [SKIP] Annotation not found")
-            continue
-        
+        for pdf_path in sorted(doc_dir.glob("*.pdf")):
+            stem = pdf_path.stem
+            if "_scanned" in pdf_path.name:
+                ann = annotations_dir / f"{stem}_annotation.json"
+                key = stem
+                doc_type = "pdf_scanned"
+            else:
+                ann = annotations_dir / f"{stem}.pdf_annotation.json"
+                if not ann.exists():
+                    ann = annotations_dir / f"{stem}_pdf_annotation.json"
+                key = f"{stem}_pdf"
+                doc_type = "pdf"
+            if ann.exists():
+                tasks.append((pdf_path, ann, key, doc_type))
+
+    if not tasks:
+        print("[ERROR] No PDF+annotation pairs found in test_files/")
+        sys.exit(1)
+
+    print(f"Found {len(tasks)} PDF(s) to process")
+    print("=" * 80)
+    results = {}
+    all_metrics = []
+    metrics_by_type = []
+
+    for i, (pdf_path, annotation_path, result_key, doc_type) in enumerate(tasks, 1):
+        print(f"\n[{i}/{len(tasks)}] {result_key}")
+        print(f"  PDF: {pdf_path.name}")
+        print(f"  Annotation: {annotation_path.name}")
+        md_file = pdf_path.parent / f"{pdf_path.stem}.md"
         try:
-            if md_file:
-                print(f"  Using MD file: {md_file.name}")
-                with open(md_file, 'r', encoding='utf-8') as f:
+            if md_file.exists():
+                print(f"  Using existing MD: {md_file.name}")
+                with open(md_file, "r", encoding="utf-8") as f:
                     md_content = f.read()
-            elif pdf_file:
-                print(f"  Processing PDF through Marker: {pdf_file.name}")
-                md_content = process_pdf_with_marker(pdf_file)
-            
-            metrics = process_markdown_file(md_content, annotation_path, doc_name)
+            else:
+                print(f"  Running Marker on PDF...")
+                md_content = process_pdf_with_marker(pdf_path)
+            metrics = process_markdown_file(md_content, annotation_path, result_key)
             all_metrics.append(metrics)
-            
-            results[doc_name] = {
-                'document_id': metrics.document_id,
-                'cer': metrics.cer,
-                'wer': metrics.wer,
-                'ordering_accuracy': metrics.ordering_accuracy,
-                'hierarchy_accuracy': metrics.hierarchy_accuracy,
-                'document_teds': metrics.document_teds,
-                'hierarchy_teds': metrics.hierarchy_teds,
-                'total_elements_gt': metrics.total_elements_gt,
-                'total_elements_pred': metrics.total_elements_pred,
-                'matched_elements': metrics.matched_elements,
-                'processing_time': metrics.processing_time
+            metrics_by_type.append((doc_type, metrics))
+            results[result_key] = {
+                "document_id": metrics.document_id,
+                "document_type": doc_type,
+                "cer": metrics.cer,
+                "wer": metrics.wer,
+                "ordering_accuracy": metrics.ordering_accuracy,
+                "hierarchy_accuracy": metrics.hierarchy_accuracy,
+                "document_teds": metrics.document_teds,
+                "hierarchy_teds": metrics.hierarchy_teds,
+                "total_elements_gt": metrics.total_elements_gt,
+                "total_elements_pred": metrics.total_elements_pred,
+                "matched_elements": metrics.matched_elements,
+                "processing_time": metrics.processing_time,
             }
-            
             print(f"  [OK] CER: {metrics.cer:.4f}")
             print(f"  [OK] WER: {metrics.wer:.4f}")
             print(f"  [OK] Ordering accuracy: {metrics.ordering_accuracy:.4f}")
             print(f"  [OK] Hierarchy accuracy: {metrics.hierarchy_accuracy:.4f}")
             print(f"  [OK] Document TEDS: {metrics.document_teds:.4f}")
+            print(f"  [OK] Hierarchy TEDS: {metrics.hierarchy_teds:.4f}")
             print(f"  [OK] Time: {metrics.processing_time:.2f} sec")
-            
         except Exception as e:
-            print(f"  [ERROR] Error: {e}")
+            print(f"  [ERROR] {e}")
             import traceback
             traceback.print_exc()
-    
+
     if all_metrics:
         summary = {
-            'total_files': len(all_metrics),
-            'avg_cer': sum(m.cer for m in all_metrics) / len(all_metrics),
-            'avg_wer': sum(m.wer for m in all_metrics) / len(all_metrics),
-            'avg_ordering_accuracy': sum(m.ordering_accuracy for m in all_metrics) / len(all_metrics),
-            'avg_hierarchy_accuracy': sum(m.hierarchy_accuracy for m in all_metrics) / len(all_metrics),
-            'avg_document_teds': sum(m.document_teds for m in all_metrics) / len(all_metrics),
-            'avg_hierarchy_teds': sum(m.hierarchy_teds for m in all_metrics) / len(all_metrics),
+            "total_files": len(all_metrics),
+            "avg_cer": sum(m.cer for m in all_metrics) / len(all_metrics),
+            "avg_wer": sum(m.wer for m in all_metrics) / len(all_metrics),
+            "avg_ordering_accuracy": sum(m.ordering_accuracy for m in all_metrics) / len(all_metrics),
+            "avg_hierarchy_accuracy": sum(m.hierarchy_accuracy for m in all_metrics) / len(all_metrics),
+            "avg_document_teds": sum(m.document_teds for m in all_metrics) / len(all_metrics),
+            "avg_hierarchy_teds": sum(m.hierarchy_teds for m in all_metrics) / len(all_metrics),
         }
-        
-        results['_summary'] = summary
-        
+        results["_summary"] = summary
+        by_type = {}
+        for dt, m in metrics_by_type:
+            by_type.setdefault(dt, []).append(m)
+        for dt, group in sorted(by_type.items()):
+            n = len(group)
+            results[f"_summary_{dt}"] = {
+                "total_files": n,
+                "avg_cer": sum(m.cer for m in group) / n,
+                "avg_wer": sum(m.wer for m in group) / n,
+                "avg_ordering_accuracy": sum(m.ordering_accuracy for m in group) / n,
+                "avg_hierarchy_accuracy": sum(m.hierarchy_accuracy for m in group) / n,
+                "avg_document_teds": sum(m.document_teds for m in group) / n,
+                "avg_hierarchy_teds": sum(m.hierarchy_teds for m in group) / n,
+            }
         print("\n" + "=" * 80)
-        print("SUMMARY METRICS")
+        print("SUMMARY (all)")
         print("=" * 80)
         print(f"Average CER: {summary['avg_cer']:.4f}")
         print(f"Average WER: {summary['avg_wer']:.4f}")
@@ -537,11 +554,21 @@ def main():
         print(f"Average Hierarchy accuracy: {summary['avg_hierarchy_accuracy']:.4f}")
         print(f"Average Document TEDS: {summary['avg_document_teds']:.4f}")
         print(f"Average Hierarchy TEDS: {summary['avg_hierarchy_teds']:.4f}")
-    
+        for dt in sorted(by_type.keys()):
+            s = results[f"_summary_{dt}"]
+            print("\n" + "-" * 40)
+            print(f"SUMMARY ({dt}, n={s['total_files']})")
+            print("-" * 40)
+            print(f"  CER: {s['avg_cer']:.4f}")
+            print(f"  WER: {s['avg_wer']:.4f}")
+            print(f"  Ordering accuracy: {s['avg_ordering_accuracy']:.4f}")
+            print(f"  Hierarchy accuracy: {s['avg_hierarchy_accuracy']:.4f}")
+            print(f"  Document TEDS: {s['avg_document_teds']:.4f}")
+            print(f"  Hierarchy TEDS: {s['avg_hierarchy_teds']:.4f}")
+
     output_file.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_file, 'w', encoding='utf-8') as f:
+    with open(output_file, "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
-    
     print(f"\nResults saved to: {output_file}")
 
 if __name__ == "__main__":
